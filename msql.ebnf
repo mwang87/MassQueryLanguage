@@ -1,4 +1,4 @@
-statement: "QUERY" return "WHERE" condition
+statement: "QUERY" return "WHERE" condition+
 
 return: "MS1DATA"
      | "MS2DATA"
@@ -7,6 +7,8 @@ return: "MS1DATA"
 
 condition: filterfields "=" NUMBER
     | filterfields "=" STRING
+    | "OR" filterfields "=" NUMBER
+    | "AND" filterfields "=" NUMBER
 
 filterfields: "MS2PROD"
     | "MS2PREC"
