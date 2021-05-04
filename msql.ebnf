@@ -1,0 +1,20 @@
+statement: "QUERY" return "WHERE" condition
+
+return: "MS1DATA"
+     | "MS2DATA"
+     | function"(MS1DATA)"
+     | function"(MS2DATA)"
+
+condition: filterfields "=" NUMBER
+    | filterfields "=" STRING
+
+filterfields: "MS2PROD"
+    | "MS2PREC"
+
+function: "scanrangesum"
+    | "scansum"
+
+%import common.ESCAPED_STRING   -> STRING
+%import common.SIGNED_NUMBER    -> NUMBER
+%import common.WS
+%ignore WS
