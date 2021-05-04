@@ -1,4 +1,4 @@
-statement: "QUERY" return "WHERE" condition+
+statement: "QUERY" return "WHERE" fullcondition+
 
 return: "MS1DATA"
      | "MS2DATA"
@@ -6,17 +6,15 @@ return: "MS1DATA"
      | function"(MS2DATA)"
      | function"(MS1DATA," param"="NUMBER")"
 
-condition: condition ":" qualifier
-    | conditionfields "=" FLOAT
+fullcondition: fullcondition "AND" fullcondition
+    | fullcondition "OR" fullcondition
+    | condition ":" qualifier
+    | condition
+
+condition: conditionfields "=" FLOAT
     | conditionfields "=" STRING
     | conditionfields "=" "(" statement ")"
     | conditionfields "=" "(" statement ")"
-    | "OR" conditionfields "=" FLOAT
-    | "OR" conditionfields "=" STRING
-    | "AND" conditionfields "=" FLOAT
-    | "AND" conditionfields "=" STRING
-    | "OR" conditionfields "=" "(" statement ")"
-    | "AND" conditionfields "=" "(" statement ")"
 
 qualifier: qualifier ":" qualifier
     | qualifierfields "=" FLOAT
