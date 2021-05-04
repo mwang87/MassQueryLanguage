@@ -98,17 +98,20 @@ def process_query(input_query, input_filename):
       print(parsed_dict["querytype"]["function"])
       # Applying function
       if parsed_dict["querytype"]["function"] == "functionscansum":
-         print("XXXXX")
 
          if parsed_dict["querytype"]["datatype"] == "datams1data":
             ms1_df = ms1_df.groupby("scan").sum()
             return ms1_df
          if parsed_dict["querytype"]["datatype"] == "datams2data":
             ms2_df = ms2_df.groupby("scan").sum()
-            
-            print(ms2_df)
 
             return ms2_df
+
+      if parsed_dict["querytype"]["function"] == "functionscanmz":
+         result_df = pd.DataFrame()
+         result_df["precmz"] = ms2_df["precmz"]
+         return result_df
+
 
       
 
