@@ -87,4 +87,7 @@ def process_query(input_query, input_filename):
          ms1_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
 
    # collating the results
-   
+   if parsed_dict["querytype"] == "MS1DATA":
+      return ms1_df
+   if parsed_dict["querytype"] == "MS2DATA":
+      return ms2_df
