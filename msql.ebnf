@@ -6,21 +6,30 @@ return: "MS1DATA"
      | function"(MS2DATA)"
      | function"(MS1DATA," param"="NUMBER")"
 
-condition: condition ":" condition
-    | filterfields "=" FLOAT
-    | filterfields "=" STRING
-    | filterfields "=" "(" statement ")"
-    | filterfields "=" "(" statement ")"
-    | "OR" filterfields "=" NUMBER
-    | "AND" filterfields "=" NUMBER
-    | "OR" filterfields "=" "(" statement ")"
-    | "AND" filterfields "=" "(" statement ")"
-    
-filterfields: "MS2PROD"
+condition: condition ":" qualifier
+    | conditionfields "=" FLOAT
+    | conditionfields "=" STRING
+    | conditionfields "=" "(" statement ")"
+    | conditionfields "=" "(" statement ")"
+    | "OR" conditionfields "=" FLOAT
+    | "OR" conditionfields "=" STRING
+    | "AND" conditionfields "=" FLOAT
+    | "AND" conditionfields "=" STRING
+    | "OR" conditionfields "=" "(" statement ")"
+    | "AND" conditionfields "=" "(" statement ")"
+
+qualifier: qualifier ":" qualifier
+    | qualifierfields "=" FLOAT
+    | qualifierfields "=" STRING
+    | "OR" qualifierfields "=" FLOAT
+    | "AND" qualifierfields "=" STRING
+
+conditionfields: "MS2PROD"
     | "MS2PREC"
     | "MS1MZ"
     | "MS2NL"
-    | "MZDELTA"
+
+qualifierfields: "MZDELTA"
     | "PPMDELTA"
 
 function: "scanrangesum"

@@ -1,5 +1,6 @@
 import sqlparse
 from lark import Lark
+from lark import Transformer
 
 #raw = "QUERY scansum(MS2DATA) WHERE MS2PROD=271:MZDELTA=0.01 AND MS2PREC=500"
 #raw = "QUERY scansum(MS2DATA) WHERE MS2PROD=271 AND MS2PREC=500"
@@ -16,9 +17,15 @@ raw = "QUERY scanrangesum(MS1DATA, TOLERANCE=0.1) WHERE MS1MZ=(QUERY scanmz(MS2D
 # for token in parsed.tokens:
 #     print("X", token)
 
-
-
 msql_parser = Lark(open("msql.ebnf").read(), start='statement')
 print(msql_parser)
 
-print(msql_parser.parse(raw).pretty())
+tree = msql_parser.parse(raw)
+print(tree.pretty())
+
+class MyTransformer(Transformer):
+   def condition(self, items):
+      print(items)
+      return "conditions"
+
+print(MyTransformer().transform(tree))
