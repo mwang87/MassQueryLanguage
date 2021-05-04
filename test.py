@@ -1,7 +1,8 @@
 import msql_parser
 import msql_engine
 
-raw = "QUERY MS2DATA WHERE MS2PROD=226.18 AND MS2PREC=226.1797"
+raw = "QUERY MS2DATA WHERE MS2PROD=226.18"
+#raw = "QUERY MS2DATA WHERE MS2PROD=226.18 AND MS2PREC=226.1797"
 #raw = "QUERY scansum(MS2DATA) WHERE MS2PROD=226.18 AND MS2PREC=226.1797"
 #raw = "QUERY scansum(MS2DATA) WHERE MS2PROD=271 AND MS2PREC=500 AND MS1MZ=100"
 #raw = "QUERY scansum(MS2DATA) WHERE MS2PROD=271:MZDELTA=0.01:INTENSITYPERCENT>10 AND MS2PREC=500"
@@ -27,4 +28,4 @@ for line in open("test_queries.txt"):
 
 results_df = msql_engine.process_query(raw, "test/GNPS00002_A3_p.mzML")
 print(results_df.head())
-print(set(results_df["scan"]))
+#print(set(results_df["scan"]))
