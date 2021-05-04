@@ -2,6 +2,8 @@
 from lark import Lark
 from lark import Transformer
 
+#TODO: Update language definition to make it such that we can distinguish different functions
+
 class MassQLToJSON(Transformer):
    def qualifiermzdelta(self, items):
       return "qualifiermzdelta"
@@ -83,8 +85,13 @@ class MassQLToJSON(Transformer):
 
 
 def parse_msql(input_query):
-    msql_parser = Lark(open("msql.ebnf").read(), start='statement')
-    tree = msql_parser.parse(input_query)
-    parsed_list = MassQLToJSON().transform(tree)
+   msql_parser = Lark(open("msql.ebnf").read(), start='statement')
+   tree = msql_parser.parse(input_query)
+   parsed_list = MassQLToJSON().transform(tree)
 
-    return parsed_list
+   return parsed_list
+
+def process_query(input_query, input_filename):
+   parsed_list = parse_msql(input_query)
+
+   # Let's apply this to real data
