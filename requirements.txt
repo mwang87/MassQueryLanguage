@@ -1,3 +1,5 @@
 sqlparse
 pymzml
 lark-parser
+pandas
+pymzml
