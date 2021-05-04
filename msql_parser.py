@@ -61,14 +61,22 @@ class MassQLToJSON(Transformer):
       return full_items_list
    
    def querytype(self, items):
-      return None
+      query_dict = {}
+      if len(items) == 1:
+         query_dict["function"] = None
+         query_dict["datatype"] = items[0].data
+      else:
+         query_dict["function"] = items[0].data
+         query_dict["datatype"] = items[1].data
+
+      return query_dict
 
    def function(self, items):
-      return "function"
+      return items[0]
    
    def statement(self, items):
       query_dict = {}
-      query_dict["querytype"] = "MS1DATA"
+      query_dict["querytype"] = items[0]
       query_dict["conditions"] = items[1]
 
       return query_dict

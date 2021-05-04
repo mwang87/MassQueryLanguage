@@ -1,10 +1,13 @@
 statement: "QUERY" querytype "WHERE" fullcondition+
 
-querytype: "MS1DATA"
-     | "MS2DATA"
-     | function"(MS1DATA)"
-     | function"(MS2DATA)"
-     | function"(MS1DATA," param "=" floating ")"
+querytype: datams1data
+     | datams2data
+     | function"(" datams1data ")"
+     | function "(" datams2data ")"
+     | function"(" datams1data "," param "=" floating ")"
+
+datams1data: "MS1DATA"
+datams2data: "MS2DATA"
 
 fullcondition: fullcondition booleanconjunction fullcondition
     | condition ":" qualifier
@@ -53,9 +56,13 @@ qualifierppmdelta: "PPMDELTA"
 qualifierintensitypercent: "INTENSITYPERCENT"
 qualifierintensityvalue: "INTENSITYVALUE"
 
-function: "scanrangesum"
-    | "scansum"
-    | "scanmz"
+function: functionscansum
+    | functionscanrangesum
+    | functionscanmz
+
+functionscansum: "scansum" 
+functionscanrangesum: "scanrangesum"
+functionscanmz: "scanmz"
 
 booleanconjunction: "AND"
 
