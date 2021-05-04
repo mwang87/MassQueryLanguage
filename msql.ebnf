@@ -4,38 +4,47 @@ return: "MS1DATA"
      | "MS2DATA"
      | function"(MS1DATA)"
      | function"(MS2DATA)"
-     | function"(MS1DATA," param"="NUMBER")"
+     | function"(MS1DATA," param "=" floating ")"
 
-fullcondition: fullcondition "AND" fullcondition
-    | fullcondition "OR" fullcondition
+fullcondition: fullcondition booleanconjunction fullcondition
     | condition ":" qualifier
     | condition
 
-condition: conditionfields "=" FLOAT
+condition: conditionfields "=" floating
     | conditionfields "=" STRING
     | conditionfields "=" "(" statement ")"
     | conditionfields "=" "(" statement ")"
 
 qualifier: qualifier ":" qualifier
-    | qualifierfields "=" FLOAT
+    | qualifierfields "=" floating
     | qualifierfields "=" STRING
-    | "OR" qualifierfields "=" FLOAT
-    | "AND" qualifierfields "=" STRING
+    | booleanconjunction qualifierfields "=" floating
+    | booleanconjunction qualifierfields "=" STRING
 
-conditionfields: "MS2PROD"
-    | "MS2PREC"
-    | "MS1MZ"
-    | "MS2NL"
+conditionfields: ms2productcondition
+    | ms2precursorcondition
+    | ms2neutrallosscondition
+    | ms1mzcondition
 
-qualifierfields: "MZDELTA"
-    | "PPMDELTA"
+ms2productcondition: "MS2PROD"
+ms2precursorcondition: "MS2PREC"
+ms2neutrallosscondition: "MS2NL"
+ms1mzcondition: "MS1MZ"
+
+qualifierfields: qualifiermzdelta
+    | qualifierppmdelta
+
+qualifiermzdelta: "MZDELTA" 
+qualifierppmdelta: "PPMDELTA"
 
 function: "scanrangesum"
     | "scansum"
     | "scanmz"
 
+booleanconjunction: "AND"
+
 param: "TOLERANCE"
-FLOAT: /[-+]?([0-9]*\.[0-9]+|[0-9]+)/
+floating: /[-+]?([0-9]*\.[0-9]+|[0-9]+)/
 
 %import common.ESCAPED_STRING   -> STRING
 %import common.SIGNED_NUMBER    -> NUMBER

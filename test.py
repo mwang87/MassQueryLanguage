@@ -23,9 +23,36 @@ print(msql_parser)
 tree = msql_parser.parse(raw)
 print(tree.pretty())
 
-class MyTransformer(Transformer):
-   def fullcondition(self, items):
-      print("X", items)
-      return "conditions"
+class MassQLToJSON(Transformer):
+   # def fullcondition(self, items):
+   #    print("X", items)
+   #    return ""
 
-print(MyTransformer().transform(tree))
+   def qualifiermzdelta(self, items):
+      return "qualifiermzdelta"
+   
+   def qualifierppmdelta(self, items):
+      return "qualifierppmdelta"
+
+   def qualifier(self, items):
+      qualifier_dict = {}
+      qualifier_dict["type"] = "qualifier"
+      qualifier_dict["unit"] = "mz" #TODO Fix
+      qualifier_dict["value"] = items[-1]
+      print("Y", qualifier_dict)
+      return qualifier_dict
+   
+   def string(self, s):
+      print("STRING", s)
+      (s,) = s
+      return s[1:-1]
+      
+   def floating(self, n):
+      (n,) = n
+      return float(n)
+
+
+   
+   
+
+print(MassQLToJSON().transform(tree))
