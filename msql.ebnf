@@ -16,10 +16,22 @@ condition: conditionfields "=" floating
     | conditionfields "=" "(" statement ")"
 
 qualifier: qualifier ":" qualifier
-    | qualifierfields "=" floating
-    | qualifierfields "=" STRING
-    | booleanconjunction qualifierfields "=" floating
-    | booleanconjunction qualifierfields "=" STRING
+    | qualifierfields equal floating
+    | qualifierfields equal STRING
+    | qualifierfields greaterthan floating
+    | qualifierfields greaterthan STRING
+    | qualifierfields lessthan floating
+    | qualifierfields lessthan STRING
+    | booleanconjunction qualifierfields equal floating
+    | booleanconjunction qualifierfields equal STRING
+    | booleanconjunction qualifierfields equal floating
+    | booleanconjunction qualifierfields equal STRING
+    | booleanconjunction qualifierfields lessthan floating
+    | booleanconjunction qualifierfields lessthan STRING
+
+equal: "="
+lessthan: "<"
+greaterthan: ">"
 
 conditionfields: ms2productcondition
     | ms2precursorcondition
@@ -33,9 +45,13 @@ ms1mzcondition: "MS1MZ"
 
 qualifierfields: qualifiermzdelta
     | qualifierppmdelta
+    | qualifierintensitypercent
+    | qualifierintensityvalue
 
 qualifiermzdelta: "MZDELTA" 
 qualifierppmdelta: "PPMDELTA"
+qualifierintensitypercent: "INTENSITYPERCENT"
+qualifierintensityvalue: "INTENSITYVALUE"
 
 function: "scanrangesum"
     | "scansum"

@@ -3,8 +3,8 @@ from lark import Lark
 from lark import Transformer
 
 #raw = "QUERY scansum(MS2DATA) WHERE MS2PROD=271 AND MS2PREC=500"
-#raw = "QUERY scansum(MS2DATA) WHERE MS2PROD=271:MZDELTA=0.01 AND MS2PREC=500"
-raw = "QUERY scanrangesum(MS1DATA, TOLERANCE=0.1) WHERE MS1MZ=(QUERY scanmz(MS2DATA) WHERE MS2PROD=85.02820:MZDELTA=0.01 AND MS2NL=59.07350:MZDELTA=0.01):MZDELTA=0.01"
+raw = "QUERY scansum(MS2DATA) WHERE MS2PROD=271:MZDELTA=0.01:INTENSITYPERCENT>10 AND MS2PREC=500"
+#raw = "QUERY scanrangesum(MS1DATA, TOLERANCE=0.1) WHERE MS1MZ=(QUERY scanmz(MS2DATA) WHERE MS2PROD=85.02820:MZDELTA=0.01 AND MS2NL=59.07350:MZDELTA=0.01):MZDELTA=0.01"
 # statements = sqlparse.split(raw)
 
 # print(statements)
@@ -34,16 +34,32 @@ class MassQLToJSON(Transformer):
    def qualifierppmdelta(self, items):
       return "qualifierppmdelta"
 
+   def ms2productcondition(self, items):
+      return "ms2productcondition"
+
+   def ms2neutrallosscondition(self, items):
+      return "ms2neutrallosscondition"
+   
+   def ms1mzcondition(self, items):
+      return "ms1mzcondition"
+
    def qualifier(self, items):
+      print("XXX", items)
       qualifier_dict = {}
       qualifier_dict["type"] = "qualifier"
+      qualifier_dict["field"] = items[0]
       qualifier_dict["unit"] = "mz" #TODO Fix
       qualifier_dict["value"] = items[-1]
-      print("Y", qualifier_dict)
       return qualifier_dict
+
+   def condition(self, items):
+      condition_dict = {}
+      condition_dict["type"] = "condition"
+      condition_dict["value"] = "condition"
+      print(items)
+      return ""
    
    def string(self, s):
-      print("STRING", s)
       (s,) = s
       return s[1:-1]
       
