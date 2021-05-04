@@ -4,17 +4,32 @@ return: "MS1DATA"
      | "MS2DATA"
      | function"(MS1DATA)"
      | function"(MS2DATA)"
+     | function"(MS1DATA," param"="NUMBER")"
 
-condition: filterfields "=" NUMBER
+condition: condition ":" condition
+    | filterfields "=" FLOAT
     | filterfields "=" STRING
+    | filterfields "=" "(" statement ")"
+    | filterfields "=" "(" statement ")"
     | "OR" filterfields "=" NUMBER
     | "AND" filterfields "=" NUMBER
-
+    | "OR" filterfields "=" "(" statement ")"
+    | "AND" filterfields "=" "(" statement ")"
+    
 filterfields: "MS2PROD"
     | "MS2PREC"
+    | "MS1MZ"
+    | "MS2NL"
+    | "MZDELTA"
+    | "PPMDELTA"
 
 function: "scanrangesum"
     | "scansum"
+    | "scanmz"
+
+param: "TOLERANCE"
+FLOAT: /[-+]?([0-9]*\.[0-9]+|[0-9]+)/
+
 
 %import common.ESCAPED_STRING   -> STRING
 %import common.SIGNED_NUMBER    -> NUMBER
