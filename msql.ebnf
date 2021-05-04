@@ -30,7 +30,6 @@ function: "scanrangesum"
 param: "TOLERANCE"
 FLOAT: /[-+]?([0-9]*\.[0-9]+|[0-9]+)/
 
-
 %import common.ESCAPED_STRING   -> STRING
 %import common.SIGNED_NUMBER    -> NUMBER
 %import common.WS
