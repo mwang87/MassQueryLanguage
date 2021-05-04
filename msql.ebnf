@@ -1,6 +1,6 @@
-statement: "QUERY" return "WHERE" fullcondition+
+statement: "QUERY" querytype "WHERE" fullcondition+
 
-return: "MS1DATA"
+querytype: "MS1DATA"
      | "MS2DATA"
      | function"(MS1DATA)"
      | function"(MS2DATA)"

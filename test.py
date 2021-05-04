@@ -72,8 +72,6 @@ class MassQLToJSON(Transformer):
       Returns:
           [type]: [description]
       """
-      print("AAA", items)
-
       if len(items) == 1:
          return items
 
@@ -84,9 +82,23 @@ class MassQLToJSON(Transformer):
          except TypeError:
             pass
 
-      print("BBB", full_items_list)
-
       return full_items_list
+   
+   def querytype(self, items):
+      print("AAA", items)
+      return None
+
+   def function(self, items):
+      return "function"
+   
+   def statement(self, items):
+      print("XXX", items)
+      query_dict = {}
+      query_dict["querytype"] = "MS1DATA"
+      query_dict["conditions"] = items[1]
+      print("DDD", query_dict)
+
+      return query_dict
 
    def qualifierfields(self, items):
       return items[0]
