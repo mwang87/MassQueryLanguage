@@ -83,7 +83,6 @@ class MassQLToJSON(Transformer):
       return items[0]
    
    def statement(self, items):
-      print(items)
       if len(items) == 1:
          query_dict = {}
          query_dict["querytype"] = items[0]

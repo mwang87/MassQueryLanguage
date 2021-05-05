@@ -150,8 +150,10 @@ def process_query(input_query, input_filename):
 
          if parsed_dict["querytype"]["datatype"] == "datams1data":
             result_df = ms1_df.groupby('scan').first().reset_index()
+            result_df = result_df[["scan"]]
          if parsed_dict["querytype"]["datatype"] == "datams2data":
             result_df = ms2_df.groupby('scan').first().reset_index()
+            result_df = result_df[["scan", "precmz", "ms1scan"]]
          
          return result_df
          
