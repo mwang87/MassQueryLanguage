@@ -175,7 +175,7 @@ def determine_task(search):
     except:
         query_dict = {}
 
-    query = _get_url_param(query_dict, "query", 'QUERY scannum(MS2DATA) WHERE MS2PROD=226.18')
+    query = _get_url_param(query_dict, "query", 'QUERY scaninfo(MS2DATA) WHERE MS2PROD=226.18:PPMDELTA=5')
 
     return [query]
 

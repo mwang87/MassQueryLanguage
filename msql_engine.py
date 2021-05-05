@@ -144,6 +144,16 @@ def process_query(input_query, input_filename):
             result_df["scan"] = list(set(ms2_df["scan"]))
          
          return result_df
+
+      if parsed_dict["querytype"]["function"] == "functionscaninfo":
+         result_df = pd.DataFrame()
+
+         if parsed_dict["querytype"]["datatype"] == "datams1data":
+            result_df = ms1_df.groupby('scan').first().reset_index()
+         if parsed_dict["querytype"]["datatype"] == "datams2data":
+            result_df = ms2_df.groupby('scan').first().reset_index()
+         
+         return result_df
          
 
 

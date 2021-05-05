@@ -60,11 +60,13 @@ function: functionscannum
     | functionscansum
     | functionscanrangesum
     | functionscanmz
+    | functionscaninfo
 
 functionscannum: "scannum"
 functionscansum: "scansum" 
 functionscanrangesum: "scanrangesum"
 functionscanmz: "scanmz"
+functionscaninfo: "scaninfo"
 
 booleanconjunction: "AND"
 
