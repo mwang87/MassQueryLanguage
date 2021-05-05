@@ -20,8 +20,7 @@ def test_qc_ms1_ms2peak():
     print(set(results_df["scan"]))
 
 def test_diphen():
-    #query = "QUERY scannum(MS2DATA) WHERE MS2PROD=167.0857:PPMDELTA=5"
-    query = "QUERY scannum(MS2DATA) WHERE MS2PROD=167.0857"
+    query = "QUERY scannum(MS2DATA) WHERE MS2PROD=167.0857:PPMDELTA=5"
     print(msql_parser.parse_msql(query))
     results_df = msql_engine.process_query(query, "test/bld_plt1_07_120_1.mzML")
     assert(1235 in list(results_df["scan"]))
