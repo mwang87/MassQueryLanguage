@@ -3,11 +3,16 @@ import msql_engine
 
 def test_simple_ms2():
     query = "QUERY MS2DATA WHERE MS2PROD=226.18"
-    results_df = msql_engine.process_query(raw, "test/GNPS00002_A3_p.mzML")
-    print(result_df)
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    
+def test_simple_ms1():
+    query = "QUERY MS1DATA WHERE MS2PROD=226.18"
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    print(results_df)
 
 def main():
     test_simple_ms2()
+    test_simple_ms1()
 
 if __name__ == "__main__":
     main()
