@@ -51,7 +51,7 @@ NAVBAR = dbc.Navbar(
         ),
         dbc.Nav(
             [
-                dbc.NavItem(dbc.NavLink("GNPS - Template Dashboard - Version 0.1", href="#")),
+                dbc.NavItem(dbc.NavLink("GNPS - MSQL Dashboard - Version 0.1", href="#")),
             ],
         navbar=True)
     ],
@@ -67,16 +67,8 @@ DATASELECTION_CARD = [
             html.H5(children='GNPS Data Selection'),
             dbc.InputGroup(
                 [
-                    dbc.InputGroupAddon("Spectrum USI", addon_type="prepend"),
-                    dbc.Input(id='usi1', placeholder="Enter GNPS USI", value=""),
-                ],
-                className="mb-3",
-            ),
-            html.Hr(),
-            dbc.InputGroup(
-                [
-                    dbc.InputGroupAddon("Spectrum USI", addon_type="prepend"),
-                    dbc.Input(id='usi2', placeholder="Enter GNPS USI", value=""),
+                    dbc.InputGroupAddon("Query", addon_type="prepend"),
+                    dbc.Input(id='query', placeholder="Enter Query", value=""),
                 ],
                 className="mb-3",
             ),
@@ -159,101 +151,27 @@ def _get_url_param(param_dict, key, default):
     return param_dict.get(key, [default])[0]
 
 @app.callback([
-                Output('usi1', 'value'), 
-                Output('usi2', 'value'), 
+                Output('query', 'value'), 
               ],
               [Input('url', 'search')])
 def determine_task(search):
-    
     try:
         query_dict = urllib.parse.parse_qs(search[1:])
     except:
         query_dict = {}
 
-    usi1 = _get_url_param(query_dict, "usi1", 'mzspec:MSV000082796:KP_108_Positive:scan:1974')
-    usi2 = _get_url_param(query_dict, "usi2", 'mzspec:MSV000082796:KP_108_Positive:scan:1977')
+    query = _get_url_param(query_dict, "query", 'QUERY MS2DATA WHERE MS2PROD=226.18')
 
-    return [usi1, usi2]
-
-
-# @app.callback([
-#                 Output('plot_link', 'children')
-#               ],
-#               [
-#                   Input('gnps_tall_table_usi', 'value'),
-#                   Input('gnps_quant_table_usi', 'value'),
-#                   Input('gnps_metadata_table_usi', 'value'), 
-#                 Input('feature', 'value'),
-#                 Input("metadata_column", "value"),
-#                 Input("facet_column", "value"),
-#                 Input("animation_column", "value"),
-#                 Input("group_selection", "value"),
-#                 Input("color_selection", "value"),
-#                 Input("theme", "value"),
-#                 Input("plot_type", "value"),
-#                 Input("image_export_format", "value"),
-#                 Input("points_toggle", "value"),
-#                 Input("log_axis", "value"),
-#                 Input("lat_column", "value"),
-#                 Input("long_column", "value"),
-#                 Input("map_animation_column", "value"),
-#                 Input("map_scope", "value"),
-#               ])
-# def draw_link(      gnps_tall_table_usi, 
-#                     gnps_quant_table_usi, 
-#                     gnps_metadata_table_usi, 
-#                     feature_id, 
-#                     metadata_column, 
-#                     facet_column, 
-#                     animation_column, 
-#                     group_selection, 
-#                     color_selection, 
-#                     theme, 
-#                     plot_type, 
-#                     image_export_format, 
-#                     points_toggle, 
-#                     log_axis,
-#                     lat_column,
-#                     long_column,
-#                     map_animation_column,
-#                     map_scope):
-#     # Creating Reproducible URL for Plot
-#     url_params = {}
-#     url_params["gnps_tall_table_usi"] = gnps_tall_table_usi
-#     url_params["gnps_quant_table_usi"] = gnps_quant_table_usi
-#     url_params["gnps_metadata_table_usi"] = gnps_metadata_table_usi
-
-#     url_params["feature"] = feature_id
-#     url_params["metadata"] = metadata_column
-#     url_params["facet"] = facet_column
-#     url_params["groups"] = ";".join(group_selection)
-#     url_params["plot_type"] = plot_type
-#     url_params["color"] = color_selection
-#     url_params["points_toggle"] = points_toggle
-#     url_params["theme"] = theme
-#     url_params["animation_column"] = animation_column
-
-#     # Mapping Options
-#     url_params["lat_column"] = lat_column
-#     url_params["long_column"] = long_column
-#     url_params["map_animation_column"] = map_animation_column
-#     url_params["map_scope"] = map_scope
-    
-#     url_provenance = dbc.Button("Link to this Plot", block=True, color="primary", className="mr-1")
-#     provenance_link_object = dcc.Link(url_provenance, href="/?" + urllib.parse.urlencode(url_params) , target="_blank")
-
-#     return [provenance_link_object]
-
+    return [query]
 
 @app.callback([
                 Output('output', 'children')
               ],
               [
-                  Input('usi1', 'value'),
-                  Input('usi2', 'value'),
+                  Input('query', 'value'),
             ])
-def draw_output(usi1, usi2):
-    return [usi1+usi2]
+def draw_output(query):
+    return [query]
 
 # API
 @server.route("/api")
