@@ -6,11 +6,11 @@ from lark import Transformer
 #TODO: Update language definition to make it such that we can distinguish different functions
 
 class MassQLToJSON(Transformer):
-   def qualifiermzdelta(self, items):
-      return "qualifiermzdelta"
+   def qualifiermztolerance(self, items):
+      return "qualifiermztolerance"
    
-   def qualifierppmdelta(self, items):
-      return "qualifierppmdelta"
+   def qualifierppmtolerance(self, items):
+      return "qualifierppmtolerance"
 
    def ms2productcondition(self, items):
       return "ms2productcondition"

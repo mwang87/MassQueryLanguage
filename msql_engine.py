@@ -99,6 +99,7 @@ def process_query(input_query, input_filename):
       # Applying function
       if parsed_dict["querytype"]["function"] == "functionscansum":
 
+         # TODO: Fix how this scan is done so the result values for most things actually make sense
          if parsed_dict["querytype"]["datatype"] == "datams1data":
             ms1_df = ms1_df.groupby("scan").sum()
             return ms1_df

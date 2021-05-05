@@ -46,20 +46,22 @@ ms2precursorcondition: "MS2PREC"
 ms2neutrallosscondition: "MS2NL"
 ms1mzcondition: "MS1MZ"
 
-qualifierfields: qualifiermzdelta
-    | qualifierppmdelta
+qualifierfields: qualifiermztolerance
+    | qualifierppmtolerance
     | qualifierintensitypercent
     | qualifierintensityvalue
 
-qualifiermzdelta: "MZDELTA" 
-qualifierppmdelta: "PPMDELTA"
+qualifiermztolerance: "MZTOLERANCE" 
+qualifierppmtolerance: "PPMDELTA"
 qualifierintensitypercent: "INTENSITYPERCENT"
 qualifierintensityvalue: "INTENSITYVALUE"
 
-function: functionscansum
+function: functionscannum
+    | functionscansum
     | functionscanrangesum
     | functionscanmz
 
+functionscannum: "scannum"
 functionscansum: "scansum" 
 functionscanrangesum: "scanrangesum"
 functionscanmz: "scanmz"
