@@ -1,4 +1,5 @@
 statement: "QUERY" querytype "WHERE" fullcondition+
+     | "QUERY" querytype
 
 querytype: datams1data
      | datams2data
