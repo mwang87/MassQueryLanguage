@@ -74,7 +74,9 @@ def process_query(input_query, input_filename):
          mz_tol = 0.1
          mz_min = condition["value"] - mz_tol
          mz_max = condition["value"] + mz_tol
-         ms2_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max)]
+         ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max)]
+         filtered_scans = set(ms2_filtered_df["scan"])
+         ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]
 
          # Filtering the MS1 data now
          ms1_scans = set(ms2_df["ms1scan"])
@@ -90,13 +92,21 @@ def process_query(input_query, input_filename):
          mz_tol = 0.1
          mz_min = condition["value"] - mz_tol
          mz_max = condition["value"] + mz_tol
-         ms1_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
+         ms1_filtered_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
+         filtered_scans = set(ms1_filtered_df["scan"])
+         ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
 
       if condition["type"] == "ms2neutrallosscondition":
          mz_tol = 0.1
          nl_min = condition["value"] - mz_tol
          nl_max = condition["value"] + mz_tol
-         ms2_df = ms2_df[((ms2_df["precmz"] - ms2_df["mz"]) > nl_min) & ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max)]
+         ms2_filtered_df = ms2_df[((ms2_df["precmz"] - ms2_df["mz"]) > nl_min) & ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max)]
+         filtered_scans = set(ms2_filtered_df["scan"])
+         ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]
+
+         # Filtering the MS1 data now
+         ms1_scans = set(ms2_df["ms1scan"])
+         ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
 
    print(parsed_dict["querytype"])
 

@@ -1,0 +1,27 @@
+version: '3'
+services:
+  msql-dash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: template-dash
+    volumes:
+      - ./logs:/app/logs:rw
+    ports:
+    - "5343:5000"
+    networks:
+      - default
+      - nginx-net
+    restart: unless-stopped
+    command: /app/run_server.sh
+    environment:
+      VIRTUAL_HOST: msql.ucsd.edu
+      VIRTUAL_PORT: 5343
+      LETSENCRYPT_HOST: msql.ucsd.edu
+      LETSENCRYPT_EMAIL: miw023@ucsd.edu
+
+
+networks:
+  nginx-net:
+    external:
+      name: nginx-net
