@@ -72,6 +72,21 @@ DATASELECTION_CARD = [
                 ],
                 className="mb-3",
             ),
+            dbc.InputGroup(
+                [
+                    dbc.InputGroupAddon("Filename", addon_type="prepend"),
+                    dbc.Select(
+                        id="filename",
+                        options=[
+                            {"label": "GNPS00002_A3_p.mzML", "value": "GNPS00002_A3_p.mzML"},
+                            {"label": "bld_plt1_07_120_1.mzML", "value": "bld_plt1_07_120_1.mzML"},
+                            {"label": "QC_0.mzML", "value": "QC_0.mzML"}
+                        ],
+                        value="GNPS00002_A3_p.mzML"
+                    )
+                ],
+                className="mb-3",
+            ),
         ]
     )
 ]
@@ -160,7 +175,7 @@ def determine_task(search):
     except:
         query_dict = {}
 
-    query = _get_url_param(query_dict, "query", 'QUERY MS2DATA WHERE MS2PROD=226.18')
+    query = _get_url_param(query_dict, "query", 'QUERY scannum(MS2DATA) WHERE MS2PROD=226.18')
 
     return [query]
 
@@ -169,9 +184,22 @@ def determine_task(search):
               ],
               [
                   Input('query', 'value'),
+                  Input('filename', 'value')
             ])
-def draw_output(query):
-    return [query]
+def draw_output(query, filename):
+    import msql_parser
+    import msql_engine
+
+    results_df = msql_engine.process_query(query, os.path.join("test", filename))
+
+    table = dash_table.DataTable(
+        id='table',
+        columns=[{"name": i, "id": i} for i in results_df.columns],
+        data=results_df.to_dict('records'),
+        page_size=20
+    )
+
+    return [table]
 
 # API
 @server.route("/api")

@@ -1,1 +1,79 @@
-../msql.ebnf
+statement: "QUERY" querytype "WHERE" fullcondition+
+
+querytype: datams1data
+     | datams2data
+     | function"(" datams1data ")"
+     | function "(" datams2data ")"
+     | function"(" datams1data "," param "=" floating ")"
+
+datams1data: "MS1DATA"
+datams2data: "MS2DATA"
+
+fullcondition: fullcondition booleanconjunction fullcondition
+    | condition ":" qualifier
+    | condition
+
+condition: conditionfields "=" floating
+    | conditionfields "=" variable
+    | conditionfields "=" "(" statement ")"
+    | conditionfields "=" "(" statement ")"
+
+qualifier: qualifier ":" qualifier
+    | qualifierfields equal floating
+    | qualifierfields equal STRING
+    | qualifierfields greaterthan floating
+    | qualifierfields greaterthan STRING
+    | qualifierfields lessthan floating
+    | qualifierfields lessthan STRING
+    | booleanconjunction qualifierfields equal floating
+    | booleanconjunction qualifierfields equal STRING
+    | booleanconjunction qualifierfields equal floating
+    | booleanconjunction qualifierfields equal STRING
+    | booleanconjunction qualifierfields lessthan floating
+    | booleanconjunction qualifierfields lessthan STRING
+
+equal: "="
+lessthan: "<"
+greaterthan: ">"
+
+conditionfields: ms2productcondition
+    | ms2precursorcondition
+    | ms2neutrallosscondition
+    | ms1mzcondition
+
+ms2productcondition: "MS2PROD"
+ms2precursorcondition: "MS2PREC"
+ms2neutrallosscondition: "MS2NL"
+ms1mzcondition: "MS1MZ"
+
+qualifierfields: qualifiermztolerance
+    | qualifierppmtolerance
+    | qualifierintensitypercent
+    | qualifierintensityvalue
+
+qualifiermztolerance: "MZTOLERANCE" 
+qualifierppmtolerance: "PPMDELTA"
+qualifierintensitypercent: "INTENSITYPERCENT"
+qualifierintensityvalue: "INTENSITYVALUE"
+
+function: functionscannum
+    | functionscansum
+    | functionscanrangesum
+    | functionscanmz
+
+functionscannum: "scannum"
+functionscansum: "scansum" 
+functionscanrangesum: "scanrangesum"
+functionscanmz: "scanmz"
+
+booleanconjunction: "AND"
+
+param: "TOLERANCE"
+floating: /[-+]?([0-9]*\.[0-9]+|[0-9]+)/
+variable: /[A-Z]+/
+// variable: /[A-Z]+[-+]([0-9]*\.[0-9]|[0-9]*)|([0-9]+\.[0-9])|([0-9]+)/
+
+%import common.ESCAPED_STRING   -> STRING
+%import common.SIGNED_NUMBER    -> NUMBER
+%import common.WS
+%ignore WS

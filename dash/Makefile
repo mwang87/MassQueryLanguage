@@ -16,4 +16,4 @@ server-compose:
 	docker-compose up -d
 
 attach:
-	docker exec -i -t gnpslcms-dash /bin/bash
+	docker exec -i -t msql-dash /bin/bash
