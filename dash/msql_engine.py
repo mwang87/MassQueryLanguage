@@ -84,9 +84,6 @@ def _load_data(input_filename, cache=False):
       ms1_filename = input_filename + "_ms1.feather"
       ms2_filename = input_filename + "_ms2.feather"
 
-      import sys
-      print(ms1_filename, os.path.exists(ms1_filename), file=sys.stderr, flush=True)
-
       if not os.path.exists(ms1_filename):
          ms1_df.to_feather(ms1_filename)
          ms2_df.to_feather(ms2_filename)
