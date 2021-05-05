@@ -40,3 +40,4 @@ matplotlib
 dash_daq
 Flask-Caching
 lark-parser
+pyarrow

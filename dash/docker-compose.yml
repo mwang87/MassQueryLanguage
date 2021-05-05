@@ -7,7 +7,7 @@ services:
     container_name: msql-dash
     volumes:
       - ./logs:/app/logs:rw
-      - ../test:/app/test:ro
+      - ../test:/app/test:rw
     ports:
     - "5343:5000"
     networks:

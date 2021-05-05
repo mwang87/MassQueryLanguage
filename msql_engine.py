@@ -1,14 +1,22 @@
 import msql_parser
 
+import os
 import pandas as pd
 import pymzml
 import numpy as np
 
 
-def process_query(input_query, input_filename):
-   parsed_dict = msql_parser.parse_msql(input_query)
+def _load_data(input_filename, cache=False):
+   if cache:
+      ms1_filename = input_filename + "_ms1.feather"
+      ms2_filename = input_filename + "_ms2.feather"
 
-   # Let's apply this to real data
+      if os.path.exists(ms1_filename):
+         ms1_df = pd.read_feather(ms1_filename)
+         ms2_df = pd.read_feather(ms2_filename)
+
+         return ms1_df, ms2_df
+
    MS_precisions = {
       1: 5e-6,
       2: 20e-6,
@@ -25,7 +33,10 @@ def process_query(input_query, input_filename):
    previous_ms1_scan = 0
 
    for spec in run:
-      # Filtering peaks by mz
+      # Getting RT
+      rt = spec.scan_time_in_minutes()
+
+      # Getting peaks
       peaks = spec.peaks("raw")
 
       # Filtering out zero rows
@@ -45,6 +56,7 @@ def process_query(input_query, input_filename):
             peak_dict["i"] = i_list[i]
             peak_dict["mz"] = mz_list[i]
             peak_dict["scan"] = spec.ID
+            peak_dict["rt"] = rt
 
             ms1mz_list.append(peak_dict)
 
@@ -57,6 +69,7 @@ def process_query(input_query, input_filename):
             peak_dict["i"] = i_list[i]
             peak_dict["mz"] = mz_list[i]
             peak_dict["scan"] = spec.ID
+            peak_dict["rt"] = rt
             peak_dict["precmz"] = msn_mz
             peak_dict["ms1scan"] = previous_ms1_scan
 
@@ -65,6 +78,26 @@ def process_query(input_query, input_filename):
    # Turning into pandas data frames
    ms1_df = pd.DataFrame(ms1mz_list)
    ms2_df = pd.DataFrame(ms2mz_list)
+
+   # Saving Cache
+   if cache:
+      ms1_filename = input_filename + "_ms1.feather"
+      ms2_filename = input_filename + "_ms2.feather"
+
+      import sys
+      print(ms1_filename, os.path.exists(ms1_filename), file=sys.stderr, flush=True)
+
+      if not os.path.exists(ms1_filename):
+         ms1_df.to_feather(ms1_filename)
+         ms2_df.to_feather(ms2_filename)
+
+   return ms1_df, ms2_df
+
+def process_query(input_query, input_filename):
+   parsed_dict = msql_parser.parse_msql(input_query)
+
+   # Let's apply this to real data
+   ms1_df, ms2_df = _load_data(input_filename, cache=True)
 
    # Applying the filtering conditions
    # TODO: need to make sure chaining within the same MS2 level works appropriately
@@ -150,10 +183,10 @@ def process_query(input_query, input_filename):
 
          if parsed_dict["querytype"]["datatype"] == "datams1data":
             result_df = ms1_df.groupby('scan').first().reset_index()
-            result_df = result_df[["scan"]]
+            result_df = result_df[["scan", "rt"]]
          if parsed_dict["querytype"]["datatype"] == "datams2data":
             result_df = ms2_df.groupby('scan').first().reset_index()
-            result_df = result_df[["scan", "precmz", "ms1scan"]]
+            result_df = result_df[["scan", "precmz", "ms1scan", "rt"]]
          
          return result_df
          
