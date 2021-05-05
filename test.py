@@ -4,7 +4,11 @@ import msql_engine
 def test_simple_ms2():
     query = "QUERY MS2DATA WHERE MS2PROD=226.18"
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
-    
+
+def test_simple_ms2_qualifier():
+    query = "QUERY MS2DATA WHERE MS2PROD=226.18:PPMDELTA=5"
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+
 def test_simple_ms1():
     query = "QUERY MS1DATA WHERE MS2PROD=226.18"
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
@@ -15,8 +19,15 @@ def test_qc_ms1_ms2peak():
     results_df = msql_engine.process_query(query, "test/QC_0.mzML")
     print(set(results_df["scan"]))
 
+def test_diphen():
+    #query = "QUERY scannum(MS2DATA) WHERE MS2PROD=167.0857:PPMDELTA=5"
+    query = "QUERY scannum(MS2DATA) WHERE MS2PROD=167.0857"
+    print(msql_parser.parse_msql(query))
+    results_df = msql_engine.process_query(query, "test/bld_plt1_07_120_1.mzML")
+    print(results_df)
+
 def main():
-    test_qc_ms1_ms2peak()
+    test_diphen()
 
 if __name__ == "__main__":
     main()

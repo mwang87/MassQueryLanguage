@@ -68,6 +68,7 @@ def process_query(input_query, input_filename):
 
    # Applying the filtering conditions
    for condition in parsed_dict["conditions"]:
+      print(condition)
       if condition["type"] == "ms2productcondition":
          mz_tol = 0.1
          mz_min = condition["value"] - mz_tol
@@ -116,6 +117,17 @@ def process_query(input_query, input_filename):
          result_df = pd.DataFrame()
          result_df["precmz"] = ms2_df["precmz"]
          return result_df
+
+      if parsed_dict["querytype"]["function"] == "functionscannum":
+         result_df = pd.DataFrame()
+
+         if parsed_dict["querytype"]["datatype"] == "datams1data":
+            result_df["scan"] = list(set(ms1_df["scan"]))
+         if parsed_dict["querytype"]["datatype"] == "datams2data":
+            result_df["scan"] = list(set(ms2_df["scan"]))
+         
+         return result_df
+         
 
 
       
