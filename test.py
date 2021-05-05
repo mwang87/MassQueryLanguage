@@ -24,7 +24,10 @@ def test_diphen():
     query = "QUERY scannum(MS2DATA) WHERE MS2PROD=167.0857"
     print(msql_parser.parse_msql(query))
     results_df = msql_engine.process_query(query, "test/bld_plt1_07_120_1.mzML")
-    print(results_df)
+    assert(1235 in list(results_df["scan"]))
+    assert(1316 in list(results_df["scan"]))
+    assert(1293 in list(results_df["scan"]))
+    
 
 def main():
     test_diphen()
