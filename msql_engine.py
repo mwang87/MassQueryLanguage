@@ -74,6 +74,10 @@ def process_query(input_query, input_filename):
          mz_max = condition["value"] + mz_tol
          ms2_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max)]
 
+         # Filtering the MS1 data now
+         ms1_scans = set(ms2_df["ms1scan"])
+         ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
+
       if condition["type"] == "ms2precursorcondition":
          mz_tol = 0.1
          mz_min = condition["value"] - mz_tol

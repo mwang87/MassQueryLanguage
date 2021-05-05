@@ -10,9 +10,13 @@ def test_simple_ms1():
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
 
+def test_qc_ms1_ms2peak():
+    query = "QUERY MS1DATA WHERE MS2PROD=156.01"
+    results_df = msql_engine.process_query(query, "test/QC_0.mzML")
+    print(set(results_df["scan"]))
+
 def main():
-    test_simple_ms2()
-    test_simple_ms1()
+    test_qc_ms1_ms2peak()
 
 if __name__ == "__main__":
     main()
