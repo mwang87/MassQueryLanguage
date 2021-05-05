@@ -67,6 +67,7 @@ def process_query(input_query, input_filename):
    ms2_df = pd.DataFrame(ms2mz_list)
 
    # Applying the filtering conditions
+   # TODO: need to make sure chaining within the same MS2 level works appropriately
    for condition in parsed_dict["conditions"]:
       print(condition)
       if condition["type"] == "ms2productcondition":
@@ -90,6 +91,12 @@ def process_query(input_query, input_filename):
          mz_min = condition["value"] - mz_tol
          mz_max = condition["value"] + mz_tol
          ms1_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
+
+      if condition["type"] == "ms2neutrallosscondition":
+         mz_tol = 0.1
+         nl_min = condition["value"] - mz_tol
+         nl_max = condition["value"] + mz_tol
+         ms2_df = ms2_df[((ms2_df["precmz"] - ms2_df["mz"]) > nl_min) & ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max)]
 
    print(parsed_dict["querytype"])
 

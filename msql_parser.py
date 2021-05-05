@@ -25,10 +25,15 @@ class MassQLToJSON(Transformer):
       return "ms1mzcondition"
 
    def qualifier(self, items):
+      tolerance_type = items[0]
+
       qualifier_dict = {}
       qualifier_dict["type"] = "qualifier"
       qualifier_dict["field"] = items[0]
-      qualifier_dict["unit"] = "mz" #TODO Fix
+      if tolerance_type == "qualifierppmtolerance":
+         qualifier_dict["unit"] = "ppm"
+      else:
+         qualifier_dict["unit"] = "mz"
       qualifier_dict["value"] = items[-1]
       return qualifier_dict
 
@@ -49,6 +54,9 @@ class MassQLToJSON(Transformer):
           [type]: [description]
       """
       if len(items) == 1:
+         return items
+      
+      if len(items) == 2:
          return items
 
       full_items_list = []

@@ -27,10 +27,27 @@ def test_diphen():
     assert(1235 in list(results_df["scan"]))
     assert(1316 in list(results_df["scan"]))
     assert(1293 in list(results_df["scan"]))
-    
+
+def test_diphen_nl():
+    query = "QUERY scannum(MS2DATA) WHERE MS2NL=176.0321"
+    print(msql_parser.parse_msql(query))
+    results_df = msql_engine.process_query(query, "test/bld_plt1_07_120_1.mzML")
+    assert(1237 in list(results_df["scan"]))
+    print(set(results_df["scan"]))
+
+def test_diphen_combo():
+    # TODO: this is a bug
+    query = "QUERY scannum(MS2DATA) WHERE MS2NL=176.0321 AND MS2PROD=85.02915"
+    print(msql_parser.parse_msql(query))
+    results_df = msql_engine.process_query(query, "test/bld_plt1_07_120_1.mzML")
+    assert(1237 in list(results_df["scan"]))
+    print(set(results_df["scan"]))
 
 def main():
-    test_diphen()
+    #test_simple_ms2_qualifier()
+    #test_diphen()
+    #test_diphen_nl()
+    test_diphen_combo()
 
 if __name__ == "__main__":
     main()
