@@ -14,7 +14,7 @@ fullcondition: fullcondition booleanconjunction fullcondition
     | condition
 
 condition: conditionfields "=" floating
-    | conditionfields "=" STRING
+    | conditionfields "=" variable
     | conditionfields "=" "(" statement ")"
     | conditionfields "=" "(" statement ")"
 
@@ -70,6 +70,8 @@ booleanconjunction: "AND"
 
 param: "TOLERANCE"
 floating: /[-+]?([0-9]*\.[0-9]+|[0-9]+)/
+variable: /[A-Z]+/
+// variable: /[A-Z]+[-+]([0-9]*\.[0-9]|[0-9]*)|([0-9]+\.[0-9])|([0-9]+)/
 
 %import common.ESCAPED_STRING   -> STRING
 %import common.SIGNED_NUMBER    -> NUMBER

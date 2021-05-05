@@ -83,7 +83,10 @@ class MassQLToJSON(Transformer):
 
    def qualifierfields(self, items):
       return items[0]
-   
+
+   def variable(self, s):
+      return s[0].value
+
    def string(self, s):
       (s,) = s
       return s[1:-1]
