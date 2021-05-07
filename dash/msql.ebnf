@@ -26,12 +26,6 @@ qualifier: qualifier ":" qualifier
     | qualifierfields greaterthan STRING
     | qualifierfields lessthan floating
     | qualifierfields lessthan STRING
-    | booleanconjunction qualifierfields equal floating
-    | booleanconjunction qualifierfields equal STRING
-    | booleanconjunction qualifierfields equal floating
-    | booleanconjunction qualifierfields equal STRING
-    | booleanconjunction qualifierfields lessthan floating
-    | booleanconjunction qualifierfields lessthan STRING
 
 equal: "="
 lessthan: "<"
@@ -52,8 +46,8 @@ qualifierfields: qualifiermztolerance
     | qualifierintensitypercent
     | qualifierintensityvalue
 
-qualifiermztolerance: "MZTOLERANCE" 
-qualifierppmtolerance: "PPMDELTA"
+qualifiermztolerance: "TOLERANCEMZ"
+qualifierppmtolerance: "TOLERANCEPPM"
 qualifierintensitypercent: "INTENSITYPERCENT"
 qualifierintensityvalue: "INTENSITYVALUE"
 

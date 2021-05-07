@@ -12,6 +12,12 @@ class MassQLToJSON(Transformer):
    def qualifierppmtolerance(self, items):
       return "qualifierppmtolerance"
 
+   def qualifierintensityvalue(self, items):
+      return "qualifierintensityvalue"
+
+   def qualifierintensitypercent(self, items):
+      return "qualifierintensitypercent"
+
    def ms2productcondition(self, items):
       return "ms2productcondition"
 
@@ -25,16 +31,31 @@ class MassQLToJSON(Transformer):
       return "ms1mzcondition"
 
    def qualifier(self, items):
-      tolerance_type = items[0]
 
-      qualifier_dict = {}
-      qualifier_dict["type"] = "qualifier"
-      qualifier_dict["field"] = items[0]
-      if tolerance_type == "qualifierppmtolerance":
-         qualifier_dict["unit"] = "ppm"
-      else:
-         qualifier_dict["unit"] = "mz"
-      qualifier_dict["value"] = items[-1]
+      # We are at a qualifier leaf
+      if len(items) == 3:
+         qualifier_type = items[0]
+
+         qualifier_dict = {}
+         qualifier_dict["type"] = "qualifier"
+         qualifier_dict[qualifier_type] = {}
+         qualifier_dict[qualifier_type]["name"] = qualifier_type
+
+         if qualifier_type == "qualifierppmtolerance":
+            qualifier_dict[qualifier_type]["unit"] = "ppm"
+         if qualifier_type == "qualifiermztolerance":
+            qualifier_dict[qualifier_type]["unit"] = "mz"
+
+         qualifier_dict[qualifier_type]["value"] = items[-1]
+
+      # We are at a merge node for the qualifier
+      if len(items) == 2:
+         qualifier_dict = {}
+         
+         for qualifier in items:
+            for key in qualifier:
+               qualifier_dict[key] = qualifier[key]
+
       return qualifier_dict
 
    def condition(self, items):
@@ -53,20 +74,29 @@ class MassQLToJSON(Transformer):
       Returns:
           [type]: [description]
       """
+
+      # Only condition, no qualifiers
       if len(items) == 1:
          return items
       
+      # Has potentially a qualifier
       if len(items) == 2:
-         return items
+         if items[1]["type"] == "qualifier":
+            condition_dict = items[0]
+            condition_dict["qualifiers"] = items[1]
 
-      full_items_list = []
-      for item in items:
-         try:
-            full_items_list += item
-         except TypeError:
-            pass
+            return [condition_dict]
+         else:
+            raise Exception
 
-      return full_items_list
+      # Merging two conditions
+      if len(items) == 3:
+         merged_list = []
+         merged_list.append(items[0][0])
+         merged_list.append(items[-1][0])
+
+         return merged_list
+
    
    def querytype(self, items):
       query_dict = {}
