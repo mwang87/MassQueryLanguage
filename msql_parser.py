@@ -81,14 +81,16 @@ class MassQLToJSON(Transformer):
          if items[1]["type"] == "qualifier":
             condition_dict = items[0]
             condition_dict["qualifiers"] = items[1]
-         
-         return condition_dict
+
+            return [condition_dict]
+         else:
+            raise Exception
 
       # Merging two conditions
       if len(items) == 3:
          merged_list = []
-         merged_list.append(items[0])
-         merged_list.append(items[-1])
+         merged_list.append(items[0][0])
+         merged_list.append(items[-1][0])
 
          return merged_list
 

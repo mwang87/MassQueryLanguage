@@ -69,8 +69,8 @@ def main():
     #test_simple_ms2_twoqualifier()
     #test_simple_ms2_twoconditions()
     #test_diphen()
-    test_diphen_nl()
-    #test_diphen_combo()
+    #test_diphen_nl()
+    test_diphen_combo()
     #test_simple_info_ms2()
 
 if __name__ == "__main__":
