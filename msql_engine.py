@@ -95,14 +95,17 @@ def _get_tolerance(qualifier, mz):
       return 0.1
    
    if "qualifierppmtolerance" in qualifier:
-      return 
-
-   print("QUALIFIERS", qualifiers)
-   return 0.1 
+      ppm = qualifier["qualifierppmtolerance"]["value"]
+      mz_tol = abs(ppm * mz / 1000000)
+      return mz_tol
+   
+   if "qualifiermztolerance" in qualifier:
+      return qualifier["qualifiermztolerance"]["value"]
 
 def process_query(input_query, input_filename):
    parsed_dict = msql_parser.parse_msql(input_query)
 
+   print(parsed_dict)
    import json
    print("parsed_dict", json.dumps(parsed_dict, indent=4))
 

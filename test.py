@@ -13,17 +13,17 @@ def test_simple_ms2():
 def test_simple_ms2_qualifier():
     query = "QUERY MS2DATA WHERE MS2PROD=226.18:TOLERANCEPPM=5"
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
-    #print(results_df)
+    print(results_df)
 
 def test_simple_ms2_twoqualifier():
     query = "QUERY MS2DATA WHERE MS2PROD=226.18:TOLERANCEPPM=5:INTENSITYVALUE=1"
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
-    #print(results_df)
+    print(results_df)
 
 def test_simple_ms2_twoconditions():
     query = "QUERY MS2DATA WHERE MS2PROD=226.18:TOLERANCEPPM=5:INTENSITYVALUE=1 AND MS2PROD=226.20:TOLERANCEPPM=5:INTENSITYVALUE=1"
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
-    #print(results_df)
+    print(results_df)
 
 
 def test_simple_info_ms2():
@@ -71,16 +71,21 @@ def test_parse():
         test_query = line.rstrip()
         msql_parser.parse_msql(test_query)
 
+def test_query():
+    for line in open("test_queries.txt"):
+        test_query = line.rstrip()
+        msql_engine.process_query(test_query, "test/bld_plt1_07_120_1.mzML")
 
 def main():
     #test_noquery()
     #test_simple_ms2_twoqualifier()
     #test_simple_ms2_twoconditions()
-    #test_diphen()
+    test_diphen()
     #test_diphen_nl()
     #test_diphen_combo()
     #test_simple_info_ms2()
-    test_parse()
+    #test_parse()
+    #test_query()
 
 if __name__ == "__main__":
     main()

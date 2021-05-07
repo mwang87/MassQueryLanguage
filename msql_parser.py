@@ -15,6 +15,9 @@ class MassQLToJSON(Transformer):
    def qualifierintensityvalue(self, items):
       return "qualifierintensityvalue"
 
+   def qualifierintensitypercent(self, items):
+      return "qualifierintensitypercent"
+
    def ms2productcondition(self, items):
       return "ms2productcondition"
 
