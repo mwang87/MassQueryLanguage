@@ -11,11 +11,23 @@ def test_simple_ms2():
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
 
 def test_simple_ms2_qualifier():
-    query = "QUERY MS2DATA WHERE MS2PROD=226.18:PPMDELTA=5"
+    query = "QUERY MS2DATA WHERE MS2PROD=226.18:TOLERANCEPPM=5"
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    #print(results_df)
+
+def test_simple_ms2_twoqualifier():
+    query = "QUERY MS2DATA WHERE MS2PROD=226.18:TOLERANCEPPM=5:INTENSITYVALUE=1"
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    #print(results_df)
+
+def test_simple_ms2_twoconditions():
+    query = "QUERY MS2DATA WHERE MS2PROD=226.18:TOLERANCEPPM=5:INTENSITYVALUE=1 AND MS2PROD=226.20:TOLERANCEPPM=5:INTENSITYVALUE=1"
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    #print(results_df)
+
 
 def test_simple_info_ms2():
-    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=226.18:PPMDELTA=5"
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=226.18:TOLERANCEPPM=5"
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
 
@@ -53,10 +65,11 @@ def test_diphen_combo():
     print(set(results_df["scan"]))
 
 def main():
-    test_noquery()
-    #test_simple_ms2_qualifier()
+    #test_noquery()
+    #test_simple_ms2_twoqualifier()
+    #test_simple_ms2_twoconditions()
     #test_diphen()
-    #test_diphen_nl()
+    test_diphen_nl()
     #test_diphen_combo()
     #test_simple_info_ms2()
 

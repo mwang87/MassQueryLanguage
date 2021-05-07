@@ -90,8 +90,14 @@ def _load_data(input_filename, cache=False):
 
    return ms1_df, ms2_df
 
+def _get_tolerance(qualifiers):
+   return 0.1 
+
 def process_query(input_query, input_filename):
    parsed_dict = msql_parser.parse_msql(input_query)
+
+   import json
+   print("parsed_dict", json.dumps(parsed_dict, indent=4))
 
    # Let's apply this to real data
    ms1_df, ms2_df = _load_data(input_filename, cache=True)
@@ -99,9 +105,9 @@ def process_query(input_query, input_filename):
    # Applying the filtering conditions
    # TODO: need to make sure chaining within the same MS2 level works appropriately
    for condition in parsed_dict["conditions"]:
-      print(condition)
+      print("ZZZ", condition)
       if condition["type"] == "ms2productcondition":
-         mz_tol = 0.1
+         mz_tol = _get_tolerance([])
          mz_min = condition["value"] - mz_tol
          mz_max = condition["value"] + mz_tol
          ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max)]
