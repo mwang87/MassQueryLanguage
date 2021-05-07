@@ -130,8 +130,23 @@ EXAMPLES_DASHBOARD = [
     dbc.CardHeader(html.H5("Examples")),
     dbc.CardBody(
         [
-            html.A('Basic', 
-                    href=""),
+            html.A('Get all MS2 scans in file', 
+                    href="/?query=QUERY scaninfo(MS2DATA)"),
+            html.Br(),
+            html.A('Get XIC of MS1 in file', 
+                    href="/?query=QUERY scansum(MS1DATA) WHERE MS1MZ=100:TOLERANCEMZ=0.1"),
+            html.Br(),
+            html.A('Get MS2 peaks where a product ion is present', 
+                    href="/?query=QUERY MS2DATA WHERE MS2PROD=226.18"),
+            html.Br(),
+            html.A('Get MS2 info where a product ion is present', 
+                    href="/?query=QUERY scaninfo(MS2DATA) WHERE MS2PROD=167.0857:TOLERANCEPPM=5"),
+            html.Br(),
+            html.A('Get MS2 info where a product ion and neutral loss is present', 
+                    href="/?query=QUERY scaninfo(MS2DATA) WHERE MS2NL=176.0321 AND MS2PROD=85.02915"),
+            html.Br(),
+            html.A('Get MS1 peaks where a MS2 with product ion is present', 
+                    href="/?query=QUERY MS1DATA WHERE MS2PROD=226.18"),
         ]
     )
 ]
@@ -168,7 +183,9 @@ def _get_url_param(param_dict, key, default):
 @app.callback([
                 Output('query', 'value'), 
               ],
-              [Input('url', 'search')])
+              [
+                  Input('url', 'search')
+              ])
 def determine_task(search):
     try:
         query_dict = urllib.parse.parse_qs(search[1:])
