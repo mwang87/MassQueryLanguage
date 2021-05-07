@@ -90,7 +90,14 @@ def _load_data(input_filename, cache=False):
 
    return ms1_df, ms2_df
 
-def _get_tolerance(qualifiers):
+def _get_tolerance(qualifier, mz):
+   if qualifier is None:
+      return 0.1
+   
+   if "qualifierppmtolerance" in qualifier:
+      return 
+
+   print("QUALIFIERS", qualifiers)
    return 0.1 
 
 def process_query(input_query, input_filename):
@@ -107,9 +114,10 @@ def process_query(input_query, input_filename):
    for condition in parsed_dict["conditions"]:
       print("ZZZ", condition)
       if condition["type"] == "ms2productcondition":
-         mz_tol = _get_tolerance([])
-         mz_min = condition["value"] - mz_tol
-         mz_max = condition["value"] + mz_tol
+         mz = condition["value"]
+         mz_tol = _get_tolerance(condition.get("qualifiers", None), mz)
+         mz_min = mz - mz_tol
+         mz_max = mz + mz_tol
          ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max)]
          filtered_scans = set(ms2_filtered_df["scan"])
          ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]

@@ -46,7 +46,7 @@ qualifierfields: qualifiermztolerance
     | qualifierintensitypercent
     | qualifierintensityvalue
 
-qualifiermztolerance: "TOLERANCEPM"
+qualifiermztolerance: "TOLERANCEMZ"
 qualifierppmtolerance: "TOLERANCEPPM"
 qualifierintensitypercent: "INTENSITYPERCENT"
 qualifierintensityvalue: "INTENSITYVALUE"

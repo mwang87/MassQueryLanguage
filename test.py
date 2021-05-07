@@ -42,12 +42,14 @@ def test_qc_ms1_ms2peak():
     print(set(results_df["scan"]))
 
 def test_diphen():
-    query = "QUERY scannum(MS2DATA) WHERE MS2PROD=167.0857:PPMDELTA=5"
+    query = "QUERY scannum(MS2DATA) WHERE MS2PROD=167.0857:TOLERANCEPPM=5"
     print(msql_parser.parse_msql(query))
     results_df = msql_engine.process_query(query, "test/bld_plt1_07_120_1.mzML")
     assert(1235 in list(results_df["scan"]))
     assert(1316 in list(results_df["scan"]))
     assert(1293 in list(results_df["scan"]))
+
+    print(results_df)
 
 def test_diphen_nl():
     query = "QUERY scannum(MS2DATA) WHERE MS2NL=176.0321"
@@ -64,14 +66,21 @@ def test_diphen_combo():
     assert(1237 in list(results_df["scan"]))
     print(set(results_df["scan"]))
 
+def test_parse():        
+    for line in open("test_queries.txt"):
+        test_query = line.rstrip()
+        msql_parser.parse_msql(test_query)
+
+
 def main():
     #test_noquery()
     #test_simple_ms2_twoqualifier()
     #test_simple_ms2_twoconditions()
     #test_diphen()
     #test_diphen_nl()
-    test_diphen_combo()
+    #test_diphen_combo()
     #test_simple_info_ms2()
+    test_parse()
 
 if __name__ == "__main__":
     main()
