@@ -94,16 +94,6 @@ class MassQLToJSON(Transformer):
 
          return merged_list
 
-
-      # Merging multiple conditions
-      # full_items_list = []
-      # for item in items:
-      #    try:
-      #       full_items_list += item
-      #    except TypeError:
-      #       pass
-
-      # return full_items_list
    
    def querytype(self, items):
       query_dict = {}
