@@ -17,6 +17,7 @@ import pandas as pd
 import requests
 import uuid
 import werkzeug
+import glob
 
 import pymzml
 import numpy as np
@@ -60,6 +61,10 @@ NAVBAR = dbc.Navbar(
     sticky="top",
 )
 
+file_list = glob.glob("./test/*.mzML")
+file_list = [os.path.basename(filename) for filename in file_list]
+file_list = [{"label": filename, "value": filename} for filename in file_list]
+
 DATASELECTION_CARD = [
     dbc.CardHeader(html.H5("Data Selection")),
     dbc.CardBody(
@@ -77,15 +82,17 @@ DATASELECTION_CARD = [
                     dbc.InputGroupAddon("Filename", addon_type="prepend"),
                     dbc.Select(
                         id="filename",
-                        options=[
-                            {"label": "GNPS00002_A3_p.mzML", "value": "GNPS00002_A3_p.mzML"},
-                            {"label": "bld_plt1_07_120_1.mzML", "value": "bld_plt1_07_120_1.mzML"},
-                            {"label": "QC_0.mzML", "value": "QC_0.mzML"}
-                        ],
+                        options=file_list,
                         value="GNPS00002_A3_p.mzML"
                     )
                 ],
                 className="mb-3",
+            ),
+            html.Hr(),
+            dcc.Loading(
+                id="output_parse",
+                children=[html.Div([html.Div(id="loading-output-21")])],
+                type="default",
             ),
         ]
     )
@@ -197,7 +204,8 @@ def determine_task(search):
     return [query]
 
 @app.callback([
-                Output('output', 'children')
+                Output('output', 'children'),
+                Output('output_parse', 'children'),
               ],
               [
                   Input('query', 'value'),
@@ -207,6 +215,7 @@ def draw_output(query, filename):
     import msql_parser
     import msql_engine
 
+    parse_results = msql_parser.parse_msql(query)
     results_df = msql_engine.process_query(query, os.path.join("test", filename))
 
     table = dash_table.DataTable(
@@ -216,7 +225,14 @@ def draw_output(query, filename):
         page_size=20
     )
 
-    return [table]
+    parse_markdown = dcc.Markdown(
+        '''
+```json
+{}
+```
+'''.format(json.dumps(parse_results, indent=4)))
+
+    return [table, parse_markdown]
 
 # API
 @server.route("/api")
