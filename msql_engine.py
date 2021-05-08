@@ -109,8 +109,22 @@ def _get_tolerance(qualifier, mz):
    if "qualifiermztolerance" in qualifier:
       return qualifier["qualifiermztolerance"]["value"]
 
+
+
 def process_query(input_query, input_filename):
    parsed_dict = msql_parser.parse_msql(input_query)
+
+   return evaluate_query(parsed_dict, input_filename)
+
+def evaluate_query(parsed_dict, input_filename):
+   for condition in parsed_dict["conditions"]:
+      try:
+         if "querytype" in condition["value"]:
+            print("SUBQUERY")
+            subquery_val = evaluate_query(condition["value"], input_filename)
+            print(subquery_val)
+      except:
+         pass
 
    print(parsed_dict)
    import json
@@ -194,7 +208,7 @@ def process_query(input_query, input_filename):
 
       if parsed_dict["querytype"]["function"] == "functionscanmz":
          result_df = pd.DataFrame()
-         result_df["precmz"] = ms2_df["precmz"]
+         result_df["precmz"] = list(set(ms2_df["precmz"]))
          return result_df
 
       if parsed_dict["querytype"]["function"] == "functionscannum":

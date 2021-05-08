@@ -1,5 +1,6 @@
 import msql_parser
 import msql_engine
+import json
 
 def test_noquery():
     query = "QUERY scaninfo(MS2DATA)"
@@ -70,6 +71,17 @@ def test_diphen_combo():
     assert(1237 in list(results_df["scan"]))
     print(set(results_df["scan"]))
 
+def test_variable():
+    # This finds the sum of the MS1 of the MS2 spectrum with 
+    query = "QUERY scansum(MS1DATA) WHERE MS1MZ=MS2PREC AND MS2PROD=160.5"
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    print(results_df)
+
+def test_subquery():
+    query = "QUERY scanrangesum(MS1DATA, TOLERANCE=0.1) WHERE MS1MZ=(QUERY scanmz(MS2DATA) WHERE MS2NL=176.0321 AND MS2PROD=85.02915)"
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    print(json.dumps(msql_parser.parse_msql(query), indent=4))
+
 def test_parse():        
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
@@ -90,7 +102,8 @@ def main():
     #test_simple_info_ms2()
     #test_parse()
     #test_query()
-    test_xic()
+    #test_xic()
+    test_subquery()
 
 if __name__ == "__main__":
     main()
