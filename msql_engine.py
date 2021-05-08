@@ -123,6 +123,7 @@ def evaluate_query(parsed_dict, input_filename):
             print("SUBQUERY")
             subquery_val = evaluate_query(condition["value"], input_filename)
             print(subquery_val)
+            # TODO: we will need to rewrite this, also probably for multiple m/z returns in the condition, we need to flatten into a list
       except:
          pass
 
