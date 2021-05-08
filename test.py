@@ -25,6 +25,10 @@ def test_simple_ms2_twoconditions():
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
 
+def test_xic():
+    query = "QUERY scansum(MS1DATA) WHERE MS1MZ=100:TOLERANCEMZ=0.1"
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    print(results_df)
 
 def test_simple_info_ms2():
     query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=226.18:TOLERANCEPPM=5"
@@ -80,12 +84,13 @@ def main():
     #test_noquery()
     #test_simple_ms2_twoqualifier()
     #test_simple_ms2_twoconditions()
-    test_diphen()
+    #test_diphen()
     #test_diphen_nl()
     #test_diphen_combo()
     #test_simple_info_ms2()
     #test_parse()
     #test_query()
+    test_xic()
 
 if __name__ == "__main__":
     main()

@@ -4,7 +4,14 @@ import os
 import pandas as pd
 import pymzml
 import numpy as np
+import logging
 
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+
+def DEBUG_MSG(msg):
+   import sys
+   print(msg, file=sys.stderr, flush=True)
 
 def _load_data(input_filename, cache=False):
    if cache:
@@ -170,10 +177,18 @@ def process_query(input_query, input_filename):
 
          # TODO: Fix how this scan is done so the result values for most things actually make sense
          if parsed_dict["querytype"]["datatype"] == "datams1data":
-            ms1_df = ms1_df.groupby("scan").sum()
+            ms1sum_df = ms1_df.groupby("scan").sum().reset_index()
+            
+            ms1_df = ms1_df.groupby("scan").first().reset_index()
+            ms1_df["i"] = ms1sum_df["i"]
+
             return ms1_df
          if parsed_dict["querytype"]["datatype"] == "datams2data":
             ms2_df = ms2_df.groupby("scan").sum()
+
+            ms2sum_df = ms2_df.groupby("scan").sum()
+            ms2_df = ms2_df.groupby("scan").first().reset_index()
+            ms2_df["i"] = ms2sum_df["i"]
 
             return ms2_df
 
