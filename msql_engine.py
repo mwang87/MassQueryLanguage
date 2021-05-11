@@ -121,8 +121,7 @@ def evaluate_query(parsed_dict, input_filename):
       try:
          if "querytype" in condition["value"][0]:
             subquery_val_df = evaluate_query(condition["value"][0], input_filename)
-            condition["value"] = list(subquery_val_df["precmz"])
-            # TODO: we will need to rewrite this, also probably for multiple m/z returns in the condition, we need to flatten into a list
+            condition["value"] = list(subquery_val_df["precmz"]) # Flattening results
       except:
          pass
 
@@ -240,9 +239,25 @@ def evaluate_query(parsed_dict, input_filename):
             result_df = result_df[["scan", "precmz", "ms1scan", "rt"]]
          
          return result_df
-         
 
+      # if parsed_dict["querytype"]["function"] == "scanrangesum":
+      #    result_df = pd.DataFrame()
 
-      
+      #    if parsed_dict["querytype"]["datatype"] == "datams1data":
+      #       ms1_df["bin"] = ms1_df["mz"].apply(lambda x: int(x / 0.1))
+      #       ms1sum_df = ms1_df.groupby("bin").sum().reset_index()
+            
+      #       ms1_df = ms1_df.groupby("scan").first().reset_index()
+      #       ms1_df["i"] = ms1sum_df["i"]
+
+      #       return ms1_df
+      #    if parsed_dict["querytype"]["datatype"] == "datams2data":
+      #       ms2_df = ms2_df.groupby("scan").sum()
+
+      #       ms2sum_df = ms2_df.groupby("scan").sum()
+      #       ms2_df = ms2_df.groupby("scan").first().reset_index()
+      #       ms2_df["i"] = ms2sum_df["i"]
+
+      #       return ms2_df
 
       print("APPLYING FUNCTION")
