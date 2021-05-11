@@ -222,7 +222,7 @@ def draw_output(query, filename):
         id='table',
         columns=[{"name": i, "id": i} for i in results_df.columns],
         data=results_df.to_dict('records'),
-        page_size=20
+        page_size=10
     )
 
     parse_markdown = dcc.Markdown(

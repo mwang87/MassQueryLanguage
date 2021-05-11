@@ -61,7 +61,7 @@ class MassQLToJSON(Transformer):
    def condition(self, items):
       condition_dict = {}
       condition_dict["type"] = items[0].children[0]
-      condition_dict["value"] = items[1]
+      condition_dict["value"] = [items[1]]
       return condition_dict
 
    def fullcondition(self, items):
