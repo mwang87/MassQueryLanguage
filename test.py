@@ -78,7 +78,8 @@ def test_variable():
     print(results_df)
 
 def test_subquery():
-    query = "QUERY scanrangesum(MS1DATA, TOLERANCE=0.1) WHERE MS1MZ=(QUERY scanmz(MS2DATA) WHERE MS2NL=176.0321 AND MS2PROD=85.02915)"
+    #query = "QUERY scanrangesum(MS1DATA, TOLERANCE=0.1) WHERE MS1MZ=(QUERY scanmz(MS2DATA) WHERE MS2NL=176.0321 AND MS2PROD=85.02915)"
+    query = "QUERY MS1DATA WHERE MS1MZ=(QUERY scanmz(MS2DATA) WHERE MS2NL=176.0321 AND MS2PROD=85.02915)"
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(json.dumps(msql_parser.parse_msql(query), indent=4))
     print(results_df)

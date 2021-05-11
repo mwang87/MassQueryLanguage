@@ -240,24 +240,31 @@ def evaluate_query(parsed_dict, input_filename):
          
          return result_df
 
-      # if parsed_dict["querytype"]["function"] == "scanrangesum":
-      #    result_df = pd.DataFrame()
+      if parsed_dict["querytype"]["function"] == "functionscanrangesum":
+         result_list = []
 
-      #    if parsed_dict["querytype"]["datatype"] == "datams1data":
-      #       ms1_df["bin"] = ms1_df["mz"].apply(lambda x: int(x / 0.1))
-      #       ms1sum_df = ms1_df.groupby("bin").sum().reset_index()
-            
-      #       ms1_df = ms1_df.groupby("scan").first().reset_index()
-      #       ms1_df["i"] = ms1sum_df["i"]
+         if parsed_dict["querytype"]["datatype"] == "datams1data":
+            ms1_df["bin"] = ms1_df["mz"].apply(lambda x: int(x / 0.1))
+            all_bins = set(ms1_df["bin"])
 
-      #       return ms1_df
-      #    if parsed_dict["querytype"]["datatype"] == "datams2data":
-      #       ms2_df = ms2_df.groupby("scan").sum()
+            for bin in all_bins:
+               print(bin)
+               ms1_filtered_df = ms1_df[ms1_df["bin"] == bin]
+               ms1sum_df = ms1_filtered_df.groupby("scan").sum().reset_index()
 
-      #       ms2sum_df = ms2_df.groupby("scan").sum()
-      #       ms2_df = ms2_df.groupby("scan").first().reset_index()
-      #       ms2_df["i"] = ms2sum_df["i"]
+               ms1_filtered_df = ms1_filtered_df.groupby("scan").first().reset_index()
+               ms1_filtered_df["i"] = ms1sum_df["i"]
 
-      #       return ms2_df
+               result_list.append(ms1_filtered_df)
+
+            return pd.concat(result_list)
+         if parsed_dict["querytype"]["datatype"] == "datams2data":
+            ms2_df = ms2_df.groupby("scan").sum()
+
+            ms2sum_df = ms2_df.groupby("scan").sum()
+            ms2_df = ms2_df.groupby("scan").first().reset_index()
+            ms2_df["i"] = ms2sum_df["i"]
+
+            return ms2_df
 
       print("APPLYING FUNCTION")
