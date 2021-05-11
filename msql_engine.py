@@ -121,8 +121,8 @@ def evaluate_query(parsed_dict, input_filename):
       try:
          if "querytype" in condition["value"]:
             print("SUBQUERY")
-            subquery_val = evaluate_query(condition["value"], input_filename)
-            print(subquery_val)
+            subquery_val_df = evaluate_query(condition["value"], input_filename)
+            print("XXXX", subquery_val_df)
             # TODO: we will need to rewrite this, also probably for multiple m/z returns in the condition, we need to flatten into a list
       except:
          pass
@@ -139,7 +139,7 @@ def evaluate_query(parsed_dict, input_filename):
    for condition in parsed_dict["conditions"]:
       print("ZZZ", condition)
       if condition["type"] == "ms2productcondition":
-         mz = condition["value"]
+         mz = condition["value"][0]
          mz_tol = _get_tolerance(condition.get("qualifiers", None), mz)
          mz_min = mz - mz_tol
          mz_max = mz + mz_tol
@@ -152,23 +152,26 @@ def evaluate_query(parsed_dict, input_filename):
          ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
 
       if condition["type"] == "ms2precursorcondition":
+         mz = condition["value"][0]
          mz_tol = 0.1
-         mz_min = condition["value"] - mz_tol
-         mz_max = condition["value"] + mz_tol
+         mz_min = mz - mz_tol
+         mz_max = mz + mz_tol
          ms2_df = ms2_df[(ms2_df["precmz"] > mz_min) & (ms2_df["precmz"] < mz_max)]
 
       if condition["type"] == "ms1mzcondition":
+         mz = condition["value"][0]
          mz_tol = 0.1
-         mz_min = condition["value"] - mz_tol
-         mz_max = condition["value"] + mz_tol
+         mz_min = mz - mz_tol
+         mz_max = mz + mz_tol
          ms1_filtered_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
          filtered_scans = set(ms1_filtered_df["scan"])
          ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
 
       if condition["type"] == "ms2neutrallosscondition":
+         mz = condition["value"][0]
          mz_tol = 0.1
-         nl_min = condition["value"] - mz_tol
-         nl_max = condition["value"] + mz_tol
+         nl_min = mz - mz_tol
+         nl_max = mz + mz_tol
          ms2_filtered_df = ms2_df[((ms2_df["precmz"] - ms2_df["mz"]) > nl_min) & ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max)]
          filtered_scans = set(ms2_filtered_df["scan"])
          ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]
