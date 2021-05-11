@@ -109,8 +109,21 @@ def _get_tolerance(qualifier, mz):
    if "qualifiermztolerance" in qualifier:
       return qualifier["qualifiermztolerance"]["value"]
 
+
+
 def process_query(input_query, input_filename):
    parsed_dict = msql_parser.parse_msql(input_query)
+
+   return evaluate_query(parsed_dict, input_filename)
+
+def evaluate_query(parsed_dict, input_filename):
+   for condition in parsed_dict["conditions"]:
+      try:
+         if "querytype" in condition["value"][0]:
+            subquery_val_df = evaluate_query(condition["value"][0], input_filename)
+            condition["value"] = list(subquery_val_df["precmz"]) # Flattening results
+      except:
+         pass
 
    print(parsed_dict)
    import json
@@ -123,8 +136,10 @@ def process_query(input_query, input_filename):
    # TODO: need to make sure chaining within the same MS2 level works appropriately
    for condition in parsed_dict["conditions"]:
       print("ZZZ", condition)
+
+      # Filtering MS2 Product Ions
       if condition["type"] == "ms2productcondition":
-         mz = condition["value"]
+         mz = condition["value"][0]
          mz_tol = _get_tolerance(condition.get("qualifiers", None), mz)
          mz_min = mz - mz_tol
          mz_max = mz + mz_tol
@@ -136,24 +151,20 @@ def process_query(input_query, input_filename):
          ms1_scans = set(ms2_df["ms1scan"])
          ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
 
+      # Filtering MS2 Precursor m/z
       if condition["type"] == "ms2precursorcondition":
+         mz = condition["value"][0]
          mz_tol = 0.1
-         mz_min = condition["value"] - mz_tol
-         mz_max = condition["value"] + mz_tol
+         mz_min = mz - mz_tol
+         mz_max = mz + mz_tol
          ms2_df = ms2_df[(ms2_df["precmz"] > mz_min) & (ms2_df["precmz"] < mz_max)]
 
-      if condition["type"] == "ms1mzcondition":
-         mz_tol = 0.1
-         mz_min = condition["value"] - mz_tol
-         mz_max = condition["value"] + mz_tol
-         ms1_filtered_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
-         filtered_scans = set(ms1_filtered_df["scan"])
-         ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
-
+      # Filtering MS2 Neutral Loss
       if condition["type"] == "ms2neutrallosscondition":
+         mz = condition["value"][0]
          mz_tol = 0.1
-         nl_min = condition["value"] - mz_tol
-         nl_max = condition["value"] + mz_tol
+         nl_min = mz - mz_tol
+         nl_max = mz + mz_tol
          ms2_filtered_df = ms2_df[((ms2_df["precmz"] - ms2_df["mz"]) > nl_min) & ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max)]
          filtered_scans = set(ms2_filtered_df["scan"])
          ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]
@@ -161,6 +172,16 @@ def process_query(input_query, input_filename):
          # Filtering the MS1 data now
          ms1_scans = set(ms2_df["ms1scan"])
          ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
+
+      # Filtering MS1 peaks
+      if condition["type"] == "ms1mzcondition":
+         mz = condition["value"][0]
+         mz_tol = 0.1
+         mz_min = mz - mz_tol
+         mz_max = mz + mz_tol
+         ms1_filtered_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
+         filtered_scans = set(ms1_filtered_df["scan"])
+         ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
 
    print(parsed_dict["querytype"])
 
@@ -194,7 +215,7 @@ def process_query(input_query, input_filename):
 
       if parsed_dict["querytype"]["function"] == "functionscanmz":
          result_df = pd.DataFrame()
-         result_df["precmz"] = ms2_df["precmz"]
+         result_df["precmz"] = list(set(ms2_df["precmz"]))
          return result_df
 
       if parsed_dict["querytype"]["function"] == "functionscannum":
@@ -218,9 +239,25 @@ def process_query(input_query, input_filename):
             result_df = result_df[["scan", "precmz", "ms1scan", "rt"]]
          
          return result_df
-         
 
+      # if parsed_dict["querytype"]["function"] == "scanrangesum":
+      #    result_df = pd.DataFrame()
 
-      
+      #    if parsed_dict["querytype"]["datatype"] == "datams1data":
+      #       ms1_df["bin"] = ms1_df["mz"].apply(lambda x: int(x / 0.1))
+      #       ms1sum_df = ms1_df.groupby("bin").sum().reset_index()
+            
+      #       ms1_df = ms1_df.groupby("scan").first().reset_index()
+      #       ms1_df["i"] = ms1sum_df["i"]
+
+      #       return ms1_df
+      #    if parsed_dict["querytype"]["datatype"] == "datams2data":
+      #       ms2_df = ms2_df.groupby("scan").sum()
+
+      #       ms2sum_df = ms2_df.groupby("scan").sum()
+      #       ms2_df = ms2_df.groupby("scan").first().reset_index()
+      #       ms2_df["i"] = ms2sum_df["i"]
+
+      #       return ms2_df
 
       print("APPLYING FUNCTION")

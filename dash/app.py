@@ -154,6 +154,9 @@ EXAMPLES_DASHBOARD = [
             html.Br(),
             html.A('Get MS1 peaks where a MS2 with product ion is present', 
                     href="/?query=QUERY MS1DATA WHERE MS2PROD=226.18"),
+            html.Br(),
+            html.A('Sub Query', 
+                    href="/?query=QUERY scanrangesum(MS1DATA, TOLERANCE=0.1) WHERE MS1MZ=(QUERY scanmz(MS2DATA) WHERE MS2NL=176.0321 AND MS2PROD=85.02915)")
         ]
     )
 ]
@@ -222,7 +225,7 @@ def draw_output(query, filename):
         id='table',
         columns=[{"name": i, "id": i} for i in results_df.columns],
         data=results_df.to_dict('records'),
-        page_size=20
+        page_size=10
     )
 
     parse_markdown = dcc.Markdown(
