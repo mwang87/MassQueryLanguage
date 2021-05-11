@@ -119,10 +119,9 @@ def process_query(input_query, input_filename):
 def evaluate_query(parsed_dict, input_filename):
    for condition in parsed_dict["conditions"]:
       try:
-         if "querytype" in condition["value"]:
-            print("SUBQUERY")
-            subquery_val_df = evaluate_query(condition["value"], input_filename)
-            print("XXXX", subquery_val_df)
+         if "querytype" in condition["value"][0]:
+            subquery_val_df = evaluate_query(condition["value"][0], input_filename)
+            condition["value"] = list(subquery_val_df["precmz"])
             # TODO: we will need to rewrite this, also probably for multiple m/z returns in the condition, we need to flatten into a list
       except:
          pass
@@ -138,6 +137,8 @@ def evaluate_query(parsed_dict, input_filename):
    # TODO: need to make sure chaining within the same MS2 level works appropriately
    for condition in parsed_dict["conditions"]:
       print("ZZZ", condition)
+
+      # Filtering MS2 Product Ions
       if condition["type"] == "ms2productcondition":
          mz = condition["value"][0]
          mz_tol = _get_tolerance(condition.get("qualifiers", None), mz)
@@ -151,6 +152,7 @@ def evaluate_query(parsed_dict, input_filename):
          ms1_scans = set(ms2_df["ms1scan"])
          ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
 
+      # Filtering MS2 Precursor m/z
       if condition["type"] == "ms2precursorcondition":
          mz = condition["value"][0]
          mz_tol = 0.1
@@ -158,15 +160,7 @@ def evaluate_query(parsed_dict, input_filename):
          mz_max = mz + mz_tol
          ms2_df = ms2_df[(ms2_df["precmz"] > mz_min) & (ms2_df["precmz"] < mz_max)]
 
-      if condition["type"] == "ms1mzcondition":
-         mz = condition["value"][0]
-         mz_tol = 0.1
-         mz_min = mz - mz_tol
-         mz_max = mz + mz_tol
-         ms1_filtered_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
-         filtered_scans = set(ms1_filtered_df["scan"])
-         ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
-
+      # Filtering MS2 Neutral Loss
       if condition["type"] == "ms2neutrallosscondition":
          mz = condition["value"][0]
          mz_tol = 0.1
@@ -179,6 +173,16 @@ def evaluate_query(parsed_dict, input_filename):
          # Filtering the MS1 data now
          ms1_scans = set(ms2_df["ms1scan"])
          ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
+
+      # Filtering MS1 peaks
+      if condition["type"] == "ms1mzcondition":
+         mz = condition["value"][0]
+         mz_tol = 0.1
+         mz_min = mz - mz_tol
+         mz_max = mz + mz_tol
+         ms1_filtered_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
+         filtered_scans = set(ms1_filtered_df["scan"])
+         ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
 
    print(parsed_dict["querytype"])
 

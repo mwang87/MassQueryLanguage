@@ -96,14 +96,14 @@ def main():
     #test_noquery()
     #test_simple_ms2_twoqualifier()
     #test_simple_ms2_twoconditions()
-    test_diphen()
+    #test_diphen()
     #test_diphen_nl()
     #test_diphen_combo()
     #test_simple_info_ms2()
     #test_parse()
     #test_query()
     #test_xic()
-    #test_subquery()
+    test_subquery()
 
 if __name__ == "__main__":
     main()
