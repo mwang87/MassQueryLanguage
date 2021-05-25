@@ -88,7 +88,24 @@ DATASELECTION_CARD = [
                 ],
                 className="mb-3",
             ),
+            html.H5(children='Plotting Options'),
+            dbc.InputGroup(
+                [
+                    dbc.InputGroupAddon("x_axis", addon_type="prepend"),
+                    dbc.Input(id='x_axis', placeholder="Enter Query", value=""),
+                ],
+                className="mb-3",
+            ),
+            dbc.InputGroup(
+                [
+                    dbc.InputGroupAddon("y_axis", addon_type="prepend"),
+                    dbc.Input(id='y_axis', placeholder="Enter Query", value=""),
+                ],
+                className="mb-3",
+            ),
+            html.Br(),
             html.Hr(),
+            html.H5(children='Query Parse'),
             dcc.Loading(
                 id="output_parse",
                 children=[html.Div([html.Div(id="loading-output-21")])],
@@ -113,6 +130,11 @@ MIDDLE_DASHBOARD = [
             dcc.Loading(
                 id="output",
                 children=[html.Div([html.Div(id="loading-output-23")])],
+                type="default",
+            ),
+            dcc.Loading(
+                id="plotting",
+                children=[html.Div([html.Div(id="loading-output-26")])],
                 type="default",
             ),
         ]
@@ -191,7 +213,9 @@ def _get_url_param(param_dict, key, default):
     return param_dict.get(key, [default])[0]
 
 @app.callback([
-                Output('query', 'value'), 
+                Output('query', 'value'),
+                Output('x_axis', 'value'),
+                Output('y_axis', 'value'),
               ],
               [
                   Input('url', 'search')
@@ -203,8 +227,10 @@ def determine_task(search):
         query_dict = {}
 
     query = _get_url_param(query_dict, "query", 'QUERY scaninfo(MS2DATA) WHERE MS2PROD=226.18:TOLERANCEPPM=5')
+    x_axis = _get_url_param(query_dict, "x_axis", dash.no_update)
+    y_axis = _get_url_param(query_dict, "y_axis", dash.no_update)
 
-    return [query]
+    return [query, x_axis, y_axis]
 
 @app.callback([
                 Output('output', 'children'),
@@ -235,7 +261,31 @@ def draw_output(query, filename):
 ```
 '''.format(json.dumps(parse_results, indent=4)))
 
+
+
     return [table, parse_markdown]
+
+
+@app.callback([
+                Output('plotting', 'children'),
+              ],
+              [
+                  Input('query', 'value'),
+                  Input('filename', 'value'),
+                  Input('x_axis', 'value'),
+                  Input('y_axis', 'value'),
+            ])
+def draw_plot(query, filename, x_axis, y_axis):
+    import msql_parser
+    import msql_engine
+
+    parse_results = msql_parser.parse_msql(query)
+    results_df = msql_engine.process_query(query, os.path.join("test", filename))
+
+    import plotly.express as px
+    fig = px.scatter(results_df, x=x_axis, y=y_axis)
+
+    return [dcc.Graph(figure=fig)]
 
 # API
 @server.route("/api")
