@@ -64,7 +64,7 @@ class MassQLToJSON(Transformer):
       condition_dict["value"] = [items[1]]
       return condition_dict
 
-   def fullcondition(self, items):
+   def wherefullcondition(self, items):
       """
       Defines the full set of qualifiers for a single constraint or all constraints
 
@@ -77,12 +77,41 @@ class MassQLToJSON(Transformer):
 
       # Only condition, no qualifiers
       if len(items) == 1:
+         items[0]["conditiontype"] = "where"
          return items
       
       # Has potentially a qualifier
       if len(items) == 2:
          if items[1]["type"] == "qualifier":
             condition_dict = items[0]
+            condition_dict["conditiontype"] = "where"
+            condition_dict["qualifiers"] = items[1]
+
+            return [condition_dict]
+         else:
+            raise Exception
+
+   def filterfullcondition(self, items):
+      """
+      Defines the full set of qualifiers for a single constraint or all constraints
+
+      Args:
+          items ([type]): [description]
+
+      Returns:
+          [type]: [description]
+      """
+
+      # Only condition, no qualifiers
+      if len(items) == 1:
+         items[0]["conditiontype"] = "filter"
+         return items
+      
+      # Has potentially a qualifier
+      if len(items) == 2:
+         if items[1]["type"] == "qualifier":
+            condition_dict = items[0]
+            condition_dict["conditiontype"] = "filter"
             condition_dict["qualifiers"] = items[1]
 
             return [condition_dict]

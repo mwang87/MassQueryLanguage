@@ -134,8 +134,13 @@ def evaluate_query(parsed_dict, input_filename):
 
    # Applying the filtering conditions
    # TODO: need to make sure chaining within the same MS2 level works appropriately
+
+   # These are for the where clause
    for condition in parsed_dict["conditions"]:
-      print("ZZZ", condition)
+      if not condition["conditiontype"] == "where":
+         continue
+   
+      logging.error("WHERE CONDITION", condition)
 
       # Filtering MS2 Product Ions
       if condition["type"] == "ms2productcondition":
@@ -173,7 +178,7 @@ def evaluate_query(parsed_dict, input_filename):
          ms1_scans = set(ms2_df["ms1scan"])
          ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
 
-      # Filtering MS1 peaks
+      # finding MS1 peaks
       if condition["type"] == "ms1mzcondition":
          mz = condition["value"][0]
          mz_tol = 0.1
@@ -183,7 +188,22 @@ def evaluate_query(parsed_dict, input_filename):
          filtered_scans = set(ms1_filtered_df["scan"])
          ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
 
-   print(parsed_dict["querytype"])
+   # These are for the where clause
+   for condition in parsed_dict["conditions"]:
+      if not condition["conditiontype"] == "filter":
+         continue
+   
+      logging.error("FILTER CONDITION", condition)
+
+      # filtering MS1 peaks
+      if condition["type"] == "ms1mzcondition":
+         mz = condition["value"][0]
+         mz_tol = 0.1
+         mz_min = mz - mz_tol
+         mz_max = mz + mz_tol
+         ms1_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
+
+
 
    # collating the results
    if parsed_dict["querytype"]["function"] is None:

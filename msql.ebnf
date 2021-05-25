@@ -1,4 +1,6 @@
-statement: "QUERY" querytype "WHERE" fullcondition+
+statement: "QUERY" querytype "WHERE" wherefullcondition+ "FILTER" filterfullcondition+
+     | "QUERY" querytype "FILTER" filterfullcondition+
+     | "QUERY" querytype "WHERE" wherefullcondition+ 
      | "QUERY" querytype
 
 querytype: datams1data
@@ -10,7 +12,11 @@ querytype: datams1data
 datams1data: "MS1DATA"
 datams2data: "MS2DATA"
 
-fullcondition: fullcondition booleanconjunction fullcondition
+wherefullcondition: wherefullcondition booleanconjunction wherefullcondition
+    | condition ":" qualifier
+    | condition
+
+filterfullcondition: filterfullcondition booleanconjunction filterfullcondition
     | condition ":" qualifier
     | condition
 

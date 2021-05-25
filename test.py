@@ -84,6 +84,12 @@ def test_subquery():
     print(json.dumps(msql_parser.parse_msql(query), indent=4))
     print(results_df)
 
+def test_filter():
+    query = "QUERY scansum(MS1DATA) FILTER MS1MZ=100"
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    print(results_df)
+
+
 def test_parse():        
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
@@ -106,7 +112,8 @@ def main():
     #test_query()
     #test_xic()
     #test_subquery()
-    test_variable()
+    #test_variable()
+    test_filter()
 
 if __name__ == "__main__":
     main()
