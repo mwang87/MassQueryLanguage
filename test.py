@@ -105,7 +105,8 @@ def main():
     #test_parse()
     #test_query()
     #test_xic()
-    test_subquery()
+    #test_subquery()
+    test_variable()
 
 if __name__ == "__main__":
     main()
