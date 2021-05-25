@@ -8,6 +8,9 @@ services:
     volumes:
       - ./logs:/app/logs:rw
       - ../test:/app/test:rw
+      - ../msql_parser.py:/app/msql_parser.py:ro
+      - ../msql_engine.py:/app/msql_engine.py:ro
+      - ../msql.ebnf:/app/msql.ebnf:ro
     ports:
     - "5343:5000"
     networks:
