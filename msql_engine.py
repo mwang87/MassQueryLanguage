@@ -6,6 +6,10 @@ import pymzml
 import numpy as np
 import logging
 
+#import ray
+#ray.init()
+
+
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)
 

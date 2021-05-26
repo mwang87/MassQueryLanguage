@@ -75,6 +75,8 @@ class MassQLToJSON(Transformer):
           [type]: [description]
       """
 
+      print("wherefullcondition", items, len(items))
+
       # Only condition, no qualifiers
       if len(items) == 1:
          items[0]["conditiontype"] = "where"
@@ -91,6 +93,10 @@ class MassQLToJSON(Transformer):
          else:
             raise Exception
 
+      # Merging multiple conditions
+      if len(items) == 3:
+         return [items[0][0], items[-1][0]]
+
    def filterfullcondition(self, items):
       """
       Defines the full set of qualifiers for a single constraint or all constraints
@@ -101,6 +107,8 @@ class MassQLToJSON(Transformer):
       Returns:
           [type]: [description]
       """
+
+      print("filterfullcondition", items)
 
       # Only condition, no qualifiers
       if len(items) == 1:
@@ -142,6 +150,8 @@ class MassQLToJSON(Transformer):
       return items[0]
    
    def statement(self, items):
+      print("AAA", items)
+
       if len(items) == 1:
          query_dict = {}
          query_dict["querytype"] = items[0]
