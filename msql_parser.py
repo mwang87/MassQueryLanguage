@@ -93,9 +93,13 @@ class MassQLToJSON(Transformer):
          else:
             raise Exception
 
-      # Merging multiple conditions
+      # Merging two conditions
       if len(items) == 3:
-         return [items[0][0], items[-1][0]]
+         merged_list = []
+         merged_list += items[0]
+         merged_list += items[-1]
+
+         return merged_list
 
    def filterfullcondition(self, items):
       """
@@ -129,8 +133,8 @@ class MassQLToJSON(Transformer):
       # Merging two conditions
       if len(items) == 3:
          merged_list = []
-         merged_list.append(items[0][0])
-         merged_list.append(items[-1][0])
+         merged_list += items[0]
+         merged_list += items[-1]
 
          return merged_list
 
@@ -150,8 +154,6 @@ class MassQLToJSON(Transformer):
       return items[0]
    
    def statement(self, items):
-      print("AAA", items)
-
       if len(items) == 1:
          query_dict = {}
          query_dict["querytype"] = items[0]
