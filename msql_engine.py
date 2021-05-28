@@ -158,8 +158,10 @@ def _evalute_variable_query(parsed_dict, input_filename):
     if has_variable:
         DELTA_VAL = 0.1
         # Lets iterate through all values of the variable
-        for i in tqdm(range(int(1500 / DELTA_VAL))):
-            x_val = i * DELTA_VAL
+        MAX_MZ = 10
+
+        for i in tqdm(range(int(MAX_MZ / DELTA_VAL))):
+            x_val = i * DELTA_VAL + 160
 
             # Writing new query
             substituted_parse = copy.deepcopy(parsed_dict)
@@ -183,15 +185,22 @@ def _evalute_variable_query(parsed_dict, input_filename):
     else:
         all_concrete_queries.append(parsed_dict)
 
-    
     # Perfoming the filtering of conditions
-    aggregated_ms1_df = pd.DataFrame()
-    aggregated_ms2_df = pd.DataFrame()
+    results_ms1_list = []
+    results_ms2_list = []
     for concrete_query in tqdm(all_concrete_queries):
+        print(concrete_query)
         ms1_df, ms2_df = _executeconditions_query(concrete_query, input_filename)
+        
+        results_ms1_list.append(ms1_df)
+        results_ms2_list.append(ms2_df)
 
-        aggregated_ms1_df = ms1_df
-        aggregated_ms2_df = ms2_df
+    aggregated_ms1_df = pd.concat(results_ms1_list)
+    aggregated_ms2_df = pd.concat(results_ms2_list)
+
+    # reduce redundancy
+    aggregated_ms1_df = aggregated_ms1_df.drop_duplicates()
+    aggregated_ms2_df = aggregated_ms2_df.drop_duplicates()
 
     
     # Collating all results
