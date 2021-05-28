@@ -8,8 +8,8 @@ import copy
 import logging
 from tqdm import tqdm
 
-# import ray
-# ray.init()
+import ray
+ray.init(ignore_reinit_error=True)
 
 
 console = logging.StreamHandler()
@@ -158,10 +158,11 @@ def _evalute_variable_query(parsed_dict, input_filename):
     if has_variable:
         DELTA_VAL = 0.1
         # Lets iterate through all values of the variable
-        MAX_MZ = 10
+        #MAX_MZ = 10
+        MAX_MZ = 1000
 
         for i in tqdm(range(int(MAX_MZ / DELTA_VAL))):
-            x_val = i * DELTA_VAL + 160
+            x_val = i * DELTA_VAL
 
             # Writing new query
             substituted_parse = copy.deepcopy(parsed_dict)
@@ -184,16 +185,29 @@ def _evalute_variable_query(parsed_dict, input_filename):
             all_concrete_queries.append(substituted_parse)
     else:
         all_concrete_queries.append(parsed_dict)
+        
 
     # Perfoming the filtering of conditions
     results_ms1_list = []
     results_ms2_list = []
-    for concrete_query in tqdm(all_concrete_queries):
-        print(concrete_query)
+
+    if len(all_concrete_queries) > 1:
+        futures = [_executeconditions_query.remote(concrete_query, input_filename) for concrete_query in all_concrete_queries]
+        all_ray_results = ray.get(futures)
+        results_ms1_list, results_ms2_list = zip(*all_ray_results)
+    else:
+        concrete_query = all_concrete_queries[0]
         ms1_df, ms2_df = _executeconditions_query(concrete_query, input_filename)
-        
         results_ms1_list.append(ms1_df)
         results_ms2_list.append(ms2_df)
+
+    # Serial Version
+    # for concrete_query in tqdm(all_concrete_queries):
+    #     print(concrete_query)
+    #     ms1_df, ms2_df = _executeconditions_query(concrete_query, input_filename)
+        
+    #     results_ms1_list.append(ms1_df)
+    #     results_ms2_list.append(ms2_df)
 
     aggregated_ms1_df = pd.concat(results_ms1_list)
     aggregated_ms2_df = pd.concat(results_ms2_list)
@@ -206,7 +220,7 @@ def _evalute_variable_query(parsed_dict, input_filename):
     # Collating all results
     return _executecollate_query(parsed_dict, aggregated_ms1_df, aggregated_ms2_df)
 
-
+@ray.remote
 def _executeconditions_query(parsed_dict, input_filename):
     # This function attempts to find the data that the query specifies in the conditions
     #import json
