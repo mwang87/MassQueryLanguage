@@ -23,6 +23,10 @@ services:
       VIRTUAL_PORT: 5343
       LETSENCRYPT_HOST: msql.ucsd.edu
       LETSENCRYPT_EMAIL: miw023@ucsd.edu
+    deploy:
+      resources:
+        limits:
+          memory: 8000M
 
 
 networks:
