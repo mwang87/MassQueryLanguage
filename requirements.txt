@@ -3,3 +3,4 @@ lark-parser
 pandas
 pyarrow
 ray
+tqdm

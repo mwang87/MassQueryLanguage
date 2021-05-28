@@ -75,8 +75,6 @@ class MassQLToJSON(Transformer):
           [type]: [description]
       """
 
-      print("wherefullcondition", items, len(items))
-
       # Only condition, no qualifiers
       if len(items) == 1:
          items[0]["conditiontype"] = "where"
@@ -111,8 +109,6 @@ class MassQLToJSON(Transformer):
       Returns:
           [type]: [description]
       """
-
-      print("filterfullcondition", items)
 
       # Only condition, no qualifiers
       if len(items) == 1:

@@ -73,12 +73,13 @@ def test_diphen_combo():
 
 def test_variable():
     # This finds the sum of the MS1 of the MS2 spectrum with 
-    query = "QUERY scansum(MS1DATA) WHERE MS1MZ=X AND MS2PREC=X AND MS2PROD=160.5"
-    #query = "QUERY scansum(MS1DATA) WHERE MS1MZ=X"
+    #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=119.09"
+    query = "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X AND MS2PREC=X AND MS2PROD=119.09"
+    #query = "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X"
     parse_obj = msql_parser.parse_msql(query)
     print(json.dumps(parse_obj, indent=4))
 
-    assert(len(parse_obj["conditions"]) == 3)
+    #assert(len(parse_obj["conditions"]) == 3)
 
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
