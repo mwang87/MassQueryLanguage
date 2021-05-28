@@ -79,7 +79,7 @@ def test_variable():
     parse_obj = msql_parser.parse_msql(query)
     print(json.dumps(parse_obj, indent=4))
 
-    #assert(len(parse_obj["conditions"]) == 3)
+    assert(len(parse_obj["conditions"]) == 3)
 
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
@@ -119,8 +119,8 @@ def main():
     #test_query()
     #test_xic()
     #test_subquery()
-    test_variable()
-    #test_filter()
+    #test_variable()
+    test_filter()
 
 if __name__ == "__main__":
     main()

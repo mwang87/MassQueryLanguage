@@ -192,15 +192,10 @@ def _evalute_variable_query(parsed_dict, input_filename):
     results_ms1_list = []
     results_ms2_list = []
 
-    if len(all_concrete_queries) > 1:
-        futures = [_executeconditions_query.remote(concrete_query, input_filename) for concrete_query in all_concrete_queries]
-        all_ray_results = ray.get(futures)
-        results_ms1_list, results_ms2_list = zip(*all_ray_results)
-    else:
-        concrete_query = all_concrete_queries[0]
-        ms1_df, ms2_df = _executeconditions_query(concrete_query, input_filename)
-        results_ms1_list.append(ms1_df)
-        results_ms2_list.append(ms2_df)
+    # Ray Parallel Version
+    futures = [_executeconditions_query.remote(concrete_query, input_filename) for concrete_query in all_concrete_queries]
+    all_ray_results = ray.get(futures)
+    results_ms1_list, results_ms2_list = zip(*all_ray_results)
 
     # Serial Version
     # for concrete_query in tqdm(all_concrete_queries):
