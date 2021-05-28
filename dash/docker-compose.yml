@@ -28,6 +28,41 @@ services:
         limits:
           memory: 8000M
 
+  msql-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: msql-worker
+    volumes:
+      - ./logs:/app/logs:rw
+      - ../test:/app/test:rw
+      - ../msql_parser.py:/app/msql_parser.py:ro
+      - ../msql_engine.py:/app/msql_engine.py:ro
+      - ../msql.ebnf:/app/msql.ebnf:ro
+    command: /app/run_worker.sh
+    restart: unless-stopped
+    depends_on: 
+      - msql-redis
+      - msql-rabbitmq
+    networks:
+      - default
+      - nginx-net
+    deploy:
+      resources:
+        limits:
+          memory: 8000M
+
+  msql-rabbitmq:
+    container_name: msql-rabbitmq
+    image: rabbitmq
+    networks:
+      - default
+
+  msql-redis:
+    container_name: msql-redis
+    image: redis
+    networks:
+      - default
 
 networks:
   nginx-net:

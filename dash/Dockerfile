@@ -1,4 +1,4 @@
-FROM continuumio/miniconda3:4.7.12
+FROM continuumio/miniconda3:4.8.2
 MAINTAINER Mingxun Wang "mwang87@gmail.com"
 
 COPY requirements.txt .

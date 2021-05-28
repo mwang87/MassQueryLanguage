@@ -9,8 +9,6 @@ import logging
 from tqdm import tqdm
 
 import ray
-ray.init(ignore_reinit_error=True)
-
 
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)
@@ -21,6 +19,9 @@ def DEBUG_MSG(msg):
 
     print(msg, file=sys.stderr, flush=True)
 
+def init_ray():
+    if not ray.is_initialized():
+        ray.init(ignore_reinit_error=True)
 
 def _load_data(input_filename, cache=False):
     if cache:
@@ -123,8 +124,6 @@ def _get_tolerance(qualifier, mz):
 def process_query(input_query, input_filename):
     parsed_dict = msql_parser.parse_msql(input_query)
 
-    print(parsed_dict)
-
     return _evalute_variable_query(parsed_dict, input_filename)
 
 
@@ -159,11 +158,11 @@ def _evalute_variable_query(parsed_dict, input_filename):
         DELTA_VAL = 0.1
         # Lets iterate through all values of the variable
         #MAX_MZ = 10
-        #MAX_MZ = 200
-        MAX_MZ = 1000
+        MAX_MZ = 200
+        #MAX_MZ = 1000
 
         for i in tqdm(range(int(MAX_MZ / DELTA_VAL))):
-            x_val = i * DELTA_VAL
+            x_val = i * DELTA_VAL + 150
 
             # Writing new query
             substituted_parse = copy.deepcopy(parsed_dict)
@@ -182,7 +181,7 @@ def _evalute_variable_query(parsed_dict, input_filename):
                         # This is when the target is actually a float
                         pass
 
-            #print(substituted_parse)
+            print(substituted_parse)
             all_concrete_queries.append(substituted_parse)
     else:
         all_concrete_queries.append(parsed_dict)
@@ -193,17 +192,18 @@ def _evalute_variable_query(parsed_dict, input_filename):
     results_ms2_list = []
 
     # Ray Parallel Version
-    futures = [_executeconditions_query.remote(concrete_query, input_filename) for concrete_query in all_concrete_queries]
-    all_ray_results = ray.get(futures)
-    results_ms1_list, results_ms2_list = zip(*all_ray_results)
-
-    # Serial Version
-    # for concrete_query in tqdm(all_concrete_queries):
-    #     print(concrete_query)
-    #     ms1_df, ms2_df = _executeconditions_query(concrete_query, input_filename)
-        
-    #     results_ms1_list.append(ms1_df)
-    #     results_ms2_list.append(ms2_df)
+    if ray.is_initialized():
+        ms1_df, ms2_df = _load_data(input_filename, cache=True)
+        futures = [_executeconditions_query_ray.remote(concrete_query, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df) for concrete_query in all_concrete_queries]
+        all_ray_results = ray.get(futures)
+        results_ms1_list, results_ms2_list = zip(*all_ray_results)
+    else:
+        # Serial Version
+        for concrete_query in tqdm(all_concrete_queries):
+            ms1_df, ms2_df = _executeconditions_query(concrete_query, input_filename)
+            
+            results_ms1_list.append(ms1_df)
+            results_ms2_list.append(ms2_df)
 
     aggregated_ms1_df = pd.concat(results_ms1_list)
     aggregated_ms2_df = pd.concat(results_ms2_list)
@@ -217,13 +217,20 @@ def _evalute_variable_query(parsed_dict, input_filename):
     return _executecollate_query(parsed_dict, aggregated_ms1_df, aggregated_ms2_df)
 
 @ray.remote
-def _executeconditions_query(parsed_dict, input_filename):
+def _executeconditions_query_ray(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None):
+    return _executeconditions_query(parsed_dict, input_filename, ms1_input_df=ms1_input_df, ms2_input_df=ms2_input_df)
+
+def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None):
     # This function attempts to find the data that the query specifies in the conditions
     #import json
     #print("parsed_dict", json.dumps(parsed_dict, indent=4))
 
     # Let's apply this to real data
-    ms1_df, ms2_df = _load_data(input_filename, cache=True)
+    if ms1_input_df is None and ms2_input_df is None:
+        ms1_df, ms2_df = _load_data(input_filename, cache=True)
+    else:
+        ms1_df = ms1_input_df
+        ms2_df = ms2_input_df
 
     # These are for the where clause
     for condition in parsed_dict["conditions"]:

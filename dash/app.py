@@ -29,7 +29,8 @@ from collections import defaultdict
 import uuid
 
 from flask_caching import Cache
-
+import tasks
+import msql_parser
 
 server = Flask(__name__)
 app = dash.Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -244,16 +245,15 @@ def determine_task(search):
                   Input('filename', 'value')
             ])
 def draw_output(query, filename):
-    import msql_parser
-    import msql_engine
-
     parse_results = msql_parser.parse_msql(query)
-    results_df = msql_engine.process_query(query, os.path.join("test", filename))
+
+    results_list = tasks.task_executequery.delay(query, filename)
+    results_list = results_list.get()
 
     table = dash_table.DataTable(
         id='table',
-        columns=[{"name": i, "id": i} for i in results_df.columns],
-        data=results_df.to_dict('records'),
+        columns=[{"name": i, "id": i} for i in results_list[0].keys()],
+        data=results_list,
         page_size=10
     )
 
@@ -279,11 +279,12 @@ def draw_output(query, filename):
                   Input('y_axis', 'value'),
             ])
 def draw_plot(query, filename, x_axis, y_axis):
-    import msql_parser
-    import msql_engine
-
     parse_results = msql_parser.parse_msql(query)
-    results_df = msql_engine.process_query(query, os.path.join("test", filename))
+
+    results_list = tasks.task_executequery.delay(query, filename)
+    results_list = results_list.get()
+
+    results_df = pd.DataFrame(results_list)
 
     import plotly.express as px
     fig = px.scatter(results_df, x=x_axis, y=y_axis)

@@ -84,6 +84,15 @@ def test_variable():
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
 
+def test_variable_ms1():
+    # This is looking for ms1 scans with a +18 delta, should include scan 52
+    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=X AND MS1MZ=X+18.031"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    print(results_df)
+
 def test_subquery():
     #query = "QUERY scanrangesum(MS1DATA, TOLERANCE=0.1) WHERE MS1MZ=(QUERY scanmz(MS2DATA) WHERE MS2NL=176.0321 AND MS2PROD=85.02915)"
     query = "QUERY MS1DATA WHERE MS1MZ=(QUERY scanmz(MS2DATA) WHERE MS2NL=176.0321 AND MS2PROD=85.02915)"
@@ -108,7 +117,9 @@ def test_query():
         msql_engine.process_query(test_query, "test/bld_plt1_07_120_1.mzML")
 
 def main():
-    #test_noquery()
+    msql_engine.init_ray()
+    
+    test_noquery()
     #test_simple_ms2_twoqualifier()
     #test_simple_ms2_twoconditions()
     #test_diphen()
@@ -120,7 +131,8 @@ def main():
     #test_xic()
     #test_subquery()
     #test_variable()
-    test_filter()
+    #test_variable_ms1()
+    #test_filter()
 
 if __name__ == "__main__":
     main()
