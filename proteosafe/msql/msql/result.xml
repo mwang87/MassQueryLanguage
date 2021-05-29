@@ -13,10 +13,11 @@
         <data>
             <source type="file" name="query_results/results.tsv"/>
             <parsers>
-                <parser type="sortedTabular" sortBy="scan" operator="ascending"/>
+                <parser type="sortedTabular" sortBy="filename" operator="ascending"/>
             </parsers>
 
             <row>
+                <column type="text" field="filename" label="filename" width="12"/>
                 <column type="text" field="scan" label="scan" width="12"/>
             </row>
         </data>
