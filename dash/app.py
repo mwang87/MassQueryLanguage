@@ -149,6 +149,7 @@ MIDDLE_DASHBOARD = [
                 type="default",
             ),
             html.Br(),
+            html.Br(),
             dcc.Loading(
                 id="spectrumplot",
                 children=[html.Div([html.Div(id="loading-output-298")])],
@@ -281,7 +282,10 @@ def draw_output(query, filename):
         id='table',
         columns=[{"name": i, "id": i} for i in results_list[0].keys()],
         data=results_list,
-        page_size=10
+        page_size=10,
+        sort_action='native',
+        filter_action='native',
+        export_format='csv'
     )
 
     parse_markdown = dcc.Markdown(

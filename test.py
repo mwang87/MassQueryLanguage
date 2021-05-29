@@ -119,6 +119,11 @@ def test_min_intensity():
     assert(len(results_df) == 1)
     print(results_df)
 
+def test_where_and_filter():
+    query = "QUERY MS2DATA WHERE MS2PROD=70.06:TOLERANCEMZ=0.01:INTENSITYVALUE>10000 FILTER MS2PROD=70.06:TOLERANCEMZ=0.1"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+
 def test_parse():        
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
@@ -146,7 +151,8 @@ def main():
     #test_variable()
     #test_variable_ms1()
     #test_filter()
-    test_filterms2()
+    #test_filterms2()
+    test_where_and_filter()
     #test_min_intensity()
 
 if __name__ == "__main__":

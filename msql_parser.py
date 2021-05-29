@@ -150,15 +150,23 @@ class MassQLToJSON(Transformer):
       return items[0]
    
    def statement(self, items):
+      print(len(items))
+
       if len(items) == 1:
          query_dict = {}
          query_dict["querytype"] = items[0]
          query_dict["conditions"] = []
-      else:
+
+      if len(items) == 2:
          query_dict = {}
          query_dict["querytype"] = items[0]
          query_dict["conditions"] = items[1]
       
+      if len(items) == 3:
+         query_dict = {}
+         query_dict["querytype"] = items[0]
+         query_dict["conditions"] = items[1] + items[2]
+
       return query_dict
 
    def qualifierfields(self, items):
