@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <flow name="msql">
         <object     name="workflowParameters"/>
+        <collection name="inputspectra"/>
 
 
         <action name="begin">
                 <output port="flowParams" object="workflowParameters"/>
+                <output port="spec"       collection="inputspectra"/>
         </action>
 
-        <collection name="collection_file_stats"/>
-        <action name="dummy">
-                <input  port="flowParams"             object="workflowParameters"/>
-                <output port="collection_file_stats"           collection="collection_file_stats"/>
+        <collection name="query_results"/>
+        <action name="query">
+                <input  port="inputspectra"             collection="inputspectra"/>
+                <input  port="workflowParameters"             object="workflowParameters"/>
+                <output port="query_results"           collection="query_results"/>
         </action>
 
         <action name="end">
-                <input port="collection_file_stats"           collection="collection_file_stats"/>
+                <input port="query_results"           collection="query_results"/>
         </action>
 </flow>

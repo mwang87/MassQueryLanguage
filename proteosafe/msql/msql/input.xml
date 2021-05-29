@@ -1,37 +1,54 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <interface id="msql" version="1.2.8">
-        <workflow-id>MSQL</workflow-id>
-        <workflow-label>MSQL</workflow-label>
+    <workflow-id>MSQL</workflow-id>
+    <workflow-label>MSQL</workflow-label>
 
-        <!-- Parameter declarations -->
-        <parameters>
-                <!-- Universal parameters -->
-                <parameter name="desc" label="Description">
-                        <validator type="length" maximum="1000"/>
-                </parameter>
-                <parameter name="email" label="Email">
-                        <validator type="email"/>
-                </parameter>
+    <!-- Parameter declarations -->
+    <parameters>
+        <!-- Universal parameters -->
+        <parameter name="desc" label="Description">
+            <validator type="length" maximum="1000"/>
+        </parameter>
+        <parameter name="email" label="Email">
+            <validator type="email"/>
+        </parameter>
 
-                <parameter name="QUERY" label="Enter QUERY (Required)">
-                        <default value="QUERY scaninfo(MS2DATA)"/>
-                </parameter>
-        </parameters>
+        <parameter name="spec_on_server" label="Spectrum Files (Required)">
+            <validator type="required"/>
+            <fileGenerator type="upload" purpose="spectrum" target="spec"/>
+        </parameter>
 
-        <block label="PlaceholderBlock">
-            <row>
-                <cell>
-                        <label>
-                        <content parameter="QUERY"/>
-                        </label>
-                </cell>
-                <cell>
-                        <input type="text" parameter="QUERY">
-                        <attribute name="size" value="30"/>
-                        </input>
-                </cell>
-                </row>
-        </block>
+        <parameter name="QUERY" label="Enter QUERY (Required)">
+            <default value="QUERY scaninfo(MS2DATA)"/>
+        </parameter>
+    </parameters>
+
+    <block label="PlaceholderBlock">
+        <row>
+            <cell>
+                <label>
+                    <content parameter="QUERY"/>
+                </label>
+            </cell>
+            <cell>
+                <input type="text" parameter="QUERY">
+                    <attribute name="size" value="30"/>
+                </input>
+            </cell>
+        </row>
+        <row>
+            <cell>
+                <label>
+                    <content parameter="spec_on_server"/>
+                </label>
+            </cell>
+            <cell colspan="3">
+                <module id="spec_on_server" type="fileSelector">
+                    <property name="label">Spectrum Files</property>
+                </module>
+            </cell>
+        </row>
+    </block>
 
 
 </interface>

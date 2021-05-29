@@ -1,18 +1,22 @@
 <toolset>
     <pathSet base="miniconda3_gamma/envs/msql/bin">
-        <toolPath tool="dummy" path="python3"/>
+        <toolPath tool="query" path="python3"/>
     </pathSet>
 
     <pathSet base="$base">
-        <pathVar name="dummy.script" path="proteosafe_query.py"/>
+        <pathVar name="query.script" path="proteosafe_query.py"/>
     </pathSet>
 
-    <tool name="dummy">
-        <produce name="collection_file_stats" type="file" naming="fixed" value="collection_file_stats" extension="tsv"/>
+    <tool name="query">
+        <require name="spec" type="folder"/>
+        <require name="workflowParameters" type="file"/>
+        <produce name="query_results" type="folder"/>
 
         <execution env="binary" argConvention="adhoc">
-            <arg pathRef="dummy.script"/>
-            <arg valueRef="collection_file_stats"/>
+            <arg pathRef="query.script"/>
+            <arg valueRef="spec"/>
+            <arg valueRef="workflowParameters"/>
+            <arg valueRef="query_results"/>
         </execution>
     </tool>
 

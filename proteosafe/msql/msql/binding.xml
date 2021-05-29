@@ -11,10 +11,15 @@
                 <downloadParams>
                         <query name="resource" value="params"/>
                 </downloadParams>
+                <download port="spec" type="folder">
+			<query name="resource" value="spec"/>
+		</download>
         </bind>
 
-        <bind action="dummy" tool="dummy">
-            <productionToOutput port="collection_file_stats" production="collection_file_stats"/>
+        <bind action="query" tool="query">
+            <inputAsRequirement port="spec" requirement="spec"/>
+            <inputAsRequirement port="workflowParameters" requirement="workflowParameters"/>
+            <productionToOutput port="query_results" production="query_results"/>
         </bind>
 
         <bind action="end" type="upload">
@@ -22,8 +27,8 @@
                 <query name="task" valueRef="@task"/>
                 <contentQuery name="content"/>
                 <compression type="zip"/>
-                <upload port="collection_file_stats" type="file">
-                        <query name="resource" value="collection_file_stats"/>
+                <upload port="query_results" type="folder">
+                        <query name="resource" value="query_results"/>
                 </upload>
         </bind>
 </binding>
