@@ -12,9 +12,25 @@
                 <parameter name="email" label="Email">
                         <validator type="email"/>
                 </parameter>
+
+                <parameter name="QUERY" label="Enter QUERY (Required)">
+                        <default value="QUERY scaninfo(MS2DATA)"/>
+                </parameter>
         </parameters>
 
         <block label="PlaceholderBlock">
+            <row>
+                <cell>
+                        <label>
+                        <content parameter="QUERY"/>
+                        </label>
+                </cell>
+                <cell>
+                        <input type="text" parameter="QUERY">
+                        <attribute name="size" value="30"/>
+                        </input>
+                </cell>
+                </row>
         </block>
 
 

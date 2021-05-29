@@ -4,7 +4,7 @@
     </pathSet>
 
     <pathSet base="$base">
-        <pathVar name="dummy.script" path="dummy.py"/>
+        <pathVar name="dummy.script" path="proteosafe_query.py"/>
     </pathSet>
 
     <tool name="dummy">
