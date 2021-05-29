@@ -32,7 +32,7 @@
             </cell>
             <cell>
                 <input type="text" parameter="QUERY">
-                    <attribute name="size" value="30"/>
+                    <attribute name="size" value="80"/>
                 </input>
             </cell>
         </row>
