@@ -11,13 +11,13 @@
                 <downloadParams>
                         <query name="resource" value="params"/>
                 </downloadParams>
-                <download port="spec" type="folder">
-			<query name="resource" value="spec"/>
+                <download port="inputspectra" type="folder">
+			<query name="resource" value="inputspectra"/>
 		</download>
         </bind>
 
         <bind action="query" tool="query">
-            <inputAsRequirement port="spec" requirement="spec"/>
+            <inputAsRequirement port="inputspectra" requirement="inputspectra"/>
             <inputAsRequirement port="workflowParameters" requirement="workflowParameters"/>
             <productionToOutput port="query_results" production="query_results"/>
         </bind>

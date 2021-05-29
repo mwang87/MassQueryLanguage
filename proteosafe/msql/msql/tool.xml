@@ -5,18 +5,20 @@
 
     <pathSet base="$base">
         <pathVar name="query.script" path="proteosafe_query.py"/>
+        <pathVar name="query.enbf" path="msql.ebnf"/>
     </pathSet>
 
     <tool name="query">
-        <require name="spec" type="folder"/>
+        <require name="inputspectra" type="folder"/>
         <require name="workflowParameters" type="file"/>
         <produce name="query_results" type="folder"/>
 
         <execution env="binary" argConvention="adhoc">
             <arg pathRef="query.script"/>
-            <arg valueRef="spec"/>
+            <arg valueRef="inputspectra"/>
             <arg valueRef="workflowParameters"/>
             <arg valueRef="query_results"/>
+            <arg pathRef="query.enbf"/>
         </execution>
     </tool>
 

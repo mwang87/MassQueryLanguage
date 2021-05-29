@@ -15,7 +15,7 @@
 
         <parameter name="spec_on_server" label="Spectrum Files (Required)">
             <validator type="required"/>
-            <fileGenerator type="upload" purpose="spectrum" target="spec"/>
+            <fileGenerator type="upload" purpose="spectrum" target="inputspectra"/>
         </parameter>
 
         <parameter name="QUERY" label="Enter QUERY (Required)">

@@ -4,20 +4,20 @@
     </download>
 
     <!-- View definitions -->
-    <view id="collection_file_stats" label="collection_file_stats">
-        <blockRef id="main" type="collection_file_stats"/>
+    <view id="query_results" label="query_results">
+        <blockRef id="main" type="query_results"/>
     </view>
 
     <!-- Block definitions -->
-    <block id="collection_file_stats" type="table">
+    <block id="query_results" type="table">
         <data>
-            <source type="file" name="collection_file_stats/"/>
+            <source type="file" name="query_results/results.tsv"/>
             <parsers>
-                <parser type="sortedTabular" sortBy="header" operator="ascending"/>
+                <parser type="sortedTabular" sortBy="scan" operator="ascending"/>
             </parsers>
 
             <row>
-                <column type="text" field="header" label="header" width="12"/>
+                <column type="text" field="scan" label="scan" width="12"/>
             </row>
         </data>
 

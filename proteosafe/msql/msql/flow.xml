@@ -6,7 +6,7 @@
 
         <action name="begin">
                 <output port="flowParams" object="workflowParameters"/>
-                <output port="spec"       collection="inputspectra"/>
+                <output port="inputspectra"       collection="inputspectra"/>
         </action>
 
         <collection name="query_results"/>

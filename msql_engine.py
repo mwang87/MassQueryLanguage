@@ -138,19 +138,19 @@ def _get_minintensity(qualifier):
     return 0
 
 
-def process_query(input_query, input_filename):
-    parsed_dict = msql_parser.parse_msql(input_query)
+def process_query(input_query, input_filename, path_to_grammar="msql.ebnf", cache=True):
+    parsed_dict = msql_parser.parse_msql(input_query, path_to_grammar=path_to_grammar)
 
-    return _evalute_variable_query(parsed_dict, input_filename)
+    return _evalute_variable_query(parsed_dict, input_filename, cache=cache)
 
 
-def _evalute_variable_query(parsed_dict, input_filename):
+def _evalute_variable_query(parsed_dict, input_filename, cache=True):
     # Lets check if there is a variable in here, the only one allowed is X
     for condition in parsed_dict["conditions"]:
         try:
             if "querytype" in condition["value"][0]:
                 subquery_val_df = _evalute_variable_query(
-                    condition["value"][0], input_filename
+                    condition["value"][0], input_filename, cache=cache
                 )
                 condition["value"] = list(
                     subquery_val_df["precmz"]
@@ -211,13 +211,13 @@ def _evalute_variable_query(parsed_dict, input_filename):
     # Ray Parallel Version
     if ray.is_initialized():
         ms1_df, ms2_df = _load_data(input_filename, cache=True)
-        futures = [_executeconditions_query_ray.remote(concrete_query, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df) for concrete_query in all_concrete_queries]
+        futures = [_executeconditions_query_ray.remote(concrete_query, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache) for concrete_query in all_concrete_queries]
         all_ray_results = ray.get(futures)
         results_ms1_list, results_ms2_list = zip(*all_ray_results)
     else:
         # Serial Version
         for concrete_query in tqdm(all_concrete_queries):
-            ms1_df, ms2_df = _executeconditions_query(concrete_query, input_filename)
+            ms1_df, ms2_df = _executeconditions_query(concrete_query, input_filename, cache=cache)
             
             results_ms1_list.append(ms1_df)
             results_ms2_list.append(ms2_df)
@@ -234,17 +234,17 @@ def _evalute_variable_query(parsed_dict, input_filename):
     return _executecollate_query(parsed_dict, aggregated_ms1_df, aggregated_ms2_df)
 
 @ray.remote
-def _executeconditions_query_ray(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None):
-    return _executeconditions_query(parsed_dict, input_filename, ms1_input_df=ms1_input_df, ms2_input_df=ms2_input_df)
+def _executeconditions_query_ray(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
+    return _executeconditions_query(parsed_dict, input_filename, ms1_input_df=ms1_input_df, ms2_input_df=ms2_input_df, cache=cache)
 
-def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None):
+def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
     # This function attempts to find the data that the query specifies in the conditions
     #import json
     #print("parsed_dict", json.dumps(parsed_dict, indent=4))
 
     # Let's apply this to real data
     if ms1_input_df is None and ms2_input_df is None:
-        ms1_df, ms2_df = _load_data(input_filename, cache=True)
+        ms1_df, ms2_df = _load_data(input_filename, cache=cache)
     else:
         ms1_df = ms1_input_df
         ms2_df = ms2_input_df

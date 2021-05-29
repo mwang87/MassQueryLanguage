@@ -184,8 +184,8 @@ class MassQLToJSON(Transformer):
       return float(n)
 
 
-def parse_msql(input_query):
-   msql_parser = Lark(open("msql.ebnf").read(), start='statement')
+def parse_msql(input_query, path_to_grammar="msql.ebnf"):
+   msql_parser = Lark(open(path_to_grammar).read(), start='statement')
    tree = msql_parser.parse(input_query)
    parsed_list = MassQLToJSON().transform(tree)
 
