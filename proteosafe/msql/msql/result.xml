@@ -13,15 +13,19 @@
         <data>
             <source type="file" name="query_results/results.tsv"/>
             <parsers>
-                <parser type="sortedTabular" sortBy="filename" operator="ascending"/>
+                <parser type="genericTabular"/>
             </parsers>
 
             <row>
-                <column type="text" field="filename" label="filename" width="12"/>
-                <column type="integer" field="scan" label="scan" width="12"/>
-                <column type="float" field="i" label="i" width="12"/>
-                <column type="float" field="mz" label="mz" width="12"/>
-                <column type="float" field="precmz" label="precmz" width="12"/>
+            </row>
+
+            <row expander="image">
+                <column type="jscolumnspectrumviewer" colspan="5" width="600" height="500">
+                    <parameter name="file"      file="f.[_dyn_#filename]"/>
+                    <parameter name="scan"      value="[_dyn_#scan]"/>
+                    <parameter name="modformat" value="inspect"/>
+                    <parameter name="trim"      value="true"/>
+                </column>
             </row>
         </data>
 
