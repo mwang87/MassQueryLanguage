@@ -175,8 +175,8 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True):
         DELTA_VAL = 0.1
         # Lets iterate through all values of the variable
         #MAX_MZ = 10
-        MAX_MZ = 200
-        #MAX_MZ = 1000
+        #MAX_MZ = 200
+        MAX_MZ = 1000
 
         for i in tqdm(range(int(MAX_MZ / DELTA_VAL))):
             x_val = i * DELTA_VAL + 150
