@@ -104,6 +104,13 @@ DATASELECTION_CARD = [
                 ],
                 className="mb-3",
             ),
+            dbc.InputGroup(
+                [
+                    dbc.InputGroupAddon("facet_column", addon_type="prepend"),
+                    dbc.Input(id='facet_column', placeholder="Enter Facet", value=""),
+                ],
+                className="mb-3",
+            ),
             html.Br(),
             html.Hr(),
             html.H5(children='Query Parse'),
@@ -220,6 +227,7 @@ def _get_url_param(param_dict, key, default):
                 Output('query', 'value'),
                 Output('x_axis', 'value'),
                 Output('y_axis', 'value'),
+                Output('facet_column', 'value')
               ],
               [
                   Input('url', 'search')
@@ -233,8 +241,9 @@ def determine_task(search):
     query = _get_url_param(query_dict, "query", 'QUERY scaninfo(MS2DATA) WHERE MS2PROD=226.18:TOLERANCEPPM=5')
     x_axis = _get_url_param(query_dict, "x_axis", dash.no_update)
     y_axis = _get_url_param(query_dict, "y_axis", dash.no_update)
+    facet_column = _get_url_param(query_dict, "facet_column", dash.no_update)
 
-    return [query, x_axis, y_axis]
+    return [query, x_axis, y_axis, facet_column]
 
 @app.callback([
                 Output('output', 'children'),
@@ -277,8 +286,9 @@ def draw_output(query, filename):
                   Input('filename', 'value'),
                   Input('x_axis', 'value'),
                   Input('y_axis', 'value'),
+                  Input('facet_column', 'value')
             ])
-def draw_plot(query, filename, x_axis, y_axis):
+def draw_plot(query, filename, x_axis, y_axis, facet_column):
     parse_results = msql_parser.parse_msql(query)
 
     results_list = tasks.task_executequery.delay(query, filename)
@@ -287,7 +297,11 @@ def draw_plot(query, filename, x_axis, y_axis):
     results_df = pd.DataFrame(results_list)
 
     import plotly.express as px
-    fig = px.scatter(results_df, x=x_axis, y=y_axis)
+
+    try:
+        fig = px.scatter(results_df, x=x_axis, y=y_axis, facet_row=facet_column)
+    except:
+        fig = px.scatter(results_df, x=x_axis, y=y_axis)
 
     return [dcc.Graph(figure=fig)]
 

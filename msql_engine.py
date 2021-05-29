@@ -371,7 +371,6 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
                 all_bins = set(ms1_df["bin"])
 
                 for bin in all_bins:
-                    print(bin)
                     ms1_filtered_df = ms1_df[ms1_df["bin"] == bin]
                     ms1sum_df = ms1_filtered_df.groupby("scan").sum().reset_index()
 
