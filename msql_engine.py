@@ -123,6 +123,20 @@ def _get_tolerance(qualifier, mz):
     if "qualifiermztolerance" in qualifier:
         return qualifier["qualifiermztolerance"]["value"]
 
+    return 0.1
+
+def _get_minintensity(qualifier):
+    if qualifier is None:
+        return 0.1
+
+    if "qualifierintensityvalue" in qualifier:
+        return qualifier["qualifierintensityvalue"]["value"]
+
+    if "qualifierintensitypercent" in qualifier:
+        raise Exception("Qualifier Not Implemented")
+
+    return 0
+
 
 def process_query(input_query, input_filename):
     parsed_dict = msql_parser.parse_msql(input_query)
@@ -248,7 +262,10 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_tol = _get_tolerance(condition.get("qualifiers", None), mz)
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
-            ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max)]
+
+            min_int = _get_minintensity(condition.get("qualifiers", None))
+
+            ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max) & (ms2_df["i"] > min_int)]
             filtered_scans = set(ms2_filtered_df["scan"])
             ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]
 
@@ -287,7 +304,10 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_tol = 0.1
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
-            ms1_filtered_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
+
+            min_int = _get_minintensity(condition.get("qualifiers", None))
+            
+            ms1_filtered_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max) & (ms1_df["i"] > min_int)]
             filtered_scans = set(ms1_filtered_df["scan"])
             ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
 
@@ -305,6 +325,16 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
             ms1_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
+        
+        if condition["type"] == "ms2productcondition":
+            mz = condition["value"][0]
+            mz_tol = _get_tolerance(condition.get("qualifiers", None), mz)
+            mz_min = mz - mz_tol
+            mz_max = mz + mz_tol
+
+            min_int = _get_minintensity(condition.get("qualifiers", None))
+
+            ms2_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max) & (ms2_df["i"] > min_int)]
 
     return ms1_df, ms2_df
 
@@ -331,9 +361,8 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
 
                 return ms1_df
             if parsed_dict["querytype"]["datatype"] == "datams2data":
-                ms2_df = ms2_df.groupby("scan").sum()
-
-                ms2sum_df = ms2_df.groupby("scan").sum()
+                ms2sum_df = ms2_df.groupby("scan").sum().reset_index()
+                
                 ms2_df = ms2_df.groupby("scan").first().reset_index()
                 ms2_df["i"] = ms2sum_df["i"]
 

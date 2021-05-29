@@ -105,6 +105,19 @@ def test_filter():
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
 
+def test_filterms2():
+    query = "QUERY MS2DATA FILTER MS2PROD=226.18"
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    print(results_df)
+
+def test_min_intensity():
+    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=226.18:INTENSITYVALUE>3000000"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+
+    assert(len(results_df) == 1)
+    print(results_df)
 
 def test_parse():        
     for line in open("test_queries.txt"):
@@ -117,9 +130,9 @@ def test_query():
         msql_engine.process_query(test_query, "test/bld_plt1_07_120_1.mzML")
 
 def main():
-    msql_engine.init_ray()
+    #msql_engine.init_ray()
     
-    test_noquery()
+    #test_noquery()
     #test_simple_ms2_twoqualifier()
     #test_simple_ms2_twoconditions()
     #test_diphen()
@@ -133,6 +146,8 @@ def main():
     #test_variable()
     #test_variable_ms1()
     #test_filter()
+    test_filterms2()
+    #test_min_intensity()
 
 if __name__ == "__main__":
     main()
