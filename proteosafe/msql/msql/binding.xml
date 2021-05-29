@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<binding>
+        <bind action="begin" type="download">
+                <url value="{livesearch.download}"/>
+                <query name="task" valueRef="@task" />
+                <query name="user" valueRef="@user"/>
+                <compression type="zip" />
+                <download port="flowParams" type="file">
+                        <query name="resource" value="params"/>
+                </download>
+                <downloadParams>
+                        <query name="resource" value="params"/>
+                </downloadParams>
+        </bind>
+
+        <bind action="dummy" tool="dummy">
+            <productionToOutput port="collection_file_stats" production="collection_file_stats"/>
+        </bind>
+
+        <bind action="end" type="upload">
+                <url value="{livesearch.upload}"/>
+                <query name="task" valueRef="@task"/>
+                <contentQuery name="content"/>
+                <compression type="zip"/>
+                <upload port="collection_file_stats" type="file">
+                        <query name="resource" value="collection_file_stats"/>
+                </upload>
+        </bind>
+</binding>

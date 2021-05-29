@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<interface id="speclib_add">
+    <download>
+    </download>
+
+    <!-- View definitions -->
+    <view id="collection_file_stats" label="collection_file_stats">
+        <blockRef id="main" type="collection_file_stats"/>
+    </view>
+
+    <!-- Block definitions -->
+    <block id="collection_file_stats" type="table">
+        <data>
+            <source type="file" name="collection_file_stats/"/>
+            <parsers>
+                <parser type="sortedTabular" sortBy="header" operator="ascending"/>
+            </parsers>
+
+            <row>
+                <column type="text" field="header" label="header" width="12"/>
+            </row>
+        </data>
+
+    </block>
+</interface>

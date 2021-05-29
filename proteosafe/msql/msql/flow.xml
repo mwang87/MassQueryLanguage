@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<flow name="msql">
+        <object     name="workflowParameters"/>
+
+
+        <action name="begin">
+                <output port="flowParams" object="workflowParameters"/>
+        </action>
+
+        <collection name="collection_file_stats"/>
+        <action name="dummy">
+                <input  port="flowParams"             object="workflowParameters"/>
+                <output port="collection_file_stats"           collection="collection_file_stats"/>
+        </action>
+
+        <action name="end">
+                <input port="collection_file_stats"           collection="collection_file_stats"/>
+        </action>
+</flow>

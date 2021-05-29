@@ -1,0 +1,20 @@
+<toolset>
+    <pathSet base="miniconda3_gamma/bin">
+        <toolPath tool="dummy" path="python3"/>
+    </pathSet>
+
+    <pathSet base="$base">
+        <pathVar name="dummy.script" path="dummy.py"/>
+    </pathSet>
+
+    <tool name="dummy">
+        <produce name="collection_file_stats" type="file" naming="fixed" value="collection_file_stats" extension="tsv"/>
+
+        <execution env="binary" argConvention="adhoc">
+            <arg pathRef="dummy.script"/>
+            <arg valueRef="collection_file_stats"/>
+        </execution>
+    </tool>
+
+
+</toolset>
