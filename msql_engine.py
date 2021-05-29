@@ -62,6 +62,9 @@ def _load_data(input_filename, cache=False):
         # Sorting by intensity
         peaks = peaks[peaks[:, 1].argsort()]
 
+        if len(peaks) == 0:
+            continue
+
         mz, intensity = zip(*peaks)
 
         mz_list = list(mz)

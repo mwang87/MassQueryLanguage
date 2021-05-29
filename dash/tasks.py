@@ -20,7 +20,7 @@ def task_computeheartbeat():
 def task_executequery(query, filename):
     
     parse_results = msql_parser.parse_msql(query)
-    results_df = msql_engine.process_query(query, os.path.join("test", filename))
+    results_df = msql_engine.process_query(query, filename)
 
     return results_df.to_dict(orient="records")
 

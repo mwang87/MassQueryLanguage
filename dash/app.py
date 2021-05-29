@@ -112,6 +112,14 @@ DATASELECTION_CARD = [
                 className="mb-3",
             ),
             html.Br(),
+            dbc.InputGroup(
+                [
+                    dbc.InputGroupAddon("scan", addon_type="prepend"),
+                    dbc.Input(id='scan', placeholder="Enter Scan", value=""),
+                ],
+                className="mb-3",
+            ),
+            html.Br(),
             html.Hr(),
             html.H5(children='Query Parse'),
             dcc.Loading(
@@ -140,6 +148,13 @@ MIDDLE_DASHBOARD = [
                 children=[html.Div([html.Div(id="loading-output-23")])],
                 type="default",
             ),
+            html.Br(),
+            dcc.Loading(
+                id="spectrumplot",
+                children=[html.Div([html.Div(id="loading-output-298")])],
+                type="default",
+            ),
+            html.Br(),
             dcc.Loading(
                 id="plotting",
                 children=[html.Div([html.Div(id="loading-output-26")])],
@@ -227,7 +242,8 @@ def _get_url_param(param_dict, key, default):
                 Output('query', 'value'),
                 Output('x_axis', 'value'),
                 Output('y_axis', 'value'),
-                Output('facet_column', 'value')
+                Output('facet_column', 'value'),
+                Output('scan', 'value')
               ],
               [
                   Input('url', 'search')
@@ -242,8 +258,9 @@ def determine_task(search):
     x_axis = _get_url_param(query_dict, "x_axis", dash.no_update)
     y_axis = _get_url_param(query_dict, "y_axis", dash.no_update)
     facet_column = _get_url_param(query_dict, "facet_column", dash.no_update)
+    scan = _get_url_param(query_dict, "scan", dash.no_update)
 
-    return [query, x_axis, y_axis, facet_column]
+    return [query, x_axis, y_axis, facet_column, scan]
 
 @app.callback([
                 Output('output', 'children'),
@@ -256,7 +273,8 @@ def determine_task(search):
 def draw_output(query, filename):
     parse_results = msql_parser.parse_msql(query)
 
-    results_list = tasks.task_executequery.delay(query, filename)
+    full_filepath = os.path.join("test", filename)
+    results_list = tasks.task_executequery.delay(query, full_filepath)
     results_list = results_list.get()
 
     table = dash_table.DataTable(
@@ -272,8 +290,6 @@ def draw_output(query, filename):
 {}
 ```
 '''.format(json.dumps(parse_results, indent=4)))
-
-
 
     return [table, parse_markdown]
 
@@ -291,7 +307,8 @@ def draw_output(query, filename):
 def draw_plot(query, filename, x_axis, y_axis, facet_column):
     parse_results = msql_parser.parse_msql(query)
 
-    results_list = tasks.task_executequery.delay(query, filename)
+    full_filepath = os.path.join("test", filename)
+    results_list = tasks.task_executequery.delay(query, full_filepath)
     results_list = results_list.get()
 
     results_df = pd.DataFrame(results_list)
@@ -304,6 +321,63 @@ def draw_plot(query, filename, x_axis, y_axis, facet_column):
         fig = px.scatter(results_df, x=x_axis, y=y_axis)
 
     return [dcc.Graph(figure=fig)]
+
+
+@app.callback([
+                Output('spectrumplot', 'children'),
+              ],
+              [
+                  Input('filename', 'value'),
+                  Input('scan', 'value'),
+            ])
+def draw_spectrum(filename, scan):
+    full_filepath = os.path.join("test", filename)
+
+    MS_precisions = {
+        1: 5e-6,
+        2: 20e-6,
+        3: 20e-6,
+        4: 20e-6,
+        5: 20e-6,
+        6: 20e-6,
+        7: 20e-6,
+    }
+    run = pymzml.run.Reader(full_filepath, MS_precisions=MS_precisions)
+
+    try:
+        spectrum = run[int(scan)]
+    except:
+        spectrum = run[str(scan)]
+    peaks = spectrum.peaks("raw")
+
+    # Drawing the spectrum object
+    mzs = [peak[0] for peak in peaks]
+    ints = [peak[1] for peak in peaks]
+    neg_ints = [intensity * -1 for intensity in ints]
+
+    interactive_fig = go.Figure(
+        data=go.Scatter(x=mzs, y=ints, 
+            mode='markers+text',
+            marker=dict(size=0.00001),
+            error_y=dict(
+                symmetric=False,
+                arrayminus=[0]*len(neg_ints),
+                array=neg_ints,
+                width=0
+            ),
+            hoverinfo="x",
+            textposition="top right",
+        )
+    )
+
+    interactive_fig.update_layout(title='{}'.format(scan))
+    interactive_fig.update_xaxes(title_text='m/z')
+    interactive_fig.update_yaxes(title_text='intensity')
+    interactive_fig.update_xaxes(showline=True, linewidth=1, linecolor='black')
+    interactive_fig.update_yaxes(showline=True, linewidth=1, linecolor='black')
+    interactive_fig.update_yaxes(range=[0, max(ints) * 1.2])
+
+    return [dcc.Graph(figure=interactive_fig)]
 
 # API
 @server.route("/api")
