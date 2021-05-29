@@ -10,7 +10,7 @@
         </action>
 
         <collection name="query_results"/>
-        <action name="query">
+        <action name="msql_query">
                 <input  port="inputspectra"             collection="inputspectra"/>
                 <input  port="workflowParameters"             object="workflowParameters"/>
                 <output port="query_results"           collection="query_results"/>

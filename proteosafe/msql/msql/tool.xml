@@ -1,24 +1,24 @@
 <toolset>
     <pathSet base="miniconda3_gamma/envs/msql/bin">
-        <toolPath tool="query" path="python3"/>
+        <toolPath tool="msql_query" path="python3"/>
     </pathSet>
 
     <pathSet base="$base">
-        <pathVar name="query.script" path="proteosafe_query.py"/>
-        <pathVar name="query.enbf" path="msql.ebnf"/>
+        <pathVar name="msql_query.script" path="proteosafe_query.py"/>
+        <pathVar name="msql_query.enbf" path="msql.ebnf"/>
     </pathSet>
 
-    <tool name="query">
+    <tool name="msql_query">
         <require name="inputspectra" type="folder"/>
         <require name="workflowParameters" type="file"/>
         <produce name="query_results" type="folder"/>
 
         <execution env="binary" argConvention="adhoc">
-            <arg pathRef="query.script"/>
+            <arg pathRef="msql_query.script"/>
             <arg valueRef="inputspectra"/>
             <arg valueRef="workflowParameters"/>
             <arg valueRef="query_results"/>
-            <arg pathRef="query.enbf"/>
+            <arg pathRef="msql_query.enbf"/>
         </execution>
     </tool>
 

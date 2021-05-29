@@ -16,7 +16,7 @@
 		</download>
         </bind>
 
-        <bind action="query" tool="query">
+        <bind action="msql_query" tool="msql_query">
             <inputAsRequirement port="inputspectra" requirement="inputspectra"/>
             <inputAsRequirement port="workflowParameters" requirement="workflowParameters"/>
             <productionToOutput port="query_results" production="query_results"/>

@@ -15,6 +15,9 @@ def main():
     output_folder = sys.argv[3]
     path_to_grammar = sys.argv[4]
 
+    # Initialize Ray
+    msql_engine.init_ray()
+
     params_obj = ming_proteosafe_library.parse_xml_file(open(workflow_params))
     mangled_mapping = ming_proteosafe_library.get_mangled_file_mapping(params_obj)
     
