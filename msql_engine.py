@@ -69,11 +69,13 @@ def _load_data(input_filename, cache=False):
 
         mz_list = list(mz)
         i_list = list(intensity)
+        i_max = max(i_list)
 
         if spec.ms_level == 1:
             for i in range(len(mz_list)):
                 peak_dict = {}
                 peak_dict["i"] = i_list[i]
+                peak_dict["i_norm"] = i_list[i] / i_max
                 peak_dict["mz"] = mz_list[i]
                 peak_dict["scan"] = spec.ID
                 peak_dict["rt"] = rt
@@ -87,6 +89,7 @@ def _load_data(input_filename, cache=False):
             for i in range(len(mz_list)):
                 peak_dict = {}
                 peak_dict["i"] = i_list[i]
+                peak_dict["i_norm"] = i_list[i] / i_max
                 peak_dict["mz"] = mz_list[i]
                 peak_dict["scan"] = spec.ID
                 peak_dict["rt"] = rt
@@ -127,15 +130,15 @@ def _get_tolerance(qualifier, mz):
 
 def _get_minintensity(qualifier):
     if qualifier is None:
-        return 0.1
+        return 0, 0
 
     if "qualifierintensityvalue" in qualifier:
-        return qualifier["qualifierintensityvalue"]["value"]
+        return qualifier["qualifierintensityvalue"]["value"], 0
 
     if "qualifierintensitypercent" in qualifier:
-        raise Exception("Qualifier Not Implemented")
+        return 0, qualifier["qualifierintensitypercent"]["value"] / 100
 
-    return 0
+    return 0, 0
 
 
 def process_query(input_query, input_filename, path_to_grammar="msql.ebnf", cache=True):
@@ -263,9 +266,9 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
 
-            min_int = _get_minintensity(condition.get("qualifiers", None))
+            min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
 
-            ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max) & (ms2_df["i"] > min_int)]
+            ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max) & (ms2_df["i"] > min_int) & (ms2_df["i_norm"] > min_intpercent)]
             filtered_scans = set(ms2_filtered_df["scan"])
             ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]
 
@@ -305,9 +308,9 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
 
-            min_int = _get_minintensity(condition.get("qualifiers", None))
+            min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
             
-            ms1_filtered_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max) & (ms1_df["i"] > min_int)]
+            ms1_filtered_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max) & (ms1_df["i"] > min_int) & (ms1_df["i_norm"] > min_intpercent)]
             filtered_scans = set(ms1_filtered_df["scan"])
             ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
 
@@ -332,9 +335,9 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
 
-            min_int = _get_minintensity(condition.get("qualifiers", None))
+            min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
 
-            ms2_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max) & (ms2_df["i"] > min_int)]
+            ms2_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max) & (ms2_df["i"] > min_int) & (ms2_df["i_norm"] > min_intpercent)]
 
     return ms1_df, ms2_df
 

@@ -119,6 +119,16 @@ def test_min_intensity():
     assert(len(results_df) == 1)
     print(results_df)
 
+def test_min_intensitypercent():
+    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=226.18:INTENSITYPERCENT>20"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    print(results_df)
+
+    assert(len(results_df) == 2)
+    print(results_df)
+
 def test_where_and_filter():
     query = "QUERY MS2DATA WHERE MS2PROD=70.06:TOLERANCEMZ=0.01:INTENSITYVALUE>10000 FILTER MS2PROD=70.06:TOLERANCEMZ=0.1"
     parse_obj = msql_parser.parse_msql(query)
@@ -152,8 +162,9 @@ def main():
     #test_variable_ms1()
     #test_filter()
     #test_filterms2()
-    test_where_and_filter()
+    #test_where_and_filter()
     #test_min_intensity()
+    test_min_intensitypercent()
 
 if __name__ == "__main__":
     main()
