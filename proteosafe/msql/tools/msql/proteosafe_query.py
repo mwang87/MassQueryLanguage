@@ -61,7 +61,11 @@ def main():
 
 @ray.remote
 def execute_query(msql_query, input_filename, path_to_grammar="msql.ebnl", cache=False, parallel=True):
-    results_df = msql_engine.process_query(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=cache, parallel=parallel)
+    try:
+        results_df = msql_engine.process_query(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=cache, parallel=parallel)
+    except:
+        return pd.DataFrame()
+
     return results_df
 
 
