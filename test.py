@@ -148,6 +148,10 @@ def test_ms1_filter():
     results_df = msql_engine.process_query(query, "test/JB_182_3_fe.mzML")
     print(results_df)
 
+def test_intensity_int_parse():
+    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=425.2898:TOLERANCEMZ=0.1:INTENSITYPERCENT>1 AND MS2PROD=353.25:TOLERANCEMZ=0.1:INTENSITYPERCENT>80 AND MS1MZ=478.1991:TOLERANCEMZ=0.1:INTENSITYPERCENT>1"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
 
 def test_parse():        
     for line in open("test_queries.txt"):
@@ -181,7 +185,9 @@ def main():
     #test_min_intensity()
     #test_min_intensitypercent()
     #test_ms1_iron()
-    test_ms1_filter()
+    #test_ms1_filter()
+    test_intensity_int_parse()
+    #test_parse()
 
 if __name__ == "__main__":
     main()

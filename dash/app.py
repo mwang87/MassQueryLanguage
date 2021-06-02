@@ -263,9 +263,28 @@ def determine_task(search):
 
     return [query, x_axis, y_axis, facet_column, scan]
 
+
+
+@app.callback([
+                Output('output_parse', 'children'),
+              ],
+              [
+                  Input('query', 'value')
+            ])
+def draw_parse(query):
+    parse_results = msql_parser.parse_msql(query)
+
+    parse_markdown = dcc.Markdown(
+        '''
+```json
+{}
+```
+'''.format(json.dumps(parse_results, indent=4)))
+
+    return [parse_markdown]
+
 @app.callback([
                 Output('output', 'children'),
-                Output('output_parse', 'children'),
               ],
               [
                   Input('query', 'value'),
@@ -288,14 +307,7 @@ def draw_output(query, filename):
         export_format='csv'
     )
 
-    parse_markdown = dcc.Markdown(
-        '''
-```json
-{}
-```
-'''.format(json.dumps(parse_results, indent=4)))
-
-    return [table, parse_markdown]
+    return [table]
 
 
 @app.callback([

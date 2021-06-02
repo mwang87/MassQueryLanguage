@@ -46,7 +46,7 @@ class MassQLToJSON(Transformer):
          if qualifier_type == "qualifiermztolerance":
             qualifier_dict[qualifier_type]["unit"] = "mz"
 
-         qualifier_dict[qualifier_type]["value"] = items[-1]
+         qualifier_dict[qualifier_type]["value"] = float(items[-1])
 
       # We are at a merge node for the qualifier
       if len(items) == 2:
