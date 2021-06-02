@@ -134,6 +134,21 @@ def test_where_and_filter():
     parse_obj = msql_parser.parse_msql(query)
     print(json.dumps(parse_obj, indent=4))
 
+def test_ms1_iron():
+    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=601.3580:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05 AND MS1MZ=654.2665:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/JB_182_3_fe.mzML")
+    print(results_df)
+
+def test_ms1_filter():
+    query = "QUERY scansum(MS1DATA) WHERE MS1MZ=601.3580:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05 AND MS1MZ=654.2665:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05 FILTER MS1MZ=601.3580"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/JB_182_3_fe.mzML")
+    print(results_df)
+
+
 def test_parse():        
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
@@ -164,7 +179,9 @@ def main():
     #test_filterms2()
     #test_where_and_filter()
     #test_min_intensity()
-    test_min_intensitypercent()
+    #test_min_intensitypercent()
+    #test_ms1_iron()
+    test_ms1_filter()
 
 if __name__ == "__main__":
     main()

@@ -310,7 +310,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
 
             min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
             
-            ms1_filtered_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max) & (ms1_df["i"] > min_int) & (ms1_df["i_norm"] > min_intpercent)]
+            ms1_filtered_df = ms1_df[(ms1_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max) & (ms1_df["i"] > min_int) & (ms1_df["i_norm"] > min_intpercent)]
             filtered_scans = set(ms1_filtered_df["scan"])
             ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
 
@@ -327,7 +327,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_tol = 0.1
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
-            ms1_df = ms1_df[(ms2_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
+            ms1_df = ms1_df[(ms1_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
         
         if condition["type"] == "ms2productcondition":
             mz = condition["value"][0]
