@@ -213,7 +213,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True):
 
     # Ray Parallel Version
     if ray.is_initialized():
-        ms1_df, ms2_df = _load_data(input_filename, cache=True)
+        ms1_df, ms2_df = _load_data(input_filename, cache=cache)
         futures = [_executeconditions_query_ray.remote(concrete_query, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache) for concrete_query in all_concrete_queries]
         all_ray_results = ray.get(futures)
         results_ms1_list, results_ms2_list = zip(*all_ray_results)
