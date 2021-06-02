@@ -54,6 +54,8 @@ def main():
     #     all_results_list.append(results_df)
 
     merged_results_df = pd.concat(all_results_list)
+    if "scan" in merged_results_df:
+        merged_results_df["scan"] = merged_results_df["scan"].astype(int)
 
     output_results_file = os.path.join(output_folder, "results.tsv")
     merged_results_df.to_csv(output_results_file, sep='\t', index=False)
