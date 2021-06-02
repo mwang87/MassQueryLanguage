@@ -6,6 +6,7 @@ import argparse
 import glob
 import sys
 import pandas as pd
+import ray
 
 import ming_proteosafe_library
 
@@ -25,20 +26,44 @@ def main():
 
     input_files_list = glob.glob(os.path.join(input_folder, "*.mzML"))
 
+    # Parallel Version
+    all_futures = []
     all_results_list = []
     for input_filename in input_files_list:
         print(input_filename)
 
-        results_df = msql_engine.process_query(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=False)
+        results_future = execute_query.remote(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=False, parallel=False)
+        all_futures.append((results_future, input_filename))
+
+    for result_future, input_filename in all_futures:
+        results_df = ray.get(result_future)
         real_filename = mangled_mapping[os.path.basename(input_filename)]
         results_df["filename"] = real_filename
 
         all_results_list.append(results_df)
 
+    # Serial Version
+    # all_results_list = []
+    # for input_filename in input_files_list:
+    #     print(input_filename)
+
+    #     results_df = execute_query(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=False, parallel=True)
+    #     real_filename = mangled_mapping[os.path.basename(input_filename)]
+    #     results_df["filename"] = real_filename
+
+    #     all_results_list.append(results_df)
+
     merged_results_df = pd.concat(all_results_list)
 
     output_results_file = os.path.join(output_folder, "results.tsv")
     merged_results_df.to_csv(output_results_file, sep='\t', index=False)
+
+
+@ray.remote
+def execute_query(msql_query, input_filename, path_to_grammar="msql.ebnl", cache=False, parallel=True):
+    results_df = msql_engine.process_query(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=cache, parallel=parallel)
+    return results_df
+
 
 if __name__ == "__main__":
     main()

@@ -141,13 +141,13 @@ def _get_minintensity(qualifier):
     return 0, 0
 
 
-def process_query(input_query, input_filename, path_to_grammar="msql.ebnf", cache=True):
+def process_query(input_query, input_filename, path_to_grammar="msql.ebnf", cache=True, parallel=True):
     parsed_dict = msql_parser.parse_msql(input_query, path_to_grammar=path_to_grammar)
 
-    return _evalute_variable_query(parsed_dict, input_filename, cache=cache)
+    return _evalute_variable_query(parsed_dict, input_filename, cache=cache, parallel=parallel)
 
 
-def _evalute_variable_query(parsed_dict, input_filename, cache=True):
+def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=True):
     # Lets check if there is a variable in here, the only one allowed is X
     for condition in parsed_dict["conditions"]:
         try:
@@ -212,7 +212,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True):
     results_ms2_list = []
 
     # Ray Parallel Version
-    if ray.is_initialized():
+    if ray.is_initialized() and parallel:
         ms1_df, ms2_df = _load_data(input_filename, cache=cache)
         futures = [_executeconditions_query_ray.remote(concrete_query, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache) for concrete_query in all_concrete_queries]
         all_ray_results = ray.get(futures)
