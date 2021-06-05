@@ -18,6 +18,15 @@ class MassQLToJSON(Transformer):
    def qualifierintensitypercent(self, items):
       return "qualifierintensitypercent"
 
+   def qualifierintensitymatch(self, items):
+      return "qualifierintensitymatch"
+
+   def qualifierintensitytolpercent(self, items):
+      return "qualifierintensitytolpercent"
+
+   def qualifierintensityreference(self, items):
+      return "qualifierintensityreference"
+
    def ms2productcondition(self, items):
       return "ms2productcondition"
 
@@ -31,6 +40,11 @@ class MassQLToJSON(Transformer):
       return "ms1mzcondition"
 
    def qualifier(self, items):
+      print("ZZ", items)
+      if len(items) == 1 and items[0] == "qualifierintensityreference":
+         qualifier_dict = {}
+
+         
 
       # We are at a qualifier leaf
       if len(items) == 3:
@@ -46,7 +60,12 @@ class MassQLToJSON(Transformer):
          if qualifier_type == "qualifiermztolerance":
             qualifier_dict[qualifier_type]["unit"] = "mz"
 
-         qualifier_dict[qualifier_type]["value"] = float(items[-1])
+         print("XX", qualifier_dict[qualifier_type])
+         if qualifier_dict[qualifier_type]["name"] == "qualifierintensitymatch":
+            # NOTE: these matches should contain variables that the engine will understand
+            qualifier_dict[qualifier_type]["value"] = items[-1]
+         else:
+            qualifier_dict[qualifier_type]["value"] = float(items[-1])
 
       # We are at a merge node for the qualifier
       if len(items) == 2:

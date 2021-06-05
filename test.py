@@ -153,6 +153,11 @@ def test_intensity_int_parse():
     parse_obj = msql_parser.parse_msql(query)
     print(json.dumps(parse_obj, indent=4))
 
+def test_intensity_match():
+    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=147.09:INTENSITYMATCH=Y:INTENSITYTOLREFERENCE AND MS1MZ=148.0945:INTENSITYMATCH=Y*0.1:INTENSITYTOLPERCENT=10"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+
 def test_parse():        
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
@@ -186,8 +191,9 @@ def main():
     #test_min_intensitypercent()
     #test_ms1_iron()
     #test_ms1_filter()
-    test_intensity_int_parse()
+    #test_intensity_int_parse()
     #test_parse()
+    test_intensity_match()
 
 if __name__ == "__main__":
     main()

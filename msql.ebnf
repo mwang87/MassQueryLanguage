@@ -28,10 +28,12 @@ condition: conditionfields "=" floating
 qualifier: qualifier ":" qualifier
     | qualifierfields equal floating
     | qualifierfields equal STRING
+    | qualifierfields equal variable
     | qualifierfields greaterthan floating
     | qualifierfields greaterthan STRING
     | qualifierfields lessthan floating
     | qualifierfields lessthan STRING
+    | qualifierintensityreference
 
 equal: "="
 lessthan: "<"
@@ -51,11 +53,16 @@ qualifierfields: qualifiermztolerance
     | qualifierppmtolerance
     | qualifierintensitypercent
     | qualifierintensityvalue
+    | qualifierintensitymatch
+    | qualifierintensitytolpercent
 
 qualifiermztolerance: "TOLERANCEMZ"
 qualifierppmtolerance: "TOLERANCEPPM"
 qualifierintensitypercent: "INTENSITYPERCENT"
 qualifierintensityvalue: "INTENSITYVALUE"
+qualifierintensitymatch: "INTENSITYMATCH"
+qualifierintensitytolpercent: "INTENSITYTOLPERCENT"
+qualifierintensityreference: "INTENSITYTOLREFERENCE"
 
 function: functionscannum
     | functionscansum
@@ -74,7 +81,7 @@ booleanconjunction: "AND"
 param: "TOLERANCE"
 floating: /[-+]?([0-9]*\.[0-9]+|[0-9]+)/
 // variable: /[A-Z]+/
-variable: /X+[-+]?(([0-9]*\.[0-9]+|[0-9]+)|([0-9]*))/
+variable: /[XY]+[-+*]?(([0-9]*\.[0-9]+|[0-9]+)|([0-9]*))/
 // variable: /[A-Z]+[-+]([0-9]*\.[0-9]|[0-9]*)|([0-9]+\.[0-9])|([0-9]+)/
 
 %import common.ESCAPED_STRING   -> STRING
