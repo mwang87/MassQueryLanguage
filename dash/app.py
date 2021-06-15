@@ -74,7 +74,7 @@ DATASELECTION_CARD = [
             dbc.InputGroup(
                 [
                     dbc.InputGroupAddon("Query", addon_type="prepend"),
-                    dbc.Input(id='query', placeholder="Enter Query", value=""),
+                    dbc.Textarea(id='query', placeholder="Enter Query", value="", rows="4"),
                 ],
                 className="mb-3",
             ),
