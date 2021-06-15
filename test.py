@@ -141,7 +141,11 @@ def test_where_and_filter():
     print(json.dumps(parse_obj, indent=4))
 
 def test_ms1_iron():
-    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=601.3580:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05 AND MS1MZ=654.2665:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05"
+    msql_engine.init_ray()
+    
+    query = "QUERY scaninfo(MS1DATA) WHERE \
+            MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=1 \
+            AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYMATCHPERCENT=1"
     parse_obj = msql_parser.parse_msql(query)
     print(json.dumps(parse_obj, indent=4))
     results_df = msql_engine.process_query(query, "test/JB_182_3_fe.mzML")
@@ -194,13 +198,13 @@ def main():
     #test_subquery()
     #test_variable_parse()
     #test_variable()
-    test_variable_ms1()
+    #test_variable_ms1()
     #test_filter()
     #test_filterms2()
     #test_where_and_filter()
     #test_min_intensity()
     #test_min_intensitypercent()
-    #test_ms1_iron()
+    test_ms1_iron()
     #test_ms1_filter()
     #test_intensity_int_parse()
     #test_parse()

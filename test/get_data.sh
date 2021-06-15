@@ -2,3 +2,4 @@ wget --output-document=GNPS00002_A3_p.mzML https://gnps-external.ucsd.edu/massiv
 wget --output-document=QC_0.mzML https://gnps-external.ucsd.edu/massiveftpproxy?ftppath=ftp://massive.ucsd.edu/MSV000085852/ccms_peak/QC_raw/QC_0.mzML
 wget --output-document=bld_plt1_07_120_1.mzML https://gnps-external.ucsd.edu/massiveftpproxy?ftppath=ftp://massive.ucsd.edu/MSV000085944/ccms_peak/raw_data/bld_plt1_07_120_1.mzML
 wget --output-document=NS_1x_test.mzML https://gnps-external.ucsd.edu/massiveftpproxy?ftppath=ftp://massive.ucsd.edu/MSV000087352/updates/2021-05-03_allegraaron_95d2215b/peak/NS_1x_test.mzML
+wget --output-document=JB_182_2_fe.mzML https://gnps-external.ucsd.edu/massiveftpproxy?ftppath=ftp://massive.ucsd.edu/MSV000084289/ccms_peak/JB_182_2_fe.mzML

@@ -511,6 +511,9 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             # Applying the intensity match
             ms1_filtered_df = _filter_intensitymatch(ms1_filtered_df, reference_conditions_register, condition)
 
+            if len(ms1_filtered_df) == 0:
+                return pd.DataFrame(), pd.DataFrame()
+
             # Filtering the actual data structures
             filtered_scans = set(ms1_filtered_df["scan"])
             ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
