@@ -61,8 +61,8 @@ qualifierppmtolerance: "TOLERANCEPPM"
 qualifierintensitypercent: "INTENSITYPERCENT"
 qualifierintensityvalue: "INTENSITYVALUE"
 qualifierintensitymatch: "INTENSITYMATCH"
-qualifierintensitytolpercent: "INTENSITYTOLPERCENT"
-qualifierintensityreference: "INTENSITYTOLREFERENCE"
+qualifierintensitytolpercent: "INTENSITYMATCHPERCENT"
+qualifierintensityreference: "INTENSITYMATCHREFERENCE"
 
 function: functionscannum
     | functionscansum

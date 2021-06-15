@@ -155,8 +155,8 @@ def test_intensity_int_parse():
 
 def test_intensity_match():
     query = "QUERY scaninfo(MS1DATA) WHERE \
-        MS1MZ=147.09:INTENSITYMATCH=Y:INTENSITYTOLREFERENCE AND \
-        MS1MZ=148.0945:INTENSITYMATCH=Y*0.1:INTENSITYTOLPERCENT=1"
+        MS1MZ=147.09:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE AND \
+        MS1MZ=148.0945:INTENSITYMATCH=Y*0.1:INTENSITYMATCHPERCENT=1"
     parse_obj = msql_parser.parse_msql(query)
     print(json.dumps(parse_obj, indent=4))
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
