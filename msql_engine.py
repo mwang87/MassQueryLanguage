@@ -9,7 +9,9 @@ import logging
 from tqdm import tqdm
 
 import ray
+from py_expression_eval import Parser
 
+math_parser = Parser()
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)
 
@@ -129,6 +131,16 @@ def _get_tolerance(qualifier, mz):
     return 0.1
 
 def _get_minintensity(qualifier):
+    """
+    Returns absolute min and relative min
+
+    Args:
+        qualifier ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+
     if qualifier is None:
         return 0, 0
 
@@ -140,6 +152,72 @@ def _get_minintensity(qualifier):
 
     return 0, 0
 
+def _get_intensitymatch_range(qualifiers, match_intensity):
+    min_intensity = 0
+    max_intensity = 0
+
+    if "qualifierintensitytolpercent" in qualifiers:
+        tolerance_percent = qualifiers["qualifierintensitytolpercent"]["value"]
+        tolerance_value = float(tolerance_percent) / 100 * match_intensity
+        
+        min_intensity = match_intensity - tolerance_value
+        max_intensity = match_intensity + tolerance_value
+
+    return min_intensity, max_intensity
+
+
+
+def _filter_intensitymatch(ms_filtered_df, register_dict, condition):
+    if "qualifiers" in condition:
+        if "qualifierintensitymatch" in condition["qualifiers"] and \
+            "qualifierintensitytolpercent" in condition["qualifiers"]:
+            qualifier_expression = condition["qualifiers"]["qualifierintensitymatch"]["value"]
+            qualifier_variable = qualifier_expression[0] #TODO: This assumes the variable is the first character in the expression, likely a bad assumption
+
+            grouped_df = ms_filtered_df.groupby("scan").sum().reset_index()
+            filtered_grouped_scans = []
+            for grouped_scan in grouped_df.to_dict(orient="records"):
+                # Reading from the register
+                key = "scan:{}:variable:{}".format(grouped_scan["scan"], qualifier_variable)
+
+                if key in register_dict:
+                    register_value = register_dict[key]                    
+                    evaluated_new_expression = math_parser.parse(qualifier_expression).evaluate({
+                        qualifier_variable : register_value
+                    })
+
+                    min_match_intensity, max_match_intensity = _get_intensitymatch_range(condition["qualifiers"], evaluated_new_expression)
+
+                    scan_intensity = grouped_scan["i"]
+
+                    if scan_intensity > min_match_intensity and \
+                        scan_intensity < max_match_intensity:
+                        filtered_grouped_scans.append(grouped_scan)
+
+                    print(key, qualifier_expression, qualifier_variable, register_value, evaluated_new_expression)
+                    print(min_match_intensity, max_match_intensity)
+                else:
+                    # Its not in the register, which means we don't find it
+                    continue
+
+            return pd.DataFrame(filtered_grouped_scans)
+
+    return ms_filtered_df
+
+def _set_intensity_register(ms_filtered_df, register_dict, condition):
+    if "qualifiers" in condition:
+        if "qualifierintensityreference" in condition["qualifiers"]:
+            qualifier_variable = condition["qualifiers"]["qualifierintensitymatch"]["value"]
+
+            grouped_df = ms_filtered_df.groupby("scan").sum().reset_index()
+            for grouped_scan in grouped_df.to_dict(orient="records"):
+                # Saving into the register
+                key = "scan:{}:variable:{}".format(grouped_scan["scan"], qualifier_variable)
+                register_dict[key] = grouped_scan["i"]
+
+            print(condition)
+            print(register_dict)
+    return
 
 def process_query(input_query, input_filename, path_to_grammar="msql.ebnf", cache=True, parallel=True):
     parsed_dict = msql_parser.parse_msql(input_query, path_to_grammar=path_to_grammar)
@@ -240,6 +318,9 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
 def _executeconditions_query_ray(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
     return _executeconditions_query(parsed_dict, input_filename, ms1_input_df=ms1_input_df, ms2_input_df=ms2_input_df, cache=cache)
 
+
+
+
 def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
     # This function attempts to find the data that the query specifies in the conditions
     #import json
@@ -252,8 +333,24 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
         ms1_df = ms1_input_df
         ms2_df = ms2_input_df
 
-    # These are for the where clause
+    # In order to handle intensities, we will make sure to sort all conditions with 
+    # with the conditions that are the reference intensity first, then subsequent conditions
+    # that have an intensity match will reference the saved reference intensities
+    reference_conditions_register = {} # This will hold all the reference intensity values
+    
+    # This helps sort the qualifiers
+    reference_conditions = []
+    nonreference_conditions = []
     for condition in parsed_dict["conditions"]:
+        if "qualifiers" in condition:
+            if "qualifierintensityreference" in condition["qualifiers"]:
+                reference_conditions.append(condition)
+                continue
+        nonreference_conditions.append(condition)
+    all_conditions = reference_conditions + nonreference_conditions
+
+    # These are for the WHERE clause
+    for condition in all_conditions:
         if not condition["conditiontype"] == "where":
             continue
 
@@ -269,12 +366,22 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
 
             ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max) & (ms2_df["i"] > min_int) & (ms2_df["i_norm"] > min_intpercent)]
+
+            # Setting the intensity match register
+            _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
+
+            # Applying the intensity match
+            ms2_filtered_df = _filter_intensitymatch(ms2_filtered_df, reference_conditions_register, condition)
+
+            # Filtering the actual data structures
             filtered_scans = set(ms2_filtered_df["scan"])
             ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]
 
             # Filtering the MS1 data now
             ms1_scans = set(ms2_df["ms1scan"])
             ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
+
+            continue
 
         # Filtering MS2 Precursor m/z
         if condition["type"] == "ms2precursorcondition":
@@ -283,6 +390,8 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
             ms2_df = ms2_df[(ms2_df["precmz"] > mz_min) & (ms2_df["precmz"] < mz_max)]
+
+            continue
 
         # Filtering MS2 Neutral Loss
         if condition["type"] == "ms2neutrallosscondition":
@@ -301,6 +410,8 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             ms1_scans = set(ms2_df["ms1scan"])
             ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
 
+            continue
+
         # finding MS1 peaks
         if condition["type"] == "ms1mzcondition":
             mz = condition["value"][0]
@@ -309,13 +420,24 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_max = mz + mz_tol
 
             min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
-            
             ms1_filtered_df = ms1_df[(ms1_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max) & (ms1_df["i"] > min_int) & (ms1_df["i_norm"] > min_intpercent)]
+            
+            # Setting the intensity match register
+            _set_intensity_register(ms1_filtered_df, reference_conditions_register, condition)
+
+            # Applying the intensity match
+            ms1_filtered_df = _filter_intensitymatch(ms1_filtered_df, reference_conditions_register, condition)
+
+            # Filtering the actual data structures
             filtered_scans = set(ms1_filtered_df["scan"])
             ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
 
-    # These are for the where clause
-    for condition in parsed_dict["conditions"]:
+            continue
+
+        raise Exception("CONDITION NOT HANDLED")
+
+    # These are for the FILTER clause
+    for condition in all_conditions:
         if not condition["conditiontype"] == "filter":
             continue
 

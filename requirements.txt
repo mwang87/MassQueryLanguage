@@ -4,3 +4,4 @@ pandas
 pyarrow
 ray
 tqdm
+py_expression_eval

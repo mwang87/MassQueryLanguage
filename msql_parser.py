@@ -40,11 +40,13 @@ class MassQLToJSON(Transformer):
       return "ms1mzcondition"
 
    def qualifier(self, items):
-      print("ZZ", items)
       if len(items) == 1 and items[0] == "qualifierintensityreference":
-         qualifier_dict = {}
-
+         qualifier_type = items[0]
          
+         qualifier_dict = {}
+         qualifier_dict["type"] = "qualifier"
+         qualifier_dict[qualifier_type] = {}
+         qualifier_dict[qualifier_type]["name"] = qualifier_type
 
       # We are at a qualifier leaf
       if len(items) == 3:
@@ -60,7 +62,6 @@ class MassQLToJSON(Transformer):
          if qualifier_type == "qualifiermztolerance":
             qualifier_dict[qualifier_type]["unit"] = "mz"
 
-         print("XX", qualifier_dict[qualifier_type])
          if qualifier_dict[qualifier_type]["name"] == "qualifierintensitymatch":
             # NOTE: these matches should contain variables that the engine will understand
             qualifier_dict[qualifier_type]["value"] = items[-1]
@@ -169,7 +170,6 @@ class MassQLToJSON(Transformer):
       return items[0]
    
    def statement(self, items):
-      print(len(items))
 
       if len(items) == 1:
          query_dict = {}
