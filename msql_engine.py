@@ -115,18 +115,36 @@ def _load_data(input_filename, cache=False):
 
     return ms1_df, ms2_df
 
+def _get_ppm_tolerance(qualifiers):
+    if qualifiers is None:
+        return None
 
-def _get_tolerance(qualifier, mz):
-    if qualifier is None:
+    if "qualifierppmtolerance" in qualifiers:
+        ppm = qualifiers["qualifierppmtolerance"]["value"]
+        return ppm
+
+    return None
+
+def _get_da_tolerance(qualifiers):
+    if qualifiers is None:
+        return None
+
+    if "qualifiermztolerance" in qualifiers:
+        return qualifiers["qualifiermztolerance"]["value"]
+
+    return None
+
+def _get_mz_tolerance(qualifiers, mz):
+    if qualifiers is None:
         return 0.1
 
-    if "qualifierppmtolerance" in qualifier:
-        ppm = qualifier["qualifierppmtolerance"]["value"]
+    if "qualifierppmtolerance" in qualifiers:
+        ppm = qualifiers["qualifierppmtolerance"]["value"]
         mz_tol = abs(ppm * mz / 1000000)
         return mz_tol
 
-    if "qualifiermztolerance" in qualifier:
-        return qualifier["qualifiermztolerance"]["value"]
+    if "qualifiermztolerance" in qualifiers:
+        return qualifiers["qualifiermztolerance"]["value"]
 
     return 0.1
 
@@ -224,6 +242,15 @@ def process_query(input_query, input_filename, path_to_grammar="msql.ebnf", cach
 
     return _evalute_variable_query(parsed_dict, input_filename, cache=cache, parallel=parallel)
 
+def _determine_mz_max(mz, ppm_tol, da_tol):
+    da_tol = da_tol if da_tol < 10000 else 0
+    ppm_tol = ppm_tol if ppm_tol < 10000 else 0
+    # We are going to make the bins half of the actual tolerance
+    half_delta = max(mz * ppm_tol / 1000000, da_tol) / 2
+
+    half_delta = half_delta if half_delta > 0 else 0.05
+
+    return mz + half_delta
 
 def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=True):
     # Lets check if there is a variable in here, the only one allowed is X
@@ -240,50 +267,107 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
             pass
 
     # Here we will check if there is a variable in the expression
-    has_variable = False
+    variable_properties = {}
+    variable_properties["has_variable"] = False
+    variable_properties["ppm_tolerance"] = 100000
+    variable_properties["da_tolerance"] = 100000
+    variable_properties["query_ms1"] = False
+    variable_properties["query_ms2"] = False
+    
     for condition in parsed_dict["conditions"]:
         for value in condition["value"]:
             try:
-                if "X" in value:
-                    has_variable = True
-                    break
+                # Checking if X is in any string
+                if "X" in value[0]:
+                    variable_properties["has_variable"] = True
+                    #mz_tolerance = _get_mz_tolerance(condition.get("qualifiers", None), 1000000)
+
+                    ppm_tolerance = _get_ppm_tolerance(condition.get("qualifiers", None))
+                    da_tolerance = _get_da_tolerance(condition.get("qualifiers", None))
+
+                    if da_tolerance is not None:
+                        variable_properties["da_tolerance"] = min(variable_properties["da_tolerance"], da_tolerance)
+                    if ppm_tolerance is not None:
+                        variable_properties["ppm_tolerance"] = min(variable_properties["ppm_tolerance"], ppm_tolerance)                    
+                    continue
             except TypeError:
                 # This is when the target is actually a float
                 pass
+
+    ms1_df, ms2_df = _load_data(input_filename, cache=cache)
     
     all_concrete_queries = []
-    if has_variable:
-        DELTA_VAL = 0.1
-        # Lets iterate through all values of the variable
-        #MAX_MZ = 10
-        #MAX_MZ = 200
-        MAX_MZ = 1000
+    if variable_properties["has_variable"]:
+        # Here we will start with the smallest mass and then go up
+        masses_considered_df = pd.DataFrame()
+        masses_considered_df["mz"] = pd.concat([ms1_df["mz"], ms2_df["mz"], ms2_df["precmz"]])
+        masses_considered_df["mz_max"] = masses_considered_df["mz"].apply(lambda x: _determine_mz_max(x, variable_properties["ppm_tolerance"], variable_properties["da_tolerance"]))
+        
+        masses_considered_df = masses_considered_df.sort_values("mz")
+        print(masses_considered_df, variable_properties)
 
-        for i in tqdm(range(int(MAX_MZ / DELTA_VAL))):
-            x_val = i * DELTA_VAL + 150
+        masses_list = masses_considered_df.to_dict(orient="records")
+
+        running_max_mz = 0
+        for masses_obj in tqdm(masses_list):
+            if running_max_mz > masses_obj["mz"]:
+                continue
 
             # Writing new query
             substituted_parse = copy.deepcopy(parsed_dict)
+            mz_val = masses_obj["mz"]
 
             for condition in substituted_parse["conditions"]:
                 for i, value in enumerate(condition["value"]):
                     try:
                         if "X" in value:
                             if "+" in value:
-                                new_value = x_val + float(value.split("+")[-1])
+                                new_value = mz_val + float(value.split("+")[-1])
                             else:
-                                new_value = x_val
+                                new_value = mz_val
                             # print("SUBSTITUTE", condition, value, i, new_value)
                             condition["value"][i] = new_value
                     except TypeError:
                         # This is when the target is actually a float
                         pass
 
-            print(substituted_parse)
+            #print(substituted_parse)
             all_concrete_queries.append(substituted_parse)
+            
+            # Let's consider this mz
+            running_max_mz = masses_obj["mz_max"]
+
+
+        # DELTA_VAL = 0.1
+        # # Lets iterate through all values of the variable
+        # #MAX_MZ = 10
+        # #MAX_MZ = 200
+        # MAX_MZ = 1000
+
+        # for i in tqdm(range(int(MAX_MZ / DELTA_VAL))):
+        #     x_val = i * DELTA_VAL + 150
+
+        #     # Writing new query
+        #     substituted_parse = copy.deepcopy(parsed_dict)
+
+        #     for condition in substituted_parse["conditions"]:
+        #         for i, value in enumerate(condition["value"]):
+        #             try:
+        #                 if "X" in value:
+        #                     if "+" in value:
+        #                         new_value = x_val + float(value.split("+")[-1])
+        #                     else:
+        #                         new_value = x_val
+        #                     # print("SUBSTITUTE", condition, value, i, new_value)
+        #                     condition["value"][i] = new_value
+        #             except TypeError:
+        #                 # This is when the target is actually a float
+        #                 pass
+
+        #     #print(substituted_parse)
+        #     all_concrete_queries.append(substituted_parse)
     else:
         all_concrete_queries.append(parsed_dict)
-        
 
     # Perfoming the filtering of conditions
     results_ms1_list = []
@@ -291,7 +375,6 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
 
     # Ray Parallel Version
     if ray.is_initialized() and parallel:
-        ms1_df, ms2_df = _load_data(input_filename, cache=cache)
         futures = [_executeconditions_query_ray.remote(concrete_query, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache) for concrete_query in all_concrete_queries]
         all_ray_results = ray.get(futures)
         results_ms1_list, results_ms2_list = zip(*all_ray_results)
@@ -359,7 +442,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
         # Filtering MS2 Product Ions
         if condition["type"] == "ms2productcondition":
             mz = condition["value"][0]
-            mz_tol = _get_tolerance(condition.get("qualifiers", None), mz)
+            mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
 
@@ -453,7 +536,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
         
         if condition["type"] == "ms2productcondition":
             mz = condition["value"][0]
-            mz_tol = _get_tolerance(condition.get("qualifiers", None), mz)
+            mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
 

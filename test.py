@@ -71,6 +71,12 @@ def test_diphen_combo():
     assert(1237 in list(results_df["scan"]))
     print(set(results_df["scan"]))
 
+def test_variable_parse():
+    # This finds the sum of the MS1 of the MS2 spectrum with 
+    query = "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X AND MS2PREC=X AND MS2PROD=119.09"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+
 def test_variable():
     # This finds the sum of the MS1 of the MS2 spectrum with 
     #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=119.09"
@@ -186,8 +192,9 @@ def main():
     #test_query()
     #test_xic()
     #test_subquery()
+    #test_variable_parse()
     #test_variable()
-    #test_variable_ms1()
+    test_variable_ms1()
     #test_filter()
     #test_filterms2()
     #test_where_and_filter()
@@ -197,7 +204,7 @@ def main():
     #test_ms1_filter()
     #test_intensity_int_parse()
     #test_parse()
-    test_intensity_match()
+    #test_intensity_match()
 
 if __name__ == "__main__":
     main()
