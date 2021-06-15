@@ -119,12 +119,12 @@ AND MS2PREC=X
 ```
 ### MS2 with distinct fragment(s) - Precursor Ion Scan
 
-One Fragment Ion
+One Fragment Ion (m/z = 660.2)
 ```
 QUERY scaninfo(MS2DATA) WHERE MS2PROD=660.2:TOLERANCEMZ=0.1
 ```
 
-Two Fragment Ions
+Two Fragment Ions (m/z = 660.2 and 468.2)
 ```
 QUERY scaninfo(MS2DATA) WHERE MS2PROD=660.2:TOLERANCEMZ=0.1 AND MS2PROD=468.2:TOLERANCEMZ=0.1
 ```
