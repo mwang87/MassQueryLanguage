@@ -99,11 +99,15 @@ INTENSITYMATCH=Y*2
 
 ### XIC Generation
 
+Precursor, m/z = 100
+
 ```
 QUERY scansum(MS1DATA) WHERE MS1MZ=100:TOLERANCEMZ=0.1
 ```
 
-### MS2 With Sugar Loss
+### MS2 With Sugar Loss - Neutral Loss Scan
+
+Neutral Loss, 163 Da
 
 ```
 QUERY scannum(MS2DATA) WHERE MS2NL=163
@@ -117,3 +121,15 @@ MS1MZ=X:INTENSITYMATCH=Y:INTENSITYTOLREFERENCE
 AND MS1MZ=X+2:INTENSITYMATCH=Y:INTENSITYTOLPERCENT=5
 AND MS2PREC=X
 ```
+### MS2 with distinct fragment(s) - Precursor Ion Scan
+
+One Product Ion, m/z = 660.2
+```
+QUERY scaninfo(MS2DATA) WHERE MS2PROD=660.2:TOLERANCEMZ=0.1
+```
+
+Two Product Ions, m/z = 660.2 and 468.2
+```
+QUERY scaninfo(MS2DATA) WHERE MS2PROD=660.2:TOLERANCEMZ=0.1 AND MS2PROD=468.2:TOLERANCEMZ=0.1
+```
+
