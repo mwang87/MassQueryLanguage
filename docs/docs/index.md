@@ -7,16 +7,26 @@ express a query in a mass spectrometry centric fashion. It is inspired by SQL,
 but it attempts to bake in assumptions of mass spectrometry to make querying much more
 natural for mass spectrometry users. 
 
+## Try it out
+
+If you want to do a large scale query on your data, try our beta workflow [here](https://proteomics2.ucsd.edu/ProteoSAFe/index.jsp?params={%22workflow%22:%22MSQL%22,%22workflow_version%22:%22current%22}).
+
 ## Definition of a Query
 
 There are several parts
 
-* QUERY - keyword
-* Type of Data
-* WHERE - keyword
-* Conditionals
-* FILTER - keyword
-* Filters
+```
+QUERY
+<Type of Data>
+WHERE
+<Condition>
+AND
+<Condition>
+FILTER
+<Filter>
+AND
+<Filter>
+```
 
 ### Type of Data
 
