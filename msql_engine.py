@@ -232,9 +232,6 @@ def _set_intensity_register(ms_filtered_df, register_dict, condition):
                 # Saving into the register
                 key = "scan:{}:variable:{}".format(grouped_scan["scan"], qualifier_variable)
                 register_dict[key] = grouped_scan["i"]
-
-            print(condition)
-            print(register_dict)
     return
 
 def process_query(input_query, input_filename, path_to_grammar="msql.ebnf", cache=True, parallel=True):
@@ -295,17 +292,31 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
                 pass
 
     ms1_df, ms2_df = _load_data(input_filename, cache=cache)
-    
+
     all_concrete_queries = []
     if variable_properties["has_variable"]:
+        # Here we could do a pre-query without any of the other conditions
+        presearch_parse = copy.deepcopy(parsed_dict)
+        non_variable_conditions = []
+        for condition in presearch_parse["conditions"]:
+            for value in condition["value"]:
+                try:
+                    # Checking if X is in any string
+                    if "X" in value[0]:
+                        continue
+                except TypeError:
+                    # This is when the target is actually a float
+                    pass
+                non_variable_conditions.append(condition)
+        presearch_parse["conditions"] = non_variable_conditions
+        ms1_df, ms2_df = _executeconditions_query(presearch_parse, input_filename, cache=cache)
+
         # Here we will start with the smallest mass and then go up
         masses_considered_df = pd.DataFrame()
         masses_considered_df["mz"] = pd.concat([ms1_df["mz"], ms2_df["mz"], ms2_df["precmz"]])
         masses_considered_df["mz_max"] = masses_considered_df["mz"].apply(lambda x: _determine_mz_max(x, variable_properties["ppm_tolerance"], variable_properties["da_tolerance"]))
         
         masses_considered_df = masses_considered_df.sort_values("mz")
-        print(masses_considered_df, variable_properties)
-
         masses_list = masses_considered_df.to_dict(orient="records")
 
         running_max_mz = 0
@@ -438,6 +449,21 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             continue
 
         #logging.error("WHERE CONDITION", condition)
+
+        # RT Filters
+        if condition["type"] == "rtmincondition":
+            rt = condition["value"][0]
+            ms2_df = ms2_df[ms2_df["rt"] > rt]
+            ms1_df = ms1_df[ms1_df["rt"] > rt]
+
+            continue
+
+        if condition["type"] == "rtmaxcondition":
+            rt = condition["value"][0]
+            ms2_df = ms2_df[ms2_df["rt"] < rt]
+            ms1_df = ms1_df[ms1_df["rt"] < rt]
+
+            continue
 
         # Filtering MS2 Product Ions
         if condition["type"] == "ms2productcondition":

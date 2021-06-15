@@ -21,9 +21,9 @@ filterfullcondition: filterfullcondition booleanconjunction filterfullcondition
     | condition
 
 condition: conditionfields "=" floating
-    | conditionfields "=" variable
-    | conditionfields "=" "(" statement ")"
-    | conditionfields "=" "(" statement ")"
+    | conditionfields equal variable
+    | conditionfields equal "(" statement ")"
+    
 
 qualifier: qualifier ":" qualifier
     | qualifierfields equal floating
@@ -43,11 +43,15 @@ conditionfields: ms2productcondition
     | ms2precursorcondition
     | ms2neutrallosscondition
     | ms1mzcondition
+    | rtmincondition
+    | rtmaxcondition
 
 ms2productcondition: "MS2PROD"
 ms2precursorcondition: "MS2PREC"
 ms2neutrallosscondition: "MS2NL"
 ms1mzcondition: "MS1MZ"
+rtmincondition: "RTMIN"
+rtmaxcondition: "RTMAX"
 
 qualifierfields: qualifiermztolerance
     | qualifierppmtolerance

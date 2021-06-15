@@ -141,12 +141,15 @@ def test_where_and_filter():
     print(json.dumps(parse_obj, indent=4))
 
 def test_ms1_iron():
-    msql_engine.init_ray()
-    
+    #msql_engine.init_ray()
+
     query = "QUERY scaninfo(MS1DATA) WHERE \
-            MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=1 \
+            RTMIN=3.0 \
+            AND RTMAX=3.2 \
+            AND MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=1 \
             AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYMATCHPERCENT=1"
     parse_obj = msql_parser.parse_msql(query)
+    print(parse_obj)
     print(json.dumps(parse_obj, indent=4))
     results_df = msql_engine.process_query(query, "test/JB_182_3_fe.mzML")
     print(results_df)
@@ -172,9 +175,18 @@ def test_intensity_match():
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
 
+def test_rt_filter():
+    query = "QUERY scaninfo(MS1DATA) WHERE \
+        RTMIN=0.1 AND RTMAX=0.3"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    print(results_df)
+
 def test_parse():        
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
+        print(test_query)
         msql_parser.parse_msql(test_query)
 
 def test_query():
@@ -209,6 +221,7 @@ def main():
     #test_intensity_int_parse()
     #test_parse()
     #test_intensity_match()
+    #test_rt_filter()
 
 if __name__ == "__main__":
     main()
