@@ -1,0 +1,35 @@
+site_name: GNPS Documentation
+site_url: https://ccms-ucsd.github.io/GNPSDocumentation/
+edit_uri: https://github.com/CCMS-UCSD/GNPSDocumentation/edit/master/docs/
+repo_name: CCMS-UCSD/GNPSDocumentation
+repo_url: https://github.com/CCMS-UCSD/GNPSDocumentation
+
+nav:
+    - MSQL Introduction: index.md
+theme:
+    name: material
+
+plugins:
+    - search
+    - git-authors:
+        show_contribution: true
+    - git-revision-date-localized:
+        type: datetime
+
+markdown_extensions:
+    - toc:
+        permalink: true
+    - admonition
+    - pymdownx.superfences:
+        # make exceptions to highlighting of code:
+        custom_fences:
+            - name: mermaid
+              class: mermaid
+              format: !!python/name:mermaid2.fence_mermaid
+    - pymdownx.details
+    - pymdownx.emoji:
+        emoji_index: !!python/name:pymdownx.emoji.twemoji
+        emoji_generator: !!python/name:pymdownx.emoji.to_svg
+            
+
+google_analytics: ['UA-8412213-5', 'ccms-ucsd.github.io']
