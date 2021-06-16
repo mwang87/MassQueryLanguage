@@ -31,9 +31,10 @@
                 </label>
             </cell>
             <cell>
-                <input type="text" parameter="QUERY">
-                    <attribute name="size" value="80"/>
-                </input>
+                <input parameter="QUERY" type="textarea">
+					<attribute name="rows" value="5"/>
+					<attribute name="cols" value="80"/>
+				</input>
             </cell>
         </row>
         <row>
