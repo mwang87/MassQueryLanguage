@@ -26,32 +26,35 @@ def main():
 
     input_files_list = glob.glob(os.path.join(input_folder, "*.mzML"))
 
-    # Parallel Version
-    all_futures = []
     all_results_list = []
-    for input_filename in input_files_list:
-        print(input_filename)
 
-        results_future = execute_query.remote(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=False, parallel=False)
-        all_futures.append((results_future, input_filename))
+    # Parallel Version
+    if len(input_files_list) > 1:
+        all_futures = []
 
-    for result_future, input_filename in all_futures:
-        results_df = ray.get(result_future)
-        real_filename = mangled_mapping[os.path.basename(input_filename)]
-        results_df["filename"] = real_filename
+        for input_filename in input_files_list:
+            print(input_filename)
 
-        all_results_list.append(results_df)
+            results_future = execute_query_ray.remote(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=False, parallel=False)
+            all_futures.append((results_future, input_filename))
 
-    # Serial Version
-    # all_results_list = []
-    # for input_filename in input_files_list:
-    #     print(input_filename)
+        for result_future, input_filename in all_futures:
+            results_df = ray.get(result_future)
+            real_filename = mangled_mapping[os.path.basename(input_filename)]
+            results_df["filename"] = real_filename
 
-    #     results_df = execute_query(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=False, parallel=True)
-    #     real_filename = mangled_mapping[os.path.basename(input_filename)]
-    #     results_df["filename"] = real_filename
+            all_results_list.append(results_df)
+    else:
+        # Serial Version
+        all_results_list = []
+        for input_filename in input_files_list:
+            print(input_filename)
 
-    #     all_results_list.append(results_df)
+            results_df = execute_query(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=False, parallel=True)
+            real_filename = mangled_mapping[os.path.basename(input_filename)]
+            results_df["filename"] = real_filename
+
+            all_results_list.append(results_df)
 
     merged_results_df = pd.concat(all_results_list)
     if "scan" in merged_results_df:
@@ -62,7 +65,7 @@ def main():
 
 
 @ray.remote
-def execute_query(msql_query, input_filename, path_to_grammar="msql.ebnl", cache=False, parallel=True):
+def execute_query_ray(msql_query, input_filename, path_to_grammar="msql.ebnl", cache=False, parallel=True):
     try:
         results_df = msql_engine.process_query(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=cache, parallel=parallel)
     except:
@@ -70,6 +73,13 @@ def execute_query(msql_query, input_filename, path_to_grammar="msql.ebnl", cache
 
     return results_df
 
+def execute_query(msql_query, input_filename, path_to_grammar="msql.ebnl", cache=False, parallel=True):
+    try:
+        results_df = msql_engine.process_query(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=cache, parallel=parallel)
+    except:
+        return pd.DataFrame()
+
+    return results_df
 
 if __name__ == "__main__":
     main()
