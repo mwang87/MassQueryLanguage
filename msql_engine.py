@@ -338,6 +338,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
                         # This is when the target is actually a float
                         pass
 
+            substituted_parse["comment"] = str(mz_val)
             all_concrete_queries.append(substituted_parse)
             
             # Let's consider this mz
@@ -399,6 +400,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
     aggregated_ms1_df = aggregated_ms1_df.drop_duplicates()
     aggregated_ms2_df = aggregated_ms2_df.drop_duplicates()
 
+    print(aggregated_ms1_df)
     
     # Collating all results
     return _executecollate_query(parsed_dict, aggregated_ms1_df, aggregated_ms2_df)
@@ -406,9 +408,6 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
 @ray.remote
 def _executeconditions_query_ray(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
     return _executeconditions_query(parsed_dict, input_filename, ms1_input_df=ms1_input_df, ms2_input_df=ms2_input_df, cache=cache)
-
-
-
 
 def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
     # This function attempts to find the data that the query specifies in the conditions
@@ -582,6 +581,10 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
 
             ms2_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max) & (ms2_df["i"] > min_int) & (ms2_df["i_norm"] > min_intpercent)]
 
+    if "comment" in parsed_dict:
+        ms1_df["comment"] = parsed_dict["comment"]
+        ms2_df["comment"] = parsed_dict["comment"]
+
     return ms1_df, ms2_df
 
 def _executecollate_query(parsed_dict, ms1_df, ms2_df):
@@ -594,7 +597,6 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
         if parsed_dict["querytype"]["datatype"] == "datams2data":
             return ms2_df
     else:
-        print(parsed_dict["querytype"]["function"])
         # Applying function
         if parsed_dict["querytype"]["function"] == "functionscansum":
 
@@ -633,16 +635,30 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
             result_df = pd.DataFrame()
 
             if parsed_dict["querytype"]["datatype"] == "datams1data":
-                result_df = ms1_df.groupby("scan").first().reset_index()
-                result_df = result_df[["scan", "rt"]]
+                groupby_columns = ["scan"]
+                kept_columns = ["scan", "rt"]
 
-                ms1sum_df = ms1_df.groupby("scan").sum().reset_index()
+                if "comment" in ms1_df:
+                    groupby_columns.append("comment")
+                    kept_columns.append("comment")
+
+                result_df = ms1_df.groupby(groupby_columns).first().reset_index()
+                result_df = result_df[kept_columns]
+
+                ms1sum_df = ms1_df.groupby(groupby_columns).sum().reset_index()
                 result_df["i"] = ms1sum_df["i"]
             if parsed_dict["querytype"]["datatype"] == "datams2data":
-                result_df = ms2_df.groupby("scan").first().reset_index()
-                result_df = result_df[["scan", "precmz", "ms1scan", "rt"]]
+                kept_columns = ["scan", "precmz", "ms1scan", "rt"]
+                groupby_columns = ["scan"]
 
-                ms2sum_df = ms2_df.groupby("scan").sum().reset_index()
+                if "comment" in ms2_df:
+                    groupby_columns.append("comment")
+                    kept_columns.append("comment")
+
+                result_df = ms2_df.groupby(groupby_columns).first().reset_index()
+                result_df = result_df[kept_columns]
+
+                ms2sum_df = ms2_df.groupby(groupby_columns).sum().reset_index()
                 result_df["i"] = ms2sum_df["i"]
 
             return result_df

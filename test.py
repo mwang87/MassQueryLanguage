@@ -256,8 +256,8 @@ def main():
     #test_intensity_match()
     #test_rt_filter()
     #test_load()
-    #test_ms1_iron()
-    test_ms1_cu()
+    test_ms1_iron()
+    #test_ms1_cu()
 
 if __name__ == "__main__":
     main()
