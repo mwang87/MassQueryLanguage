@@ -163,19 +163,25 @@ def test_ms1_iron():
     assert(1223 in list(results_df["scan"]))
 
 def test_ms1_cu():
-    #msql_engine.init_ray()
+    msql_engine.init_ray()
 
     query = "QUERY scaninfo(MS1DATA) \
             WHERE \
-            RTMIN=4.2 \
-            AND RTMAX=4.4 \
+            RTMIN=4.23 \
+            AND RTMAX=4.28 \
             AND MS1MZ=X-2:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE \
             AND MS1MZ=X:INTENSITYMATCH=Y*0.574:INTENSITYMATCHPERCENT=25 \
-            AND MS1MZ=X+2:INTENSITYMATCH=Y*0.387:INTENSITYMATCHPERCENT=25"
+            AND MS1MZ=X+2:INTENSITYMATCH=Y*0.387:INTENSITYMATCHPERCENT=25 \
+            FILTER \
+            MS1MZ=X"
+    # query = "QUERY scaninfo(MS1DATA) \
+    #         WHERE \
+    #         RTMIN=4.23 \
+    #         AND RTMAX=4.28"
     parse_obj = msql_parser.parse_msql(query)
     print(parse_obj)
     print(json.dumps(parse_obj, indent=4))
-    results_df = msql_engine.process_query(query, "test/S_N1_neutral_Zn.mzML")
+    results_df = msql_engine.process_query(query, "test/S_N2_neutral_Zn.mzML")
     print(results_df)
 
 def test_ms1_filter():
