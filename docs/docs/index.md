@@ -53,6 +53,14 @@ which are specific conditions and the associated qualifiers. You may further com
 
 The types of conditions are as follows
 
+
+#### RTMIN
+
+Setting the minimum retention time in minutes
+#### RTMAX
+
+Setting the maximum retention time in minutes
+
 #### MS2PROD
 
 Looking for an MS2 peak
