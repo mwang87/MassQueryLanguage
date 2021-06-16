@@ -60,6 +60,14 @@ def main():
     if "scan" in merged_results_df:
         merged_results_df["scan"] = merged_results_df["scan"].astype(int)
 
+    # Writing a mass range if possible
+    if "comment" in merged_results_df:
+        try:
+            merged_results_df["mz_lower"] = merged_results_df["comment"].astype(float) - 10
+            merged_results_df["mz_upper"] = merged_results_df["comment"].astype(float) + 10
+        except:
+            pass
+
     output_results_file = os.path.join(output_folder, "results.tsv")
     merged_results_df.to_csv(output_results_file, sep='\t', index=False)
 
