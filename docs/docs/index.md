@@ -72,27 +72,33 @@ These can be attached to conditions to modify some properties about the peaks we
 #### Mass Accuracy
 
 TOLERANCEMZ=0.1
+
 TOLERANCEPPM=50
 
 #### Intensity Relative to Full Spectrum
 
 INTENSITYVALUE=1000
+
 INTENSITYPERCENT>10
 
 #### Intensity Relative to Other Peaks
 
 INTENSITYMATCHREFERENCE
+
 INTENSITYMATCH=Y
+
 INTENSITYMATCH=Y*2
+
+INTENSITYMATCHPERCENT=10
 
 !!! info "Intensity Matching Between Peaks"
     This is actually complicated, but you'll end up with one peak per variable that is the reference
     and all others are relative to that reference. 
     ```
     WHERE 
-    MS1MZ=X:INTENSITYMATCH=Y:INTENSITYTOLREFERENCE 
+    MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE 
     AND 
-    MS1MZ=X+2:INTENSITYMATCH=Y*2:INTENSITYTOLPERCENT=1 
+    MS1MZ=X+2:INTENSITYMATCH=Y*2:INTENSITYMATCHPERCENT=1 
     ```
 
 ## Examples
@@ -117,8 +123,8 @@ QUERY scannum(MS2DATA) WHERE MS2NL=163
 
 ```
 QUERY scaninfo(MS2DATA) WHERE 
-MS1MZ=X:INTENSITYMATCH=Y:INTENSITYTOLREFERENCE 
-AND MS1MZ=X+2:INTENSITYMATCH=Y:INTENSITYTOLPERCENT=5
+MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE 
+AND MS1MZ=X+2:INTENSITYMATCH=Y:INTENSITYMATCHPERCENT=5
 AND MS2PREC=X
 ```
 ### MS2 with distinct fragment(s) - Precursor Ion Scan

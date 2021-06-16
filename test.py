@@ -71,6 +71,12 @@ def test_diphen_combo():
     assert(1237 in list(results_df["scan"]))
     print(set(results_df["scan"]))
 
+def test_variable_parse():
+    # This finds the sum of the MS1 of the MS2 spectrum with 
+    query = "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X AND MS2PREC=X AND MS2PROD=119.09"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+
 def test_variable():
     # This finds the sum of the MS1 of the MS2 spectrum with 
     #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=119.09"
@@ -135,17 +141,27 @@ def test_where_and_filter():
     print(json.dumps(parse_obj, indent=4))
 
 def test_ms1_iron():
-    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=601.3580:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05 AND MS1MZ=654.2665:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05"
+    #msql_engine.init_ray()
+
+    # query = "QUERY scaninfo(MS1DATA) WHERE \
+    #         RTMIN=3.06 \
+    #         AND RTMAX=3.07"
+    query = "QUERY scaninfo(MS1DATA) WHERE \
+            RTMIN=3.03 \
+            AND RTMAX=3.05 \
+            AND MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25 \
+            AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE"
     parse_obj = msql_parser.parse_msql(query)
+    print(parse_obj)
     print(json.dumps(parse_obj, indent=4))
-    results_df = msql_engine.process_query(query, "test/JB_182_3_fe.mzML")
+    results_df = msql_engine.process_query(query, "test/JB_182_2_fe.mzML")
     print(results_df)
 
 def test_ms1_filter():
     query = "QUERY scansum(MS1DATA) WHERE MS1MZ=601.3580:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05 AND MS1MZ=654.2665:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05 FILTER MS1MZ=601.3580"
     parse_obj = msql_parser.parse_msql(query)
     print(json.dumps(parse_obj, indent=4))
-    results_df = msql_engine.process_query(query, "test/JB_182_3_fe.mzML")
+    results_df = msql_engine.process_query(query, "test/JB_182_2_fe.mzML")
     print(results_df)
 
 def test_intensity_int_parse():
@@ -162,15 +178,27 @@ def test_intensity_match():
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
 
+def test_rt_filter():
+    query = "QUERY scaninfo(MS1DATA) WHERE \
+        RTMIN=0.1 AND RTMAX=0.3"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    print(results_df)
+
 def test_parse():        
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
+        print(test_query)
         msql_parser.parse_msql(test_query)
 
 def test_query():
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
         msql_engine.process_query(test_query, "test/bld_plt1_07_120_1.mzML")
+
+def test_load():
+    ms1_df, ms2_df = msql_engine._load_data("test/JB_182_2_fe.mzML", cache=False)
 
 def main():
     #msql_engine.init_ray()
@@ -186,6 +214,7 @@ def main():
     #test_query()
     #test_xic()
     #test_subquery()
+    #test_variable_parse()
     #test_variable()
     #test_variable_ms1()
     #test_filter()
@@ -197,7 +226,10 @@ def main():
     #test_ms1_filter()
     #test_intensity_int_parse()
     #test_parse()
-    test_intensity_match()
+    #test_intensity_match()
+    #test_rt_filter()
+    #test_load()
+    test_ms1_iron()
 
 if __name__ == "__main__":
     main()
