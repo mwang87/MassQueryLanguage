@@ -23,6 +23,7 @@ def main():
     mangled_mapping = ming_proteosafe_library.get_mangled_file_mapping(params_obj)
     
     msql_query = params_obj["QUERY"][0]
+    PARALLEL = params_obj["PARALLEL"][0]
 
     input_files_list = glob.glob(os.path.join(input_folder, "*.mzML"))
 
@@ -35,7 +36,7 @@ def main():
         for input_filename in input_files_list:
             print(input_filename)
 
-            results_future = execute_query_ray.remote(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=False, parallel=False)
+            results_future = execute_query_ray.remote(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=False, parallel=(PARALLEL=="YES"))
             all_futures.append((results_future, input_filename))
 
         for result_future, input_filename in all_futures:
@@ -50,7 +51,7 @@ def main():
         for input_filename in input_files_list:
             print(input_filename)
 
-            results_df = execute_query(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=False, parallel=True)
+            results_df = execute_query(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=False, parallel=(PARALLEL=="YES"))
             real_filename = mangled_mapping[os.path.basename(input_filename)]
             results_df["filename"] = real_filename
 

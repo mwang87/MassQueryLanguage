@@ -21,9 +21,18 @@
         <parameter name="QUERY" label="Enter QUERY (Required)">
             <default value="QUERY scaninfo(MS2DATA)"/>
         </parameter>
+
+        <parameter name="PARALLEL" label="Parallelism">
+			<options>
+				<option value="YES" label="YES"/>
+				<option value="NO" label="NO"/>
+			</options>
+			<validator type="set"/>
+			<default value="YES"/>
+		</parameter>
     </parameters>
 
-    <block label="PlaceholderBlock">
+    <block label="Setting">
         <row>
             <cell>
                 <label>
@@ -47,6 +56,18 @@
                 <module id="spec_on_server" type="fileSelector">
                     <property name="label">Spectrum Files</property>
                 </module>
+            </cell>
+        </row>
+        <row>
+            <cell>
+                <label>
+                    <content parameter="PARALLEL"/>
+                </label>
+            </cell>
+
+            <cell>
+                <input type="select" parameter="PARALLEL">
+                </input>
             </cell>
         </row>
     </block>
