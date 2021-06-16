@@ -639,9 +639,15 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
             if parsed_dict["querytype"]["datatype"] == "datams1data":
                 result_df = ms1_df.groupby("scan").first().reset_index()
                 result_df = result_df[["scan", "rt"]]
+
+                ms1sum_df = ms1_df.groupby("scan").sum().reset_index()
+                result_df["i"] = ms1sum_df["i"]
             if parsed_dict["querytype"]["datatype"] == "datams2data":
                 result_df = ms2_df.groupby("scan").first().reset_index()
                 result_df = result_df[["scan", "precmz", "ms1scan", "rt"]]
+
+                ms2sum_df = ms2_df.groupby("scan").sum().reset_index()
+                result_df["i"] = ms2sum_df["i"]
 
             return result_df
 

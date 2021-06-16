@@ -146,11 +146,14 @@ def test_ms1_iron():
     # query = "QUERY scaninfo(MS1DATA) WHERE \
     #         RTMIN=3.06 \
     #         AND RTMAX=3.07"
-    query = "QUERY scaninfo(MS1DATA) WHERE \
+    query = "QUERY scaninfo(MS1DATA) \
+            WHERE \
             RTMIN=3.03 \
             AND RTMAX=3.05 \
             AND MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25 \
-            AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE"
+            AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE \
+            FILTER \
+            MS1MZ=X"
     parse_obj = msql_parser.parse_msql(query)
     print(parse_obj)
     print(json.dumps(parse_obj, indent=4))

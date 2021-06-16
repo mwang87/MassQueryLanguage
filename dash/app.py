@@ -272,7 +272,10 @@ def determine_task(search):
                   Input('query', 'value')
             ])
 def draw_parse(query):
-    parse_results = msql_parser.parse_msql(query)
+    try:
+        parse_results = msql_parser.parse_msql(query)
+    except:
+        return ["Parse Error"]
 
     parse_markdown = dcc.Markdown(
         '''
