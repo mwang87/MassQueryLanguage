@@ -326,10 +326,6 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
             substituted_parse = copy.deepcopy(parsed_dict)
             mz_val = masses_obj["mz"]
 
-            #DEBUG
-            if abs(mz_val - 654.26) > 0.03:
-                continue
-
             for condition in substituted_parse["conditions"]:
                 for i, value in enumerate(condition["value"]):
                     try:

@@ -45,6 +45,7 @@ def test_qc_ms1_ms2peak():
     query = "QUERY MS1DATA WHERE MS2PROD=156.01"
     results_df = msql_engine.process_query(query, "test/QC_0.mzML")
     print(set(results_df["scan"]))
+    assert(len(results_df) > 1000)
 
 def test_diphen():
     query = "QUERY scannum(MS2DATA) WHERE MS2PROD=167.0857:TOLERANCEPPM=5"
@@ -161,6 +162,22 @@ def test_ms1_iron():
     print(results_df)
     assert(1223 in list(results_df["scan"]))
 
+def test_ms1_cu():
+    #msql_engine.init_ray()
+
+    query = "QUERY scaninfo(MS1DATA) \
+            WHERE \
+            RTMIN=4.2 \
+            AND RTMAX=4.4 \
+            AND MS1MZ=X-2:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE \
+            AND MS1MZ=X:INTENSITYMATCH=Y*0.574:INTENSITYMATCHPERCENT=25 \
+            AND MS1MZ=X+2:INTENSITYMATCH=Y*0.387:INTENSITYMATCHPERCENT=25"
+    parse_obj = msql_parser.parse_msql(query)
+    print(parse_obj)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/S_N1_neutral_Zn.mzML")
+    print(results_df)
+
 def test_ms1_filter():
     query = "QUERY scansum(MS1DATA) WHERE MS1MZ=601.3580:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05 AND MS1MZ=654.2665:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05 FILTER MS1MZ=601.3580"
     parse_obj = msql_parser.parse_msql(query)
@@ -233,7 +250,8 @@ def main():
     #test_intensity_match()
     #test_rt_filter()
     #test_load()
-    test_ms1_iron()
+    #test_ms1_iron()
+    test_ms1_cu()
 
 if __name__ == "__main__":
     main()
