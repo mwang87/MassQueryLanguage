@@ -159,6 +159,7 @@ def test_ms1_iron():
     print(json.dumps(parse_obj, indent=4))
     results_df = msql_engine.process_query(query, "test/JB_182_2_fe.mzML")
     print(results_df)
+    assert(1223 in list(results_df["scan"]))
 
 def test_ms1_filter():
     query = "QUERY scansum(MS1DATA) WHERE MS1MZ=601.3580:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05 AND MS1MZ=654.2665:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05 FILTER MS1MZ=601.3580"
