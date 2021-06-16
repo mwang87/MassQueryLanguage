@@ -23,7 +23,7 @@ def DEBUG_MSG(msg):
 
 def init_ray():
     if not ray.is_initialized():
-        ray.init(ignore_reinit_error=True)
+        ray.init(ignore_reinit_error=True, object_store_memory=10000000000)
 
 def _load_data(input_filename, cache=False):
     if cache:
@@ -51,7 +51,7 @@ def _load_data(input_filename, cache=False):
     ms2mz_list = []
     previous_ms1_scan = 0
 
-    for spec in run:
+    for i, spec in enumerate(run):
         # Getting RT
         rt = spec.scan_time_in_minutes()
 
@@ -72,7 +72,7 @@ def _load_data(input_filename, cache=False):
         mz_list = list(mz)
         i_list = list(intensity)
         i_max = max(i_list)
-
+        
         if spec.ms_level == 1:
             for i in range(len(mz_list)):
                 peak_dict = {}
@@ -211,9 +211,6 @@ def _filter_intensitymatch(ms_filtered_df, register_dict, condition):
                     if scan_intensity > min_match_intensity and \
                         scan_intensity < max_match_intensity:
                         filtered_grouped_scans.append(grouped_scan)
-
-                    print(key, qualifier_expression, qualifier_variable, register_value, evaluated_new_expression)
-                    print(min_match_intensity, max_match_intensity)
                 else:
                     # Its not in the register, which means we don't find it
                     continue
@@ -293,6 +290,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
 
     ms1_df, ms2_df = _load_data(input_filename, cache=cache)
 
+    # Here we are going to translate the variable query into a concrete query based upon the data
     all_concrete_queries = []
     if variable_properties["has_variable"]:
         # Here we could do a pre-query without any of the other conditions
@@ -328,21 +326,22 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
             substituted_parse = copy.deepcopy(parsed_dict)
             mz_val = masses_obj["mz"]
 
+            #DEBUG
+            if abs(mz_val - 654.26) > 0.03:
+                continue
+
             for condition in substituted_parse["conditions"]:
                 for i, value in enumerate(condition["value"]):
                     try:
                         if "X" in value:
-                            if "+" in value:
-                                new_value = mz_val + float(value.split("+")[-1])
-                            else:
-                                new_value = mz_val
-                            # print("SUBSTITUTE", condition, value, i, new_value)
+                            new_value = math_parser.parse(value).evaluate({
+                                "X" : mz_val
+                            })
                             condition["value"][i] = new_value
                     except TypeError:
                         # This is when the target is actually a float
                         pass
 
-            #print(substituted_parse)
             all_concrete_queries.append(substituted_parse)
             
             # Let's consider this mz
@@ -417,6 +416,7 @@ def _executeconditions_query_ray(parsed_dict, input_filename, ms1_input_df=None,
 
 def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
     # This function attempts to find the data that the query specifies in the conditions
+    
     #import json
     #print("parsed_dict", json.dumps(parsed_dict, indent=4))
 
@@ -443,7 +443,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
         nonreference_conditions.append(condition)
     all_conditions = reference_conditions + nonreference_conditions
 
-    # These are for the WHERE clause
+    # These are for the WHERE clause, first lets filter by RT
     for condition in all_conditions:
         if not condition["conditiontype"] == "where":
             continue
@@ -464,6 +464,13 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             ms1_df = ms1_df[ms1_df["rt"] < rt]
 
             continue
+
+    # These are for the WHERE clause
+    for condition in all_conditions:
+        if not condition["conditiontype"] == "where":
+            continue
+
+        #logging.error("WHERE CONDITION", condition)
 
         # Filtering MS2 Product Ions
         if condition["type"] == "ms2productcondition":
@@ -544,6 +551,12 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             filtered_scans = set(ms1_filtered_df["scan"])
             ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
 
+            continue
+
+        if condition["type"] == "rtmincondition":
+            continue
+
+        if condition["type"] == "rtmaxcondition":
             continue
 
         raise Exception("CONDITION NOT HANDLED")

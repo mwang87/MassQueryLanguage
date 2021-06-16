@@ -143,22 +143,25 @@ def test_where_and_filter():
 def test_ms1_iron():
     #msql_engine.init_ray()
 
+    # query = "QUERY scaninfo(MS1DATA) WHERE \
+    #         RTMIN=3.06 \
+    #         AND RTMAX=3.07"
     query = "QUERY scaninfo(MS1DATA) WHERE \
-            RTMIN=3.0 \
-            AND RTMAX=3.2 \
-            AND MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=1 \
-            AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYMATCHPERCENT=1"
+            RTMIN=3.03 \
+            AND RTMAX=3.05 \
+            AND MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25 \
+            AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE"
     parse_obj = msql_parser.parse_msql(query)
     print(parse_obj)
     print(json.dumps(parse_obj, indent=4))
-    results_df = msql_engine.process_query(query, "test/JB_182_3_fe.mzML")
+    results_df = msql_engine.process_query(query, "test/JB_182_2_fe.mzML")
     print(results_df)
 
 def test_ms1_filter():
     query = "QUERY scansum(MS1DATA) WHERE MS1MZ=601.3580:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05 AND MS1MZ=654.2665:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.05 FILTER MS1MZ=601.3580"
     parse_obj = msql_parser.parse_msql(query)
     print(json.dumps(parse_obj, indent=4))
-    results_df = msql_engine.process_query(query, "test/JB_182_3_fe.mzML")
+    results_df = msql_engine.process_query(query, "test/JB_182_2_fe.mzML")
     print(results_df)
 
 def test_intensity_int_parse():
@@ -194,6 +197,9 @@ def test_query():
         test_query = line.rstrip()
         msql_engine.process_query(test_query, "test/bld_plt1_07_120_1.mzML")
 
+def test_load():
+    ms1_df, ms2_df = msql_engine._load_data("test/JB_182_2_fe.mzML", cache=False)
+
 def main():
     #msql_engine.init_ray()
     
@@ -216,12 +222,14 @@ def main():
     #test_where_and_filter()
     #test_min_intensity()
     #test_min_intensitypercent()
-    test_ms1_iron()
+    #test_ms1_iron()
     #test_ms1_filter()
     #test_intensity_int_parse()
     #test_parse()
     #test_intensity_match()
     #test_rt_filter()
+    #test_load()
+    test_ms1_iron()
 
 if __name__ == "__main__":
     main()
