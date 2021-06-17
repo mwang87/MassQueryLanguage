@@ -273,6 +273,16 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
             try:
                 # Checking if X is in any string
                 if "X" in value[0]:
+
+                    if value == "X":
+                        # This is the main varaible, not expression containing it
+                        if condition["type"] == "ms1mzcondition":
+                            variable_properties["query_ms1"] = True
+                        if condition["type"] == "ms2productcondition":
+                            variable_properties["query_ms2"] = True
+                        if condition["type"] == "ms2neutrallosscondition":
+                            variable_properties["query_ms2"] = True
+
                     variable_properties["has_variable"] = True
                     #mz_tolerance = _get_mz_tolerance(condition.get("qualifiers", None), 1000000)
 
@@ -311,7 +321,10 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
 
         # Here we will start with the smallest mass and then go up
         masses_considered_df = pd.DataFrame()
-        masses_considered_df["mz"] = pd.concat([ms1_df["mz"], ms2_df["mz"], ms2_df["precmz"]])
+        if variable_properties["query_ms1"]:
+            masses_considered_df["mz"] = pd.concat([ms1_df["mz"]])
+        if variable_properties["query_ms2"]:
+            masses_considered_df["mz"] = pd.concat([ms2_df["mz"]])
         masses_considered_df["mz_max"] = masses_considered_df["mz"].apply(lambda x: _determine_mz_max(x, variable_properties["ppm_tolerance"], variable_properties["da_tolerance"]))
         
         masses_considered_df = masses_considered_df.sort_values("mz")
