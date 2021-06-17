@@ -264,9 +264,9 @@ def main():
     #test_intensity_match()
     #test_rt_filter()
     #test_load()
-    #test_ms1_iron()
+    test_ms1_iron()
     #test_ms1_cu()
-    test_neutral_loss_intensity()
+    #test_neutral_loss_intensity()
 
 if __name__ == "__main__":
     main()

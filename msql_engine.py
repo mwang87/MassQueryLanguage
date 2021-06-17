@@ -683,7 +683,10 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
                 result_df["i"] = ms2sum_df["i"]
 
             # Lets try to remove duplicates
-            # result_df = result_df.drop_duplicates()
+            if "comment" in result_df:
+                result_df["truncated_comment"] = result_df["comment"].astype(float).astype(int)
+                result_df = result_df.drop_duplicates(subset=["scan", "truncated_comment"])
+                result_df = result_df.drop("truncated_comment", axis=1)
 
             return result_df
 
