@@ -500,7 +500,11 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_tol = 0.1
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
-            ms2_df = ms2_df[(ms2_df["precmz"] > mz_min) & (ms2_df["precmz"] < mz_max)]
+
+            ms2_df = ms2_df[(
+                ms2_df["precmz"] > mz_min) & 
+                (ms2_df["precmz"] < mz_max)
+            ]
 
             continue
 
@@ -510,10 +514,23 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_tol = 0.1
             nl_min = mz - mz_tol
             nl_max = mz + mz_tol
+
+            min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
+
             ms2_filtered_df = ms2_df[
-                ((ms2_df["precmz"] - ms2_df["mz"]) > nl_min)
-                & ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max)
+                ((ms2_df["precmz"] - ms2_df["mz"]) > nl_min) & 
+                ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max) &
+                (ms1_df["i"] > min_int) & 
+                (ms1_df["i_norm"] > min_intpercent)
             ]
+
+            # Setting the intensity match register
+            _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
+
+            # Applying the intensity match
+            ms2_filtered_df = _filter_intensitymatch(ms2_filtered_df, reference_conditions_register, condition)
+
+            # Filtering the actual data structures
             filtered_scans = set(ms2_filtered_df["scan"])
             ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]
 
@@ -531,7 +548,11 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_max = mz + mz_tol
 
             min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
-            ms1_filtered_df = ms1_df[(ms1_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max) & (ms1_df["i"] > min_int) & (ms1_df["i_norm"] > min_intpercent)]
+            ms1_filtered_df = ms1_df[
+                (ms1_df["mz"] > mz_min) & 
+                (ms1_df["mz"] < mz_max) & 
+                (ms1_df["i"] > min_int) & 
+                (ms1_df["i_norm"] > min_intpercent)]
             
             # Setting the intensity match register
             _set_intensity_register(ms1_filtered_df, reference_conditions_register, condition)
@@ -660,6 +681,9 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
 
                 ms2sum_df = ms2_df.groupby(groupby_columns).sum().reset_index()
                 result_df["i"] = ms2sum_df["i"]
+
+            # Lets try to remove duplicates
+            # result_df = result_df.drop_duplicates()
 
             return result_df
 
