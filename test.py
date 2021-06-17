@@ -213,6 +213,14 @@ def test_rt_filter():
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
 
+def test_neutral_loss_intensity():
+    query = "QUERY scaninfo(MS2DATA) WHERE \
+            MS2NL=183.096:TOLERANCEMZ=0.1:INTENSITYPERCENT=50"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/XA_Frac_6.mzML")
+    print(results_df)
+
 def test_parse():        
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
@@ -256,8 +264,9 @@ def main():
     #test_intensity_match()
     #test_rt_filter()
     #test_load()
-    test_ms1_iron()
+    #test_ms1_iron()
     #test_ms1_cu()
+    test_neutral_loss_intensity()
 
 if __name__ == "__main__":
     main()

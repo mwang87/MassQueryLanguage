@@ -62,10 +62,6 @@ NAVBAR = dbc.Navbar(
     sticky="top",
 )
 
-file_list = glob.glob("./test/*.mzML")
-file_list = [os.path.basename(filename) for filename in file_list]
-file_list = [{"label": filename, "value": filename} for filename in file_list]
-
 DATASELECTION_CARD = [
     dbc.CardHeader(html.H5("Data Selection")),
     dbc.CardBody(
@@ -83,7 +79,7 @@ DATASELECTION_CARD = [
                     dbc.InputGroupAddon("Filename", addon_type="prepend"),
                     dbc.Select(
                         id="filename",
-                        options=file_list,
+                        options=[],
                         value="GNPS00002_A3_p.mzML"
                     )
                 ],
@@ -249,7 +245,7 @@ def _get_url_param(param_dict, key, default):
               [
                   Input('url', 'search')
               ])
-def determine_task(search):
+def determine_params(search):
     try:
         query_dict = urllib.parse.parse_qs(search[1:])
     except:
@@ -263,7 +259,18 @@ def determine_task(search):
 
     return [query, x_axis, y_axis, facet_column, scan]
 
+@app.callback([
+                Output('filename', 'options'),
+              ],
+              [
+                  Input('url', 'search')
+              ])
+def determine_files(search):
+    file_list = glob.glob("./test/*.mzML")
+    file_list = [os.path.basename(filename) for filename in file_list]
+    file_list = [{"label": filename, "value": filename} for filename in file_list]
 
+    return [file_list]
 
 @app.callback([
                 Output('output_parse', 'children'),

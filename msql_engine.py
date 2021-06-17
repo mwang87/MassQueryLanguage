@@ -520,8 +520,8 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             ms2_filtered_df = ms2_df[
                 ((ms2_df["precmz"] - ms2_df["mz"]) > nl_min) & 
                 ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max) &
-                (ms1_df["i"] > min_int) & 
-                (ms1_df["i_norm"] > min_intpercent)
+                (ms2_df["i"] > min_int) & 
+                (ms2_df["i_norm"] > min_intpercent)
             ]
 
             # Setting the intensity match register
