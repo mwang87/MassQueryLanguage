@@ -319,6 +319,9 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
         presearch_parse["conditions"] = non_variable_conditions
         ms1_df, ms2_df = _executeconditions_query(presearch_parse, input_filename, cache=cache)
 
+        # TODO: Checking if we can prefilter the X variable, if there are conditions
+        
+
         # Here we will start with the smallest mass and then go up
         masses_considered_df = pd.DataFrame()
         if variable_properties["query_ms1"]:
