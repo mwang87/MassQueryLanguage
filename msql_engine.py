@@ -2,7 +2,6 @@ import msql_parser
 
 import os
 import pandas as pd
-import pymzml
 import numpy as np
 import copy
 import logging
@@ -10,6 +9,8 @@ from tqdm import tqdm
 
 import ray
 from py_expression_eval import Parser
+
+import msql_fileloading
 
 math_parser = Parser()
 console = logging.StreamHandler()
@@ -26,9 +27,19 @@ def init_ray():
         ray.init(ignore_reinit_error=True, object_store_memory=10000000000)
 
 def _load_data(input_filename, cache=False):
+    """
+    Loading data generically
+
+    Args:
+        input_filename ([type]): [description]
+        cache (bool, optional): [description]. Defaults to False.
+
+    Returns:
+        [type]: [description]
+    """
     if cache:
-        ms1_filename = input_filename + "_ms1.feather"
-        ms2_filename = input_filename + "_ms2.feather"
+        ms1_filename = input_filename + "_ms1.msql.feather"
+        ms2_filename = input_filename + "_ms2.msql.feather"
 
         if os.path.exists(ms1_filename):
             ms1_df = pd.read_feather(ms1_filename)
@@ -36,78 +47,18 @@ def _load_data(input_filename, cache=False):
 
             return ms1_df, ms2_df
 
-    MS_precisions = {
-        1: 5e-6,
-        2: 20e-6,
-        3: 20e-6,
-        4: 20e-6,
-        5: 20e-6,
-        6: 20e-6,
-        7: 20e-6,
-    }
-    run = pymzml.run.Reader(input_filename, MS_precisions=MS_precisions)
+    # Actually loading
+    if input_filename[-5:] == ".mzML":
+        ms1_df, ms2_df = msql_fileloading._load_data_mzML(input_filename)
 
-    ms1mz_list = []
-    ms2mz_list = []
-    previous_ms1_scan = 0
-
-    for i, spec in enumerate(run):
-        # Getting RT
-        rt = spec.scan_time_in_minutes()
-
-        # Getting peaks
-        peaks = spec.peaks("raw")
-
-        # Filtering out zero rows
-        peaks = peaks[~np.any(peaks < 1.0, axis=1)]
-
-        # Sorting by intensity
-        peaks = peaks[peaks[:, 1].argsort()]
-
-        if len(peaks) == 0:
-            continue
-
-        mz, intensity = zip(*peaks)
-
-        mz_list = list(mz)
-        i_list = list(intensity)
-        i_max = max(i_list)
-        
-        if spec.ms_level == 1:
-            for i in range(len(mz_list)):
-                peak_dict = {}
-                peak_dict["i"] = i_list[i]
-                peak_dict["i_norm"] = i_list[i] / i_max
-                peak_dict["mz"] = mz_list[i]
-                peak_dict["scan"] = spec.ID
-                peak_dict["rt"] = rt
-
-                ms1mz_list.append(peak_dict)
-
-                previous_ms1_scan = spec.ID
-
-        if spec.ms_level == 2:
-            msn_mz = spec.selected_precursors[0]["mz"]
-            for i in range(len(mz_list)):
-                peak_dict = {}
-                peak_dict["i"] = i_list[i]
-                peak_dict["i_norm"] = i_list[i] / i_max
-                peak_dict["mz"] = mz_list[i]
-                peak_dict["scan"] = spec.ID
-                peak_dict["rt"] = rt
-                peak_dict["precmz"] = msn_mz
-                peak_dict["ms1scan"] = previous_ms1_scan
-
-                ms2mz_list.append(peak_dict)
-
-    # Turning into pandas data frames
-    ms1_df = pd.DataFrame(ms1mz_list)
-    ms2_df = pd.DataFrame(ms2mz_list)
+    if input_filename[-5:] == ".json":
+        ms1_df, ms2_df = msql_fileloading._load_data_gnps_json(input_filename)
+    
 
     # Saving Cache
     if cache:
-        ms1_filename = input_filename + "_ms1.feather"
-        ms2_filename = input_filename + "_ms2.feather"
+        ms1_filename = input_filename + "_ms1.msql.feather"
+        ms2_filename = input_filename + "_ms2.msql.feather"
 
         if not os.path.exists(ms1_filename):
             ms1_df.to_feather(ms1_filename)

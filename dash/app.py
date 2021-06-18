@@ -267,6 +267,7 @@ def determine_params(search):
               ])
 def determine_files(search):
     file_list = glob.glob("./test/*.mzML")
+    file_list += glob.glob("./test/*.json")
     file_list = [os.path.basename(filename) for filename in file_list]
     file_list = [{"label": filename, "value": filename} for filename in file_list]
 

@@ -10,6 +10,7 @@ services:
       - ../test:/app/test:rw
       - ../msql_parser.py:/app/msql_parser.py:ro
       - ../msql_engine.py:/app/msql_engine.py:ro
+      - ../msql_fileloading.py:/app/msql_fileloading.py:ro
       - ../msql.ebnf:/app/msql.ebnf:ro
     ports:
     - "5343:5000"
@@ -38,6 +39,7 @@ services:
       - ../test:/app/test:rw
       - ../msql_parser.py:/app/msql_parser.py:ro
       - ../msql_engine.py:/app/msql_engine.py:ro
+      - ../msql_fileloading.py:/app/msql_fileloading.py:ro
       - ../msql.ebnf:/app/msql.ebnf:ro
     command: /app/run_worker.sh
     restart: unless-stopped

@@ -240,6 +240,14 @@ def test_neutral_loss_intensity():
     results_df = msql_engine.process_query(query, "test/XA_Frac_6.mzML")
     print(results_df)
 
+def test_gnps_library():
+    query = "QUERY scaninfo(MS2DATA) WHERE \
+            MS2PROD=271.06:TOLERANCEMZ=0.1:INTENSITYPERCENT=50"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/gnps-library.json")
+    print(results_df)
+
 def test_parse():        
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
@@ -284,9 +292,10 @@ def main():
     #test_rt_filter()
     #test_load()
     #test_ms1_iron()
-    test_ms1_iron_min_intensity()
+    #test_ms1_iron_min_intensity()
     #test_ms1_cu()
     #test_neutral_loss_intensity()
+    test_gnps_library()
 
 if __name__ == "__main__":
     main()
