@@ -260,7 +260,6 @@ def test_networking_mgf_library():
 def test_swath():
     query = "QUERY scansum(MS2DATA) WHERE MS2PREC=714.55 FILTER \
         MS2PROD=714.34"
-    query = "QUERY scansum(MS2DATA)"
     parse_obj = msql_parser.parse_msql(query)
     print(json.dumps(parse_obj, indent=4))
     results_df = msql_engine.process_query(query, "test/170425_01_Edith_120417_CCF_01.mzML")
