@@ -52,7 +52,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 8000M
+          memory: 16000M
 
   msql-rabbitmq:
     container_name: msql-rabbitmq

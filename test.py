@@ -248,6 +248,25 @@ def test_gnps_library():
     results_df = msql_engine.process_query(query, "test/gnps-library.json")
     print(results_df)
 
+def test_networking_mgf_library():
+    query = "QUERY scaninfo(MS2DATA) WHERE \
+            MS2PROD=86.10:TOLERANCEMZ=0.1:INTENSITYPERCENT=50"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/specs_ms.mgf")
+    print(results_df)
+    assert("2" in list(results_df["scan"]))
+
+def test_swath():
+    query = "QUERY scansum(MS2DATA) WHERE MS2PREC=714.55 FILTER \
+        MS2PROD=714.34"
+    query = "QUERY scansum(MS2DATA)"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/170425_01_Edith_120417_CCF_01.mzML")
+    print(results_df)
+    
+
 def test_parse():        
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
@@ -295,7 +314,9 @@ def main():
     #test_ms1_iron_min_intensity()
     #test_ms1_cu()
     #test_neutral_loss_intensity()
-    test_gnps_library()
+    #test_gnps_library()
+    #test_networking_mgf_library()
+    test_swath()
 
 if __name__ == "__main__":
     main()

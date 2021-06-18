@@ -54,6 +54,8 @@ def _load_data(input_filename, cache=False):
     if input_filename[-5:] == ".json":
         ms1_df, ms2_df = msql_fileloading._load_data_gnps_json(input_filename)
     
+    if input_filename[-4:] == ".mgf":
+        ms1_df, ms2_df = msql_fileloading._load_data_mgf(input_filename)
 
     # Saving Cache
     if cache:
@@ -367,7 +369,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
     aggregated_ms1_df = aggregated_ms1_df.drop_duplicates()
     aggregated_ms2_df = aggregated_ms2_df.drop_duplicates()
 
-    print(aggregated_ms1_df)
+    print(aggregated_ms2_df)
     
     # Collating all results
     return _executecollate_query(parsed_dict, aggregated_ms1_df, aggregated_ms2_df)

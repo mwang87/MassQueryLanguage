@@ -6,3 +6,4 @@ wget --output-document=JB_182_2_fe.mzML https://gnps-external.ucsd.edu/massiveft
 wget --output-document=S_N2_neutral_Zn.mzML https://gnps-external.ucsd.edu/massiveftpproxy?ftppath=ftp://massive.ucsd.edu/MSV000083387/updates/2019-11-12_allegraaron_e893cb7e/peak/S_N2_neutral_Zn.mzML
 wget --output-document=gnps.json https://gnps-external.ucsd.edu/gnpslibrary/ALL_GNPS.json
 wget --output-document=gnps-library.json https://gnps-external.ucsd.edu/gnpslibrary/GNPS-LIBRARY.json
+wget --output-document=specs_ms.mgf "http://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?task=5ecfcf81cb3c471698995b194d8246a0&block=main&file=spectra/specs_ms.mgf"
