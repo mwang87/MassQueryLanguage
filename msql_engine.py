@@ -368,8 +368,6 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
     # reduce redundancy
     aggregated_ms1_df = aggregated_ms1_df.drop_duplicates()
     aggregated_ms2_df = aggregated_ms2_df.drop_duplicates()
-
-    print(aggregated_ms2_df)
     
     # Collating all results
     return _executecollate_query(parsed_dict, aggregated_ms1_df, aggregated_ms2_df)
@@ -592,6 +590,9 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
 
             # TODO: Fix how this scan is done so the result values for most things actually make sense
             if parsed_dict["querytype"]["datatype"] == "datams1data":
+                if len(ms1_df) == 0:
+                    return ms1_df
+
                 ms1sum_df = ms1_df.groupby("scan").sum().reset_index()
 
                 ms1_df = ms1_df.groupby("scan").first().reset_index()
@@ -599,6 +600,9 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
 
                 return ms1_df
             if parsed_dict["querytype"]["datatype"] == "datams2data":
+                if len(ms2_df) == 0:
+                    return ms2_df
+
                 ms2sum_df = ms2_df.groupby("scan").sum().reset_index()
                 
                 ms2_df = ms2_df.groupby("scan").first().reset_index()
@@ -607,6 +611,9 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
                 return ms2_df
 
         if parsed_dict["querytype"]["function"] == "functionscanmz":
+            if len(ms2_df) == 0:
+                return ms2_df
+
             result_df = pd.DataFrame()
             result_df["precmz"] = list(set(ms2_df["precmz"]))
             return result_df

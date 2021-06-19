@@ -1,6 +1,7 @@
 import msql_parser
 import msql_engine
 import json
+import pytest
 
 def test_noquery():
     query = "QUERY scaninfo(MS2DATA)"
@@ -91,6 +92,7 @@ def test_variable():
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
 
+@pytest.mark.skip(reason="too slow")
 def test_variable_ms1():
     # This is looking for ms1 scans with a +18 delta, should include scan 52
     query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=X AND MS1MZ=X+18.031"
@@ -118,23 +120,23 @@ def test_filterms2():
     print(results_df)
 
 def test_min_intensity():
-    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=226.18:INTENSITYVALUE>3000000"
+    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=226.18:INTENSITYVALUE=300000"
     parse_obj = msql_parser.parse_msql(query)
     print(json.dumps(parse_obj, indent=4))
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
-
-    assert(len(results_df) == 1)
     print(results_df)
+    
+    assert(len(results_df) == 6)
+    
 
 def test_min_intensitypercent():
-    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=226.18:INTENSITYPERCENT>20"
+    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=226.18:INTENSITYPERCENT=1"
     parse_obj = msql_parser.parse_msql(query)
     print(json.dumps(parse_obj, indent=4))
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
 
-    assert(len(results_df) == 2)
-    print(results_df)
+    assert(len(results_df) == 8)
 
 def test_where_and_filter():
     query = "QUERY MS2DATA WHERE MS2PROD=70.06:TOLERANCEMZ=0.01:INTENSITYVALUE>10000 FILTER MS2PROD=70.06:TOLERANCEMZ=0.1"
@@ -257,6 +259,7 @@ def test_networking_mgf_library():
     print(results_df)
     assert("2" in list(results_df["scan"]))
 
+@pytest.mark.skip(reason="too slow")
 def test_swath():
     query = "QUERY scansum(MS2DATA) WHERE MS2PREC=714.55 FILTER \
         MS2PROD=714.34"
@@ -265,7 +268,6 @@ def test_swath():
     results_df = msql_engine.process_query(query, "test/170425_01_Edith_120417_CCF_01.mzML")
     print(results_df)
     
-
 def test_parse():        
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
@@ -275,6 +277,7 @@ def test_parse():
 def test_query():
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
+        print(test_query)
         msql_engine.process_query(test_query, "test/bld_plt1_07_120_1.mzML")
 
 def test_load():
