@@ -41,6 +41,12 @@
                     <parameter name="REQUESTPARAMETER=mz_max" value="[_dyn_#mz_upper]"/>
                     <parameter name="LABEL" value="Spectrum USI - With Range"/>
                 </column>
+                <column label="USI-Spectrum" type="genericurlgenerator" width="3">
+                    <parameter name="URLBASE" value="https://fastlibrarysearch.ucsd.edu/fastsearch/"/>
+                    <parameter name="REQUESTPARAMETER=usi1" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#filename]:scan:[_dyn_#scan]"/>
+                    <parameter name="LABEL" value="Library Search MS/MS"/>
+                </column>
+                
                 <!-- <column type="genericimagedisplayer" label="Structure">
                     <parameter name="URLBASE" value="https://metabolomics-usi.ucsd.edu/png/"/>
                     <parameter name="REQUESTPARAMETER=usi1" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#filename]:scan:[_dyn_#scan]"/>
