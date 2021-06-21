@@ -558,6 +558,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             # Filtering the actual data structures
             filtered_scans = set(ms1_filtered_df["scan"])
             ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
+            ms2_df = ms2_df[ms2_df["ms1scan"].isin(filtered_scans)]
 
             continue
 

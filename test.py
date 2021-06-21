@@ -200,7 +200,7 @@ def test_ms1_iron_min_intensity_m2_prec():
     print(json.dumps(parse_obj, indent=4))
     results_df = msql_engine.process_query(query, "test/JB_182_2_fe.mzML")
     print(results_df)
-    assert(1213 in list(results_df["scan"]))
+    assert(1214 in list(results_df["scan"]))
 
 def test_ms1_cu():
     msql_engine.init_ray()
@@ -225,6 +225,13 @@ def test_ms1_filter():
     parse_obj = msql_parser.parse_msql(query)
     print(json.dumps(parse_obj, indent=4))
     results_df = msql_engine.process_query(query, "test/JB_182_2_fe.mzML")
+    print(results_df)
+
+def test_ms1_filtered_by_ms2():
+    query = "QUERY scansum(MS1DATA) WHERE MS2PROD=309.2:TOLERANCEMZ=0.1"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
 
 def test_intensity_int_parse():
@@ -359,6 +366,7 @@ def main():
     #test_ms1_iron()
     #test_ms1_iron_min_intensity()
     test_ms1_iron_min_intensity_m2_prec()
+    #test_ms1_filtered_by_ms2()
     #test_ms1_cu()
     #test_neutral_loss_intensity()
     #test_gnps_library()
