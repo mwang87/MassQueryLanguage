@@ -320,8 +320,8 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
                         pass
 
             # DEBUG
-            #if mz_val < 613 or mz_val > 615:
-            #    continue
+            # if mz_val < 613 or mz_val > 615:
+            #     continue
 
             substituted_parse["comment"] = str(mz_val)
             all_concrete_queries.append(substituted_parse)
@@ -485,7 +485,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
         # Filtering MS2 Precursor m/z
         if condition["type"] == "ms2precursorcondition":
             mz = condition["value"][0]
-            mz_tol = 0.1
+            mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
 
@@ -503,7 +503,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
         # Filtering MS2 Neutral Loss
         if condition["type"] == "ms2neutrallosscondition":
             mz = condition["value"][0]
-            mz_tol = 0.1
+            mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
             nl_min = mz - mz_tol
             nl_max = mz + mz_tol
 
@@ -535,9 +535,11 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
         # finding MS1 peaks
         if condition["type"] == "ms1mzcondition":
             mz = condition["value"][0]
-            mz_tol = 0.1
+            mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
+
+            print(mz_min, mz_max)
 
             min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
             ms1_filtered_df = ms1_df[

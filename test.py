@@ -365,7 +365,7 @@ def main():
     #test_load()
     #test_ms1_iron()
     #test_ms1_iron_min_intensity()
-    test_ms1_iron_min_intensity_m2_prec()
+    #test_ms1_iron_min_intensity_m2_prec()
     #test_ms1_filtered_by_ms2()
     #test_ms1_cu()
     #test_neutral_loss_intensity()
@@ -373,7 +373,7 @@ def main():
     #test_networking_mgf_library()
     #test_swath()
     #test_albicidin_tag()
-    #test_double_brominated()
+    test_double_brominated()
 
 if __name__ == "__main__":
     main()
