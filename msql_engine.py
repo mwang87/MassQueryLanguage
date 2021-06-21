@@ -324,8 +324,8 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
                         pass
 
             # DEBUG
-            if mz_val < 614.75 or mz_val > 614.8:
-                continue
+            # if mz_val < 614.75 or mz_val > 614.8:
+            #     continue
 
             substituted_parse["comment"] = str(mz_val)
             all_concrete_queries.append(substituted_parse)
