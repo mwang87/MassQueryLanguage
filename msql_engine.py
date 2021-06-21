@@ -430,6 +430,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             continue
 
         #logging.error("WHERE CONDITION", condition)
+        print(condition)
 
         # RT Filters
         if condition["type"] == "rtmincondition":

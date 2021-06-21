@@ -183,6 +183,25 @@ def test_ms1_iron_min_intensity():
     assert(1223 in list(results_df["scan"]))
     assert(len(results_df) == 10)
 
+def test_ms1_iron_min_intensity_m2_prec():
+    #msql_engine.init_ray()
+
+    query = "QUERY scaninfo(MS2DATA) \
+            WHERE \
+            RTMIN=2.8 \
+            AND RTMAX=3.05 \
+            AND MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=30 \
+            AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=5 \
+            AND MS2PREC=X \
+            FILTER \
+            MS1MZ=X"
+    parse_obj = msql_parser.parse_msql(query)
+    print(parse_obj)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/JB_182_2_fe.mzML")
+    print(results_df)
+    assert(1213 in list(results_df["scan"]))
+
 def test_ms1_cu():
     msql_engine.init_ray()
 
@@ -195,10 +214,6 @@ def test_ms1_cu():
             AND MS1MZ=X+2:INTENSITYMATCH=Y*0.387:INTENSITYMATCHPERCENT=25 \
             FILTER \
             MS1MZ=X"
-    # query = "QUERY scaninfo(MS1DATA) \
-    #         WHERE \
-    #         RTMIN=4.23 \
-    #         AND RTMAX=4.28"
     parse_obj = msql_parser.parse_msql(query)
     print(parse_obj)
     print(json.dumps(parse_obj, indent=4))
@@ -343,13 +358,14 @@ def main():
     #test_load()
     #test_ms1_iron()
     #test_ms1_iron_min_intensity()
+    test_ms1_iron_min_intensity_m2_prec()
     #test_ms1_cu()
     #test_neutral_loss_intensity()
     #test_gnps_library()
     #test_networking_mgf_library()
     #test_swath()
     #test_albicidin_tag()
-    test_double_brominated()
+    #test_double_brominated()
 
 if __name__ == "__main__":
     main()
