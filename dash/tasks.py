@@ -16,7 +16,7 @@ def task_computeheartbeat():
     print("UP", file=sys.stderr, flush=True)
     return "Up"
 
-@celery_instance.task(time_limit=60)
+@celery_instance.task(time_limit=120)
 def task_executequery(query, filename):
     
     parse_results = msql_parser.parse_msql(query)

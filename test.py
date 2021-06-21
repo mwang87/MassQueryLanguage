@@ -329,7 +329,12 @@ def test_swath():
     print(json.dumps(parse_obj, indent=4))
     results_df = msql_engine.process_query(query, "test/170425_01_Edith_120417_CCF_01.mzML")
     print(results_df)
+
+def test_agilent():
+    query = "QUERY scaninfo(MS2DATA)"
+    results_df = msql_engine.process_query(query, "test/20190310_MSMSpos_marine_water_20180510_CBTheaFoss_1.mzML")
     
+
 def test_parse():        
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
@@ -384,7 +389,8 @@ def main():
     #test_networking_mgf_library()
     #test_swath()
     #test_albicidin_tag()
-    test_double_brominated()
+    #test_double_brominated()
+    test_agilent()
 
 if __name__ == "__main__":
     main()
