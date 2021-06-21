@@ -2,6 +2,7 @@ import json
 import pymzml
 import pandas as pd
 import numpy as np
+from tqdm import tqdm
 from pyteomics import mgf
 
 def _load_data_mgf(input_filename):
@@ -82,7 +83,7 @@ def _load_data_mzML(input_filename):
     ms2mz_list = []
     previous_ms1_scan = 0
 
-    for i, spec in enumerate(run):
+    for i, spec in tqdm(enumerate(run)):
         # Getting RT
         rt = spec.scan_time_in_minutes()
 
@@ -94,6 +95,9 @@ def _load_data_mzML(input_filename):
 
         # Sorting by intensity
         peaks = peaks[peaks[:, 1].argsort()]
+
+        # Getting top 1000
+        #peaks = peaks[-1000:]
 
         if len(peaks) == 0:
             continue
