@@ -298,6 +298,7 @@ def test_double_brominated():
     print(json.dumps(parse_obj, indent=4))
     results_df = msql_engine.process_query(query, "test/1810E-II.mzML")
     print(results_df)
+    assert(474 in list(results_df["scan"]))
 
 
 # @pytest.mark.skip(reason="too slow")
