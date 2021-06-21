@@ -24,7 +24,7 @@ def DEBUG_MSG(msg):
 
 def init_ray():
     if not ray.is_initialized():
-        ray.init(ignore_reinit_error=True, object_store_memory=10000000000)
+        ray.init(ignore_reinit_error=True, object_store_memory=8000000000)
 
 def _load_data(input_filename, cache=False):
     """
