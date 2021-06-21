@@ -161,6 +161,8 @@ def _filter_intensitymatch(ms_filtered_df, register_dict, condition):
 
                     scan_intensity = grouped_scan["i"]
 
+                    print(key, scan_intensity, qualifier_expression, min_match_intensity, max_match_intensity)
+
                     if scan_intensity > min_match_intensity and \
                         scan_intensity < max_match_intensity:
                         filtered_grouped_scans.append(grouped_scan)
@@ -273,6 +275,16 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
         ms1_df, ms2_df = _executeconditions_query(presearch_parse, input_filename, cache=cache)
 
         # TODO: Checking if we can prefilter the X variable, if there are conditions
+        for condition in parsed_dict["conditions"]:
+            if not condition["conditiontype"] == "where":
+                continue
+        
+            # Filtering MS1 peaks
+            if condition["type"] == "ms1mzcondition":
+                min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
+                ms1_df = ms1_df[
+                    (ms1_df["i"] > min_int) & 
+                    (ms1_df["i_norm"] > min_intpercent)]
         
 
         # Here we will start with the smallest mass and then go up
@@ -306,6 +318,10 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
                     except TypeError:
                         # This is when the target is actually a float
                         pass
+
+            # DEBUG
+            #if mz_val < 613 or mz_val > 615:
+            #    continue
 
             substituted_parse["comment"] = str(mz_val)
             all_concrete_queries.append(substituted_parse)
@@ -345,6 +361,8 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
     else:
         all_concrete_queries.append(parsed_dict)
 
+    print("TOTAL QUERIES", len(all_concrete_queries))
+
     # Perfoming the filtering of conditions
     results_ms1_list = []
     results_ms2_list = []
@@ -357,6 +375,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
     else:
         # Serial Version
         for concrete_query in tqdm(all_concrete_queries):
+            print(concrete_query)
             ms1_df, ms2_df = _executeconditions_query(concrete_query, input_filename, cache=cache)
             
             results_ms1_list.append(ms1_df)
@@ -433,6 +452,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             continue
 
         #logging.error("WHERE CONDITION", condition)
+        #print(condition)
 
         # Filtering MS2 Product Ions
         if condition["type"] == "ms2productcondition":
@@ -472,6 +492,10 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
                 ms2_df["precmz"] > mz_min) & 
                 (ms2_df["precmz"] < mz_max)
             ]
+
+            # Filtering the MS1 data now
+            ms1_scans = set(ms2_df["ms1scan"])
+            ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
 
             continue
 

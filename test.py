@@ -258,6 +258,35 @@ def test_networking_mgf_library():
     results_df = msql_engine.process_query(query, "test/specs_ms.mgf")
     print(results_df)
     assert("2" in list(results_df["scan"]))
+    
+
+@pytest.mark.skip(reason="too slow")
+def test_double_brominated():
+    #msql_engine.init_ray()
+
+    query = "QUERY scaninfo(MS1DATA) WHERE \
+        RTMIN=11.6 \
+        AND RTMAX=12.2 \
+        AND MS1MZ=X:TOLERANCEMZ=0.1:INTENSITYPERCENT=25:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE \
+        AND MS1MZ=X+2:TOLERANCEMZ=0.1:INTENSITYMATCH=Y*0.5:INTENSITYMATCHPERCENT=30 \
+        AND MS1MZ=X-2:TOLERANCEMZ=0.1:INTENSITYMATCH=Y*0.5:INTENSITYMATCHPERCENT=30 \
+        AND MS1MZ=X+4:TOLERANCEMZ=0.3:INTENSITYMATCH=Y*0.25:INTENSITYMATCHPERCENT=30 \
+        AND MS1MZ=X-4:TOLERANCEMZ=0.3:INTENSITYMATCH=Y*0.25:INTENSITYMATCHPERCENT=30"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/1810E-II.mzML")
+    print(results_df)
+
+
+# @pytest.mark.skip(reason="too slow")
+# def test_albicidin_tag():
+#     query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X:TOLERANCEMZ=0.1:INTENSITYPERCENT=5 \
+#         AND MS2PROD=X+119.1 :TOLERANCEMZ=0.1:INTENSITYPERCENT=5 \
+#         AND MS2PROD=X+284.0 :TOLERANCEMZ=0.1:INTENSITYPERCENT=5"
+#     parse_obj = msql_parser.parse_msql(query)
+#     print(json.dumps(parse_obj, indent=4))
+#     results_df = msql_engine.process_query(query, "test/XA_Frac_6.mzML")
+#     print(results_df)
 
 @pytest.mark.skip(reason="too slow")
 def test_swath():
@@ -318,7 +347,9 @@ def main():
     #test_neutral_loss_intensity()
     #test_gnps_library()
     #test_networking_mgf_library()
-    test_swath()
+    #test_swath()
+    #test_albicidin_tag()
+    test_double_brominated()
 
 if __name__ == "__main__":
     main()
