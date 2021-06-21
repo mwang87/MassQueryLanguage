@@ -146,6 +146,7 @@ def _filter_intensitymatch(ms_filtered_df, register_dict, condition):
             qualifier_variable = qualifier_expression[0] #TODO: This assumes the variable is the first character in the expression, likely a bad assumption
 
             grouped_df = ms_filtered_df.groupby("scan").sum().reset_index()
+
             filtered_grouped_scans = []
             for grouped_scan in grouped_df.to_dict(orient="records"):
                 # Reading from the register
@@ -161,7 +162,7 @@ def _filter_intensitymatch(ms_filtered_df, register_dict, condition):
 
                     scan_intensity = grouped_scan["i"]
 
-                    print(key, scan_intensity, qualifier_expression, min_match_intensity, max_match_intensity)
+                    #print(key, scan_intensity, qualifier_expression, min_match_intensity, max_match_intensity, grouped_scan)
 
                     if scan_intensity > min_match_intensity and \
                         scan_intensity < max_match_intensity:
@@ -169,7 +170,6 @@ def _filter_intensitymatch(ms_filtered_df, register_dict, condition):
                 else:
                     # Its not in the register, which means we don't find it
                     continue
-
             return pd.DataFrame(filtered_grouped_scans)
 
     return ms_filtered_df
@@ -273,16 +273,20 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
                 non_variable_conditions.append(condition)
         presearch_parse["conditions"] = non_variable_conditions
         ms1_df, ms2_df = _executeconditions_query(presearch_parse, input_filename, cache=cache)
+        variable_x_ms1_df = ms1_df
 
         # TODO: Checking if we can prefilter the X variable, if there are conditions
         for condition in parsed_dict["conditions"]:
             if not condition["conditiontype"] == "where":
                 continue
+
+            if not "X" in condition["value"]:
+                continue
         
-            # Filtering MS1 peaks
+            # Filtering MS1 peaks only to consider contention for X
             if condition["type"] == "ms1mzcondition":
                 min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
-                ms1_df = ms1_df[
+                variable_x_ms1_df = ms1_df[
                     (ms1_df["i"] > min_int) & 
                     (ms1_df["i_norm"] > min_intpercent)]
         
@@ -290,7 +294,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
         # Here we will start with the smallest mass and then go up
         masses_considered_df = pd.DataFrame()
         if variable_properties["query_ms1"]:
-            masses_considered_df["mz"] = pd.concat([ms1_df["mz"]])
+            masses_considered_df["mz"] = pd.concat([variable_x_ms1_df["mz"]])
         if variable_properties["query_ms2"]:
             masses_considered_df["mz"] = pd.concat([ms2_df["mz"]])
         masses_considered_df["mz_max"] = masses_considered_df["mz"].apply(lambda x: _determine_mz_max(x, variable_properties["ppm_tolerance"], variable_properties["da_tolerance"]))
@@ -320,8 +324,8 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
                         pass
 
             # DEBUG
-            # if mz_val < 613 or mz_val > 615:
-            #     continue
+            if mz_val < 614.75 or mz_val > 614.8:
+                continue
 
             substituted_parse["comment"] = str(mz_val)
             all_concrete_queries.append(substituted_parse)
@@ -375,8 +379,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
     else:
         # Serial Version
         for concrete_query in tqdm(all_concrete_queries):
-            print(concrete_query)
-            ms1_df, ms2_df = _executeconditions_query(concrete_query, input_filename, cache=cache)
+            ms1_df, ms2_df = _executeconditions_query(concrete_query, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache)
             
             results_ms1_list.append(ms1_df)
             results_ms2_list.append(ms2_df)
@@ -430,7 +433,6 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             continue
 
         #logging.error("WHERE CONDITION", condition)
-        print(condition)
 
         # RT Filters
         if condition["type"] == "rtmincondition":
@@ -453,7 +455,6 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             continue
 
         #logging.error("WHERE CONDITION", condition)
-        #print(condition)
 
         # Filtering MS2 Product Ions
         if condition["type"] == "ms2productcondition":
@@ -539,8 +540,6 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
 
-            print(mz_min, mz_max)
-
             min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
             ms1_filtered_df = ms1_df[
                 (ms1_df["mz"] > mz_min) & 
@@ -548,11 +547,15 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
                 (ms1_df["i"] > min_int) & 
                 (ms1_df["i_norm"] > min_intpercent)]
             
+            #print("YYY", mz_min, mz_max, min_int, min_intpercent, len(ms1_filtered_df))
+
             # Setting the intensity match register
             _set_intensity_register(ms1_filtered_df, reference_conditions_register, condition)
 
             # Applying the intensity match
             ms1_filtered_df = _filter_intensitymatch(ms1_filtered_df, reference_conditions_register, condition)
+
+            #print(ms1_filtered_df)
 
             if len(ms1_filtered_df) == 0:
                 return pd.DataFrame(), pd.DataFrame()
