@@ -26,6 +26,7 @@ def main():
     PARALLEL = params_obj["PARALLEL"][0]
 
     input_files_list = glob.glob(os.path.join(input_folder, "*.mzML"))
+    input_files_list += glob.glob(os.path.join(input_folder, "*.mgf"))
 
     all_results_list = []
 

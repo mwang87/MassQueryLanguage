@@ -5,4 +5,4 @@ pyarrow
 ray
 tqdm
 py_expression_eval
-pyteomics
+matchms

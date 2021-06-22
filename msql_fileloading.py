@@ -3,18 +3,18 @@ import pymzml
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
-from pyteomics import mgf
+from matchms.importing import load_from_mgf
 
 def _load_data_mgf(input_filename):
-    reader = mgf.read(input_filename)
+    file = load_from_mgf(input_filename)
 
     ms2mz_list = []
-    for spectrum in reader:
-        if len(spectrum["intensity array"]) == 0:
+    for spectrum in file:
+        if len(spectrum.peaks.mz) == 0:
             continue
-    
-        mz_list = list(spectrum["m/z array"])
-        i_list = list(spectrum["intensity array"])
+
+        mz_list = list(spectrum.peaks.mz)
+        i_list = list(spectrum.peaks.intensities)
         i_max = max(i_list)
 
         for i in range(len(mz_list)):
@@ -22,9 +22,9 @@ def _load_data_mgf(input_filename):
             peak_dict["i"] = i_list[i]
             peak_dict["i_norm"] = i_list[i] / i_max
             peak_dict["mz"] = mz_list[i]
-            peak_dict["scan"] = spectrum["params"]["scans"]
-            peak_dict["rt"] = spectrum["params"]["rtinseconds"]
-            peak_dict["precmz"] = spectrum["params"]["pepmass"][0]
+            peak_dict["scan"] = spectrum.metadata["scans"]
+            peak_dict["rt"] = spectrum.metadata["rtinseconds"]
+            peak_dict["precmz"] = spectrum.metadata["pepmass"][0]
             peak_dict["ms1scan"] = 0
 
             ms2mz_list.append(peak_dict)
