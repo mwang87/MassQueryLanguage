@@ -237,6 +237,7 @@ def _get_url_param(param_dict, key, default):
 
 @app.callback([
                 Output('query', 'value'),
+                Output('filename', 'value'),
                 Output('x_axis', 'value'),
                 Output('y_axis', 'value'),
                 Output('facet_column', 'value'),
@@ -252,12 +253,13 @@ def determine_params(search):
         query_dict = {}
 
     query = _get_url_param(query_dict, "query", 'QUERY scaninfo(MS2DATA) WHERE MS2PROD=226.18:TOLERANCEPPM=5')
+    filename = _get_url_param(query_dict, "filename", 'QUERY scaninfo(MS2DATA) WHERE MS2PROD=226.18:TOLERANCEPPM=5')
     x_axis = _get_url_param(query_dict, "x_axis", dash.no_update)
     y_axis = _get_url_param(query_dict, "y_axis", dash.no_update)
     facet_column = _get_url_param(query_dict, "facet_column", dash.no_update)
     scan = _get_url_param(query_dict, "scan", dash.no_update)
 
-    return [query, x_axis, y_axis, facet_column, scan]
+    return [query, filename, x_axis, y_axis, facet_column, scan]
 
 @app.callback([
                 Output('filename', 'options'),

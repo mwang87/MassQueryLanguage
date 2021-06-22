@@ -272,6 +272,15 @@ def test_gnps_library():
     results_df = msql_engine.process_query(query, "test/gnps-library.json")
     print(results_df)
 
+def test_gnps_full_library():
+    query = "QUERY scaninfo(MS2DATA) WHERE \
+            MS2PROD=271.06:TOLERANCEMZ=0.1:INTENSITYPERCENT=50"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/gnps.json")
+    print(results_df)
+
+
 def test_networking_mgf_library():
     query = "QUERY scaninfo(MS2DATA) WHERE \
             MS2PROD=86.10:TOLERANCEMZ=0.1:INTENSITYPERCENT=50"
@@ -386,11 +395,12 @@ def main():
     #test_ms1_cu()
     #test_neutral_loss_intensity()
     #test_gnps_library()
+    test_gnps_full_library()
     #test_networking_mgf_library()
     #test_swath()
     #test_albicidin_tag()
     #test_double_brominated()
-    test_agilent()
+    #test_agilent()
 
 if __name__ == "__main__":
     main()
