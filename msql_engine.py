@@ -379,10 +379,10 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
     else:
         # Serial Version
         for concrete_query in tqdm(all_concrete_queries):
-            ms1_df, ms2_df = _executeconditions_query(concrete_query, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache)
+            results_ms1_df, results_ms2_df = _executeconditions_query(concrete_query, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache)
             
-            results_ms1_list.append(ms1_df)
-            results_ms2_list.append(ms2_df)
+            results_ms1_list.append(results_ms1_df)
+            results_ms2_list.append(results_ms2_df)
 
     aggregated_ms1_df = pd.concat(results_ms1_list)
     aggregated_ms2_df = pd.concat(results_ms2_list)
