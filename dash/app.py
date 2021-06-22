@@ -363,6 +363,9 @@ def draw_plot(query, filename, x_axis, y_axis, facet_column):
 def draw_spectrum(filename, scan):
     full_filepath = os.path.join("test", filename)
 
+    if not ".mzML" in full_filepath:
+        return
+
     MS_precisions = {
         1: 5e-6,
         2: 20e-6,
@@ -372,6 +375,8 @@ def draw_spectrum(filename, scan):
         6: 20e-6,
         7: 20e-6,
     }
+
+    
     run = pymzml.run.Reader(full_filepath, MS_precisions=MS_precisions)
 
     try:
