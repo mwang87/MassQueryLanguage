@@ -26,7 +26,7 @@
 
     <tool name="extract_data">
         <require name="inputspectra" type="folder"/>
-        <require name="query_results" type="file"/>
+        <require name="query_results" type="folder"/>
         <produce name="extract_results" type="folder"/>
 
         <execution env="binary" argConvention="adhoc">
