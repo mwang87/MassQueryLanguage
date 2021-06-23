@@ -51,6 +51,9 @@ def _load_data(input_filename, cache=False):
     if input_filename[-5:] == ".mzML":
         ms1_df, ms2_df = msql_fileloading._load_data_mzML(input_filename)
 
+    if input_filename[-6:] == ".mzXML":
+        ms1_df, ms2_df = msql_fileloading._load_data_mzXML(input_filename)
+    
     if input_filename[-5:] == ".json":
         ms1_df, ms2_df = msql_fileloading._load_data_gnps_json(input_filename)
     

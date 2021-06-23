@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 from matchms.importing import load_from_mgf
+from pyteomics import mzxml
 
 def _load_data_mgf(input_filename):
     file = load_from_mgf(input_filename)
@@ -65,7 +66,55 @@ def _load_data_gnps_json(input_filename):
     ms2_df = pd.DataFrame(ms2mz_list)
 
     return ms1_df, ms2_df
-    
+
+def _load_data_mzXML(input_filename):
+    ms1mz_list = []
+    ms2mz_list = []
+    previous_ms1_scan = 0
+
+    with mzxml.read(input_filename) as reader:
+        for spectrum in reader:
+            if len(spectrum["intensity array"]) == 0:
+                continue
+                
+            mz_list = list(spectrum["m/z array"])
+            i_list = list(spectrum["intensity array"])
+            i_max = max(i_list)
+
+            mslevel = spectrum["msLevel"]
+            if mslevel == 1:
+                for i in range(len(mz_list)):
+                    peak_dict = {}
+                    peak_dict["i"] = i_list[i]
+                    peak_dict["i_norm"] = i_list[i] / i_max
+                    peak_dict["mz"] = mz_list[i]
+                    peak_dict["scan"] = spectrum["id"]
+                    peak_dict["rt"] = spectrum["retentionTime"]
+
+                    ms1mz_list.append(peak_dict)
+
+                    previous_ms1_scan = spectrum["id"]
+
+            if mslevel == 2:
+                msn_mz = spectrum["precursorMz"][0]["precursorMz"]
+                for i in range(len(mz_list)):
+                    peak_dict = {}
+                    peak_dict["i"] = i_list[i]
+                    peak_dict["i_norm"] = i_list[i] / i_max
+                    peak_dict["mz"] = mz_list[i]
+                    peak_dict["scan"] = spectrum["id"]
+                    peak_dict["rt"] = spectrum["retentionTime"]
+                    peak_dict["precmz"] = msn_mz
+                    peak_dict["ms1scan"] = previous_ms1_scan
+
+                    ms2mz_list.append(peak_dict)
+
+    # Turning into pandas data frames
+    ms1_df = pd.DataFrame(ms1mz_list)
+    ms2_df = pd.DataFrame(ms2mz_list)
+
+    return ms1_df, ms2_df
+
 
 def _load_data_mzML(input_filename):
     MS_precisions = {
