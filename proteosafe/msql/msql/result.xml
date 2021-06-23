@@ -71,8 +71,8 @@
 
             <row expander="image">
                 <column type="jscolumnspectrumviewer" colspan="5" width="600" height="500">
-                    <parameter name="file"      file="f.[_dyn_#filename]"/>
-                    <parameter name="scan"      value="[_dyn_#scan]"/>
+                    <parameter name="file"      file="extract_results/extracted.mgf"/>
+                    <parameter name="scan"      value="[_dyn_#new_scan]"/>
                     <parameter name="modformat" value="inspect"/>
                     <parameter name="trim"      value="true"/>
                 </column>

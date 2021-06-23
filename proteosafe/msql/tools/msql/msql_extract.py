@@ -99,7 +99,7 @@ def _extract_spectra(results_df, input_spectra_folder, output_spectra, output_su
         df.to_csv(output_summary, sep='\t', index=False)
 
     # Writing the spectrum now
-    with open(output_filename, "w") as o:
+    with open(output_spectra, "w") as o:
         for i, spectrum in enumerate(spectrum_list):
             o.write("BEGIN IONS\n")
             if "precursor_mz" in spectrum:
