@@ -11,7 +11,8 @@ def main():
     args = parser.parse_args()
 
     results_df = msql_engine.process_query(args.query, args.filename, cache=True, parallel=False)
-
+    if args.output_file:
+        results_df.to_csv(args.output_file, index=False)
     print(results_df)
 
 if __name__ == "__main__":
