@@ -14,7 +14,7 @@ def main():
 
     args = parser.parse_args()
 
-    results_df = pd.read_csv(glob.glob(args.results_file, "*")[0], sep='\t')
+    results_df = pd.read_csv(glob.glob(os.path.join(args.results_file, "*"))[0], sep='\t')
 
     try:
         _extract_spectra(results_df, args.extract_results_folder, os.path.join(args.input_folder, "extracted.mgf"))
