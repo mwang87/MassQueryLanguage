@@ -1,5 +1,5 @@
 <toolset>
-    <pathSet base="miniconda3_gamma/envs/msql/bin">
+    <pathSet base="miniconda3_gamma/envs/msql2/bin">
         <toolPath tool="msql_query" path="python3"/>
     </pathSet>
 
