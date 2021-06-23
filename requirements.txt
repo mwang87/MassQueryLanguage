@@ -6,3 +6,4 @@ ray
 tqdm
 py_expression_eval
 matchms
+pyteomics
