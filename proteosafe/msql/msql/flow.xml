@@ -16,7 +16,15 @@
                 <output port="query_results"           collection="query_results"/>
         </action>
 
+        <collection name="extract_results"/>
+        <action name="extract_data">
+                <input  port="inputspectra"             collection="inputspectra"/>
+                <input  port="query_results"             collection="query_results"/>
+                <output port="extract_results"           collection="extract_results"/>
+        </action>
+
         <action name="end">
                 <input port="query_results"           collection="query_results"/>
+                <input port="extract_results"           collection="extract_results"/>
         </action>
 </flow>
