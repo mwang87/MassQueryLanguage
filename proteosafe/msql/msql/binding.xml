@@ -22,6 +22,12 @@
             <productionToOutput port="query_results" production="query_results"/>
         </bind>
 
+        <bind action="extract_data" tool="extract_data">
+            <inputAsRequirement port="inputspectra" requirement="inputspectra"/>
+            <inputAsRequirement port="query_results" requirement="query_results"/>
+            <productionToOutput port="extract_results" production="extract_results"/>
+        </bind>
+
         <bind action="end" type="upload">
                 <url value="{livesearch.upload}"/>
                 <query name="task" valueRef="@task"/>
@@ -29,6 +35,9 @@
                 <compression type="zip"/>
                 <upload port="query_results" type="folder">
                         <query name="resource" value="query_results"/>
+                </upload>
+                <upload port="extract_results" type="folder">
+                        <query name="resource" value="extract_results"/>
                 </upload>
         </bind>
 </binding>

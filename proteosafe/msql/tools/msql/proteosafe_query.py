@@ -11,10 +11,18 @@ import ray
 import ming_proteosafe_library
 
 def main():
-    input_folder = sys.argv[1]
-    workflow_params = sys.argv[2]
-    output_folder = sys.argv[3]
-    path_to_grammar = sys.argv[4]
+    parser = argparse.ArgumentParser(description="MSQL Query in Proteosafe")
+    parser.add_argument('input_folder', help='Input filename')
+    parser.add_argument('workflow_params', help='Input Query')
+    parser.add_argument('output_folder', help='Input Query')
+    parser.add_argument('path_to_grammar', help='Input Query')
+
+    args = parser.parse_args()
+
+    input_folder = args.input_folder
+    workflow_params = args.workflow_params
+    output_folder = args.output_folder
+    path_to_grammar = args.path_to_grammar
 
     # Initialize Ray
     msql_engine.init_ray()
@@ -46,6 +54,7 @@ def main():
             results_df = ray.get(result_future)
             real_filename = mangled_mapping[os.path.basename(input_filename)]
             results_df["filename"] = real_filename
+            results_df["mangled_filename"] = os.path.basename(input_filename)
 
             all_results_list.append(results_df)
     else:
@@ -57,6 +66,7 @@ def main():
             results_df = execute_query(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=False, parallel=(PARALLEL=="YES"))
             real_filename = mangled_mapping[os.path.basename(input_filename)]
             results_df["filename"] = real_filename
+            results_df["mangled_filename"] = os.path.basename(input_filename)
 
             all_results_list.append(results_df)
 
