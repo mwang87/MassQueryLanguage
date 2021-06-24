@@ -54,6 +54,7 @@ def main():
             results_df = ray.get(result_future)
             real_filename = mangled_mapping[os.path.basename(input_filename)]
             results_df["filename"] = real_filename
+            results_df["mangled_filename"] = os.path.basename(input_filename)
 
             all_results_list.append(results_df)
     else:

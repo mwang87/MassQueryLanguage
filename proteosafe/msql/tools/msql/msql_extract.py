@@ -22,7 +22,8 @@ def main():
                         args.input_folder, 
                         os.path.join(args.extract_results_folder, "extracted.mgf"),
                         os.path.join(args.extract_results_folder, "extracted.tsv"))
-    except:
+    except Exception as e: 
+        print(e)
         print("FAILURE ON EXTRACTION")
         pass
         
