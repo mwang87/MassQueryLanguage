@@ -80,6 +80,9 @@ def _extract_spectra(results_df, input_spectra_folder, output_spectra, output_su
             for i in range(len(mz_list)):
                 peaks_list.append([mz_list[i], i_list[i]])
 
+            # Sorting Peaks
+            peaks_list = sorted(peaks_list, key=lambda x: x[0])
+
             spectrum_obj = {}
             spectrum_obj["peaks"] = peaks_list
             spectrum_obj["scan"] = scan_number
