@@ -53,7 +53,6 @@ which are specific conditions and the associated qualifiers. You may further com
 
 The types of conditions are as follows
 
-
 #### RTMIN
 
 Setting the minimum retention time in minutes
@@ -79,25 +78,32 @@ These can be attached to conditions to modify some properties about the peaks we
 
 #### Mass Accuracy
 
-TOLERANCEMZ=0.1
+These two fields enable setting a peak m/z tolerance
 
+```
+TOLERANCEMZ=0.1
 TOLERANCEPPM=50
+```
 
 #### Intensity Relative to Full Spectrum
 
-INTENSITYVALUE=1000
+These two fields enable to set an minimum intensity
 
-INTENSITYPERCENT>10
+```
+INTENSITYVALUE=1000
+INTENSITYPERCENT=10
+```
 
 #### Intensity Relative to Other Peaks
 
+Here we can start imposing relative intensities between peaks
+
+```
 INTENSITYMATCHREFERENCE
-
 INTENSITYMATCH=Y
-
 INTENSITYMATCH=Y*2
-
 INTENSITYMATCHPERCENT=10
+```
 
 !!! info "Intensity Matching Between Peaks"
     This is actually complicated, but you'll end up with one peak per variable that is the reference
@@ -109,14 +115,22 @@ INTENSITYMATCHPERCENT=10
     MS1MZ=X+2:INTENSITYMATCH=Y*2:INTENSITYMATCHPERCENT=1 
     ```
 
+
+### Filters
+
+Filters are like conditional but we don't elimate scans based on the condition. Rather, we simply filter out peaks within the spectra. 
+
+This is useful for things like SRM or SIM/XIC. 
+
+
 ## Examples
 
 ### XIC Generation
 
-Precursor, m/z = 100
+MS1 XIC, m/z = 100
 
 ```
-QUERY scansum(MS1DATA) WHERE MS1MZ=100:TOLERANCEMZ=0.1
+QUERY scansum(MS1DATA) FILTER MS1MZ=100:TOLERANCEMZ=0.1
 ```
 
 ### MS2 With Sugar Loss - Neutral Loss Scan
