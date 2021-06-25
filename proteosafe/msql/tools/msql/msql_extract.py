@@ -6,6 +6,7 @@ import sys
 import pandas as pd
 import numpy as np
 import pymzml
+from pyteomics import mzxml
 
 def main():
     parser = argparse.ArgumentParser(description="MSQL Query in Proteosafe")
@@ -25,9 +26,93 @@ def main():
     except Exception as e: 
         print(e)
         print("FAILURE ON EXTRACTION")
+        raise
         pass
-        
+
+def _extract_mzML_scan(input_filename, spectrum_identifier):
+    MS_precisions = {
+        1: 5e-6,
+        2: 20e-6,
+        3: 20e-6,
+        4: 20e-6,
+        5: 20e-6,
+        6: 20e-6,
+        7: 20e-6,
+    }
     
+    run = pymzml.run.Reader(input_filename, MS_precisions=MS_precisions)
+
+    try:
+        for spec in run:
+            if str(spec.ID) == str(spectrum_identifier):
+                break
+    except:
+        raise
+
+    peaks = spec.peaks("raw")
+
+    # Filtering out zero rows
+    peaks = peaks[~np.any(peaks < 1.0, axis=1)]
+
+    # Sorting by intensity
+    peaks = peaks[peaks[:, 1].argsort()]
+
+    # Getting top 1000
+    #peaks = peaks[-1000:]
+
+    if len(peaks) == 0:
+        return None
+
+    mz, intensity = zip(*peaks)
+
+    mz_list = list(mz)
+    i_list = list(intensity)
+
+    peaks_list = []
+    for i in range(len(mz_list)):
+        peaks_list.append([mz_list[i], i_list[i]])
+
+    # Sorting Peaks
+    peaks_list = sorted(peaks_list, key=lambda x: x[0])
+
+    spectrum_obj = {}
+    spectrum_obj["peaks"] = peaks_list
+    spectrum_obj["scan"] = spectrum_identifier
+
+    if spec.ms_level > 1:
+        msn_mz = spec.selected_precursors[0]["mz"]
+        spectrum_obj["precursor_mz"] = msn_mz
+
+    return spectrum_obj
+
+def _extract_mzXML_scan(input_filename, spectrum_identifier):
+    with mzxml.read(input_filename) as reader:
+        for spectrum in reader:
+            if spectrum["id"] == spectrum_identifier:
+                spec = spectrum
+                break
+
+        mz_list = list(spec["m/z array"])
+        i_list = list(spec["intensity array"])
+
+        peaks_list = []
+        for i in range(len(mz_list)):
+            peaks_list.append([mz_list[i], i_list[i]])
+
+        # Sorting Peaks
+        peaks_list = sorted(peaks_list, key=lambda x: x[0])
+
+        # Loading Data
+        spectrum_obj = {}
+        spectrum_obj["peaks"] = peaks_list
+        spectrum_obj["scan"] = spectrum_identifier
+
+        if spec.ms_level > 1:
+            msn_mz = spec["precursorMz"][0]["precursorMz"]
+            spectrum_obj["precursor_mz"] = msn_mz
+
+        return spectrum_obj
+
 def _extract_spectra(results_df, input_spectra_folder, output_spectra, output_summary=None):
     spectrum_list = []
 
@@ -37,62 +122,17 @@ def _extract_spectra(results_df, input_spectra_folder, output_spectra, output_su
     results_list = results_df.to_dict(orient="records")
     for result_obj in results_list:
         input_spectra_filename = os.path.join(input_spectra_folder, result_obj["mangled_filename"])
+        scan_number = result_obj["scan"]
+
+        spectrum_obj = None
         if ".mzML" in input_spectra_filename:
-            MS_precisions = {
-                1: 5e-6,
-                2: 20e-6,
-                3: 20e-6,
-                4: 20e-6,
-                5: 20e-6,
-                6: 20e-6,
-                7: 20e-6,
-            }
-            run = pymzml.run.Reader(input_spectra_filename, MS_precisions=MS_precisions)
-            scan_number = result_obj["scan"]
+            spectrum_obj = _extract_mzML_scan(input_spectra_filename, scan_number)
+        if ".mzXML" in input_spectra_filename:
+            spectrum_obj = _extract_mzXML_scan(input_spectra_filename, scan_number)
 
-            try:
-                for spec in run:
-                    if str(spec.ID) == str(scan_number):
-                        break
-            except:
-                raise
-
-            peaks = spec.peaks("raw")
-
-            # Filtering out zero rows
-            peaks = peaks[~np.any(peaks < 1.0, axis=1)]
-
-            # Sorting by intensity
-            peaks = peaks[peaks[:, 1].argsort()]
-
-            # Getting top 1000
-            #peaks = peaks[-1000:]
-
-            if len(peaks) == 0:
-                continue
-
-            mz, intensity = zip(*peaks)
-
-            mz_list = list(mz)
-            i_list = list(intensity)
-
-            peaks_list = []
-            for i in range(len(mz_list)):
-                peaks_list.append([mz_list[i], i_list[i]])
-
-            # Sorting Peaks
-            peaks_list = sorted(peaks_list, key=lambda x: x[0])
-
-            spectrum_obj = {}
-            spectrum_obj["peaks"] = peaks_list
-            spectrum_obj["scan"] = scan_number
+        if spectrum_obj is not None:
             spectrum_obj["new_scan"] = current_scan
-
             result_obj["new_scan"] = current_scan
-
-            if spec.ms_level > 1:
-                msn_mz = spec.selected_precursors[0]["mz"]
-                spectrum_obj["precursor_mz"] = msn_mz
 
             spectrum_list.append(spectrum_obj)
             current_scan += 1
