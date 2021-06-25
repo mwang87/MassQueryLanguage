@@ -24,9 +24,6 @@ def main():
     output_folder = args.output_folder
     path_to_grammar = args.path_to_grammar
 
-    # Initialize Ray
-    msql_engine.init_ray()
-
     params_obj = ming_proteosafe_library.parse_xml_file(open(workflow_params))
     mangled_mapping = ming_proteosafe_library.get_mangled_file_mapping(params_obj)
     
@@ -37,16 +34,16 @@ def main():
     input_files_list += glob.glob(os.path.join(input_folder, "*.mzXML"))
     input_files_list += glob.glob(os.path.join(input_folder, "*.mgf"))
 
-
     all_results_list = []
 
+    # Initialize Ray
+    msql_engine.init_ray()
+
     # Parallel Version
-    if len(input_files_list) > 1:
+    if len(input_files_list) > 1 and PARALLEL == "YES":
         all_futures = []
 
         for input_filename in input_files_list:
-            print(input_filename)
-
             results_future = execute_query_ray.remote(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=False, parallel=(PARALLEL=="YES"))
             all_futures.append((results_future, input_filename))
 
@@ -61,8 +58,6 @@ def main():
         # Serial Version
         all_results_list = []
         for input_filename in input_files_list:
-            print(input_filename)
-
             results_df = execute_query(msql_query, input_filename, path_to_grammar=path_to_grammar, cache=False, parallel=(PARALLEL=="YES"))
             real_filename = mangled_mapping[os.path.basename(input_filename)]
             results_df["filename"] = real_filename
