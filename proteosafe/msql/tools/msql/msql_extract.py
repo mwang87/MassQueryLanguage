@@ -107,10 +107,10 @@ def _extract_mzXML_scan(input_filename, spectrum_identifier):
         # Loading Data
         spectrum_obj = {}
         spectrum_obj["peaks"] = peaks_list
-        spectrum_obj["mslevel"] = spec["ms level"]
+        spectrum_obj["mslevel"] = spec["msLevel"]
         spectrum_obj["scan"] = spectrum_identifier
 
-        if spec.ms_level > 1:
+        if spec["msLevel"] > 1:
             msn_mz = spec["precursorMz"][0]["precursorMz"]
             spectrum_obj["precursor_mz"] = msn_mz
 
@@ -159,7 +159,7 @@ def _extract_spectra(results_df, input_spectra_folder,
                 o.write("{} {}\n".format(peak[0], peak[1]))
             o.write("END IONS\n")
 
-    # mzML
+    # TODO: mzML export
     
 
 if __name__ == "__main__":
