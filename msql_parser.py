@@ -87,7 +87,7 @@ class MassQLToJSON(Transformer):
    def condition(self, items):
       condition_dict = {}
       condition_dict["type"] = items[0].children[0]
-      condition_dict["value"] = [items[-1]]
+      condition_dict["value"] = items[-1]
       return condition_dict
 
    def wherefullcondition(self, items):
@@ -159,7 +159,16 @@ class MassQLToJSON(Transformer):
          merged_list += items[-1]
 
          return merged_list
+         
+   def conditionvalue(self, items):
+      if len(items) == 1:
+         return items
+      if len(items) == 2:
+         merged_list = []
+         merged_list += items[0]
+         merged_list += items[-1]
 
+         return merged_list
    
    def querytype(self, items):
       query_dict = {}

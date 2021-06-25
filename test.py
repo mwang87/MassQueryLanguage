@@ -48,6 +48,8 @@ def test_qc_ms1_ms2peak():
     print(set(results_df["scan"]))
     assert(len(results_df) > 1000)
 
+
+
 def test_diphen():
     query = "QUERY scannum(MS2DATA) WHERE MS2PROD=167.0857:TOLERANCEPPM=5"
     print(msql_parser.parse_msql(query))
@@ -280,6 +282,14 @@ def test_gnps_full_library():
     results_df = msql_engine.process_query(query, "test/gnps.json")
     print(results_df)
 
+def test_multiple_mz():
+    query = "QUERY scaninfo(MS2DATA) WHERE \
+            MS2PROD=271.06,217.1"
+    parse_obj = msql_parser.parse_msql(query)
+    print(parse_obj)
+
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    print(results_df)
 
 def test_networking_mgf_library():
     query = "QUERY scaninfo(MS2DATA) WHERE \
@@ -395,12 +405,13 @@ def main():
     #test_ms1_cu()
     #test_neutral_loss_intensity()
     #test_gnps_library()
-    test_gnps_full_library()
+    #test_gnps_full_library()
     #test_networking_mgf_library()
     #test_swath()
     #test_albicidin_tag()
     #test_double_brominated()
     #test_agilent()
+    test_multiple_mz()
 
 if __name__ == "__main__":
     main()

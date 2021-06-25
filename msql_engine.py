@@ -461,23 +461,31 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
 
         # Filtering MS2 Product Ions
         if condition["type"] == "ms2productcondition":
-            mz = condition["value"][0]
-            mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
-            mz_min = mz - mz_tol
-            mz_max = mz + mz_tol
+            filtered_scans = set()
+            for mz in condition["value"]:
+                mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
+                mz_min = mz - mz_tol
+                mz_max = mz + mz_tol
 
-            min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
+                min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
 
-            ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max) & (ms2_df["i"] > min_int) & (ms2_df["i_norm"] > min_intpercent)]
+                ms2_filtered_df = ms2_df[
+                    (ms2_df["mz"] > mz_min) & 
+                    (ms2_df["mz"] < mz_max) & 
+                    (ms2_df["i"] > min_int) & 
+                    (ms2_df["i_norm"] > min_intpercent)
+                ]
 
-            # Setting the intensity match register
-            _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
+                # Setting the intensity match register
+                _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
 
-            # Applying the intensity match
-            ms2_filtered_df = _filter_intensitymatch(ms2_filtered_df, reference_conditions_register, condition)
+                # Applying the intensity match
+                ms2_filtered_df = _filter_intensitymatch(ms2_filtered_df, reference_conditions_register, condition)
+
+                # Getting union of all scans
+                filtered_scans = filtered_scans.union(set(ms2_filtered_df["scan"]))
 
             # Filtering the actual data structures
-            filtered_scans = set(ms2_filtered_df["scan"])
             ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]
 
             # Filtering the MS1 data now
