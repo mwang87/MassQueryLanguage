@@ -187,6 +187,7 @@ def _load_data_mzML(input_filename):
     # Turning into pandas data frames
     ms1_df = pd.DataFrame(ms1mz_list)
     ms2_df = pd.DataFrame(ms2mz_list)
+    ms3_df = pd.DataFrame()
 
     return ms1_df, ms2_df
 
