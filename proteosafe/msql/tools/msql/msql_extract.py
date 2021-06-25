@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import pymzml
 from pyteomics import mzxml
+from psims.mzml.writer import MzMLWriter
 
 def main():
     parser = argparse.ArgumentParser(description="MSQL Query in Proteosafe")
@@ -21,8 +22,8 @@ def main():
     try:
         _extract_spectra(results_df, 
                         args.input_folder, 
-                        os.path.join(args.extract_results_folder, "extracted.mgf"),
-                        os.path.join(args.extract_results_folder, "extracted.tsv"))
+                        output_mgf_filename=os.path.join(args.extract_results_folder, "extracted.mgf"),
+                        output_summary=os.path.join(args.extract_results_folder, "extracted.tsv"))
     except Exception as e: 
         print(e)
         print("FAILURE ON EXTRACTION")
@@ -77,6 +78,7 @@ def _extract_mzML_scan(input_filename, spectrum_identifier):
 
     spectrum_obj = {}
     spectrum_obj["peaks"] = peaks_list
+    spectrum_obj["mslevel"] = spec.mslevel
     spectrum_obj["scan"] = spectrum_identifier
 
     if spec.ms_level > 1:
@@ -88,7 +90,7 @@ def _extract_mzML_scan(input_filename, spectrum_identifier):
 def _extract_mzXML_scan(input_filename, spectrum_identifier):
     with mzxml.read(input_filename) as reader:
         for spectrum in reader:
-            if spectrum["id"] == spectrum_identifier:
+            if str(spectrum["id"]) == str(spectrum_identifier):
                 spec = spectrum
                 break
 
@@ -105,6 +107,7 @@ def _extract_mzXML_scan(input_filename, spectrum_identifier):
         # Loading Data
         spectrum_obj = {}
         spectrum_obj["peaks"] = peaks_list
+        spectrum_obj["mslevel"] = spec["ms level"]
         spectrum_obj["scan"] = spectrum_identifier
 
         if spec.ms_level > 1:
@@ -113,7 +116,10 @@ def _extract_mzXML_scan(input_filename, spectrum_identifier):
 
         return spectrum_obj
 
-def _extract_spectra(results_df, input_spectra_folder, output_spectra, output_summary=None):
+def _extract_spectra(results_df, input_spectra_folder, 
+                    output_mgf_filename=None, 
+                    output_mzML_filename=None, 
+                    output_summary=None):
     spectrum_list = []
 
     # TODO: reduce duplicate scans to extract
@@ -143,7 +149,7 @@ def _extract_spectra(results_df, input_spectra_folder, output_spectra, output_su
         df.to_csv(output_summary, sep='\t', index=False)
 
     # Writing the spectrum now
-    with open(output_spectra, "w") as o:
+    with open(output_mgf_filename, "w") as o:
         for i, spectrum in enumerate(spectrum_list):
             o.write("BEGIN IONS\n")
             if "precursor_mz" in spectrum:
@@ -152,6 +158,9 @@ def _extract_spectra(results_df, input_spectra_folder, output_spectra, output_su
             for peak in spectrum["peaks"]:
                 o.write("{} {}\n".format(peak[0], peak[1]))
             o.write("END IONS\n")
+
+    # mzML
+    
 
 if __name__ == "__main__":
     main()

@@ -164,6 +164,15 @@ def test_ms1_iron():
     print(results_df)
     assert(1223 in list(results_df["scan"]))
 
+
+def test_ms1_iron_X_changes_intensity():
+    query = "QUERY scaninfo(MS2DATA) WHERE \
+        MS1MZ=X-2:INTENSITYMATCH=Y*(0.0608+(.000002*X)):INTENSITYMATCHPERCENT=25 AND \
+        MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=5 AND \
+        MS2PREC=X"
+    parse_obj = msql_parser.parse_msql(query)
+    print(parse_obj)
+
 def test_ms1_iron_min_intensity():
     #msql_engine.init_ray()
 
@@ -395,12 +404,13 @@ def main():
     #test_ms1_cu()
     #test_neutral_loss_intensity()
     #test_gnps_library()
-    test_gnps_full_library()
+    #test_gnps_full_library()
     #test_networking_mgf_library()
     #test_swath()
     #test_albicidin_tag()
     #test_double_brominated()
     #test_agilent()
+    test_ms1_iron_X_changes_intensity()
 
 if __name__ == "__main__":
     main()
