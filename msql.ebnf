@@ -20,10 +20,13 @@ filterfullcondition: filterfullcondition booleanconjunction filterfullcondition
     | condition ":" qualifier
     | condition
 
-condition: conditionfields "=" floating
-    | conditionfields equal variable
+// Conditions 
+condition: conditionfields equal conditionvalue
     | conditionfields equal "(" statement ")"
     
+conditionvalue: conditionvalue "," conditionvalue
+    | variable
+    | floating
 
 qualifier: qualifier ":" qualifier
     | qualifierfields equal floating
