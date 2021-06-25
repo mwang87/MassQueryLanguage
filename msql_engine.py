@@ -591,7 +591,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
         if not condition["conditiontype"] == "filter":
             continue
 
-        logging.error("FILTER CONDITION", condition)
+        #logging.error("FILTER CONDITION", condition)
 
         # filtering MS1 peaks
         if condition["type"] == "ms1mzcondition":
