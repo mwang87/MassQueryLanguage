@@ -11,7 +11,7 @@ from dash.dependencies import Input, Output, State
 import os
 from zipfile import ZipFile
 import urllib.parse
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, request
 
 import pandas as pd
 import requests
@@ -417,7 +417,18 @@ def draw_spectrum(filename, scan):
 # API
 @server.route("/api")
 def api():
-    return "Up"    
+    return "Up"
+
+@server.route("/parse")
+def parse_api():
+    query = request.args.get("query")
+
+    try:
+        parse_results = msql_parser.parse_msql(query)
+    except:
+        return ["Parse Error"]
+
+    return json.dumps(parse_results)
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=5000, host="0.0.0.0")
