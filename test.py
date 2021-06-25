@@ -167,7 +167,7 @@ def test_ms1_iron():
 
 def test_ms1_iron_X_changes_intensity():
     query = "QUERY scaninfo(MS2DATA) WHERE \
-        MS1MZ=X-2:INTENSITYMATCH=Y*(0.0608+(.000002*X)):INTENSITYMATCHPERCENT=25 AND \
+        MS1MZ=X-2:INTENSITYMATCH=Y*0.0608+0.000002*X:INTENSITYMATCHPERCENT=25 AND \
         MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=5 AND \
         MS2PREC=X"
     parse_obj = msql_parser.parse_msql(query)
