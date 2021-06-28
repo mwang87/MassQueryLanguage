@@ -33,6 +33,6 @@ def main():
 
     if args.conda is not None:
         cmd += " -with-conda {}".format(args.conda)
-    
-    print(cmd)
+
+    os.system(cmd)
 
