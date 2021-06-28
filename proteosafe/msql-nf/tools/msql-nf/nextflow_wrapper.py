@@ -4,6 +4,7 @@ import argparse
 import glob
 import sys
 import pandas as pd
+import ming_proteosafe_library
 
 def main():
     parser = argparse.ArgumentParser(description="Proteosafe Wrapper for Nextflow")
@@ -18,6 +19,16 @@ def main():
 
     cmd = "{} run {}".format(args.nextflow_binary, 
                         args.nextflow_script)
+    for parameter in args.newparameters:
+        print(parameter)
+        cmd += ' --{} "{}"'.format(parameter.split(":")[0], parameter.split(":")[1])
+
+    params_obj = ming_proteosafe_library.parse_xml_file(open(args.workflow_params))
+    for parameter in args.parametermapping:
+        print(parameter)
+        new_param = parameter.split(":")[1]
+        old_param = parameter.split(":")[0]
+        cmd += ' --{} "{}"'.format(new_param, params_obj[old_param][0])
     
     print(cmd)
 

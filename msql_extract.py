@@ -27,13 +27,12 @@ def main():
     try:
         _extract_spectra(results_df, 
                         args.input_folder, 
-                        output_mgf_filename=os.path.join(args.extract_results_folder, "extracted.mgf"),
-                        output_mzML_filename=os.path.join(args.extract_results_folder, "extracted.mzML"),
-                        output_summary=os.path.join(args.extract_results_folder, "extracted.tsv"))
+                        output_mgf_filename=args.extracted_mgf,
+                        output_mzML_filename=args.extracted_mzML,
+                        output_summary=args.extracted_result)
     except Exception as e: 
         print(e)
         print("FAILURE ON EXTRACTION")
-        raise
         pass
 
 def _extract_mzML_scan(input_filename, spectrum_identifier):
