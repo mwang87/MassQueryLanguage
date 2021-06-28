@@ -34,7 +34,9 @@ def main():
     #    cmd += " -with-conda {}".format(args.conda)
 
     print(cmd)
-    os.system(cmd)
+    return_val = os.system(cmd)
+    if return_val != 0:
+        raise Exception("Error")
 
 
 if __name__ == "__main__":
