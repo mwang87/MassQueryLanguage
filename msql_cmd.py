@@ -1,6 +1,7 @@
 import msql_parser
 import msql_engine
 import argparse
+import os
 
 def main():
     parser = argparse.ArgumentParser(description="MSQL CMD")
@@ -10,7 +11,8 @@ def main():
 
     args = parser.parse_args()
 
-    results_df = msql_engine.process_query(args.query, args.filename, cache=True, parallel=False)
+    grammar_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "msql.ebnf")
+    results_df = msql_engine.process_query(args.query, args.filename, path_to_grammar=grammar_path, cache=True, parallel=False)
     if args.output_file:
         results_df.to_csv(args.output_file, index=False)
     print(results_df)
