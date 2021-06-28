@@ -2,6 +2,7 @@
 
 params.input_spectra = 'test/GNPS00002_A3_p.mzML'
 params.query = "QUERY scaninfo(MS2DATA)"
+params_parallel_queries = 'Yes'
 
 _spectra_ch = Channel.fromPath( params.input_spectra )
 
@@ -24,3 +25,7 @@ process queryData {
         "${params.query}"
     """
 }
+
+// Merging the results
+
+// Extracting the spectra
