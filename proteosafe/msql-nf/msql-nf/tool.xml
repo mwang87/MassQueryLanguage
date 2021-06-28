@@ -7,8 +7,8 @@
         <pathVar name="msql.env" path="msql2"/>
     </pathSet>
 
-    <pathSet base="miniconda3_gamma/envs/nextflow/bin">
-        <pathVar name="nextflow.binary" path="nextflow"/>
+    <pathSet base="miniconda3_gamma/bin">
+        <pathVar name="conda_activate_path" path="activate"/>
     </pathSet>
 
     <pathSet base="$base">
@@ -25,6 +25,8 @@
             <arg pathRef="nextflow_wrapper.script"/>
             <arg valueRef="workflowParameters"/>
             <arg pathRef="nextflow.script"/>
+            <arg pathRef="conda_activate_path"/>
+            <arg value="nextflow"/>
             <arg option="-conda" pathRef="msql.env"/>
             <arg option="-newparameters" value="input_spectra:inputspectra/*"/>
             <arg option="-newparameters" value="publishdir:query_results"/>

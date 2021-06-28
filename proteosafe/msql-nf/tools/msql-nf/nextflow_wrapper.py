@@ -8,17 +8,17 @@ import ming_proteosafe_library
 
 def main():
     parser = argparse.ArgumentParser(description="Proteosafe Wrapper for Nextflow")
-    parser.add_argument('workflow_params', help='workflow_params')
-    parser.add_argument('nextflow_script', help='nextflow_script')
-    parser.add_argument('nextflow_binary', help='nextflow_binary')
-    parser.add_argument('output_folder', help='output_folder')
+    parser.add_argument('workflow_params', help='workflow_params, from proteosafe')
+    parser.add_argument('nextflow_script', help='nextflow_script to actually run')
+    parser.add_argument('conda_activate', help='conda_activate, this is the path to the activate command in the main conda installation')
+    parser.add_argument('nextflow_conda_environment', help='nextflow_conda_environment, this likely should be nextflow')
     parser.add_argument('--conda', default=None, help='conda path')
     parser.add_argument('--parametermapping', action='append', help='mapping of current workflow parameters to new parameters in the format: <old parameter>:<new parameter>')
     parser.add_argument('--newparameters', action='append', help='parameter key: <param name>:<parameter value>')
 
     args = parser.parse_args()
 
-    cmd = "{} run {}".format(args.nextflow_binary, 
+    cmd = "source {} {} nextflow run {}".format(args.conda_activate, args.nextflow_conda_environment,
                         args.nextflow_script)
     for parameter in args.newparameters:
         print(parameter)
@@ -36,3 +36,6 @@ def main():
 
     os.system(cmd)
 
+
+if __name__ == "__main__":
+    main()
