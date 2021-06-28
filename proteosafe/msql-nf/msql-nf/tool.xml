@@ -3,10 +3,6 @@
         <toolPath tool="msql_nf_process" path="python3"/>
     </pathSet>
 
-    <pathSet base="miniconda3_gamma/envs">
-        <pathVar name="msql.env" path="msql2"/>
-    </pathSet>
-
     <pathSet base="miniconda3_gamma/bin">
         <pathVar name="conda_activate_path" path="activate"/>
     </pathSet>
@@ -26,8 +22,7 @@
             <arg valueRef="workflowParameters"/>
             <arg pathRef="nextflow.script"/>
             <arg pathRef="conda_activate_path"/>
-            <arg value="nextflow"/>
-            <arg option="-conda" pathRef="msql.env"/>
+            <arg value="msql2"/>
             <arg option="-newparameters" value="input_spectra:inputspectra/*"/>
             <arg option="-newparameters" value="publishdir:query_results"/>
             <arg option="-parametermapping" value="QUERY:QUERY"/>
