@@ -12,6 +12,7 @@ def main():
     parser.add_argument('nextflow_script', help='nextflow_script')
     parser.add_argument('nextflow_binary', help='nextflow_binary')
     parser.add_argument('output_folder', help='output_folder')
+    parser.add_argument('--conda', default=None, help='conda path')
     parser.add_argument('--parametermapping', action='append', help='mapping of current workflow parameters to new parameters in the format: <old parameter>:<new parameter>')
     parser.add_argument('--newparameters', action='append', help='parameter key: <param name>:<parameter value>')
 
@@ -29,6 +30,9 @@ def main():
         new_param = parameter.split(":")[1]
         old_param = parameter.split(":")[0]
         cmd += ' --{} "{}"'.format(new_param, params_obj[old_param][0])
+
+    if args.conda is not None:
+        cmd += " -with-conda {}".format(args.conda)
     
     print(cmd)
 
