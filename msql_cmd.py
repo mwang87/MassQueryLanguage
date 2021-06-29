@@ -30,6 +30,7 @@ def main():
             useful_filename = args.original_path
             # TODO: Clean up for ProteoSAFe
             useful_filename = useful_filename.split("demangled_spectra/")[-1]
+            results_df["original_path"] = useful_filename
 
         if ".tsv" in args.output_file:
             results_df.to_csv(args.output_file, index=False, sep="\t")
