@@ -2,12 +2,14 @@
 
 params.input_spectra = 'test/GNPS00002_A3_p.mzML'
 params.query = "QUERY scaninfo(MS2DATA)"
-params.parallel_files = 'YES'
-params.parallel_query = 'YES'
+params.parallel_files = 'NO'
+params.parallel_query = 'NO'
 params.extract = 'YES'
 
 _spectra_ch = Channel.fromPath( params.input_spectra )
 _spectra_ch.into{_spectra_ch1;_spectra_ch2}
+
+_spectra_ch3 = _spectra_ch1.map { file -> tuple(file, file) }
 
 TOOL_FOLDER = "$baseDir/bin"
 params.publishdir = "nf_output"
@@ -20,7 +22,7 @@ if(params.parallel_files == "YES"){
         publishDir "$params.publishdir/msql", mode: 'copy'
         
         input:
-        file input_spectrum from _spectra_ch1
+        set val(filepath), file(input_spectrum) from _spectra_ch3
 
         output:
         file "*_output.tsv" optional true into _query_results_ch
@@ -31,19 +33,21 @@ if(params.parallel_files == "YES"){
             $input_spectrum \
             "${params.query}" \
             --parallel_query $params.parallel_query \
-            --cache NO
+            --cache NO \
+            --original_path "$filepath"
         """
     }
 }
 else{
     process queryData2 {
+        echo true
         errorStrategy 'ignore'
         maxForks 1
         
         publishDir "$params.publishdir/msql", mode: 'copy'
         
         input:
-        file input_spectrum from _spectra_ch1
+        set val(filepath), file(input_spectrum) from _spectra_ch3
 
         output:
         file "*_output.tsv" optional true into _query_results_ch
@@ -54,7 +58,8 @@ else{
             $input_spectrum \
             "${params.query}" \
             --parallel_query $params.parallel_query \
-            --cache NO
+            --cache NO \
+            --original_path "$filepath"
         """
     }
 }

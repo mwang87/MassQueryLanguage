@@ -10,6 +10,7 @@ def main():
     parser.add_argument('--output_file', default=None, help='output_file')
     parser.add_argument('--parallel_query', default="NO", help='parallel_query')
     parser.add_argument('--cache', default="YES", help='parallel_query')
+    parser.add_argument('--original_path', default=None, help='Original absolute path, useful in proteosafe')
     
     args = parser.parse_args()
 
@@ -19,8 +20,14 @@ def main():
                                             path_to_grammar=grammar_path, 
                                             cache=(args.cache == "YES"), 
                                             parallel=(args.parallel_query == "YES"))
+    
     if args.output_file and len(results_df) > 0:
         results_df["filename"] = os.path.basename(args.filename)
+
+        if args.original_path is not None:
+            useful_filename = args.original_path
+            # TODO: Clean up for ProteoSAFe
+            
         if ".tsv" in args.output_file:
             results_df.to_csv(args.output_file, index=False, sep="\t")
         else:
