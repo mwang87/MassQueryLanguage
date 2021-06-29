@@ -14,6 +14,8 @@ def main():
     
     args = parser.parse_args()
 
+    print(args)
+
     grammar_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "msql.ebnf")
     results_df = msql_engine.process_query(args.query, 
                                             args.filename, 
@@ -27,7 +29,8 @@ def main():
         if args.original_path is not None:
             useful_filename = args.original_path
             # TODO: Clean up for ProteoSAFe
-            
+            useful_filename = useful_filename.split("demangled_spectra/")[-1]
+
         if ".tsv" in args.output_file:
             results_df.to_csv(args.output_file, index=False, sep="\t")
         else:
