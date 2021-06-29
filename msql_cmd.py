@@ -9,6 +9,7 @@ def main():
     parser.add_argument('query', help='Input Query')
     parser.add_argument('--output_file', default=None, help='output_file')
     parser.add_argument('--parallel_query', default="NO", help='parallel_query')
+    parser.add_argument('--cache', default="YES", help='parallel_query')
     
     args = parser.parse_args()
 
@@ -16,7 +17,7 @@ def main():
     results_df = msql_engine.process_query(args.query, 
                                             args.filename, 
                                             path_to_grammar=grammar_path, 
-                                            cache=True, 
+                                            cache=(args.cache == "YES"), 
                                             parallel=(args.parallel_query == "YES"))
     if args.output_file and len(results_df) > 0:
         results_df["filename"] = os.path.basename(args.filename)

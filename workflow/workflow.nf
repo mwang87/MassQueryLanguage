@@ -4,6 +4,7 @@ params.input_spectra = 'test/GNPS00002_A3_p.mzML'
 params.query = "QUERY scaninfo(MS2DATA)"
 params.parallel_files = 'YES'
 params.parallel_query = 'YES'
+params.extract = 'YES'
 
 _spectra_ch = Channel.fromPath( params.input_spectra )
 _spectra_ch.into{_spectra_ch1;_spectra_ch2}
@@ -28,7 +29,8 @@ if(params.parallel_files == "YES"){
             --output_file ${input_spectrum}_output.tsv \
             $input_spectrum \
             "${params.query}" \
-            --parallel_query $params.parallel_query
+            --parallel_query $params.parallel_query \
+            --cache NO
         """
     }
 }
@@ -49,7 +51,8 @@ else{
             --output_file ${input_spectrum}_output.tsv \
             $input_spectrum \
             "${params.query}" \
-            --parallel_query $params.parallel_query
+            --parallel_query $params.parallel_query \
+            --cache NO
         """
     }
 }
@@ -58,23 +61,25 @@ else{
 _query_results_merged_ch = Channel.create()
 _query_results_ch.collectFile(name: "merged_query_results.tsv", storeDir: "$params.publishdir/msql", keepHeader: true).into(_query_results_merged_ch)
 
-// Extracting the spectra
-process extractSpectra {
-    publishDir "$params.publishdir/extracted", mode: 'copy'
-    
-    input:
-    file query_results from _query_results_merged_ch
-    file "files/*" from _spectra_ch2
+if(params.extract == "YES"){
+    // Extracting the spectra
+    process extractSpectra {
+        publishDir "$params.publishdir/extracted", mode: 'copy'
+        
+        input:
+        file query_results from _query_results_merged_ch
+        file "files/*" from _spectra_ch2
 
-    output:
-    file "extracted.*" optional true
+        output:
+        file "extracted.*" optional true
 
-    """
-    python $TOOL_FOLDER/msql_extract.py \
-    files \
-    $query_results \
-    extracted.mgf \
-    extracted.mzML \
-    extracted.tsv
-    """
+        """
+        python $TOOL_FOLDER/msql_extract.py \
+        files \
+        $query_results \
+        extracted.mgf \
+        extracted.mzML \
+        extracted.tsv
+        """
+    }
 }

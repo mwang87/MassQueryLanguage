@@ -39,6 +39,15 @@
 			<validator type="set"/>
 			<default value="NO"/>
 		</parameter>
+
+        <parameter name="EXTRACT" label="Extract Found MS Spectra">
+			<options>
+				<option value="YES" label="YES"/>
+				<option value="NO" label="NO"/>
+			</options>
+			<validator type="set"/>
+			<default value="NO"/>
+		</parameter>
     </parameters>
 
     <block label="Setting">
@@ -88,6 +97,18 @@
 
             <cell>
                 <input type="select" parameter="PARALLELFILES">
+                </input>
+            </cell>
+        </row>
+        <row>
+            <cell>
+                <label>
+                    <content parameter="EXTRACT"/>
+                </label>
+            </cell>
+
+            <cell>
+                <input type="select" parameter="EXTRACT">
                 </input>
             </cell>
         </row>
