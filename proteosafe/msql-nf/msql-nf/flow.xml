@@ -8,9 +8,16 @@
                 <output port="inputspectra"       collection="inputspectra"/>
         </action>
 
+        <collection name="demangled_spectra"/>
+        <action name="demangle_spectra">
+                <input  port="inputspectra"             collection="inputspectra"/>
+                <input  port="workflowParameters"             object="workflowParameters"/>
+                <output port="demangled_spectra"           collection="demangled_spectra"/>
+        </action>
+
         <collection name="query_results"/>
         <action name="msql_nf_process">
-                <input  port="inputspectra"             collection="inputspectra"/>
+                <input  port="demangled_spectra"             collection="demangled_spectra"/>
                 <input  port="workflowParameters"             object="workflowParameters"/>
                 <output port="query_results"           collection="query_results"/>
         </action>
