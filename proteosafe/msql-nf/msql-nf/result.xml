@@ -15,6 +15,14 @@
             </parsers>
 
             <row>
+                <column label="View Chromatogram (Beta)" type="genericurlgenerator" width="5">
+                    <parameter name="URLBASE" value="https://gnps-lcms.ucsd.edu"/>
+                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]"/>
+                    <parameter name="REQUESTPARAMETER=ms2_identifier" value="MS2:[_dyn_#scan]"/>
+                    <parameter name="REQUESTPARAMETER=xic_mz" value="[_dyn_#precmz]"/>
+                    <parameter name="REQUESTPARAMETER=xic_rt_window" value="[_dyn_#rt]"/>
+                    <parameter name="LABEL" value="View LCMS"/>
+                </column>
             </row>
 
             <row expander="image">
