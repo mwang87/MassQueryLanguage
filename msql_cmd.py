@@ -16,12 +16,17 @@ def main():
 
     print(args)
 
+    PARALLEL = args.parallel_query == "YES"
+
+    if PARALLEL:
+        msql_engine.init_ray()
+
     grammar_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "msql.ebnf")
     results_df = msql_engine.process_query(args.query, 
                                             args.filename, 
                                             path_to_grammar=grammar_path, 
                                             cache=(args.cache == "YES"), 
-                                            parallel=(args.parallel_query == "YES"))
+                                            parallel=PARALLEL)
     
     if args.output_file and len(results_df) > 0:
         results_df["filename"] = os.path.basename(args.filename)

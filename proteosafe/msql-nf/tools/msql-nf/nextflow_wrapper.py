@@ -21,14 +21,14 @@ def main():
                         args.nextflow_script)
     for parameter in args.newparameters:
         print(parameter)
-        cmd += ' --{} "{}"'.format(parameter.split(":")[0], parameter.split(":")[1])
+        cmd += ' --{} "{}"'.format(parameter.split(":")[0], parameter.split(":")[1].replace("\n", ""))
 
     params_obj = ming_proteosafe_library.parse_xml_file(open(args.workflow_params))
     for parameter in args.parametermapping:
         print(parameter)
         new_param = parameter.split(":")[1]
         old_param = parameter.split(":")[0]
-        cmd += ' --{} "{}"'.format(new_param, params_obj[old_param][0])
+        cmd += ' --{} "{}"'.format(new_param, params_obj[old_param][0].replace("\n", ""))
 
     #if args.conda is not None:
     #    cmd += " -with-conda {}".format(args.conda)
