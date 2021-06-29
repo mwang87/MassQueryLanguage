@@ -9,7 +9,7 @@
     </view>
     <block id="query_results" type="table">
         <data>
-            <source type="file" name="query_results/results.tsv"/>
+            <source type="file" name="query_results/msql/merged_query_results.tsv"/>
             <parsers>
                 <parser type="genericTabular"/>
             </parsers>
@@ -61,7 +61,7 @@
     </view>
     <block id="extract_results" type="table">
         <data>
-            <source type="file" name="extract_results/extracted.tsv"/>
+            <source type="file" name="query_results/extracted/extracted.tsv"/>
             <parsers>
                 <parser type="genericTabular"/>
             </parsers>
