@@ -8,5 +8,5 @@ cluster_test:
 	nextflow run workflow.nf -c cluster.config \
         --input_spectra="/data/massive/MSV000082622/ccms_peak/**.mzML" \
         --publishdir="./nf_MSV000082622" \
-		--parallel_query="YES" \
+		--parallel_files="YES" \
         -with-trace -resume
