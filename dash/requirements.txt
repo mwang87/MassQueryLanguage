@@ -29,6 +29,7 @@ PySocks==1.7.0
 python-dateutil==2.8.1
 pytz==2019.3
 requests==2.22.0
+requests_cache
 retrying==1.3.3
 six==1.12.0
 tqdm==4.32.1
