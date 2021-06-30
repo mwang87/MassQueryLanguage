@@ -468,7 +468,10 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
 
             min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
 
-            ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max) & (ms2_df["i"] > min_int) & (ms2_df["i_norm"] > min_intpercent)]
+            ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & 
+                                    (ms2_df["mz"] < mz_max) & 
+                                    (ms2_df["i"] > min_int) & 
+                                    (ms2_df["i_norm"] > min_intpercent)]
 
             # Setting the intensity match register
             _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<interface id="speclib_add">
+    <download>
+    </download>
+
+    <!-- View definitions -->
+    <view id="query_results" label="query_results">
+        <blockRef id="main" type="query_results"/>
+    </view>
+    <block id="query_results" type="table">
+        <data>
+            <source type="file" name="query_results/msql/merged_query_results.tsv"/>
+            <parsers>
+                <parser type="genericTabular"/>
+            </parsers>
+
+            <row>
+                <column label="View Chromatogram (Beta)" type="genericurlgenerator" width="5">
+                    <parameter name="URLBASE" value="https://gnps-lcms.ucsd.edu"/>
+                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]"/>
+                    <parameter name="REQUESTPARAMETER=ms2_identifier" value="MS2:[_dyn_#scan]"/>
+                    <parameter name="REQUESTPARAMETER=xic_mz" value="[_dyn_#precmz]"/>
+                    <parameter name="REQUESTPARAMETER=xic_rt_window" value="[_dyn_#rt]"/>
+                    <parameter name="LABEL" value="View LCMS"/>
+                </column>
+            </row>
+
+            <row expander="image">
+                <column type="jscolumnspectrumviewer" colspan="5" width="600" height="500">
+                    <parameter name="file"      file="f.[_dyn_#original_path]"/>
+                    <parameter name="scan"      value="[_dyn_#scan]"/>
+                    <parameter name="modformat" value="inspect"/>
+                    <parameter name="trim"      value="true"/>
+                </column>
+            </row>
+
+            <row expander="USI Links" expandericontype="text">
+                <column label="USI-Spectrum" type="genericurlgenerator" width="3">
+                    <parameter name="URLBASE" value="https://metabolomics-usi.ucsd.edu/spectrum/"/>
+                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]:scan:[_dyn_#scan]"/>
+                    <parameter name="LABEL" value="Spectrum USI"/>
+                </column>
+                <column label="USI-Spectrum" type="genericurlgenerator" width="3">
+                    <parameter name="URLBASE" value="https://metabolomics-usi.ucsd.edu/spectrum/"/>
+                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]:scan:[_dyn_#scan]"/>
+                    <parameter name="REQUESTPARAMETER=mz_min" value="[_dyn_#mz_lower]"/>
+                    <parameter name="REQUESTPARAMETER=mz_max" value="[_dyn_#mz_upper]"/>
+                    <parameter name="LABEL" value="Spectrum USI - With Range"/>
+                </column>
+                <column label="USI-Spectrum" type="genericurlgenerator" width="3">
+                    <parameter name="URLBASE" value="https://fastlibrarysearch.ucsd.edu/fastsearch/"/>
+                    <parameter name="REQUESTPARAMETER=usi1" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]:scan:[_dyn_#scan]"/>
+                    <parameter name="LABEL" value="Library Search MS/MS"/>
+                </column>
+                
+                <!-- <column type="genericimagedisplayer" label="Structure">
+                    <parameter name="URLBASE" value="https://metabolomics-usi.ucsd.edu/png/"/>
+                    <parameter name="REQUESTPARAMETER=usi1" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#filename]:scan:[_dyn_#scan]"/>
+                    <parameter name="REQUESTPARAMETER=mz_min" value="[_dyn_#mz_lower]"/>
+                    <parameter name="REQUESTPARAMETER=mz_max" value="[_dyn_#mz_upper]"/>
+                </column> -->
+            </row>
+        </data>
+    </block>
+
+
+    <view id="extract_results" label="extract_results">
+        <blockRef id="main" type="extract_results"/>
+    </view>
+    <block id="extract_results" type="table">
+        <data>
+            <source type="file" name="query_results/extracted/extracted.tsv"/>
+            <parsers>
+                <parser type="genericTabular"/>
+            </parsers>
+
+            <row>
+            </row>
+
+            <row expander="image">
+                <column type="jscolumnspectrumviewer" colspan="5" width="600" height="500">
+                    <parameter name="file"      file="query_results/extracted/extracted.mgf"/>
+                    <parameter name="scan"      value="[_dyn_#new_scan]"/>
+                    <parameter name="modformat" value="inspect"/>
+                    <parameter name="trim"      value="true"/>
+                </column>
+            </row>
+
+            <row expander="USI Links" expandericontype="text">
+                <column label="USI-Spectrum" type="genericurlgenerator" width="3">
+                    <parameter name="URLBASE" value="https://metabolomics-usi.ucsd.edu/spectrum/"/>
+                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-f.query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
+                    <parameter name="LABEL" value="Spectrum USI"/>
+                </column>
+                <column label="USI-Spectrum" type="genericurlgenerator" width="3">
+                    <parameter name="URLBASE" value="https://metabolomics-usi.ucsd.edu/spectrum/"/>
+                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-f.query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
+                    <parameter name="REQUESTPARAMETER=mz_min" value="[_dyn_#mz_lower]"/>
+                    <parameter name="REQUESTPARAMETER=mz_max" value="[_dyn_#mz_upper]"/>
+                    <parameter name="LABEL" value="Spectrum USI - With Range"/>
+                </column>
+                <column label="USI-Spectrum" type="genericurlgenerator" width="3">
+                    <parameter name="URLBASE" value="https://fastlibrarysearch.ucsd.edu/fastsearch/"/>
+                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-f.query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
+                    <parameter name="LABEL" value="Library Search MS/MS"/>
+                </column>
+            </row>
+        </data>
+    </block>
+
+    <view id="reanalyze_networking" label="Analyze with Networking" group="Advanced Views - Analysis Views">
+        <blockRef id="main" type="reanalyze_networking"/>
+    </view>
+    <block id="reanalyze_networking" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='https://gnps.ucsd.edu/ProteoSAFe/index.jsp?params={"workflow":"METABOLOMICS-SNETS-V2","desc":"Reanalysis of MSQL [task] with Networking","spec_on_server":"t.[task]/query_results/extracted/extracted.mgf","CLUSTER_MIN_SIZE":"1"}'/>
+    </block>
+</interface>

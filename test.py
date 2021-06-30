@@ -281,6 +281,19 @@ def test_gnps_library():
     results_df = msql_engine.process_query(query, "test/gnps-library.json")
     print(results_df)
 
+def test_gnps_library_loading():
+    ms1_df, ms2_df = msql_engine._load_data("test/gnps-library.json")
+    print(ms2_df[ms2_df["scan"] == "CCMSLIB00000072227"])
+    assert(len(ms2_df[ms2_df["scan"] == "CCMSLIB00000072227"]) > 300)
+
+def test_gnps_pqs_library():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=175:INTENSITYPERCENT=20"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/gnps-library.json")
+    print(results_df)
+    assert("CCMSLIB00000072227" in list(results_df["scan"]))
+
 def test_gnps_full_library():
     query = "QUERY scaninfo(MS2DATA) WHERE \
             MS2PROD=271.06:TOLERANCEMZ=0.1:INTENSITYPERCENT=50"
@@ -410,7 +423,8 @@ def main():
     #test_albicidin_tag()
     #test_double_brominated()
     #test_agilent()
-    test_ms1_iron_X_changes_intensity()
+    #test_ms1_iron_X_changes_intensity()
+    test_gnps_pqs_library()
 
 if __name__ == "__main__":
     main()

@@ -43,6 +43,7 @@ def _load_data_gnps_json(input_filename):
 
     for spectrum in all_spectra:
         peaks = json.loads(spectrum["peaks_json"])
+        peaks = [peak for peak in peaks if peak[1] > 0]
         if len(peaks) == 0:
             continue
         i_max = max([peak[1] for peak in peaks])
@@ -59,7 +60,7 @@ def _load_data_gnps_json(input_filename):
             peak_dict["precmz"] = spectrum["Precursor_MZ"]
             peak_dict["ms1scan"] = 0
 
-        ms2mz_list.append(peak_dict)
+            ms2mz_list.append(peak_dict)
 
     # Turning into pandas data frames
     ms1_df = pd.DataFrame([peak_dict])
@@ -128,11 +129,14 @@ def _load_data_mzML(input_filename):
     }
     run = pymzml.run.Reader(input_filename, MS_precisions=MS_precisions)
 
-    ms1mz_list = []
-    ms2mz_list = []
+    ms1_df_list = []
+    ms2_df_list = []
     previous_ms1_scan = 0
 
     for i, spec in tqdm(enumerate(run)):
+        ms1mz_list = []
+        ms2mz_list = []
+
         # Getting RT
         rt = spec.scan_time_in_minutes()
 
@@ -145,8 +149,11 @@ def _load_data_mzML(input_filename):
         # Sorting by intensity
         peaks = peaks[peaks[:, 1].argsort()]
 
-        # Getting top 1000
-        #peaks = peaks[-1000:]
+        #print(spec.ms_level, len(peaks))
+
+        if spec.ms_level == 2:
+            # Getting top 1000
+            peaks = peaks[-1000:]
 
         if len(peaks) == 0:
             continue
@@ -184,9 +191,17 @@ def _load_data_mzML(input_filename):
 
                 ms2mz_list.append(peak_dict)
 
-    # Turning into pandas data frames
-    ms1_df = pd.DataFrame(ms1mz_list)
-    ms2_df = pd.DataFrame(ms2mz_list)
+        # Turning into pandas data frames
+        if len(ms1mz_list) > 0:
+            ms1_df = pd.DataFrame(ms1mz_list)
+            ms1_df_list.append(ms1_df)
+        
+        if len(ms2mz_list) > 0:
+            ms2_df = pd.DataFrame(ms2mz_list)
+            ms2_df_list.append(ms2_df)
+
+    ms1_df = pd.concat(ms1_df_list).reset_index()
+    ms2_df = pd.concat(ms2_df_list).reset_index()
 
     return ms1_df, ms2_df
 
