@@ -50,6 +50,7 @@ def _enrich_results(results_list):
             if "CCMSLIB" in spectrumid:
                 spectruminfo = _get_gnps_spectruminfo(spectrumid)
                 result_obj["Compound_Name"] = spectruminfo["annotations"][0]["Compound_Name"][:30]
+                result_obj["Adduct"] = spectruminfo["annotations"][0]["Adduct"]
                 result_obj["library_membership"] = spectruminfo["spectruminfo"]["library_membership"]
             
     return results_list
