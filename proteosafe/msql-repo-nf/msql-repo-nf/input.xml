@@ -13,6 +13,10 @@
             <validator type="email"/>
         </parameter>
 
+        <parameter name="DATASETS" label="Enter DATASETS to subset (one per line)">
+            <default value=""/>
+        </parameter>
+
         <parameter name="QUERY" label="Enter QUERY (Required)">
             <default value="QUERY scaninfo(MS2DATA)"/>
         </parameter>
@@ -62,13 +66,14 @@
         <row>
             <cell>
                 <label>
-                    <content parameter="spec_on_server"/>
+                    <content parameter="DATASETS"/>
                 </label>
             </cell>
-            <cell colspan="3">
-                <module id="spec_on_server" type="fileSelector">
-                    <property name="label">Spectrum Files</property>
-                </module>
+            <cell>
+                <input parameter="DATASETS" type="textarea">
+					<attribute name="rows" value="10"/>
+					<attribute name="cols" value="40"/>
+				</input>
             </cell>
         </row>
         <row>
