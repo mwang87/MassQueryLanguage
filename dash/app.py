@@ -53,7 +53,7 @@ NAVBAR = dbc.Navbar(
         ),
         dbc.Nav(
             [
-                dbc.NavItem(dbc.NavLink("GNPS - MSQL Dashboard - Version 0.1", href="#")),
+                dbc.NavItem(dbc.NavLink("GNPS - MSQL Dashboard - Version 0.2", href="#")),
             ],
         navbar=True)
     ],
