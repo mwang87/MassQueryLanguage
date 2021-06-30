@@ -17,7 +17,6 @@ params.publishdir = "nf_output"
 if(params.parallel_files == "YES"){
     process queryData {
         errorStrategy 'ignore'
-        maxForks 10
 
         publishDir "$params.publishdir/msql", mode: 'copy'
         
