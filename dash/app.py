@@ -311,6 +311,8 @@ def draw_output(query, filename):
     results_list = tasks.task_executequery.delay(query, full_filepath)
     results_list = results_list.get()
 
+    # Doing enrichment if possible
+
     table = dash_table.DataTable(
         id='table',
         columns=[{"name": i, "id": i} for i in results_list[0].keys()],

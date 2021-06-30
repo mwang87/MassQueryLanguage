@@ -39,9 +39,10 @@ def _load_data_mgf(input_filename):
 def _load_data_gnps_json(input_filename):
     all_spectra = json.loads(open(input_filename).read())
 
-    ms2mz_list = []
+    ms1_df_list = []
+    ms2_df_list = []
 
-    for spectrum in all_spectra:
+    for spectrum in tqdm(all_spectra):
         peaks = json.loads(spectrum["peaks_json"])
         peaks = [peak for peak in peaks if peak[1] > 0]
         if len(peaks) == 0:
@@ -49,6 +50,8 @@ def _load_data_gnps_json(input_filename):
         i_max = max([peak[1] for peak in peaks])
         if i_max == 0:
             continue
+
+        ms2mz_list = []
 
         for peak in peaks:
             peak_dict = {}
@@ -61,10 +64,18 @@ def _load_data_gnps_json(input_filename):
             peak_dict["ms1scan"] = 0
 
             ms2mz_list.append(peak_dict)
+        
+        # Turning into pandas data frames
+        if len(ms2mz_list) > 0:
+            ms2_df = pd.DataFrame(ms2mz_list)
+            ms2_df_list.append(ms2_df)
+            
+            ms1_df = pd.DataFrame([peak_dict])
+            ms1_df_list.append(ms1_df)
 
-    # Turning into pandas data frames
-    ms1_df = pd.DataFrame([peak_dict])
-    ms2_df = pd.DataFrame(ms2mz_list)
+    # Merging
+    ms1_df = pd.concat(ms1_df_list).reset_index()
+    ms2_df = pd.concat(ms2_df_list).reset_index()
 
     return ms1_df, ms2_df
 
