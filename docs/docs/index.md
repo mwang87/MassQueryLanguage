@@ -9,7 +9,7 @@ natural for mass spectrometry users.
 
 ## Try it out
 
-If you want to do a large scale query on your data, try our beta workflow [here](https://proteomics2.ucsd.edu/ProteoSAFe/index.jsp?params={%22workflow%22:%22MSQL%22,%22workflow_version%22:%22current%22}).
+If you want to do a large scale query on your data, try our beta workflow [here](https://proteomics2.ucsd.edu/ProteoSAFe/index.jsp?params=%7B%22workflow%22%3A%20%22MSQL-NF%22%7D}).
 
 ## Definition of a Query
 
