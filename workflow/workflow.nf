@@ -14,7 +14,7 @@ _spectra_ch3 = _spectra_ch1.map { file -> tuple(file, file) }
 TOOL_FOLDER = "$baseDir/bin"
 params.publishdir = "nf_output"
 
-if(params.parallel_files == "YES"){
+if(params.parallel_query == "YES"){
     process queryData {
         errorStrategy 'ignore'
 
