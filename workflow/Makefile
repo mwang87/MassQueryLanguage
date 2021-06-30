@@ -7,5 +7,6 @@ run_resume_test:
 cluster_test:
 	nextflow run workflow.nf -c cluster.config \
         --input_spectra="/data/massive/MSV000082622/ccms_peak/**.mzML" \
-        --outdir="./nf_MSV000082622" \
+        --publishdir="./nf_MSV000082622" \
+		--parallel_query="YES" \
         -with-trace -resume
