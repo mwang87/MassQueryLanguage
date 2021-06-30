@@ -27,6 +27,14 @@ def main():
                                             path_to_grammar=grammar_path, 
                                             cache=(args.cache == "YES"), 
                                             parallel=PARALLEL)
+
+    # Setting mzupper and mzlower
+    try:
+        if "comment" in results_df:
+            results_df["mz_lower"] = results_df["comment"].astype(float) - 10
+            results_df["mz_upper"] = results_df["comment"].astype(float) + 10
+    except:
+        pass
     
     if args.output_file and len(results_df) > 0:
         results_df["filename"] = os.path.basename(args.filename)
