@@ -4,6 +4,7 @@ import argparse
 import shutil
 import glob
 import sys
+import requests
 import pandas as pd
 from pathlib import Path
 
@@ -13,9 +14,14 @@ def main():
 
     args = parser.parse_args()
 
-    print(args)
+    # Getting all GNPS Datasets
+    all_datasets = requests.get("https://massive.ucsd.edu/ProteoSAFe/datasets_json.jsp").json()["datasets"]
+    gnps_datasets = [dataset for dataset in all_datasets if "GNPS" in dataset["title"].upper()]
+    
+    print("NUMBER GNPS DATASETS", len(gnps_datasets))
 
-    link_dataset("MSV000084030", args.output_staged)
+    for dataset in gnps_datasets:
+        link_dataset(dataset["dataset"], args.output_staged)
 
 def link_dataset(accession, output_folder):
     source_ccms_peak = os.path.join("/data/massive/{}/ccms_peak".format(accession))
