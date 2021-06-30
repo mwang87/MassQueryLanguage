@@ -20,7 +20,7 @@ def main():
     
     print("NUMBER GNPS DATASETS", len(gnps_datasets))
 
-    for dataset in gnps_datasets[:2]:
+    for dataset in gnps_datasets:
         print("linking", dataset["dataset"])
         link_dataset(dataset["dataset"], args.output_staged)
 
