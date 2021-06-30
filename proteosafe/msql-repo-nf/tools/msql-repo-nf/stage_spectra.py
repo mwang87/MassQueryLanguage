@@ -20,19 +20,22 @@ def main():
     
     print("NUMBER GNPS DATASETS", len(gnps_datasets))
 
-    for dataset in gnps_datasets:
+    for dataset in gnps_datasets[:2]:
         print("linking", dataset["dataset"])
         link_dataset(dataset["dataset"], args.output_staged)
 
 def link_dataset(accession, output_folder):
-    source_ccms_peak = os.path.join("/data/massive/{}/ccms_peak".format(accession))
-    if not os.path.exists(source_ccms_peak):
-        return
-    
-    target_location = os.path.join(output_folder, accession, "ccms_peak")
-    output_path = Path(target_location)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.symlink_to(source_ccms_peak)
+    source_ccms_peak = os.path.join("/data/massive-ro/{}/ccms_peak".format(accession))
+
+    all_files = []
+    all_files += glob.glob(os.path.join(source_ccms_peak, "**/*mzML"), recursive=True)
+    all_files += glob.glob(os.path.join(source_ccms_peak, "**/*mzXML"), recursive=True)
+
+    for filepath in all_files:
+        target_location = filepath.replace("/data/massive-ro/", output_folder)
+        output_path = Path(target_location)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.symlink_to(filepath)
 
 
 
