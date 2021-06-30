@@ -16,7 +16,7 @@ def main():
 
     args = parser.parse_args()
 
-    params_obj = ming_proteosafe_library.parse_xml_file(open(args.workflow_params))
+    params_obj = ming_proteosafe_library.parse_xml_file(open(args.params_xml))
     dataset_subset = []
     try:
         dataset_subset = params_obj["DATASETS"][0].split("\n")
