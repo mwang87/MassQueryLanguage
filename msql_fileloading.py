@@ -43,6 +43,7 @@ def _load_data_gnps_json(input_filename):
 
     for spectrum in all_spectra:
         peaks = json.loads(spectrum["peaks_json"])
+        peaks = [peak for peak in peaks if peak[1] > 0]
         if len(peaks) == 0:
             continue
         i_max = max([peak[1] for peak in peaks])
@@ -59,7 +60,7 @@ def _load_data_gnps_json(input_filename):
             peak_dict["precmz"] = spectrum["Precursor_MZ"]
             peak_dict["ms1scan"] = 0
 
-        ms2mz_list.append(peak_dict)
+            ms2mz_list.append(peak_dict)
 
     # Turning into pandas data frames
     ms1_df = pd.DataFrame([peak_dict])
