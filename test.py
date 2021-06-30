@@ -417,14 +417,14 @@ def main():
     #test_ms1_cu()
     #test_neutral_loss_intensity()
     #test_gnps_library()
-    #test_gnps_full_library()
+    test_gnps_full_library()
     #test_networking_mgf_library()
     #test_swath()
     #test_albicidin_tag()
     #test_double_brominated()
     #test_agilent()
     #test_ms1_iron_X_changes_intensity()
-    test_gnps_pqs_library()
+    #test_gnps_pqs_library()
 
 if __name__ == "__main__":
     main()

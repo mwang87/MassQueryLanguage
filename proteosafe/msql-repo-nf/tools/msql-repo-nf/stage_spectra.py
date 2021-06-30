@@ -45,11 +45,14 @@ def link_dataset(accession, output_folder):
     all_files += glob.glob(os.path.join(source_ccms_peak, "**/*mzXML"), recursive=True)
 
     for filepath in all_files:
-        print(filepath)
-        target_location = filepath.replace("/data/massive-ro", output_folder)
-        output_path = Path(target_location)
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.symlink_to(filepath)
+        try:
+            print(filepath)
+            target_location = filepath.replace("/data/massive-ro", output_folder)
+            output_path = Path(target_location)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.symlink_to(filepath)
+        except:
+            pass
 
 
 
