@@ -31,7 +31,6 @@ def main():
                         output_mzML_filename=args.extracted_mzML,
                         output_summary=args.extracted_result)
     except Exception as e: 
-        print(e)
         print("FAILURE ON EXTRACTION")
         pass
 
@@ -132,25 +131,29 @@ def _extract_spectra(results_df, input_spectra_folder,
     current_scan = 1
     results_list = results_df.to_dict(orient="records")
     for result_obj in results_list:
-        if "mangled_filename" in result_obj:
-            input_spectra_filename = os.path.join(input_spectra_folder, result_obj["mangled_filename"])
-        else:
-            input_spectra_filename = os.path.join(input_spectra_folder, result_obj["filename"])
+        try:
+            if "mangled_filename" in result_obj:
+                input_spectra_filename = os.path.join(input_spectra_folder, result_obj["mangled_filename"])
+            else:
+                input_spectra_filename = os.path.join(input_spectra_folder, result_obj["filename"])
 
-        scan_number = result_obj["scan"]
+            scan_number = result_obj["scan"]
 
-        spectrum_obj = None
-        if ".mzML" in input_spectra_filename:
-            spectrum_obj = _extract_mzML_scan(input_spectra_filename, scan_number)
-        if ".mzXML" in input_spectra_filename:
-            spectrum_obj = _extract_mzXML_scan(input_spectra_filename, scan_number)
+            spectrum_obj = None
+            if ".mzML" in input_spectra_filename:
+                spectrum_obj = _extract_mzML_scan(input_spectra_filename, scan_number)
+            if ".mzXML" in input_spectra_filename:
+                spectrum_obj = _extract_mzXML_scan(input_spectra_filename, scan_number)
 
-        if spectrum_obj is not None:
-            spectrum_obj["new_scan"] = current_scan
-            result_obj["new_scan"] = current_scan
+            if spectrum_obj is not None:
+                spectrum_obj["new_scan"] = current_scan
+                result_obj["new_scan"] = current_scan
 
-            spectrum_list.append(spectrum_obj)
-            current_scan += 1
+                spectrum_list.append(spectrum_obj)
+                current_scan += 1
+        except:
+            print("cant find", result_obj)
+            pass
 
     # Writing the updated extraction
     if output_summary is not None:

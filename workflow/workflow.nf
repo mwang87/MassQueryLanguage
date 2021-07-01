@@ -75,10 +75,11 @@ if(params.extract == "YES"){
     // Extracting the spectra
     process extractSpectra {
         publishDir "$params.publishdir/extracted", mode: 'copy'
+        cache false
         
         input:
         file query_results from _query_results_merged_ch
-        file "files/*" from _spectra_ch2
+        file "files/*" from _spectra_ch2.collect()
 
         output:
         file "extracted.*" optional true
