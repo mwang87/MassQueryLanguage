@@ -10,3 +10,10 @@ cluster_test:
         --publishdir="./nf_MSV000082622" \
 		--parallel_files="YES" \
         -with-trace -resume
+
+cluster_full:
+	nextflow run workflow.nf -c cluster.config \
+        --input_spectra="./repo_data/**.mzML" \
+        --publishdir="./nf_output_repo_data" \
+		--parallel_files="YES" \
+        -with-trace -resume
