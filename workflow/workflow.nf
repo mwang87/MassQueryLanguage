@@ -18,6 +18,8 @@ if(params.parallel_files == "YES"){
     process queryData {
         errorStrategy 'ignore'
         time '1h'
+        maxRetries 3
+        memory { 4.GB * task.attempt }
 
         publishDir "$params.publishdir/msql", mode: 'copy'
         
