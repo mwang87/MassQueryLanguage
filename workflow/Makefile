@@ -17,3 +17,10 @@ cluster_full:
         --publishdir="./nf_output_repo_data" \
 		--parallel_files="YES" \
         -with-trace -resume
+
+cluster_full_qexactive:
+	nextflow run workflow.nf -c cluster.config \
+        --input_spectra="./repo_data_qexactive/**.mzML" \
+        --publishdir="./nf_output_repo_data_qexactive" \
+		--parallel_files="YES" \
+        -with-trace -resume
