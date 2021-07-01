@@ -23,7 +23,7 @@ def link_dataset(accession, output_folder):
     source_ccms_peak = os.path.join("/data/massive-ro/{}/ccms_peak".format(accession))
 
     if os.path.exists(source_ccms_peak):
-        target_location = os.path.join("repo_data", accession, "ccms_peak")
+        target_location = os.path.join(output_folder, accession, "ccms_peak")
 
         output_path = Path(target_location)
         output_path.parent.mkdir(parents=True, exist_ok=True)
