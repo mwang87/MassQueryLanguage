@@ -17,6 +17,7 @@ params.publishdir = "nf_output"
 if(params.parallel_files == "YES"){
     process queryData {
         errorStrategy 'ignore'
+        time '1h'
 
         publishDir "$params.publishdir/msql", mode: 'copy'
         
@@ -42,6 +43,7 @@ else{
         echo true
         errorStrategy 'ignore'
         maxForks 1
+        time '1h'
         
         publishDir "$params.publishdir/msql", mode: 'copy'
         
