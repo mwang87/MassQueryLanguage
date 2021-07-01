@@ -19,7 +19,7 @@ if(params.parallel_files == "YES"){
         errorStrategy 'ignore'
         time '1h'
         maxRetries 3
-        memory { 4.GB * task.attempt }
+        memory { 6.GB * task.attempt }
 
         publishDir "$params.publishdir/msql", mode: 'copy'
         
