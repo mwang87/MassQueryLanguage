@@ -312,7 +312,7 @@ def test_networking_mgf_library():
     assert("2" in list(results_df["scan"]))
     
 def test_mse():
-    query = "QUERY scaninfo(MS1DATA)"
+    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=X:TOLERANCEMZ=0.1:INTENSITYPERCENT=25:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE AND MS1MZ=X+2:TOLERANCEMZ=0.1:INTENSITYMATCH=Y*0.33:INTENSITYMATCHPERCENT=30"
     parse_obj = msql_parser.parse_msql(query)
     print(json.dumps(parse_obj, indent=4))
     results_df = msql_engine.process_query(query, "test/KoLRI_24666_Cent.mzML")

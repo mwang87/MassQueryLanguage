@@ -76,7 +76,7 @@ def _load_data(input_filename, cache=False):
                 ms1_df.to_feather(ms1_filename)
             except:
                 pass
-            
+
             try:
                 ms2_df.to_feather(ms2_filename)
             except:
@@ -582,7 +582,9 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             # Filtering the actual data structures
             filtered_scans = set(ms1_filtered_df["scan"])
             ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
-            ms2_df = ms2_df[ms2_df["ms1scan"].isin(filtered_scans)]
+
+            if "ms1scan" in ms2_df:
+                ms2_df = ms2_df[ms2_df["ms1scan"].isin(filtered_scans)]
 
             continue
 
