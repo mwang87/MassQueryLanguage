@@ -41,9 +41,15 @@ def _load_data(input_filename, cache=False):
         ms1_filename = input_filename + "_ms1.msql.feather"
         ms2_filename = input_filename + "_ms2.msql.feather"
 
-        if os.path.exists(ms1_filename):
-            ms1_df = pd.read_feather(ms1_filename)
-            ms2_df = pd.read_feather(ms2_filename)
+        if os.path.exists(ms1_filename) or os.path.exists(ms2_filename):
+            try:
+                ms1_df = pd.read_feather(ms1_filename)
+            except:
+                ms1_df = pd.DataFrame()
+            try:
+                ms2_df = pd.read_feather(ms2_filename)
+            except:
+                ms2_df = pd.DataFrame()
 
             return ms1_df, ms2_df
 
@@ -65,9 +71,16 @@ def _load_data(input_filename, cache=False):
         ms1_filename = input_filename + "_ms1.msql.feather"
         ms2_filename = input_filename + "_ms2.msql.feather"
 
-        if not os.path.exists(ms1_filename):
-            ms1_df.to_feather(ms1_filename)
-            ms2_df.to_feather(ms2_filename)
+        if not (os.path.exists(ms1_filename) or os.path.exists(ms2_filename)):
+            try:
+                ms1_df.to_feather(ms1_filename)
+            except:
+                pass
+            
+            try:
+                ms2_df.to_feather(ms2_filename)
+            except:
+                pass
 
     return ms1_df, ms2_df
 

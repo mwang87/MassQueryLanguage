@@ -302,7 +302,6 @@ def test_gnps_full_library():
     results_df = msql_engine.process_query(query, "test/gnps.json")
     print(results_df)
 
-
 def test_networking_mgf_library():
     query = "QUERY scaninfo(MS2DATA) WHERE \
             MS2PROD=86.10:TOLERANCEMZ=0.1:INTENSITYPERCENT=50"
@@ -312,6 +311,12 @@ def test_networking_mgf_library():
     print(results_df)
     assert("2" in list(results_df["scan"]))
     
+def test_mse():
+    query = "QUERY scaninfo(MS1DATA)"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/KoLRI_24666_Cent.mzML")
+    print(results_df)
 
 @pytest.mark.skip(reason="too slow")
 def test_double_brominated():
@@ -417,7 +422,7 @@ def main():
     #test_ms1_cu()
     #test_neutral_loss_intensity()
     #test_gnps_library()
-    test_gnps_full_library()
+    #test_gnps_full_library()
     #test_networking_mgf_library()
     #test_swath()
     #test_albicidin_tag()
@@ -425,6 +430,7 @@ def main():
     #test_agilent()
     #test_ms1_iron_X_changes_intensity()
     #test_gnps_pqs_library()
+    test_mse()
 
 if __name__ == "__main__":
     main()

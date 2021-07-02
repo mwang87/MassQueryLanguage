@@ -211,8 +211,15 @@ def _load_data_mzML(input_filename):
             ms2_df = pd.DataFrame(ms2mz_list)
             ms2_df_list.append(ms2_df)
 
-    ms1_df = pd.concat(ms1_df_list).reset_index()
-    ms2_df = pd.concat(ms2_df_list).reset_index()
+    if len(ms1_df_list) > 0:
+        ms1_df = pd.concat(ms1_df_list).reset_index()
+    else:
+        ms1_df = pd.DataFrame()
+
+    if len(ms2_df_list) > 0:
+        ms2_df = pd.concat(ms2_df_list).reset_index()
+    else:
+        ms2_df = pd.DataFrame()
 
     return ms1_df, ms2_df
 
