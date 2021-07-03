@@ -7,11 +7,12 @@
     <view id="query_results" label="Query Results">
         <blockRef id="main" type="query_results"/>
     </view>
-    <block id="query_results" type="table">
+    <block id="query_results" type="table_ss">
         <data>
             <source type="file" name="query_results/msql/merged_query_results.tsv"/>
             <parsers>
                 <parser type="genericTabular"/>
+                <parser type="SQLite"/>
             </parsers>
 
             <row>
