@@ -24,7 +24,7 @@ def DEBUG_MSG(msg):
 
 def init_ray():
     if not ray.is_initialized():
-        ray.init(ignore_reinit_error=True, object_store_memory=8000000000)
+        ray.init(ignore_reinit_error=True, object_store_memory=8000000000, num_cpus=8)
 
 
 def _get_ppm_tolerance(qualifiers):
@@ -332,9 +332,18 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
 
     # Ray Parallel Version
     if ray.is_initialized() and parallel:
-        futures = [_executeconditions_query_ray.remote(concrete_query, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache) for concrete_query in all_concrete_queries]
+        # TODO: Divide up the parallel thing
+        chunk_size = 100
+        concrete_query_lists = [all_concrete_queries[i:i + chunk_size] for i in range(0, len(all_concrete_queries), chunk_size)]
+        futures = [_executeconditions_query_ray.remote(concrete_query_list, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache) for concrete_query_list in concrete_query_lists]
         all_ray_results = ray.get(futures)
+
         results_ms1_list, results_ms2_list = zip(*all_ray_results)
+
+        # Flattening this list of lists
+        results_ms1_list = [item for sublist in results_ms1_list for item in sublist]
+        results_ms2_list = [item for sublist in results_ms2_list for item in sublist]
+
     else:
         # Serial Version
         for concrete_query in tqdm(all_concrete_queries):
@@ -354,8 +363,30 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
     return _executecollate_query(parsed_dict, aggregated_ms1_df, aggregated_ms2_df)
 
 @ray.remote
-def _executeconditions_query_ray(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
-    return _executeconditions_query(parsed_dict, input_filename, ms1_input_df=ms1_input_df, ms2_input_df=ms2_input_df, cache=cache)
+def _executeconditions_query_ray(parsed_dict_list, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
+    """
+    Here we will use parallel ray, we will give a list of dictionaries to query, and return a list of results
+
+    Args:
+        parsed_dict_list ([type]): [description]
+        input_filename ([type]): [description]
+        ms1_input_df ([type], optional): [description]. Defaults to None.
+        ms2_input_df ([type], optional): [description]. Defaults to None.
+        cache (bool, optional): [description]. Defaults to True.
+
+    Returns:
+        [type]: [description]
+    """
+
+    result_ms1_list = []
+    result_ms2_list = []
+    for parsed_dict in parsed_dict_list:
+        ms1_df, ms2_df = _executeconditions_query(parsed_dict, input_filename, ms1_input_df=ms1_input_df, ms2_input_df=ms2_input_df, cache=cache)
+
+        result_ms1_list.append(ms1_df)
+        result_ms2_list.append(ms2_df)
+
+    return result_ms1_list, result_ms2_list
 
 def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
     # This function attempts to find the data that the query specifies in the conditions

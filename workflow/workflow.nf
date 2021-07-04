@@ -31,10 +31,10 @@ if(params.parallel_files == "YES"){
 
         """
         python $TOOL_FOLDER/msql_cmd.py \
-            --output_file ${input_spectrum}_output.tsv \
-            $input_spectrum \
+            "$input_spectrum" \
             "${params.query}" \
-            --parallel_query $params.parallel_query \
+            --output_file ${input_spectrum}_output.tsv \
+            --parallel_query "$params.parallel_query" \
             --cache NO \
             --original_path "$filepath"
         """
@@ -57,9 +57,9 @@ else{
 
         """
         python $TOOL_FOLDER/msql_cmd.py \
-            --output_file ${input_spectrum}_output.tsv \
-            $input_spectrum \
+            "$input_spectrum" \
             "${params.query}" \
+            --output_file "${input_spectrum}_output.tsv" \
             --parallel_query $params.parallel_query \
             --cache NO \
             --original_path "$filepath"
