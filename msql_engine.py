@@ -349,7 +349,16 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
 
     collated_df = pd.concat(collated_list)
     collated_df = collated_df.reset_index()
-    
+
+    # Lets try to remove duplicates
+    try:
+        if "comment" in collated_df:
+            collated_df["truncated_comment"] = collated_df["comment"].astype(float).astype(int)
+            collated_df = collated_df.drop_duplicates(subset=["scan", "truncated_comment"])
+            collated_df = collated_df.drop("truncated_comment", axis=1)
+    except:
+        pass
+        
     return collated_df
 
 
@@ -678,12 +687,6 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
 
                 ms2sum_df = ms2_df.groupby(groupby_columns).sum().reset_index()
                 result_df["i"] = ms2sum_df["i"]
-
-            # Lets try to remove duplicates
-            if "comment" in result_df:
-                result_df["truncated_comment"] = result_df["comment"].astype(float).astype(int)
-                result_df = result_df.drop_duplicates(subset=["scan", "truncated_comment"])
-                result_df = result_df.drop("truncated_comment", axis=1)
 
             return result_df
 
