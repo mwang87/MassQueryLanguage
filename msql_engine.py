@@ -24,7 +24,7 @@ def DEBUG_MSG(msg):
 
 def init_ray():
     if not ray.is_initialized():
-        ray.init(ignore_reinit_error=True, object_store_memory=8000000000)
+        ray.init(ignore_reinit_error=True, object_store_memory=8000000000, num_cpus=8)
 
 
 def _get_ppm_tolerance(qualifiers):
