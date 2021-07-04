@@ -372,7 +372,7 @@ def test_agilent():
     results_df = msql_engine.process_query(query, "test/20190310_MSMSpos_marine_water_20180510_CBTheaFoss_1.mzML")
 
 def test_visualize():
-    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=177"
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=177 AND MS2PROD=270"
     fig = msql_visualizer.visualize_query(query)
     fig.write_image("test_visualize.png", engine="kaleido")
 
