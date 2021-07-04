@@ -1,6 +1,7 @@
 import msql_parser
 import msql_engine
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 from py_expression_eval import Parser
 math_parser = Parser()
@@ -21,7 +22,8 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800):
             except:
                 pass
 
-    fig = go.Figure()
+    ms1_fig = go.Figure()
+    ms2_fig = go.Figure()
 
     for condition in parsed_query["conditions"]:
         print(condition)
@@ -32,10 +34,10 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800):
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
 
-            fig.add_shape(type="rect",
+            ms2_fig.add_shape(type="rect",
                 x0=mz_min, y0=0, x1=mz_max, y1=1,
                 line=dict(
-                    color="RoyalBlue",
+                    color="Blue",
                     width=2,
                 )
             )
@@ -49,7 +51,7 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800):
             mz_min = precursor_mz - nl_max
             mz_max = precursor_mz - nl_min
 
-            fig.add_shape(type="rect",
+            ms2_fig.add_shape(type="rect",
                 x0=mz_min, y0=0, x1=mz_max, y1=1,
                 line=dict(
                     color="Red",
@@ -57,15 +59,37 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800):
                 )
             )
 
+        if condition["type"] == "ms1mzcondition":
+            mz = condition["value"][0]
+            mz_tol = msql_engine._get_mz_tolerance(condition.get("qualifiers", None), mz)
+            mz_min = mz - mz_tol
+            mz_max = mz + mz_tol
+
+            ms1_fig.add_shape(type="rect",
+                x0=mz_min, y0=0, x1=mz_max, y1=1,
+                line=dict(
+                    color="Blue",
+                    width=2,
+                )
+            )
 
     # Set axes properties
-    fig.update_xaxes(range=[0, 1000], showgrid=False)
-    fig.update_yaxes(range=[0, 1])
+    ms2_fig.update_xaxes(range=[0, 1000], showgrid=False)
+    ms2_fig.update_yaxes(range=[0, 1])
 
-    fig.update_layout(
-        title="Query Visualization, Precursor m/z {}".format(precursor_mz),
+    ms2_fig.update_layout(
+        title="MS2 Query Visualization, Precursor m/z {}".format(precursor_mz),
         xaxis_title="m/z",
         yaxis_title="intensity",
     )
 
-    return fig
+    ms1_fig.update_xaxes(range=[0, 1000], showgrid=False)
+    ms1_fig.update_yaxes(range=[0, 1])
+
+    ms1_fig.update_layout(
+        title="MS1 Query Visualization",
+        xaxis_title="m/z",
+        yaxis_title="intensity",
+    )
+
+    return ms1_fig, ms2_fig

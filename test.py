@@ -374,8 +374,9 @@ def test_agilent():
 def test_visualize():
     #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=177 AND MS2PROD=270 AND MS2NL=163"
     query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X+14"
-    fig = msql_visualizer.visualize_query(query)
-    fig.write_image("test_visualize.png", engine="kaleido")
+    ms1_fig, ms2_fig = msql_visualizer.visualize_query(query)
+    ms2_fig.write_image("test_ms2_visualize.png", engine="kaleido")
+    ms1_fig.write_image("test_ms1_visualize.png", engine="kaleido")
 
 def test_parse():        
     for line in open("test_queries.txt"):
