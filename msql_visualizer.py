@@ -12,15 +12,24 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800):
 
     # Cleaning up variables
     for condition in parsed_query["conditions"]:
+        # Setting m/z variables
         for i, value in enumerate(condition["value"]):
             try:
                 # Checking if X is in any string
                 if "X" in value:
                     condition["value"][i] = math_parser.parse(value ).evaluate({
                                 "X" : variable_x
-                            })
+                            })    
             except:
                 pass
+
+        # Setting intensity variables
+        if "qualifiers" in condition:
+            if "qualifierintensitymatch" in condition["qualifiers"]:
+                value = condition["qualifiers"]["qualifierintensitymatch"]["value"]
+                condition["qualifiers"]["qualifierintensitymatch"]["value"] = math_parser.parse(value).evaluate({
+                                "Y" : variable_y
+                            })                
 
     ms1_fig = go.Figure()
     ms2_fig = go.Figure()
@@ -34,8 +43,14 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800):
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
 
+            intensity = 1
+
+            if "qualifiers" in condition:
+                if "qualifierintensitymatch" in condition["qualifiers"]:
+                    intensity = condition["qualifiers"]["qualifierintensitymatch"]["value"]
+
             ms2_fig.add_shape(type="rect",
-                x0=mz_min, y0=0, x1=mz_max, y1=1,
+                x0=mz_min, y0=0, x1=mz_max, y1=intensity,
                 line=dict(
                     color="Blue",
                     width=2,
@@ -51,8 +66,14 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800):
             mz_min = precursor_mz - nl_max
             mz_max = precursor_mz - nl_min
 
+            intensity = 1
+
+            if "qualifiers" in condition:
+                if "qualifierintensitymatch" in condition["qualifiers"]:
+                    intensity = condition["qualifiers"]["qualifierintensitymatch"]["value"]
+
             ms2_fig.add_shape(type="rect",
-                x0=mz_min, y0=0, x1=mz_max, y1=1,
+                x0=mz_min, y0=0, x1=mz_max, y1=intensity,
                 line=dict(
                     color="Red",
                     width=2,
@@ -65,8 +86,14 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800):
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
 
+            intensity = 1
+
+            if "qualifiers" in condition:
+                if "qualifierintensitymatch" in condition["qualifiers"]:
+                    intensity = condition["qualifiers"]["qualifierintensitymatch"]["value"]
+
             ms1_fig.add_shape(type="rect",
-                x0=mz_min, y0=0, x1=mz_max, y1=1,
+                x0=mz_min, y0=0, x1=mz_max, y1=intensity,
                 line=dict(
                     color="Blue",
                     width=2,
