@@ -333,10 +333,17 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
     # Ray Parallel Version
     if ray.is_initialized() and parallel:
         # TODO: Divide up the parallel thing
-        
-        futures = [_executeconditions_query_ray.remote(concrete_query, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache) for concrete_query in all_concrete_queries]
+        chunk_size = 100
+        concrete_query_lists = [all_concrete_queries[i:i + chunk_size] for i in range(0, len(all_concrete_queries), chunk_size)]
+        futures = [_executeconditions_query_ray.remote(concrete_query_list, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache) for concrete_query_list in concrete_query_lists]
         all_ray_results = ray.get(futures)
+
         results_ms1_list, results_ms2_list = zip(*all_ray_results)
+
+        # Flattening this list of lists
+        results_ms1_list = [item for sublist in results_ms1_list for item in sublist]
+        results_ms2_list = [item for sublist in results_ms2_list for item in sublist]
+        
     else:
         # Serial Version
         for concrete_query in tqdm(all_concrete_queries):
