@@ -8,8 +8,8 @@ def main():
     parser.add_argument('filename', help='Input filename')
     parser.add_argument('query', help='Input Query')
     parser.add_argument('--output_file', default=None, help='output_file')
-    parser.add_argument('--parallel_query', default="NO", help='parallel_query')
-    parser.add_argument('--cache', default="YES", help='parallel_query')
+    parser.add_argument('--parallel_query', default="NO", help='YES to make it parallel with ray locally')
+    parser.add_argument('--cache', default="YES", help='YES to cache with feather')
     parser.add_argument('--original_path', default=None, help='Original absolute path, useful in proteosafe')
     
     args = parser.parse_args()

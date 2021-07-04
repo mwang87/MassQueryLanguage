@@ -343,7 +343,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
         # Flattening this list of lists
         results_ms1_list = [item for sublist in results_ms1_list for item in sublist]
         results_ms2_list = [item for sublist in results_ms2_list for item in sublist]
-        
+
     else:
         # Serial Version
         for concrete_query in tqdm(all_concrete_queries):
