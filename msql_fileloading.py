@@ -1,10 +1,70 @@
 import json
+import os
 import pymzml
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
 from matchms.importing import load_from_mgf
 from pyteomics import mzxml
+
+
+def load_data(input_filename, cache=False):
+    """
+    Loading data generically
+
+    Args:
+        input_filename ([type]): [description]
+        cache (bool, optional): [description]. Defaults to False.
+
+    Returns:
+        [type]: [description]
+    """
+    if cache:
+        ms1_filename = input_filename + "_ms1.msql.feather"
+        ms2_filename = input_filename + "_ms2.msql.feather"
+
+        if os.path.exists(ms1_filename) or os.path.exists(ms2_filename):
+            try:
+                ms1_df = pd.read_feather(ms1_filename)
+            except:
+                ms1_df = pd.DataFrame()
+            try:
+                ms2_df = pd.read_feather(ms2_filename)
+            except:
+                ms2_df = pd.DataFrame()
+
+            return ms1_df, ms2_df
+
+    # Actually loading
+    if input_filename[-5:] == ".mzML":
+        ms1_df, ms2_df = _load_data_mzML(input_filename)
+
+    if input_filename[-6:] == ".mzXML":
+        ms1_df, ms2_df = _load_data_mzXML(input_filename)
+    
+    if input_filename[-5:] == ".json":
+        ms1_df, ms2_df = _load_data_gnps_json(input_filename)
+    
+    if input_filename[-4:] == ".mgf":
+        ms1_df, ms2_df = _load_data_mgf(input_filename)
+
+    # Saving Cache
+    if cache:
+        ms1_filename = input_filename + "_ms1.msql.feather"
+        ms2_filename = input_filename + "_ms2.msql.feather"
+
+        if not (os.path.exists(ms1_filename) or os.path.exists(ms2_filename)):
+            try:
+                ms1_df.to_feather(ms1_filename)
+            except:
+                pass
+
+            try:
+                ms2_df.to_feather(ms2_filename)
+            except:
+                pass
+
+    return ms1_df, ms2_df
 
 def _load_data_mgf(input_filename):
     file = load_from_mgf(input_filename)

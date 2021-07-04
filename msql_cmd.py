@@ -49,6 +49,7 @@ def main():
             results_df.to_csv(args.output_file, index=False, sep="\t")
         else:
             results_df.to_csv(args.output_file, index=False)
+
     print(results_df)
 
 if __name__ == "__main__":
