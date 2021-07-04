@@ -26,14 +26,18 @@ def main():
 
     # Getting all GNPS Datasets
     all_datasets = requests.get("https://massive.ucsd.edu/ProteoSAFe/datasets_json.jsp").json()["datasets"]
-    gnps_datasets = [dataset for dataset in all_datasets if "GNPS" in dataset["title"].upper()]
+    #gnps_datasets = [dataset for dataset in all_datasets if "GNPS" in dataset["title"].upper()]
 
     if len(dataset_subset) > 0:
-        gnps_datasets = [dataset for dataset in gnps_datasets if dataset["dataset"] in dataset_subset]
+        all_datasets = [dataset for dataset in all_datasets if dataset["dataset"] in dataset_subset]
     
-    print("NUMBER GNPS DATASETS", len(gnps_datasets))
+    print("NUMBER DATASETS", len(all_datasets))
 
-    for dataset in gnps_datasets:
+    if len(all_datasets) > 20:
+        print("Too Many Datasets, please apply subsets")
+        exit(1)
+
+    for dataset in all_datasets:
         print("linking", dataset["dataset"])
         link_dataset(dataset["dataset"], args.output_staged)
 
