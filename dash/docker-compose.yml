@@ -11,6 +11,7 @@ services:
       - ../msql_parser.py:/app/msql_parser.py:ro
       - ../msql_engine.py:/app/msql_engine.py:ro
       - ../msql_fileloading.py:/app/msql_fileloading.py:ro
+      - ../msql_visualizer.py:/app/msql_visualizer.py:ro
       - ../msql.ebnf:/app/msql.ebnf:ro
     ports:
     - "5343:5000"

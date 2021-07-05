@@ -102,7 +102,7 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800):
 
     # Set axes properties
     ms2_fig.update_xaxes(range=[0, 1000], showgrid=False)
-    ms2_fig.update_yaxes(range=[0, 1])
+    ms2_fig.update_yaxes(range=[0, 1.5])
 
     ms2_fig.update_layout(
         title="MS2 Query Visualization, Precursor m/z {}".format(precursor_mz),
@@ -111,7 +111,7 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800):
     )
 
     ms1_fig.update_xaxes(range=[0, 1000], showgrid=False)
-    ms1_fig.update_yaxes(range=[0, 1])
+    ms1_fig.update_yaxes(range=[0, 1.5])
 
     ms1_fig.update_layout(
         title="MS1 Query Visualization",
