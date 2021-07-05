@@ -497,7 +497,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
         # Filtering MS2 Neutral Loss
         if condition["type"] == "ms2neutrallosscondition":
             mz = condition["value"][0]
-            mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
+            mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz) #TODO: This is incorrect logic if it comes to PPM accuracy
             nl_min = mz - mz_tol
             nl_max = mz + mz_tol
 
