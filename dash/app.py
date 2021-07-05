@@ -31,6 +31,7 @@ import uuid
 from flask_caching import Cache
 import tasks
 import msql_parser
+import msql_visualizer
 
 server = Flask(__name__)
 app = dash.Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -117,10 +118,32 @@ DATASELECTION_CARD = [
             ),
             html.Br(),
             html.Hr(),
-            html.H5(children='Query Parse'),
+            html.H5("Parse Viz Options"),
+            dbc.InputGroup(
+                [
+                    dbc.InputGroupAddon("x_value", addon_type="prepend"),
+                    dbc.Input(id='x_value', placeholder="Enter X m/z Value", value="500"),
+                ],
+                className="mb-3",
+            ),
+            dbc.InputGroup(
+                [
+                    dbc.InputGroupAddon("y_value", addon_type="prepend"),
+                    dbc.Input(id='y_value', placeholder="Enter Y Intensity Value", value="1"),
+                ],
+                className="mb-3",
+            ),
+            html.H5(children='Query Parse Visualization'),
+            dcc.Loading(
+                id="output_parse_drawing",
+                children=[html.Div([html.Div(id="loading-output-21")])],
+                type="default",
+            ),
+            html.Br(),
+            html.Hr(),
             dcc.Loading(
                 id="output_parse",
-                children=[html.Div([html.Div(id="loading-output-21")])],
+                children=[html.Div([html.Div(id="loading-output-872")])],
                 type="default",
             ),
         ]
@@ -296,6 +319,25 @@ def draw_parse(query):
 '''.format(json.dumps(parse_results, indent=4)))
 
     return [parse_markdown]
+
+@app.callback([
+                Output('output_parse_drawing', 'children'),
+              ],
+              [
+                  Input('query', 'value'),
+                  Input('x_value', 'value'),
+                  Input('y_value', 'value')
+            ])
+def draw_parse_drawing(query, x_value, y_value):
+    try:
+        ms1_fig, ms2_fig = msql_visualizer.visualize_query(query, variable_x=float(x_value), variable_y=float(y_value))
+    except:
+        return ["Parse Error"]
+
+    ms1_graph = dcc.Graph(figure=ms1_fig)
+    ms2_graph = dcc.Graph(figure=ms2_fig)
+
+    return [[ms1_graph, ms2_graph]]
 
 @app.callback([
                 Output('output', 'children'),

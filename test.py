@@ -1,5 +1,6 @@
 import msql_parser
 import msql_engine
+import msql_visualizer
 import json
 import pytest
 
@@ -389,7 +390,18 @@ def test_swath():
 def test_agilent():
     query = "QUERY scaninfo(MS2DATA)"
     results_df = msql_engine.process_query(query, "test/20190310_MSMSpos_marine_water_20180510_CBTheaFoss_1.mzML")
-    
+
+def test_visualize():
+    #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=177 AND MS2PROD=270 AND MS2NL=163"
+    #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X+14"
+    #query = "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X AND MS1MZ=X+14"
+    query = "QUERY scaninfo(MS1DATA) WHERE \
+            MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25 \
+            AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE"
+
+    ms1_fig, ms2_fig = msql_visualizer.visualize_query(query)
+    ms2_fig.write_image("test_ms2_visualize.png", engine="kaleido")
+    ms1_fig.write_image("test_ms1_visualize.png", engine="kaleido")
 
 def test_parse():        
     for line in open("test_queries.txt"):
@@ -452,6 +464,7 @@ def main():
     #test_ms1_iron_X_changes_intensity()
     #test_gnps_pqs_library()
     #test_mse()
+    #test_visualize()
 
 if __name__ == "__main__":
     main()
