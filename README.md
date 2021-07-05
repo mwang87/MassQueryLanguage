@@ -10,8 +10,17 @@ This is the repository to define the language and reference implementation. This
 1. Dash interactive exploration
 1. Documentation for MSQL
 
+## Developers/Contact
+
+Mingxun Wang is the main creator and developer of MSQL. Contact me for contributing or using it!
+
 ## Docs
 
 [Here](https://ucsdccms.s3.us-west-1.amazonaws.com/msql/index.html)
 
 ## Python API
+
+
+## License
+
+MIT License

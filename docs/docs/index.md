@@ -1,11 +1,15 @@
 
 
-## What is Mass Query Language
+## What is Mass Spec Query Language
 
-The Mass Query Langauge is a domain specific language meant to be a succinct way to 
+The Mass Spec Query Langauge (MSQL) is a domain specific language meant to be a succinct way to 
 express a query in a mass spectrometry centric fashion. It is inspired by SQL, 
 but it attempts to bake in assumptions of mass spectrometry to make querying much more
-natural for mass spectrometry users. 
+natural for mass spectrometry users. Broadly we attempt to design it according to several principles:
+
+1. Expressiveness - Capture complex mass spectrometry patterns that the community would like to look for
+1. Precision - Exactly prescribe how to find data without ambiguity
+1. Relatively Natural - MSQL should be relatively easy to read and write and even use as a way to communicate ideas about mass spectrometry, you know like a language. 
 
 ## Try it out
 
@@ -161,3 +165,18 @@ Two Product Ions, m/z = 660.2 and 468.2
 QUERY scaninfo(MS2DATA) WHERE MS2PROD=660.2:TOLERANCEMZ=0.1 AND MS2PROD=468.2:TOLERANCEMZ=0.1
 ```
 
+## How To Use MSQL
+
+### Python API
+
+We have a python API that you can utilize in your own software
+
+### Commandline Utility
+
+We have a standalone script that can execute queries on single spectrum files. 
+
+### Nextflow Workflow
+
+### Web API
+
+We have built out a 
