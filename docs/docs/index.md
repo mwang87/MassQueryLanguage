@@ -177,6 +177,18 @@ We have a standalone script that can execute queries on single spectrum files.
 
 ### Nextflow Workflow
 
+We have a nextflow workflow to enable scalable queries across hundreds of thousands of mass spectrometry files
+
+### ProteoSAFe Workflow
+
+We have a proteosafe workflow that we have created that nicely integrates into GNPS. 
+
 ### Web API
 
-We have built out a 
+We have built out a web API for people to use, especially for parsing. 
+
+```
+https://msql.ucsd.edu/parse?query=QUERY%20MS2DATA%20WHERE%20MS1MZ=100
+```
+
+Simply put in the query as a url encoded parameter and a JSON representation of the parse is returned. 
