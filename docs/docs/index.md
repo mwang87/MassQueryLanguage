@@ -15,6 +15,10 @@ natural for mass spectrometry users. Broadly we attempt to design it according t
 
 If you want to do a large scale query on your data, try our beta workflow [here](https://proteomics2.ucsd.edu/ProteoSAFe/index.jsp?params=%7B%22workflow%22%3A%20%22MSQL-NF%22%7D).
 
+## Developers
+
+Mingxun Wang is the creator and main developer of MSQL. Please contact me if you have questions! I'm hoping this becomes a community effort so reach out if you want to help/use MSQL. 
+
 ## Definition of a Query
 
 There are several parts
