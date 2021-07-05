@@ -164,6 +164,26 @@ def test_ms1_iron():
     results_df = msql_engine.process_query(query, "test/JB_182_2_fe.mzML")
     print(results_df)
     assert(1223 in list(results_df["scan"]))
+    assert(len(results_df) == 15)
+
+def test_ms1_iron_parallel():
+    msql_engine.init_ray()
+
+    query = "QUERY scaninfo(MS1DATA) \
+            WHERE \
+            RTMIN=3.03 \
+            AND RTMAX=3.05 \
+            AND MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25 \
+            AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE \
+            FILTER \
+            MS1MZ=X"
+    parse_obj = msql_parser.parse_msql(query)
+    print(parse_obj)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/JB_182_2_fe.mzML")
+    print(results_df)
+    assert(1223 in list(results_df["scan"]))
+    assert(len(results_df) == 15)
 
 
 def test_ms1_iron_X_changes_intensity():
@@ -421,6 +441,7 @@ def main():
     #test_min_intensity()
     #test_min_intensitypercent()
     #test_ms1_iron()
+    test_ms1_iron_parallel()
     #test_ms1_filter()
     #test_intensity_int_parse()
     #test_parse()
@@ -443,7 +464,7 @@ def main():
     #test_ms1_iron_X_changes_intensity()
     #test_gnps_pqs_library()
     #test_mse()
-    test_visualize()
+    #test_visualize()
 
 if __name__ == "__main__":
     main()

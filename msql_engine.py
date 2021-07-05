@@ -326,9 +326,8 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
 
     print("TOTAL QUERIES", len(all_concrete_queries))
 
-    # Perfoming the filtering of conditions
-    results_ms1_list = []
-    results_ms2_list = []
+    # Perfoming all the concrete queries
+    collated_list = [] # This list holds the collated set of results from each query, final result is a concat of all of them
 
     # Ray Parallel Version
     if ray.is_initialized() and parallel:
@@ -338,34 +337,35 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
         futures = [_executeconditions_query_ray.remote(concrete_query_list, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache) for concrete_query_list in concrete_query_lists]
         all_ray_results = ray.get(futures)
 
-        results_ms1_list, results_ms2_list = zip(*all_ray_results)
-
         # Flattening this list of lists
-        results_ms1_list = [item for sublist in results_ms1_list for item in sublist]
-        results_ms2_list = [item for sublist in results_ms2_list for item in sublist]
-
+        collated_list = [item for sublist in all_ray_results for item in sublist]
     else:
         # Serial Version
         for concrete_query in tqdm(all_concrete_queries):
             results_ms1_df, results_ms2_df = _executeconditions_query(concrete_query, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache)
             
-            results_ms1_list.append(results_ms1_df)
-            results_ms2_list.append(results_ms2_df)
+            collated_df = _executecollate_query(parsed_dict, results_ms1_df, results_ms2_df)
+            collated_list.append(collated_df)
 
-    aggregated_ms1_df = pd.concat(results_ms1_list)
-    aggregated_ms2_df = pd.concat(results_ms2_list)
+    collated_df = pd.concat(collated_list)
+    collated_df = collated_df.reset_index()
 
-    # reduce redundancy
-    aggregated_ms1_df = aggregated_ms1_df.drop_duplicates()
-    aggregated_ms2_df = aggregated_ms2_df.drop_duplicates()
-    
-    # Collating all results
-    return _executecollate_query(parsed_dict, aggregated_ms1_df, aggregated_ms2_df)
+    # Lets try to remove duplicates
+    try:
+        if "comment" in collated_df:
+            collated_df["truncated_comment"] = collated_df["comment"].astype(float).astype(int)
+            collated_df = collated_df.drop_duplicates(subset=["scan", "truncated_comment"])
+            collated_df = collated_df.drop("truncated_comment", axis=1)
+    except:
+        pass
+        
+    return collated_df
+
 
 @ray.remote
 def _executeconditions_query_ray(parsed_dict_list, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
     """
-    Here we will use parallel ray, we will give a list of dictionaries to query, and return a list of results
+    Here we will use parallel ray, we will give a list of dictionaries to query, and return a list of results that are collated
 
     Args:
         parsed_dict_list ([type]): [description]
@@ -378,15 +378,15 @@ def _executeconditions_query_ray(parsed_dict_list, input_filename, ms1_input_df=
         [type]: [description]
     """
 
-    result_ms1_list = []
-    result_ms2_list = []
+    collated_list = []
+
     for parsed_dict in parsed_dict_list:
         ms1_df, ms2_df = _executeconditions_query(parsed_dict, input_filename, ms1_input_df=ms1_input_df, ms2_input_df=ms2_input_df, cache=cache)
 
-        result_ms1_list.append(ms1_df)
-        result_ms2_list.append(ms2_df)
+        collated_df = _executecollate_query(parsed_dict, ms1_df, ms2_df)
+        collated_list.append(collated_df)
 
-    return result_ms1_list, result_ms2_list
+    return collated_list
 
 def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
     # This function attempts to find the data that the query specifies in the conditions
@@ -604,6 +604,10 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
 def _executecollate_query(parsed_dict, ms1_df, ms2_df):
     # This function takes the dataframes from executing the conditions and returns the proper formatted version
 
+    # Early Exit
+    if len(ms1_df) == 0 and len(ms2_df) == 0:
+        return pd.DataFrame()
+
     # collating the results
     if parsed_dict["querytype"]["function"] is None:
         if parsed_dict["querytype"]["datatype"] == "datams1data":
@@ -683,12 +687,6 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
 
                 ms2sum_df = ms2_df.groupby(groupby_columns).sum().reset_index()
                 result_df["i"] = ms2sum_df["i"]
-
-            # Lets try to remove duplicates
-            if "comment" in result_df:
-                result_df["truncated_comment"] = result_df["comment"].astype(float).astype(int)
-                result_df = result_df.drop_duplicates(subset=["scan", "truncated_comment"])
-                result_df = result_df.drop("truncated_comment", axis=1)
 
             return result_df
 
