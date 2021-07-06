@@ -399,6 +399,9 @@ def draw_output(query, filename):
     results_list = tasks.task_executequery.delay(query, full_filepath)
     results_list = results_list.get()
 
+    if len(results_list) == 0:
+        return ["No Matches"]
+
     # Doing enrichment if possible
 
     table = dash_table.DataTable(
