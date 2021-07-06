@@ -51,7 +51,7 @@ else{
         maxForks 1
         time '1h'
         
-        publishDir "$params.publishdir/msql", mode: 'copy'
+        publishDir "$params.publishdir/msql_temp", mode: 'copy'
         
         input:
         set val(filepath), val(mangled_output_filename), file(input_spectrum) from _spectra_ch3
@@ -81,23 +81,21 @@ _query_results_ch.collectFile(name: "merged_query_results.tsv", storeDir: "$para
 
 if(params.extract == "YES"){
     // Extracting the spectra
-    process extractSpectra {
+    process formatExtractedSpectra {
         publishDir "$params.publishdir/extracted", mode: 'copy'
         cache false
         
         input:
-        file query_results from _query_results_merged_ch
-        file "files/*" from _spectra_ch2.collect()
+        file "json/*" from _query_extract_results_ch.collect()
 
         output:
         file "extracted.*" optional true
 
         """
-        python $TOOL_FOLDER/msql_extract.py \
-        files \
-        $query_results \
-        extracted.mgf \
+        python $TOOL_FOLDER/merged_extracted.py \
+        json \
         extracted.mzML \
+        extracted.mgf \
         extracted.tsv
         """
     }

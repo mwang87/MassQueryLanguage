@@ -174,19 +174,21 @@ def _extract_spectra(results_df, input_spectra_folder,
 
     # Writing the spectrum now
     if output_mgf_filename is not None:
-        with open(output_mgf_filename, "w") as o:
-            for i, spectrum in enumerate(spectrum_list):
-                o.write("BEGIN IONS\n")
-                if "precursor_mz" in spectrum:
-                    o.write("PEPMASS={}\n".format(spectrum["precursor_mz"]))
-                o.write("SCANS={}\n".format(spectrum["new_scan"]))
-                for peak in spectrum["peaks"]:
-                    o.write("{} {}\n".format(peak[0], peak[1]))
-                o.write("END IONS\n")
+        _export_mgf(spectrum_list, output_mgf_filename)
 
     if output_mzML_filename is not None:
         _export_mzML(spectrum_list, output_mzML_filename)
 
+def _export_mgf(spectrum_list, output_mgf_filename):
+    with open(output_mgf_filename, "w") as o:
+        for i, spectrum in enumerate(spectrum_list):
+            o.write("BEGIN IONS\n")
+            if "precursor_mz" in spectrum:
+                o.write("PEPMASS={}\n".format(spectrum["precursor_mz"]))
+            o.write("SCANS={}\n".format(spectrum["new_scan"]))
+            for peak in spectrum["peaks"]:
+                o.write("{} {}\n".format(peak[0], peak[1]))
+            o.write("END IONS\n")
 
 def _export_mzML(spectrum_list, output_mzML_filename):
     with MzMLWriter(open(output_mzML_filename, 'wb'), close=True) as out:
