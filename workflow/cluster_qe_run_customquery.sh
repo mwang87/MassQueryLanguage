@@ -4,4 +4,4 @@ nextflow run workflow.nf -c cluster.config \
         --publishdir="$2" \
         --parallel_files="YES" \
         --parallel_query="YES" \
-        -with-trace -resume
+        -with-trace
