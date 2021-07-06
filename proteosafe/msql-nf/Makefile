@@ -3,5 +3,5 @@ include ../Makefile.deploytemplate
 
 WORKFLOW_NAME=msql-nf
 TOOL_FOLDER_NAME=msql-nf
-WORKFLOW_VERSION=release_29.4
+WORKFLOW_VERSION=release_29.5
 WORKFLOW_DESCRIPTION="MSQL NF - <a href='https://ucsdccms.s3.us-west-1.amazonaws.com/msql/index.html'>Documentation Link</a>"

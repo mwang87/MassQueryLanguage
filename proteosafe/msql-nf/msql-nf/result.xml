@@ -133,4 +133,18 @@
         </data>
         <parameter name="URLBASE" value='https://gnps.ucsd.edu/ProteoSAFe/index.jsp?params={"workflow":"MOLECULAR-LIBRARYSEARCH-V2","desc":"Reanalysis of MSQL [task] with Library Search","spec_on_server":"t.[task]/query_results/extracted/extracted.mgf"}'/>
     </block>
+
+    <view id="visualize_query" label="Visualize Query" group="Advanced Views - Visualize">
+        <blockRef id="main" type="visualize_query"/>
+    </view>
+    <block id="visualize_query" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='https://msql.ucsd.edu/?query={QUERY}'/>
+    </block>
+
+
 </interface>
