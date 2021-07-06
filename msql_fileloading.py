@@ -120,7 +120,7 @@ def _load_data_gnps_json(input_filename):
             peak_dict["mz"] = peak[0]
             peak_dict["scan"] = spectrum["spectrum_id"]
             peak_dict["rt"] = 0
-            peak_dict["precmz"] = spectrum["Precursor_MZ"]
+            peak_dict["precmz"] = float(spectrum["Precursor_MZ"])
             peak_dict["ms1scan"] = 0
 
             ms2mz_list.append(peak_dict)
