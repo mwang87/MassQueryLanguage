@@ -29,7 +29,6 @@ def task_executequery(query, filename):
 
     try:
         all_results = _enrich_results(all_results)
-            
     except:
         pass
 
