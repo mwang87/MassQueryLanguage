@@ -359,7 +359,12 @@ def draw_parse_drawing(query, x_value, y_value, ms1_usi, ms2_usi):
     ms2_peaks = None
 
     try:
-        print("XXX")
+        r = requests.get("https://metabolomics-usi.ucsd.edu/json/?usi1={}".format(ms1_usi))
+        ms1_peaks = r.json()["peaks"]
+    except:
+        pass
+
+    try:
         r = requests.get("https://metabolomics-usi.ucsd.edu/json/?usi1={}".format(ms2_usi))
         ms2_peaks = r.json()["peaks"]
     except:
@@ -372,6 +377,7 @@ def draw_parse_drawing(query, x_value, y_value, ms1_usi, ms2_usi):
                                                             ms1_peaks=ms1_peaks,
                                                             ms2_peaks=ms2_peaks)
     except:
+        raise
         return ["Parse Error"]
 
     ms1_graph = dcc.Graph(figure=ms1_fig)

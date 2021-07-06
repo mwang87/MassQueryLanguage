@@ -50,7 +50,7 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
     ms2_fig = go.Figure()
 
     if ms1_peaks is not None:
-        max_int = max([peak[1] for peak in ms2_peaks])
+        max_int = max([peak[1] for peak in ms1_peaks])
         # Drawing the spectrum object
         mzs = [peak[0] for peak in ms1_peaks]
         ints = [peak[1]/max_int for peak in ms1_peaks]
@@ -155,7 +155,7 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
             ms1_fig.add_shape(type="rect",
                 x0=mz_min, y0=0, x1=mz_max, y1=intensity,
                 line=dict(
-                    color="Blue",
+                    color="Green",
                     width=2,
                 )
             )
