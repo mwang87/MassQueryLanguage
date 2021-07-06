@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <interface id="speclib_add">
     <download>
+        <source type="folder" name="query_results/"/>
     </download>
 
     <!-- View definitions -->
