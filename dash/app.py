@@ -134,6 +134,20 @@ DATASELECTION_CARD = [
                 ],
                 className="mb-3",
             ),
+            dbc.InputGroup(
+                [
+                    dbc.InputGroupAddon("ms1_usi", addon_type="prepend"),
+                    dbc.Input(id='ms1_usi', placeholder="Enter MS1 USI", value=""),
+                ],
+                className="mb-3",
+            ),
+            dbc.InputGroup(
+                [
+                    dbc.InputGroupAddon("ms2_usi", addon_type="prepend"),
+                    dbc.Input(id='ms2_usi', placeholder="Enter MS2 USI", value=""),
+                ],
+                className="mb-3",
+            ),
             html.H5(children='Query Parse Visualization'),
             dcc.Loading(
                 id="output_parse_drawing",
@@ -327,11 +341,28 @@ def draw_parse(query):
               [
                   Input('query', 'value'),
                   Input('x_value', 'value'),
-                  Input('y_value', 'value')
+                  Input('y_value', 'value'),
+                  Input('ms1_usi', 'value'),
+                  Input('ms2_usi', 'value'),
             ])
-def draw_parse_drawing(query, x_value, y_value):
+def draw_parse_drawing(query, x_value, y_value, ms1_usi, ms2_usi):
+    # Getting the peaks
+    ms1_peaks = None
+    ms2_peaks = None
+
     try:
-        ms1_fig, ms2_fig = msql_visualizer.visualize_query(query, variable_x=float(x_value), variable_y=float(y_value))
+        print("XXX")
+        r = requests.get("https://metabolomics-usi.ucsd.edu/json/?usi1={}".format(ms2_usi))
+        ms2_peaks = r.json()["peaks"]
+    except:
+        pass
+
+    try:
+        ms1_fig, ms2_fig = msql_visualizer.visualize_query(query, 
+                                                            variable_x=float(x_value), 
+                                                            variable_y=float(y_value),
+                                                            ms1_peaks=ms1_peaks,
+                                                            ms2_peaks=ms2_peaks)
     except:
         return ["Parse Error"]
 

@@ -84,8 +84,8 @@ def _load_data_mgf(input_filename):
             peak_dict["i_norm"] = i_list[i] / i_max
             peak_dict["mz"] = mz_list[i]
             peak_dict["scan"] = spectrum.metadata["scans"]
-            peak_dict["rt"] = spectrum.metadata["rtinseconds"]
-            peak_dict["precmz"] = spectrum.metadata["pepmass"][0]
+            peak_dict["rt"] = float(spectrum.metadata["rtinseconds"]) / 60
+            peak_dict["precmz"] = float(spectrum.metadata["pepmass"][0])
             peak_dict["ms1scan"] = 0
 
             ms2mz_list.append(peak_dict)

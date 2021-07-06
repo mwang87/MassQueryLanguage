@@ -7,7 +7,22 @@ from py_expression_eval import Parser
 math_parser = Parser()
 
 
-def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800):
+def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_peaks=None, ms2_peaks=None):
+    """
+    This function creates a plotly visualization. If ms1 and ms2 peaks are included, we will plot them along with it. 
+
+    Args:
+        query ([type]): [description]
+        variable_x (int, optional): [description]. Defaults to 500.
+        variable_y (int, optional): [description]. Defaults to 1.
+        precursor_mz (int, optional): [description]. Defaults to 800.
+        ms1_peaks ([type], optional): [description]. Defaults to None.
+        ms2_peaks ([type], optional): [description]. Defaults to None.
+
+    Returns:
+        [type]: [description]
+    """
+
     parsed_query = msql_parser.parse_msql(query)
 
     # Cleaning up variables
@@ -33,6 +48,51 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800):
 
     ms1_fig = go.Figure()
     ms2_fig = go.Figure()
+
+    if ms1_peaks is not None:
+        max_int = max([peak[1] for peak in ms2_peaks])
+        # Drawing the spectrum object
+        mzs = [peak[0] for peak in ms1_peaks]
+        ints = [peak[1]/max_int for peak in ms1_peaks]
+        neg_ints = [intensity * -1 for intensity in ints]
+
+        ms1_fig = go.Figure(
+            data=go.Scatter(x=mzs, y=ints, 
+                mode='markers+text',
+                marker=dict(size=0.00001),
+                error_y=dict(
+                    symmetric=False,
+                    arrayminus=[0]*len(neg_ints),
+                    array=neg_ints,
+                    width=0
+                ),
+                hoverinfo="x",
+                textposition="top right"
+            )
+        )
+
+
+    if ms2_peaks is not None:
+        max_int = max([peak[1] for peak in ms2_peaks])
+        # Drawing the spectrum object
+        mzs = [peak[0] for peak in ms2_peaks]
+        ints = [peak[1]/max_int for peak in ms2_peaks]
+        neg_ints = [intensity * -1 for intensity in ints]
+
+        ms2_fig = go.Figure(
+            data=go.Scatter(x=mzs, y=ints, 
+                mode='markers+text',
+                marker=dict(size=0.00001),
+                error_y=dict(
+                    symmetric=False,
+                    arrayminus=[0]*len(neg_ints),
+                    array=neg_ints,
+                    width=0
+                ),
+                hoverinfo="x",
+                textposition="top right"
+            )
+        )
 
     for condition in parsed_query["conditions"]:
         print(condition)
