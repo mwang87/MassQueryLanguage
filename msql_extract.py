@@ -131,8 +131,8 @@ def _extract_mgf_scan(input_filename, spectrum_identifier):
             spec = spectrum
             break
 
-    mz_list = list(spectrum.peaks.mz)
-    i_list = list(spectrum.peaks.intensities)
+    mz_list = list(spec.peaks.mz)
+    i_list = list(spec.peaks.intensities)
 
     peaks_list = []
     for i in range(len(mz_list)):
@@ -143,7 +143,7 @@ def _extract_mgf_scan(input_filename, spectrum_identifier):
     spectrum_obj["peaks"] = peaks_list
     spectrum_obj["mslevel"] = 2
     spectrum_obj["scan"] = spectrum_identifier
-    spectrum_obj["precursor_mz"] = float(spectrum.metadata["pepmass"][0])
+    spectrum_obj["precursor_mz"] = float(spec.metadata["pepmass"][0])
 
     return spectrum_obj
 
@@ -173,7 +173,7 @@ def _extract_spectra(results_df, input_spectra_folder,
                 spectrum_obj = _extract_mzML_scan(input_spectra_filename, scan_number)
             if ".mzXML" in input_spectra_filename:
                 spectrum_obj = _extract_mzXML_scan(input_spectra_filename, scan_number)
-            if ".mgf" in _extract_mgf_scan:
+            if ".mgf" in input_spectra_filename:
                 spectrum_obj = _extract_mgf_scan(input_spectra_filename, scan_number)
 
             if spectrum_obj is not None:
