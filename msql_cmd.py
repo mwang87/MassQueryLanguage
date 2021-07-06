@@ -2,6 +2,8 @@ import msql_parser
 import msql_engine
 import argparse
 import os
+import uuid
+import msql_extract
 
 def main():
     parser = argparse.ArgumentParser(description="MSQL CMD")
@@ -11,6 +13,8 @@ def main():
     parser.add_argument('--parallel_query', default="NO", help='YES to make it parallel with ray locally')
     parser.add_argument('--cache', default="YES", help='YES to cache with feather')
     parser.add_argument('--original_path', default=None, help='Original absolute path, useful in proteosafe')
+    parser.add_argument('--extract_mzML', default=None, help='Extracting spectra found as mzML file')
+    parser.add_argument('--extract_json', default=None, help='Extracting spectra found as json file')
     
     args = parser.parse_args()
 
@@ -49,6 +53,10 @@ def main():
             results_df.to_csv(args.output_file, index=False, sep="\t")
         else:
             results_df.to_csv(args.output_file, index=False)
+
+        # Extracting
+        if args.extract_json is not None:
+            msql_extract._extract_spectra(results_df, os.path.dirname(args.filename), output_json_filename=args.extract_json)
 
     print(results_df)
 
