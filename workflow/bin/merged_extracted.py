@@ -36,7 +36,6 @@ def main():
     results_df = pd.DataFrame(all_spectra)
     results_df.drop(labels=["peaks"], inplace=True, axis=1)
     results_df.to_csv(args.output_tsv, sep="\t", index=False)
-    #print(all_spectra[0].keys())
 
 
 
