@@ -1,1 +1,0 @@
-../../../../workflow/bin/merged_extracted.py
