@@ -54,6 +54,11 @@
                     <parameter name="REQUESTPARAMETER=usi1" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]:scan:[_dyn_#scan]"/>
                     <parameter name="LABEL" value="Library Search MS/MS"/>
                 </column>
+
+                <column label="USI-Spectrum" type="genericurlgenerator" width="3">
+                    <parameter name="URLBASE" value="https://msql.ucsd.edu/"/>
+                    <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
+                </column>
                 
                 <!-- <column type="genericimagedisplayer" label="Structure">
                     <parameter name="URLBASE" value="https://metabolomics-usi.ucsd.edu/png/"/>
@@ -143,7 +148,7 @@
                 <parser type="stream" contentType="text/xml"/>
             </parsers>
         </data>
-        <parameter name="URLBASE" value='https://msql.ucsd.edu/?query={QUERY}'/>
+        <parameter name="URLBASE" value='https://msql.ucsd.edu/?query=@QUERY'/>
     </block>
 
 

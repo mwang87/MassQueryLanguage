@@ -33,7 +33,6 @@
 
         <parameter name="PARALLELPERFILE" label="Parallelism Per File">
 			<options>
-				<option value="YES" label="YES"/>
 				<option value="NO" label="NO"/>
 			</options>
 			<validator type="set"/>
