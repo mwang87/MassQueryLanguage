@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import pymzml
 from pyteomics import mzxml
+from matchms.importing import load_from_mgf
 from psims.mzml.writer import MzMLWriter
 
 def main():
@@ -120,6 +121,33 @@ def _extract_mzXML_scan(input_filename, spectrum_identifier):
 
         return spectrum_obj
 
+def _extract_mgf_scan(input_filename, spectrum_identifier):
+    file = load_from_mgf(input_filename)
+
+    spec = None
+    for spectrum in file:
+        scan_number = spectrum.metadata["scans"]
+        if str(scan_number) == str(spectrum_identifier):
+            spec = spectrum
+            break
+
+    mz_list = list(spectrum.peaks.mz)
+    i_list = list(spectrum.peaks.intensities)
+
+    peaks_list = []
+    for i in range(len(mz_list)):
+        peaks_list.append([mz_list[i], i_list[i]])
+
+    # Loading Data
+    spectrum_obj = {}
+    spectrum_obj["peaks"] = peaks_list
+    spectrum_obj["mslevel"] = 2
+    spectrum_obj["scan"] = spectrum_identifier
+    spectrum_obj["precursor_mz"] = float(spectrum.metadata["pepmass"][0])
+
+    return spectrum_obj
+
+
 def _extract_spectra(results_df, input_spectra_folder, 
                     output_mgf_filename=None, 
                     output_mzML_filename=None, 
@@ -145,6 +173,8 @@ def _extract_spectra(results_df, input_spectra_folder,
                 spectrum_obj = _extract_mzML_scan(input_spectra_filename, scan_number)
             if ".mzXML" in input_spectra_filename:
                 spectrum_obj = _extract_mzXML_scan(input_spectra_filename, scan_number)
+            if ".mgf" in _extract_mgf_scan:
+                spectrum_obj = _extract_mgf_scan(input_spectra_filename, scan_number)
 
             if spectrum_obj is not None:
                 spectrum_obj["new_scan"] = current_scan
