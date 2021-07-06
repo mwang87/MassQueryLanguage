@@ -4,6 +4,7 @@ import glob
 import json
 import uuid
 import msql_extract
+import pandas as pd
 
 def main():
     parser = argparse.ArgumentParser(description="MSQL CMD")
@@ -23,11 +24,19 @@ def main():
     for json_filename in all_json_files:
         all_spectra += json.loads(open(json_filename).read())
 
+    scan = 1
+    for spectrum in all_spectra:
+        spectrum["new_scan"] = scan
+        scan += 1
+
     msql_extract._export_mzML(all_spectra, args.output_mzML)
     msql_extract._export_mgf(all_spectra, args.output_mgf)
 
-    # Formatting output
-    print(all_spectra[0].keys())
+    # Formatting output for tsv
+    results_df = pd.DataFrame(all_spectra)
+    results_df.drop(labels=["peaks"], inplace=True, axis=1)
+    results_df.to_csv(args.output_tsv, sep="\t", index=False)
+    #print(all_spectra[0].keys())
 
 
 
