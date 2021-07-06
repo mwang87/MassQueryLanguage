@@ -55,6 +55,7 @@ NAVBAR = dbc.Navbar(
         dbc.Nav(
             [
                 dbc.NavItem(dbc.NavLink("GNPS - MSQL Dashboard - Version 0.2", href="#")),
+                dbc.NavItem(dbc.NavLink("Documentation", href="https://mwang87.github.io/MassQueryLanguage_Documentation/")),
             ],
         navbar=True)
     ],
