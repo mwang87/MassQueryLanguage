@@ -9,7 +9,7 @@ params.extract = 'YES'
 _spectra_ch = Channel.fromPath( params.input_spectra )
 _spectra_ch.into{_spectra_ch1;_spectra_ch2}
 
-_spectra_ch3 = _spectra_ch1.map { file -> tuple(file, file) }
+_spectra_ch3 = _spectra_ch1.map { file -> tuple(file, file.toString().replaceAll("/", "_"), file) }
 
 TOOL_FOLDER = "$baseDir/bin"
 params.publishdir = "nf_output"
@@ -24,19 +24,23 @@ if(params.parallel_files == "YES"){
         publishDir "$params.publishdir/msql", mode: 'copy'
         
         input:
-        set val(filepath), file(input_spectrum) from _spectra_ch3
+        set val(filepath), val(mangled_output_filename), file(input_spectrum) from _spectra_ch3
 
         output:
         file "*_output.tsv" optional true into _query_results_ch
+        file "*_extract.json" optional true into _query_extract_results_ch
 
+        script:
+        def extractflag = params.extract == 'YES' ? "--extract_json ${mangled_output_filename}_extract.json" : ''
         """
         python $TOOL_FOLDER/msql_cmd.py \
             "$input_spectrum" \
             "${params.query}" \
-            --output_file ${input_spectrum}_output.tsv \
-            --parallel_query "$params.parallel_query" \
+            --output_file ${mangled_output_filename}_output.tsv \
+            --parallel_query $params.parallel_query \
             --cache NO \
-            --original_path "$filepath"
+            --original_path "$filepath" \
+            $extractflag
         """
     }
 }
@@ -47,22 +51,26 @@ else{
         maxForks 1
         time '1h'
         
-        publishDir "$params.publishdir/msql", mode: 'copy'
+        publishDir "$params.publishdir/msql_temp", mode: 'copy'
         
         input:
-        set val(filepath), file(input_spectrum) from _spectra_ch3
+        set val(filepath), val(mangled_output_filename), file(input_spectrum) from _spectra_ch3
 
         output:
         file "*_output.tsv" optional true into _query_results_ch
+        file "*_extract.json" optional true into _query_extract_results_ch
 
+        script:
+        def extractflag = params.extract == 'YES' ? "--extract_json ${mangled_output_filename}_extract.json" : ''
         """
         python $TOOL_FOLDER/msql_cmd.py \
             "$input_spectrum" \
             "${params.query}" \
-            --output_file "${input_spectrum}_output.tsv" \
+            --output_file ${mangled_output_filename}_output.tsv \
             --parallel_query $params.parallel_query \
             --cache NO \
-            --original_path "$filepath"
+            --original_path "$filepath" \
+            $extractflag
         """
     }
 }
@@ -73,23 +81,21 @@ _query_results_ch.collectFile(name: "merged_query_results.tsv", storeDir: "$para
 
 if(params.extract == "YES"){
     // Extracting the spectra
-    process extractSpectra {
+    process formatExtractedSpectra {
         publishDir "$params.publishdir/extracted", mode: 'copy'
         cache false
         
         input:
-        file query_results from _query_results_merged_ch
-        file "files/*" from _spectra_ch2.collect()
+        file "json/*" from _query_extract_results_ch.collect()
 
         output:
         file "extracted.*" optional true
 
         """
-        python $TOOL_FOLDER/msql_extract.py \
-        files \
-        $query_results \
-        extracted.mgf \
+        python $TOOL_FOLDER/merged_extracted.py \
+        json \
         extracted.mzML \
+        extracted.mgf \
         extracted.tsv
         """
     }

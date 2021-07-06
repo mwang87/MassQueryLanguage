@@ -75,7 +75,7 @@ def _extract_mzML_scan(input_filename, spectrum_identifier):
 
     peaks_list = []
     for i in range(len(mz_list)):
-        peaks_list.append([mz_list[i], i_list[i]])
+        peaks_list.append([float(mz_list[i]), float(i_list[i])])
 
     # Sorting Peaks
     peaks_list = sorted(peaks_list, key=lambda x: x[0])
@@ -123,6 +123,7 @@ def _extract_mzXML_scan(input_filename, spectrum_identifier):
 def _extract_spectra(results_df, input_spectra_folder, 
                     output_mgf_filename=None, 
                     output_mzML_filename=None, 
+                    output_json_filename=None,
                     output_summary=None):
     spectrum_list = []
 
@@ -149,6 +150,9 @@ def _extract_spectra(results_df, input_spectra_folder,
                 spectrum_obj["new_scan"] = current_scan
                 result_obj["new_scan"] = current_scan
 
+                for key in result_obj:
+                    spectrum_obj[key] = result_obj[key]
+
                 spectrum_list.append(spectrum_obj)
                 current_scan += 1
         except:
@@ -160,7 +164,22 @@ def _extract_spectra(results_df, input_spectra_folder,
         df = pd.DataFrame(results_list)
         df.to_csv(output_summary, sep='\t', index=False)
 
+    if len(spectrum_list) > 1000:
+        print("Not Extracting, too many spectra")
+        return
+
+    if output_json_filename is not None:
+        with open(output_json_filename, "w") as o:
+            o.write(json.dumps(spectrum_list))
+
     # Writing the spectrum now
+    if output_mgf_filename is not None:
+        _export_mgf(spectrum_list, output_mgf_filename)
+
+    if output_mzML_filename is not None:
+        _export_mzML(spectrum_list, output_mzML_filename)
+
+def _export_mgf(spectrum_list, output_mgf_filename):
     with open(output_mgf_filename, "w") as o:
         for i, spectrum in enumerate(spectrum_list):
             o.write("BEGIN IONS\n")
@@ -171,45 +190,45 @@ def _extract_spectra(results_df, input_spectra_folder,
                 o.write("{} {}\n".format(peak[0], peak[1]))
             o.write("END IONS\n")
 
-    if output_mzML_filename is not None:
-        with MzMLWriter(open(output_mzML_filename, 'wb'), close=True) as out:
-            # Add default controlled vocabularies
-            out.controlled_vocabularies()
-            # Open the run and spectrum list sections
-            with out.run(id="my_analysis"):
-                spectrum_count = len(spectrum_list)
-                with out.spectrum_list(count=spectrum_count):
-                    for spectrum in spectrum_list:
-                        mz_list = [peak[0] for peak in spectrum["peaks"]]
-                        i_list = [peak[1] for peak in spectrum["peaks"]]
-                        mslevel = spectrum["mslevel"]
+def _export_mzML(spectrum_list, output_mzML_filename):
+    with MzMLWriter(open(output_mzML_filename, 'wb'), close=True) as out:
+        # Add default controlled vocabularies
+        out.controlled_vocabularies()
+        # Open the run and spectrum list sections
+        with out.run(id="my_analysis"):
+            spectrum_count = len(spectrum_list)
+            with out.spectrum_list(count=spectrum_count):
+                for spectrum in spectrum_list:
+                    mz_list = [peak[0] for peak in spectrum["peaks"]]
+                    i_list = [peak[1] for peak in spectrum["peaks"]]
+                    mslevel = spectrum["mslevel"]
 
-                        if mslevel == 1:
-                            # Write Precursor scan
-                            out.write_spectrum(
-                                mz_list, i_list,
-                                id="scan={}".format(spectrum["new_scan"]), params=[
-                                    "MS1 Spectrum",
-                                    {"ms level": 1},
-                                    {"total ion current": sum(i_list)}
-                                ])
-                        elif mslevel == 2:
-                            out.write_spectrum(
-                                mz_list, i_list,
-                                id="scan={}".format(spectrum["new_scan"]), params=[
-                                    "MSn Spectrum",
-                                    {"ms level": 2},
-                                    {"total ion current": sum(i_list)}
-                                ],
-                                # Include precursor information
-                                precursor_information={
-                                    "mz": spectrum["precursor_mz"],
-                                    "intensity": 0,
-                                    "charge": 0,
-                                    "scan_id": 0,
-                                    "activation": ["beam-type collisional dissociation", {"collision energy": 25}],
-                                    "isolation_window": [spectrum["precursor_mz"] - 1, spectrum["precursor_mz"], spectrum["precursor_mz"] + 1]
-                                })
+                    if mslevel == 1:
+                        # Write Precursor scan
+                        out.write_spectrum(
+                            mz_list, i_list,
+                            id="scan={}".format(spectrum["new_scan"]), params=[
+                                "MS1 Spectrum",
+                                {"ms level": 1},
+                                {"total ion current": sum(i_list)}
+                            ])
+                    elif mslevel == 2:
+                        out.write_spectrum(
+                            mz_list, i_list,
+                            id="scan={}".format(spectrum["new_scan"]), params=[
+                                "MSn Spectrum",
+                                {"ms level": 2},
+                                {"total ion current": sum(i_list)}
+                            ],
+                            # Include precursor information
+                            precursor_information={
+                                "mz": spectrum["precursor_mz"],
+                                "intensity": 0,
+                                "charge": 0,
+                                "scan_id": 0,
+                                "activation": ["beam-type collisional dissociation", {"collision energy": 25}],
+                                "isolation_window": [spectrum["precursor_mz"] - 1, spectrum["precursor_mz"], spectrum["precursor_mz"] + 1]
+                            })
 
 
 if __name__ == "__main__":
