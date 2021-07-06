@@ -75,10 +75,10 @@ def _get_minintensity(qualifier):
         return 0, 0
 
     if "qualifierintensityvalue" in qualifier:
-        return qualifier["qualifierintensityvalue"]["value"], 0
+        return float(qualifier["qualifierintensityvalue"]["value"]), 0
 
     if "qualifierintensitypercent" in qualifier:
-        return 0, qualifier["qualifierintensitypercent"]["value"] / 100
+        return 0, float(qualifier["qualifierintensitypercent"]["value"]) / 100
 
     return 0, 0
 
