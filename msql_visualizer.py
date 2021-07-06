@@ -112,7 +112,7 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
             ms2_fig.add_shape(type="rect",
                 x0=mz_min, y0=0, x1=mz_max, y1=intensity,
                 line=dict(
-                    color="Blue",
+                    color="Green",
                     width=2,
                 )
             )

@@ -279,7 +279,11 @@ def _get_url_param(param_dict, key, default):
                 Output('x_axis', 'value'),
                 Output('y_axis', 'value'),
                 Output('facet_column', 'value'),
-                Output('scan', 'value')
+                Output('scan', 'value'),
+                Output('x_value', 'value'),
+                Output('y_value', 'value'),
+                Output('ms1_usi', 'value'),
+                Output('ms2_usi', 'value'),
               ],
               [
                   Input('url', 'search')
@@ -296,8 +300,12 @@ def determine_params(search):
     y_axis = _get_url_param(query_dict, "y_axis", dash.no_update)
     facet_column = _get_url_param(query_dict, "facet_column", dash.no_update)
     scan = _get_url_param(query_dict, "scan", dash.no_update)
+    x_value = _get_url_param(query_dict, "x_value", dash.no_update)
+    y_value = _get_url_param(query_dict, "y_value", dash.no_update)
+    ms1_usi = _get_url_param(query_dict, "ms1_usi", dash.no_update)
+    ms2_usi = _get_url_param(query_dict, "ms2_usi", dash.no_update)
 
-    return [query, filename, x_axis, y_axis, facet_column, scan]
+    return [query, filename, x_axis, y_axis, facet_column, scan, x_value, y_value, ms1_usi, ms2_usi]
 
 @app.callback([
                 Output('filename', 'options'),
