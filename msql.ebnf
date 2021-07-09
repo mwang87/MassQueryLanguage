@@ -23,6 +23,8 @@ filterfullcondition: filterfullcondition booleanconjunction filterfullcondition
 condition: conditionfields "=" floating
     | conditionfields equal variable
     | conditionfields equal "(" statement ")"
+    | polaritycondition equal positivepolarity
+    | polaritycondition equal negativepolarity
     
 
 qualifier: qualifier ":" qualifier
@@ -38,6 +40,8 @@ qualifier: qualifier ":" qualifier
 equal: "="
 lessthan: "<"
 greaterthan: ">"
+positivepolarity: "Positive"
+negativepolarity: "Negative"
 
 conditionfields: ms2productcondition
     | ms2precursorcondition
@@ -52,6 +56,7 @@ ms2neutrallosscondition: "MS2NL"
 ms1mzcondition: "MS1MZ"
 rtmincondition: "RTMIN"
 rtmaxcondition: "RTMAX"
+polaritycondition: "POLARITY"
 
 qualifierfields: qualifiermztolerance
     | qualifierppmtolerance
