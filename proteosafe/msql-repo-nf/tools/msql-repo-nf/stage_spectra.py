@@ -33,7 +33,7 @@ def main():
     
     print("NUMBER DATASETS", len(all_datasets))
 
-    if len(all_datasets) > 20:
+    if len(all_datasets) > 50:
         print("Too Many Datasets, please apply subsets")
         exit(1)
 
