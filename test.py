@@ -51,11 +51,9 @@ def test_qc_ms1_ms2peak():
 
 def test_polarity_pos():
     query = "QUERY scaninfo(MS1DATA) WHERE POLARITY=Positive"
-    #query = "QUERY scaninfo(MS1DATA) WHERE RTMIN=1"
     print(msql_parser.parse_msql(query))
-    #results_df = msql_engine.process_query(query, "test/QC_0.mzML")
-    #print(set(results_df["scan"]))
-    #assert(len(results_df) > 1000)
+    results_df = msql_engine.process_query(query, "test/QC_0.mzML")
+    assert(len(results_df) > 10)
 
 def test_diphen():
     query = "QUERY scannum(MS2DATA) WHERE MS2PROD=167.0857:TOLERANCEPPM=5"
