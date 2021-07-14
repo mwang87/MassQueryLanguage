@@ -33,8 +33,9 @@ def _load_data_mgf(input_filename):
     # Turning into pandas data frames
     ms1_df = pd.DataFrame([peak_dict])
     ms2_df = pd.DataFrame(ms2mz_list)
+    ms3_df = pd.DataFrame()
 
-    return ms1_df, ms2_df
+    return ms1_df, ms2_df, ms3_df
 
 def _load_data_gnps_json(input_filename):
     all_spectra = json.loads(open(input_filename).read())
@@ -64,8 +65,9 @@ def _load_data_gnps_json(input_filename):
     # Turning into pandas data frames
     ms1_df = pd.DataFrame([peak_dict])
     ms2_df = pd.DataFrame(ms2mz_list)
+    ms3_df = pd.DataFrame()
 
-    return ms1_df, ms2_df
+    return ms1_df, ms2_df, ms3_df
 
 def _load_data_mzXML(input_filename):
     ms1mz_list = []
@@ -112,8 +114,9 @@ def _load_data_mzXML(input_filename):
     # Turning into pandas data frames
     ms1_df = pd.DataFrame(ms1mz_list)
     ms2_df = pd.DataFrame(ms2mz_list)
+    ms3_df = pd.DataFrame()
 
-    return ms1_df, ms2_df
+    return ms1_df, ms2_df, ms3_df
 
 
 def _load_data_mzML(input_filename):
@@ -189,5 +192,5 @@ def _load_data_mzML(input_filename):
     ms2_df = pd.DataFrame(ms2mz_list)
     ms3_df = pd.DataFrame()
 
-    return ms1_df, ms2_df
+    return ms1_df, ms2_df, ms3_df
 

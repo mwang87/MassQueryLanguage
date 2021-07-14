@@ -40,36 +40,67 @@ def _load_data(input_filename, cache=False):
     if cache:
         ms1_filename = input_filename + "_ms1.msql.feather"
         ms2_filename = input_filename + "_ms2.msql.feather"
+        ms3_filename = input_filename + "_ms3.msql.feather"
 
-        if os.path.exists(ms1_filename):
-            ms1_df = pd.read_feather(ms1_filename)
-            ms2_df = pd.read_feather(ms2_filename)
+        feather_caches_exist = os.path.exists(ms1_filename) or os.path.exists(ms2_filename) or os.path.exists(ms3_filename)
 
-            return ms1_df, ms2_df
+        if feather_caches_exist:
+            try:
+                ms1_df = pd.read_feather(ms1_filename)
+            except:
+                ms1_df = pd.DataFrame()
+            
+            try:
+                ms2_df = pd.read_feather(ms2_filename)
+            except:
+                ms2_df = pd.DataFrame()
+
+            try:
+                ms3_df = pd.read_feather(ms3_filename)
+            except:
+                ms3_df = pd.DataFrame()
+
+            return ms1_df, ms2_df, ms3_df
 
     # Actually loading
     if input_filename[-5:] == ".mzML":
-        ms1_df, ms2_df = msql_fileloading._load_data_mzML(input_filename)
+        ms1_df, ms2_df, ms3_df = msql_fileloading._load_data_mzML(input_filename)
 
     if input_filename[-6:] == ".mzXML":
-        ms1_df, ms2_df = msql_fileloading._load_data_mzXML(input_filename)
+        ms1_df, ms2_df, ms3_df = msql_fileloading._load_data_mzXML(input_filename)
     
     if input_filename[-5:] == ".json":
-        ms1_df, ms2_df = msql_fileloading._load_data_gnps_json(input_filename)
+        ms1_df, ms2_df, ms3_df = msql_fileloading._load_data_gnps_json(input_filename)
     
     if input_filename[-4:] == ".mgf":
-        ms1_df, ms2_df = msql_fileloading._load_data_mgf(input_filename)
+        ms1_df, ms2_df, ms3_df = msql_fileloading._load_data_mgf(input_filename)
 
     # Saving Cache
     if cache:
         ms1_filename = input_filename + "_ms1.msql.feather"
         ms2_filename = input_filename + "_ms2.msql.feather"
+        ms3_filename = input_filename + "_ms3.msql.feather"
 
-        if not os.path.exists(ms1_filename):
-            ms1_df.to_feather(ms1_filename)
-            ms2_df.to_feather(ms2_filename)
+        feather_caches_exist = os.path.exists(ms1_filename) or os.path.exists(ms2_filename) or os.path.exists(ms3_filename)
 
-    return ms1_df, ms2_df
+        # Writing out the files
+        if not feather_caches_exist:
+            try:
+                ms1_df.to_feather(ms1_filename)
+            except:
+                pass
+
+            try:
+                ms2_df.to_feather(ms2_filename)
+            except:
+                pass
+
+            try:
+                ms3_df.to_feather(ms3_filename)
+            except:
+                pass
+
+    return ms1_df, ms2_df, ms3_df
 
 def _get_ppm_tolerance(qualifiers):
     if qualifiers is None:
@@ -256,7 +287,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
                 # This is when the target is actually a float
                 pass
 
-    ms1_df, ms2_df = _load_data(input_filename, cache=cache)
+    ms1_df, ms2_df, ms3_df = _load_data(input_filename, cache=cache)
 
     # Here we are going to translate the variable query into a concrete query based upon the data
     all_concrete_queries = []
@@ -398,10 +429,10 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
     return _executecollate_query(parsed_dict, aggregated_ms1_df, aggregated_ms2_df)
 
 @ray.remote
-def _executeconditions_query_ray(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
-    return _executeconditions_query(parsed_dict, input_filename, ms1_input_df=ms1_input_df, ms2_input_df=ms2_input_df, cache=cache)
+def _executeconditions_query_ray(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, ms3_input_df=None, cache=True):
+    return _executeconditions_query(parsed_dict, input_filename, ms1_input_df=ms1_input_df, ms2_input_df=ms2_input_df, ms3_input_df=ms3_input_df, cache=cache)
 
-def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
+def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, ms3_input_df=None, cache=True):
     # This function attempts to find the data that the query specifies in the conditions
     
     #import json
@@ -409,10 +440,11 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
 
     # Let's apply this to real data
     if ms1_input_df is None and ms2_input_df is None:
-        ms1_df, ms2_df = _load_data(input_filename, cache=cache)
+        ms1_df, ms2_df, ms3_df = _load_data(input_filename, cache=cache)
     else:
         ms1_df = ms1_input_df
         ms2_df = ms2_input_df
+        ms3_df = ms3_input_df
 
     # In order to handle intensities, we will make sure to sort all conditions with 
     # with the conditions that are the reference intensity first, then subsequent conditions

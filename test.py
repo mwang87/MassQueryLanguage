@@ -234,6 +234,13 @@ def test_ms1_filtered_by_ms2():
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
 
+def test_ms3():
+    query = "QUERY scansum(MS3DATA)"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/Toronamide_MS3_DDA_2.mzML")
+    print(results_df)
+
 def test_intensity_int_parse():
     query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=425.2898:TOLERANCEMZ=0.1:INTENSITYPERCENT>1 AND MS2PROD=353.25:TOLERANCEMZ=0.1:INTENSITYPERCENT>80 AND MS1MZ=478.1991:TOLERANCEMZ=0.1:INTENSITYPERCENT>1"
     parse_obj = msql_parser.parse_msql(query)
@@ -395,12 +402,13 @@ def main():
     #test_ms1_cu()
     #test_neutral_loss_intensity()
     #test_gnps_library()
-    test_gnps_full_library()
+    #test_gnps_full_library()
     #test_networking_mgf_library()
     #test_swath()
     #test_albicidin_tag()
     #test_double_brominated()
     #test_agilent()
+    test_ms3()
 
 if __name__ == "__main__":
     main()
