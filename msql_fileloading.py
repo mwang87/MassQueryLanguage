@@ -188,6 +188,26 @@ def _load_data_mzXML(input_filename):
     return ms1_df, ms2_df
 
 
+def _determine_scan_polarity_mzML(spec):
+    """
+    Gets an enum for positive and negative polarity
+
+    Args:
+        spec ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    polarity = 0
+    negative_polarity = spec["negative scan"]
+    if negative_polarity is True:
+        polarity = 2
+    positive_polarity = spec["positive scan"]
+    if positive_polarity is True:
+        polarity = 1
+
+    return polarity
+
 def _load_data_mzML(input_filename):
     MS_precisions = {
         1: 5e-6,
@@ -243,6 +263,7 @@ def _load_data_mzML(input_filename):
                 peak_dict["mz"] = mz_list[i]
                 peak_dict["scan"] = spec.ID
                 peak_dict["rt"] = rt
+                peak_dict["polarity"] = _determine_scan_polarity_mzML(spec)
 
                 ms1mz_list.append(peak_dict)
 
@@ -259,6 +280,7 @@ def _load_data_mzML(input_filename):
                 peak_dict["rt"] = rt
                 peak_dict["precmz"] = msn_mz
                 peak_dict["ms1scan"] = previous_ms1_scan
+                peak_dict["polarity"] = _determine_scan_polarity_mzML(spec)
 
                 ms2mz_list.append(peak_dict)
 

@@ -422,8 +422,6 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
         if not condition["conditiontype"] == "where":
             continue
 
-        #logging.error("WHERE CONDITION", condition)
-
         # RT Filters
         if condition["type"] == "rtmincondition":
             rt = condition["value"][0]
@@ -438,6 +436,24 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             ms1_df = ms1_df[ms1_df["rt"] < rt]
 
             continue
+
+    # These are for the WHERE clause, first lets filter by polarity
+    for condition in all_conditions:
+        if not condition["conditiontype"] == "where":
+            continue
+
+        # Polarity Filters
+        if condition["type"] == "polaritycondition":
+            polaritycondition = condition["value"][0]
+            if polaritycondition == "positivepolarity":
+                ms2_df = ms2_df[ms2_df["polarity"] == 1]
+                ms1_df = ms1_df[ms1_df["polarity"] == 1]
+            if polaritycondition == "negativepolarity":
+                ms2_df = ms2_df[ms2_df["polarity"] == 2]
+                ms1_df = ms1_df[ms1_df["polarity"] == 2]
+
+            continue
+
 
     # These are for the WHERE clause
     for condition in all_conditions:
@@ -566,6 +582,9 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             continue
 
         if condition["type"] == "rtmaxcondition":
+            continue
+
+        if condition["type"] == "polaritycondition":
             continue
 
         raise Exception("CONDITION NOT HANDLED")

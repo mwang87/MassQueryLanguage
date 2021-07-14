@@ -105,7 +105,6 @@ class MassQLToJSON(Transformer):
          condition_dict["type"] = items[0]
          condition_dict["value"] = [items[-1]]
    
-      
       return condition_dict
 
    def wherefullcondition(self, items):
