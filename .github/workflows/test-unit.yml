@@ -10,7 +10,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  unit-testing-parse:
 
     runs-on: ubuntu-latest
 
