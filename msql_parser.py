@@ -45,6 +45,15 @@ class MassQLToJSON(Transformer):
    def rtmaxcondition(self, items):
       return "rtmaxcondition"
 
+   def polaritycondition(self, items):
+      return "polaritycondition"
+
+   def positivepolarity(self, items):
+      return "positivepolarity"
+
+   def negativepolarity(self, items):
+      return "negativepolarity"
+
    def qualifier(self, items):
       if len(items) == 1 and items[0] == "qualifierintensityreference":
          qualifier_type = items[0]
@@ -85,9 +94,17 @@ class MassQLToJSON(Transformer):
       return qualifier_dict
 
    def condition(self, items):
-      condition_dict = {}
-      condition_dict["type"] = items[0].children[0]
-      condition_dict["value"] = [items[-1]]
+      if len(items) == 2:
+         # These are most queries
+         condition_dict = {}
+         condition_dict["type"] = items[0].children[0]
+         condition_dict["value"] = [items[-1]]
+      elif len(items) == 3:
+         # These are for polarity
+         condition_dict = {}
+         condition_dict["type"] = items[0]
+         condition_dict["value"] = [items[-1]]
+   
       return condition_dict
 
    def wherefullcondition(self, items):
