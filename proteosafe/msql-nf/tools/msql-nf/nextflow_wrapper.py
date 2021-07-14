@@ -28,6 +28,7 @@ def main():
         print(parameter)
         new_param = parameter.split(":")[1]
         old_param = parameter.split(":")[0]
+
         cmd += ' --{} "{}"'.format(new_param, params_obj[old_param][0].replace("\n", ""))
 
     #if args.conda is not None:
