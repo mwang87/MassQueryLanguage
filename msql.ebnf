@@ -51,6 +51,7 @@ conditionfields: ms2productcondition
     | rtmaxcondition
     | scanmincondition
     | scanmaxcondition
+    | chargecondition
 
 ms2productcondition: "MS2PROD"
 ms2precursorcondition: "MS2PREC"
@@ -61,6 +62,7 @@ rtmaxcondition: "RTMAX"
 scanmincondition: "SCANMIN"
 scanmaxcondition: "SCANMAX"
 polaritycondition: "POLARITY"
+chargecondition: "CHARGE"
 
 qualifierfields: qualifiermztolerance
     | qualifierppmtolerance

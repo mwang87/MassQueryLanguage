@@ -87,6 +87,7 @@ def _load_data_mgf(input_filename):
             peak_dict["rt"] = float(spectrum.metadata["rtinseconds"]) / 60
             peak_dict["precmz"] = float(spectrum.metadata["pepmass"][0])
             peak_dict["ms1scan"] = 0
+            # TODO: Add Polarity Here
 
             ms2mz_list.append(peak_dict)
 
@@ -122,6 +123,7 @@ def _load_data_gnps_json(input_filename):
             peak_dict["rt"] = 0
             peak_dict["precmz"] = float(spectrum["Precursor_MZ"])
             peak_dict["ms1scan"] = 0
+            # TODO: Add Polarity Here
 
             ms2mz_list.append(peak_dict)
         
@@ -162,6 +164,7 @@ def _load_data_mzXML(input_filename):
                     peak_dict["mz"] = mz_list[i]
                     peak_dict["scan"] = spectrum["id"]
                     peak_dict["rt"] = spectrum["retentionTime"]
+                    # TODO: Add Polarity Here
 
                     ms1mz_list.append(peak_dict)
 
@@ -271,6 +274,10 @@ def _load_data_mzML(input_filename):
 
         if spec.ms_level == 2:
             msn_mz = spec.selected_precursors[0]["mz"]
+            charge = 0
+            if "charge" in spec.selected_precursors[0]:
+                charge = spec.selected_precursors[0]["charge"]
+
             for i in range(len(mz_list)):
                 peak_dict = {}
                 peak_dict["i"] = i_list[i]
@@ -281,6 +288,7 @@ def _load_data_mzML(input_filename):
                 peak_dict["precmz"] = msn_mz
                 peak_dict["ms1scan"] = previous_ms1_scan
                 peak_dict["polarity"] = _determine_scan_polarity_mzML(spec)
+                peak_dict["charge"] = charge
 
                 ms2mz_list.append(peak_dict)
 

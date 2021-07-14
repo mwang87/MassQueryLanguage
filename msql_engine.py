@@ -464,7 +464,14 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
 
             continue
 
+        # Charge Filters
+        if condition["type"] == "chargecondition":
+            charge = int(condition["value"][0])
+            ms2_df = ms2_df[ms2_df["charge"] == charge]
 
+            # Filtering the MS1 data now
+            ms1_scans = set(ms2_df["ms1scan"])
+            ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
 
     # These are for the WHERE clause
     for condition in all_conditions:
@@ -593,7 +600,8 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
                             "rtmaxcondition", 
                             "polaritycondition", 
                             "scanmincondition", 
-                            "scanmaxcondition"]
+                            "scanmaxcondition",
+                            "chargecondition"]
         
         if condition["type"] in skip_conditions:
             continue
@@ -705,7 +713,7 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
                 ms1sum_df = ms1_df.groupby(groupby_columns).sum().reset_index()
                 result_df["i"] = ms1sum_df["i"]
             if parsed_dict["querytype"]["datatype"] == "datams2data":
-                kept_columns = ["scan", "precmz", "ms1scan", "rt"]
+                kept_columns = ["scan", "precmz", "ms1scan", "rt", "charge"]
                 groupby_columns = ["scan"]
 
                 if "comment" in ms2_df:
