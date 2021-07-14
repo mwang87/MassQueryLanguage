@@ -510,7 +510,9 @@ def draw_spectrum(filename, scan):
 # API
 @server.route("/api")
 def api():
-    return "Up"
+    version_dict = {}
+    version_dict["version"] = 1.0
+    return json.dumps(version_dict)
 
 @server.route("/parse")
 def parse_api():
