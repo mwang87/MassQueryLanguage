@@ -305,6 +305,14 @@ def test_rt_filter():
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
 
+def test_charge_filter():
+    query = "QUERY scaninfo(MS2DATA) WHERE CHARGE=2"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    print(results_df)
+    assert(len(results_df) == 2)
+
 def test_neutral_loss_intensity():
     query = "QUERY scaninfo(MS2DATA) WHERE \
             MS2NL=183.096:TOLERANCEMZ=0.1:INTENSITYPERCENT=50"
@@ -462,7 +470,8 @@ def main():
     #test_ms1_iron()
     #test_ms1_iron_parallel()
     #test_polarity()
-    test_scan_range()
+    #test_scan_range()
+    test_charge_filter()
     #test_parse()
     #test_ms1_filter()
     #test_intensity_int_parse()

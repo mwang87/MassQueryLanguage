@@ -51,6 +51,9 @@ class MassQLToJSON(Transformer):
    def scanmaxcondition(self, items):
       return "scanmaxcondition"
 
+   def chargecondition(self, items):
+      return "chargecondition"
+
    def polaritycondition(self, items):
       return "polaritycondition"
 
