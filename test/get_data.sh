@@ -8,3 +8,4 @@ wget --output-document=gnps.json https://gnps-external.ucsd.edu/gnpslibrary/ALL_
 wget --output-document=gnps-library.json https://gnps-external.ucsd.edu/gnpslibrary/GNPS-LIBRARY.json
 wget --output-document=specs_ms.mgf "http://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?task=5ecfcf81cb3c471698995b194d8246a0&block=main&file=spectra/specs_ms.mgf"
 wget --output-document=1810E-II.mzML "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000084691/ccms_peak/1810E-II.mzML&forceDownload=true"
+wget --output-document=Toronamide_MS3_DDA_2.mzML "https://gnps-external.ucsd.edu/massiveftpproxy?ftppath=ftp://massive.ucsd.edu/MSV000084754/ccms_peak/raw/Toronamide_MS3_DDA_2.mzML"
