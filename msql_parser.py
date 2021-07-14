@@ -45,6 +45,12 @@ class MassQLToJSON(Transformer):
    def rtmaxcondition(self, items):
       return "rtmaxcondition"
 
+   def scanmincondition(self, items):
+      return "scanmincondition"
+
+   def scanmaxcondition(self, items):
+      return "scanmaxcondition"
+
    def polaritycondition(self, items):
       return "polaritycondition"
 

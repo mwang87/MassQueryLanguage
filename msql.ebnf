@@ -49,6 +49,8 @@ conditionfields: ms2productcondition
     | ms1mzcondition
     | rtmincondition
     | rtmaxcondition
+    | scanmincondition
+    | scanmaxcondition
 
 ms2productcondition: "MS2PROD"
 ms2precursorcondition: "MS2PREC"
@@ -56,6 +58,8 @@ ms2neutrallosscondition: "MS2NL"
 ms1mzcondition: "MS1MZ"
 rtmincondition: "RTMIN"
 rtmaxcondition: "RTMAX"
+scanmincondition: "SCANMIN"
+scanmaxcondition: "SCANMAX"
 polaritycondition: "POLARITY"
 
 qualifierfields: qualifiermztolerance
