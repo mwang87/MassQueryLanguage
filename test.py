@@ -60,6 +60,14 @@ def test_polarity():
     results_df = msql_engine.process_query(query, "test/QC_0.mzML")
     assert(len(results_df) == 0)
 
+def test_scan_range():
+    query = "QUERY scaninfo(MS1DATA) WHERE SCANMIN=100 AND SCANMAX=105"
+    print(msql_parser.parse_msql(query))
+    results_df = msql_engine.process_query(query, "test/QC_0.mzML")
+    print(results_df)
+
+    assert(len(results_df) == 6)
+
 def test_diphen():
     query = "QUERY scannum(MS2DATA) WHERE MS2PROD=167.0857:TOLERANCEPPM=5"
     print(msql_parser.parse_msql(query))
@@ -453,7 +461,8 @@ def main():
     #test_min_intensitypercent()
     #test_ms1_iron()
     #test_ms1_iron_parallel()
-    test_polarity()
+    #test_polarity()
+    test_scan_range()
     #test_parse()
     #test_ms1_filter()
     #test_intensity_int_parse()

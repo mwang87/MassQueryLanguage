@@ -417,7 +417,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
         nonreference_conditions.append(condition)
     all_conditions = reference_conditions + nonreference_conditions
 
-    # These are for the WHERE clause, first lets filter by RT
+    # These are for the WHERE clause, first lets filter by RT and polarity and scan
     for condition in all_conditions:
         if not condition["conditiontype"] == "where":
             continue
@@ -436,12 +436,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             ms1_df = ms1_df[ms1_df["rt"] < rt]
 
             continue
-
-    # These are for the WHERE clause, first lets filter by polarity
-    for condition in all_conditions:
-        if not condition["conditiontype"] == "where":
-            continue
-
+    
         # Polarity Filters
         if condition["type"] == "polaritycondition":
             polaritycondition = condition["value"][0]
@@ -453,6 +448,22 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
                 ms1_df = ms1_df[ms1_df["polarity"] == 2]
 
             continue
+
+        # Scan Filters
+        if condition["type"] == "scanmincondition":
+            scan = int(condition["value"][0])
+            ms2_df = ms2_df[ms2_df["scan"] >= scan]
+            ms1_df = ms1_df[ms1_df["scan"] >= scan]
+
+            continue
+            
+        if condition["type"] == "scanmaxcondition":
+            scan = int(condition["value"][0])
+            ms2_df = ms2_df[ms2_df["scan"] <= scan]
+            ms1_df = ms1_df[ms1_df["scan"] <= scan]
+
+            continue
+
 
 
     # These are for the WHERE clause
@@ -578,13 +589,13 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
 
             continue
 
-        if condition["type"] == "rtmincondition":
-            continue
-
-        if condition["type"] == "rtmaxcondition":
-            continue
-
-        if condition["type"] == "polaritycondition":
+        skip_conditions = [ "rtmincondition", 
+                            "rtmaxcondition", 
+                            "polaritycondition", 
+                            "scanmincondition", 
+                            "scanmaxcondition"]
+        
+        if condition["type"] in skip_conditions:
             continue
 
         raise Exception("CONDITION NOT HANDLED")
