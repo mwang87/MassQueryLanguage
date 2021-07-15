@@ -13,7 +13,7 @@
                 </downloadParams>
         </bind>
 
-        <bind action="msql_nf_process" tool="msql_nf_process">
+        <bind action="massql_nf_clusterparallel_process" tool="massql_nf_clusterparallel_process">
             <inputAsRequirement port="workflowParameters" requirement="workflowParameters"/>
             <productionToOutput port="query_results" production="query_results"/>
         </bind>

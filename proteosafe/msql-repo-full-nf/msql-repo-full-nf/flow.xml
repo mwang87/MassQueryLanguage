@@ -7,7 +7,7 @@
         </action>
 
         <collection name="query_results"/>
-        <action name="msql_nf_process">
+        <action name="massql_nf_clusterparallel_process">
                 <input  port="workflowParameters"             object="workflowParameters"/>
                 <output port="query_results"           collection="query_results"/>
         </action>

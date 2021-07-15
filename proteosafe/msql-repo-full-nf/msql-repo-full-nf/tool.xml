@@ -1,6 +1,6 @@
 <toolset>
     <pathSet base="miniconda3_gamma/envs/msql2/bin">
-        <toolPath tool="msql_nf_process" path="python3"/>
+        <toolPath tool="massql_nf_clusterparallel_process" path="python3"/>
     </pathSet>
 
     <pathSet base="miniconda3_gamma/bin">
@@ -10,9 +10,10 @@
     <pathSet base="$base">
         <pathVar name="nextflow_wrapper.script" path="nextflow_wrapper.py"/>
         <pathVar name="nextflow.script" path="workflow.nf"/>
+        <pathVar name="cluster.config" path="cluster.config"/>
     </pathSet>
 
-    <tool name="msql_nf_process">
+    <tool name="massql_nf_clusterparallel_process">
         <require name="demangled_spectra" type="folder"/>
         <require name="workflowParameters" type="file"/>
         <produce name="query_results" type="folder"/>
@@ -29,6 +30,10 @@
             <arg option="-parametermapping" value="PARALLELFILES:parallel_files"/>
             <arg option="-parametermapping" value="PARALLELPERFILE:parallel_query"/>
             <arg option="-parametermapping" value="EXTRACT:extract"/>
+            <arg option="-runcluster" valueRef="@CLUSTERPARALLEL"/>
+            <arg option="-clusterconfig" pathRef="cluster.config"/>
+            <arg option="-user" valueRef="@user"/>
+            
         </execution>
     </tool>
 
