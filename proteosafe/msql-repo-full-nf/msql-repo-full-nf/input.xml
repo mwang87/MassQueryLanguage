@@ -59,7 +59,7 @@
                 <option value="YES" label="YES"/>
 			</options>
 			<validator type="set"/>
-			<default value="NO"/>
+			<default value="YES"/>
 		</parameter>
     </parameters>
 
