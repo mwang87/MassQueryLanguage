@@ -189,13 +189,14 @@
     <view id="workflow_trace" label="Workflow Trace" group="Compute Stats">
         <blockRef id="main" type="workflow_trace"/>
     </view>
-    <block id="workflow_trace" type="stream">
+    <block id="workflow_trace" type="table">
         <data>
             <source type="file" name="query_results/trace.txt"/>
             <parsers>
-                <parser type="stream" contentType="text/plain"/>
+                <parser type="genericTabular"/>
             </parsers>
         </data>
+        <row/>
     </block>
 
     <view id="workflow_summary" label="Workflow Summary" group="Compute Stats">
