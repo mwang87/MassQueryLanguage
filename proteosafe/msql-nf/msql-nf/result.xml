@@ -210,6 +210,20 @@
         <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/report.html&amp;block=main'/>
     </block>
 
+    <view id="workflow_timeline" label="Workflow Timeline" group="Compute Stats">
+        <blockRef id="main" type="workflow_timeline"/>
+    </view>
+    <block id="workflow_timeline" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/timeline.html&amp;block=main'/>
+    </block>
+
+
+
     <view id="download_data" label="Download Data" group="Advanced Views">
         <blockRef id="main" type="download_data"/>
     </view>

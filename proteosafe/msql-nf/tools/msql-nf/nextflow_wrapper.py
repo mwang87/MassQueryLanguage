@@ -40,16 +40,16 @@ def main():
                 -work-dir {} \
                 --PYTHONRUNTIME={} \
                 -with-trace \
-                -with-dag \
-                -with-report \
-                report.html".format(args.conda_activate, args.nextflow_conda_environment,
+                -with-dag dag.html \
+                -with-report report.html \
+                -with-timeline timeline.html".format(args.conda_activate, args.nextflow_conda_environment,
                             args.nextflow_script, args.clusterconfig, pbs_cluster_work_dir, args.clusterpythonruntime)
     else:
         cmd = "source {} {} && nextflow run {} \
                 -with-trace \
-                -with-dag \
-                -with-report \
-                report.html".format(args.conda_activate, args.nextflow_conda_environment,
+                -with-dag dag.html \
+                -with-report report.html \
+                -with-timeline timeline.html".format(args.conda_activate, args.nextflow_conda_environment,
                             args.nextflow_script)
     for parameter in args.newparameters:
         print(parameter)
@@ -77,8 +77,9 @@ def main():
         try:
             os.rename("trace.txt", os.path.join(args.metricoutput, "trace.txt"))
             os.rename("report.html", os.path.join(args.metricoutput, "report.html"))
+            os.rename("timeline.html", os.path.join(args.metricoutput, "timeline.html"))
+            os.rename("dag.html", os.path.join(args.metricoutput, "dag.html"))
         except:
-            raise
             pass
 
 
