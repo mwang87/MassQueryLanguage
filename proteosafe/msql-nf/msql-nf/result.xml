@@ -163,6 +163,29 @@
     </block>
 
     <!-- Summary Stats for Compute -->
+    <view id="proteosafe_workflow_trace" label="ProteoSAFe Workflow Trace" group="Compute Stats">
+        <blockRef id="main" type="proteosafe_workflow_trace"/>
+    </view>
+    <block id="proteosafe_workflow_trace" type="table">
+        <data>
+            <source type="file" name=".logs/workflow_summary.tsv"/>
+            <parsers>
+                <parser type="genericTabular"/>
+            </parsers>
+        </data>
+        <row/>
+    </block>
+            
+    <!-- <block id="proteosafe_workflow_trace" type="stream">
+    
+        <data>
+            <source type="file" name=".logs/workflow_summary.tsv"/>
+            <parsers>
+                <parser type="stream" contentType="text/plain"/>
+            </parsers>
+        </data>
+    </block> -->
+
     <view id="workflow_trace" label="Workflow Trace" group="Compute Stats">
         <blockRef id="main" type="workflow_trace"/>
     </view>
@@ -178,11 +201,23 @@
     <view id="workflow_summary" label="Workflow Summary" group="Compute Stats">
         <blockRef id="main" type="workflow_summary"/>
     </view>
-    <block id="workflow_summary" type="stream">
+    <block id="workflow_summary" type="dummylinkout">
         <data>
-            <source type="file" name="query_results/report.html"/>
             <parsers>
-                <parser type="stream" contentType="text/html"/>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/report.html&amp;block=main'/>
+    </block>
+
+    <view id="download_data" label="Download Data" group="Advanced Views">
+        <blockRef id="main" type="download_data"/>
+    </view>
+    <block id="download_data" type="dummydownload">
+        <data>
+            <source type="file" name="query_results/"/>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
             </parsers>
         </data>
     </block>
