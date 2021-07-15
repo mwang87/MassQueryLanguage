@@ -15,6 +15,8 @@ def main():
     parser.add_argument('--parametermapping', action='append', help='mapping of current workflow parameters to new parameters in the format: <old parameter>:<new parameter>')
     parser.add_argument('--newparameters', action='append', help='parameter key: <param name>:<parameter value>')
 
+    parser.add_argument('--metricoutput', default=None, help='output folder for metrics')
+
     # These settings are for the cluster run
     parser.add_argument('--runcluster', default='NO', help='Tries to run this on the cluster, values are NO and YES')
     parser.add_argument('--clusterconfig', default=None, help='Path to configuration file')

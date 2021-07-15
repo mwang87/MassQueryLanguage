@@ -25,6 +25,9 @@
             <arg pathRef="nextflow.script"/>
             <arg pathRef="conda_activate_path"/>
             <arg value="msql2"/>
+
+            <arg option="-metricoutput" valueRef="query_results"/>
+
             <arg option="-newparameters" value="publishdir:query_results"/>
             <arg option="-parametermapping" value="DATASET:input_spectra"/>
             <arg option="-parametermapping" value="QUERY:query"/>
