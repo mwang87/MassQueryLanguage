@@ -13,6 +13,7 @@ _spectra_ch3 = _spectra_ch1.map { file -> tuple(file, file.toString().replaceAll
 
 TOOL_FOLDER = "$baseDir/bin"
 params.publishdir = "nf_output"
+params.PYTHONRUNTIME = "python" // this is a hack because CCMS cluster does not have python installed
 
 if(params.parallel_files == "YES"){
     process queryData {
@@ -33,7 +34,7 @@ if(params.parallel_files == "YES"){
         script:
         def extractflag = params.extract == 'YES' ? "--extract_json ${mangled_output_filename}_extract.json" : ''
         """
-        python $TOOL_FOLDER/msql_cmd.py \
+        $params.PYTHONRUNTIME $TOOL_FOLDER/msql_cmd.py \
             "$input_spectrum" \
             "${params.query}" \
             --output_file ${mangled_output_filename}_output.tsv \
@@ -63,7 +64,7 @@ else{
         script:
         def extractflag = params.extract == 'YES' ? "--extract_json ${mangled_output_filename}_extract.json" : ''
         """
-        python $TOOL_FOLDER/msql_cmd.py \
+        $params.PYTHONRUNTIME $TOOL_FOLDER/msql_cmd.py \
             "$input_spectrum" \
             "${params.query}" \
             --output_file ${mangled_output_filename}_output.tsv \
@@ -92,7 +93,7 @@ if(params.extract == "YES"){
         file "extracted.*" optional true
 
         """
-        python $TOOL_FOLDER/merged_extracted.py \
+        $params.PYTHONRUNTIME $TOOL_FOLDER/merged_extracted.py \
         json \
         extracted.mzML \
         extracted.mgf \

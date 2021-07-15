@@ -36,6 +36,8 @@
             <arg option="-clusterconfig" pathRef="cluster.config"/>
             <arg option="-user" valueRef="@user"/>
             <arg option="-clusterpythonruntime" pathRef="massql_python_runtime"/>
+            <arg option="-clusterworkprefix" value="/gscratch/nextflow_work"/>
+            <arg option="-task" valueRef="@task"/>
         </execution>
     </tool>
 
