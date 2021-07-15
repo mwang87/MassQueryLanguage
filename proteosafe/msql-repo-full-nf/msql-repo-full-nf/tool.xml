@@ -1,6 +1,7 @@
 <toolset>
     <pathSet base="miniconda3_gamma/envs/msql2/bin">
         <toolPath tool="massql_nf_clusterparallel_process" path="python3"/>
+        <pathVar name="massql_python_runtime" path="python3"/>
     </pathSet>
 
     <pathSet base="miniconda3_gamma/bin">
@@ -30,13 +31,12 @@
             <arg option="-parametermapping" value="PARALLELFILES:parallel_files"/>
             <arg option="-parametermapping" value="PARALLELPERFILE:parallel_query"/>
             <arg option="-parametermapping" value="EXTRACT:extract"/>
+
             <arg option="-runcluster" valueRef="@CLUSTERPARALLEL"/>
             <arg option="-clusterconfig" pathRef="cluster.config"/>
             <arg option="-user" valueRef="@user"/>
-            
+            <arg option="-clusterpythonruntime" pathRef="massql_python_runtime"/>
         </execution>
     </tool>
-
-
 
 </toolset>
