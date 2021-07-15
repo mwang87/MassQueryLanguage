@@ -162,5 +162,30 @@
         <parameter name="URLBASE" value='https://msql.ucsd.edu/?query=@QUERY'/>
     </block>
 
+    <!-- Summary Stats for Compute -->
+    <view id="workflow_trace" label="Workflow Trace" group="Compute Stats">
+        <blockRef id="main" type="workflow_trace"/>
+    </view>
+    <block id="workflow_trace" type="stream">
+        <data>
+            <source type="file" name="query_results/trace.txt"/>
+            <parsers>
+                <parser type="stream" contentType="text/plain"/>
+            </parsers>
+        </data>
+    </block>
+
+    <view id="workflow_summary" label="Workflow Summary" group="Compute Stats">
+        <blockRef id="main" type="workflow_summary"/>
+    </view>
+    <block id="workflow_summary" type="stream">
+        <data>
+            <source type="file" name="query_results/report.html"/>
+            <parsers>
+                <parser type="stream" contentType="text/html"/>
+            </parsers>
+        </data>
+    </block>
+
 
 </interface>

@@ -63,6 +63,7 @@ def main():
 
         cmd += ' --{} "{}"'.format(new_param, params_obj[old_param][0].replace("\n", ""))
 
+
     #if args.conda is not None:
     #    cmd += " -with-conda {}".format(args.conda)
 
@@ -70,6 +71,15 @@ def main():
     return_val = os.system(cmd)
     if return_val != 0:
         raise Exception("Error")
+
+    # Copying the metric output to output folder
+    if args.metricoutput is not None:
+        try:
+            os.rename("trace.txt", os.path.join(args.metricoutput, "trace.txt"))
+            os.rename("report.html", os.path.join(args.metricoutput, "report.html"))
+        except:
+            raise
+            pass
 
 
 if __name__ == "__main__":
