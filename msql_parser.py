@@ -18,6 +18,9 @@ class MassQLToJSON(Transformer):
    def qualifierintensitypercent(self, items):
       return "qualifierintensitypercent"
 
+   def qualifierintensityticpercent(self, items):
+      return "qualifierintensityticpercent"
+
    def qualifierintensitymatch(self, items):
       return "qualifierintensitymatch"
 
