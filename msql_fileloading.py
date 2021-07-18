@@ -181,7 +181,7 @@ def _load_data_mzXML(input_filename):
                 msn_charge = 0
 
                 if "precursorCharge" in spectrum["precursorMz"][0]:
-                    msn_charge = spectrum["precursorMz"][0]["charge"]
+                    msn_charge = spectrum["precursorMz"][0]["precursorCharge"]
                     
                 for i in range(len(mz_list)):
                     peak_dict = {}
