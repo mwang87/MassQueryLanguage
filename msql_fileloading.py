@@ -89,7 +89,8 @@ def _load_data_mgf(input_filename):
             peak_dict["rt"] = float(spectrum.metadata["rtinseconds"]) / 60
             peak_dict["precmz"] = float(spectrum.metadata["pepmass"][0])
             peak_dict["ms1scan"] = 0
-            # TODO: Add Polarity Here
+            peak_dict["charge"] = 1 # TODO: Add Charge Correctly here
+            peak_dict["polarity"] = 1 # TODO: Add Polarity Correctly here
 
             ms2mz_list.append(peak_dict)
 
@@ -127,7 +128,9 @@ def _load_data_gnps_json(input_filename):
             peak_dict["rt"] = 0
             peak_dict["precmz"] = float(spectrum["Precursor_MZ"])
             peak_dict["ms1scan"] = 0
-            # TODO: Add Polarity Here
+            peak_dict["charge"] = 1 # TODO: Add Charge Correctly here
+            peak_dict["polarity"] = 1 # TODO: Add Polarity Correctly here
+            
 
             ms2mz_list.append(peak_dict)
         
@@ -151,7 +154,7 @@ def _load_data_mzXML(input_filename):
     previous_ms1_scan = 0
 
     with mzxml.read(input_filename) as reader:
-        for spectrum in reader:
+        for spectrum in tqdm(reader):
             if len(spectrum["intensity array"]) == 0:
                 continue
                 
@@ -170,7 +173,7 @@ def _load_data_mzXML(input_filename):
                     peak_dict["mz"] = mz_list[i]
                     peak_dict["scan"] = spectrum["id"]
                     peak_dict["rt"] = spectrum["retentionTime"]
-                    # TODO: Add Polarity Here
+                    peak_dict["polarity"] = _determine_scan_polarity_mzXML(spectrum)
 
                     ms1mz_list.append(peak_dict)
 
@@ -194,6 +197,7 @@ def _load_data_mzXML(input_filename):
                     peak_dict["precmz"] = msn_mz
                     peak_dict["ms1scan"] = previous_ms1_scan
                     peak_dict["charge"] = msn_charge
+                    peak_dict["polarity"] = _determine_scan_polarity_mzXML(spectrum)
 
                     ms2mz_list.append(peak_dict)
 
@@ -222,6 +226,14 @@ def _determine_scan_polarity_mzML(spec):
     if positive_polarity is True:
         polarity = 1
 
+    return polarity
+
+def _determine_scan_polarity_mzXML(spec):
+    polarity = 0
+    if spec["polarity"] == "+":
+        polarity = 1
+    if spec["polarity"] == "-":
+        polarity = 2
     return polarity
 
 def _load_data_mzML(input_filename):
