@@ -183,8 +183,6 @@ def _determine_mz_max(mz, ppm_tol, da_tol):
     return mz + half_delta
 
 def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=True):
-    print(parsed_dict)
-
     # Lets check if there is a variable in here, the only one allowed is X
     for condition in parsed_dict["conditions"]:
         try:
@@ -211,7 +209,6 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
             try:
                 # Checking if X is in any string
                 if "X" in value[0]:
-                    print(value, condition["type"])
                     if value == "X":
                         # This is the main varaible, not expression containing it
                         if condition["type"] == "ms1mzcondition":
@@ -273,9 +270,6 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
                     (ms1_df["i"] > min_int) & 
                     (ms1_df["i_norm"] > min_intpercent) & 
                     (ms1_df["i_tic_norm"] > min_tic_percent_intensity)]
-        
-        print(ms2_df)
-        print(variable_properties)
 
         # Here we will start with the smallest mass and then go up
         masses_considered_df = pd.DataFrame()

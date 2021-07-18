@@ -1,9 +1,10 @@
 import msql_parser
 import msql_engine
+import msql_extract
+
 import argparse
 import os
-import uuid
-import msql_extract
+import json
 
 def main():
     parser = argparse.ArgumentParser(description="MSQL CMD")
@@ -26,6 +27,11 @@ def main():
         msql_engine.init_ray()
 
     grammar_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "msql.ebnf")
+    # Let's parse first
+    parsed_query = msql_parser.parse_msql(args.query, grammar_path)
+    print(json.dumps(parsed_query, indent=4))
+
+    # Executing
     results_df = msql_engine.process_query(args.query, 
                                             args.filename, 
                                             path_to_grammar=grammar_path, 
