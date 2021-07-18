@@ -31,4 +31,4 @@ jobs:
     - name: Query Testing
       run: |
         cd test && sh ./get_data.sh
-        cd .. && pytest --capture=tee-sys -vv test.py::test_noquery
+        cd .. && pytest --capture=tee-sys -vv test.py
