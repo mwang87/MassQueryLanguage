@@ -17,6 +17,7 @@
             <options>
 				<option value="/data/ccms-data/uploads/mwang87/data/Metabolomics/MassQL/repo_data/**" label="ALL_GNPS"/>
 				<option value="/data/ccms-data/uploads/mwang87/data/Metabolomics/MassQL/repo_data_qexactive/**" label="ALL_GNPS_QE"/>
+                <option value="/data/ccms-data/uploads/mwang87/data/Metabolomics/MassQL/repo_data_testdataset/**" label="TEST_MSV000078646"/>
                 <option value="/data/ccms-data/uploads/mwang87/data/Metabolomics/MassQL/repo_data_test/**" label="TEST"/>
 			</options>
 			<validator type="set"/>
