@@ -105,6 +105,9 @@ class MassQLToJSON(Transformer):
 
       return qualifier_dict
 
+   def conditionfields(self, items):
+      return items[0]
+
    def condition(self, items):
       if len(items) == 2:
          # These are most queries
