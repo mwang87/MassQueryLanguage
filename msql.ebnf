@@ -67,6 +67,7 @@ chargecondition: "CHARGE"
 qualifierfields: qualifiermztolerance
     | qualifierppmtolerance
     | qualifierintensitypercent
+    | qualifierintensityticpercent
     | qualifierintensityvalue
     | qualifierintensitymatch
     | qualifierintensitytolpercent
@@ -74,10 +75,12 @@ qualifierfields: qualifiermztolerance
 qualifiermztolerance: "TOLERANCEMZ"
 qualifierppmtolerance: "TOLERANCEPPM"
 qualifierintensitypercent: "INTENSITYPERCENT"
+qualifierintensityticpercent: "INTENSITYTICPERCENT"
 qualifierintensityvalue: "INTENSITYVALUE"
 qualifierintensitymatch: "INTENSITYMATCH"
 qualifierintensitytolpercent: "INTENSITYMATCHPERCENT"
 qualifierintensityreference: "INTENSITYMATCHREFERENCE"
+
 
 function: functionscannum
     | functionscansum
