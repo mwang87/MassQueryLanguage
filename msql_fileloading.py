@@ -178,6 +178,11 @@ def _load_data_mzXML(input_filename):
 
             if mslevel == 2:
                 msn_mz = spectrum["precursorMz"][0]["precursorMz"]
+                msn_charge = 0
+
+                if "precursorCharge" in spectrum["precursorMz"][0]:
+                    msn_charge = spectrum["precursorMz"][0]["charge"]
+                    
                 for i in range(len(mz_list)):
                     peak_dict = {}
                     peak_dict["i"] = i_list[i]
@@ -188,6 +193,7 @@ def _load_data_mzXML(input_filename):
                     peak_dict["rt"] = spectrum["retentionTime"]
                     peak_dict["precmz"] = msn_mz
                     peak_dict["ms1scan"] = previous_ms1_scan
+                    peak_dict["charge"] = msn_charge
 
                     ms2mz_list.append(peak_dict)
 
