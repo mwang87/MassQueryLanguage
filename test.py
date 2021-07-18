@@ -366,6 +366,20 @@ def test_mse():
     results_df = msql_engine.process_query(query, "test/KoLRI_24666_Cent.mzML")
     print(results_df)
 
+def test_ticintmin():
+    query = "QUERY scansum(MS1DATA) WHERE MS2PROD=309.2:TOLERANCEMZ=0.1:INTENSITYTICPERCENT=10"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    print(results_df)
+
+    assert(len(results_df) == 1)
+
+    query = "QUERY scansum(MS1DATA) WHERE MS2PROD=309.2:TOLERANCEMZ=0.1:INTENSITYTICPERCENT=50"
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    assert(len(results_df) == 0)
+
+
 @pytest.mark.skip(reason="too slow")
 def test_double_brominated():
     #msql_engine.init_ray()
@@ -471,7 +485,8 @@ def main():
     #test_ms1_iron_parallel()
     #test_polarity()
     #test_scan_range()
-    test_charge_filter()
+    #test_charge_filter()
+    test_ticintmin()
     #test_parse()
     #test_ms1_filter()
     #test_intensity_int_parse()

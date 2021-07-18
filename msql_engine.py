@@ -71,18 +71,40 @@ def _get_minintensity(qualifier):
         [type]: [description]
     """
 
-    if qualifier is None:
-        return 0, 0
+    min_intensity = 0
+    min_percent_intensity = 0
+    min_tic_percent_intensity = 0
+    
 
+    if qualifier is None:
+        min_intensity = 0
+        min_percent_intensity = 0
+
+        return min_intensity, min_percent_intensity, min_tic_percent_intensity
+    
     if "qualifierintensityvalue" in qualifier:
-        return float(qualifier["qualifierintensityvalue"]["value"]), 0
+        min_intensity = float(qualifier["qualifierintensityvalue"]["value"])
 
     if "qualifierintensitypercent" in qualifier:
-        return 0, float(qualifier["qualifierintensitypercent"]["value"]) / 100
+        min_percent_intensity = float(qualifier["qualifierintensitypercent"]["value"]) / 100
 
-    return 0, 0
+    if "qualifierintensityticpercent" in qualifier:
+        min_tic_percent_intensity = float(qualifier["qualifierintensityticpercent"]["value"]) / 100
+
+    return min_intensity, min_percent_intensity, min_tic_percent_intensity
 
 def _get_intensitymatch_range(qualifiers, match_intensity):
+    """
+    Matching the intensity range
+
+    Args:
+        qualifiers ([type]): [description]
+        match_intensity ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+
     min_intensity = 0
     max_intensity = 0
 
@@ -244,10 +266,11 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
         
             # Filtering MS1 peaks only to consider contention for X
             if condition["type"] == "ms1mzcondition":
-                min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
+                min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
                 variable_x_ms1_df = ms1_df[
                     (ms1_df["i"] > min_int) & 
-                    (ms1_df["i_norm"] > min_intpercent)]
+                    (ms1_df["i_norm"] > min_intpercent) & 
+                    (ms1_df["i_tic_norm"] > min_tic_percent_intensity)]
         
 
         # Here we will start with the smallest mass and then go up
@@ -487,12 +510,13 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
 
-            min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
+            min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
 
             ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & 
                                     (ms2_df["mz"] < mz_max) & 
                                     (ms2_df["i"] > min_int) & 
-                                    (ms2_df["i_norm"] > min_intpercent)]
+                                    (ms2_df["i_norm"] > min_intpercent) & 
+                                    (ms2_df["i_tic_norm"] > min_tic_percent_intensity)]
 
             # Setting the intensity match register
             _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
@@ -535,13 +559,14 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             nl_min = mz - mz_tol
             nl_max = mz + mz_tol
 
-            min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
+            min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
 
             ms2_filtered_df = ms2_df[
                 ((ms2_df["precmz"] - ms2_df["mz"]) > nl_min) & 
                 ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max) &
                 (ms2_df["i"] > min_int) & 
-                (ms2_df["i_norm"] > min_intpercent)
+                (ms2_df["i_norm"] > min_intpercent) & 
+                (ms2_df["i_tic_norm"] > min_tic_percent_intensity)
             ]
 
             # Setting the intensity match register
@@ -567,12 +592,13 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
 
-            min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
+            min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
             ms1_filtered_df = ms1_df[
                 (ms1_df["mz"] > mz_min) & 
                 (ms1_df["mz"] < mz_max) & 
                 (ms1_df["i"] > min_int) & 
-                (ms1_df["i_norm"] > min_intpercent)]
+                (ms1_df["i_norm"] > min_intpercent) & 
+                (ms1_df["i_tic_norm"] > min_tic_percent_intensity)]
             
             #print("YYY", mz_min, mz_max, min_int, min_intpercent, len(ms1_filtered_df))
 
@@ -629,9 +655,13 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
 
-            min_int, min_intpercent = _get_minintensity(condition.get("qualifiers", None))
+            min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
 
-            ms2_df = ms2_df[(ms2_df["mz"] > mz_min) & (ms2_df["mz"] < mz_max) & (ms2_df["i"] > min_int) & (ms2_df["i_norm"] > min_intpercent)]
+            ms2_df = ms2_df[(ms2_df["mz"] > mz_min) & 
+                            (ms2_df["mz"] < mz_max) & 
+                            (ms2_df["i"] > min_int) & 
+                            (ms2_df["i_norm"] > min_intpercent) & 
+                            (ms2_df["i_tic_norm"] > min_tic_percent_intensity)]
 
     if "comment" in parsed_dict:
         ms1_df["comment"] = parsed_dict["comment"]

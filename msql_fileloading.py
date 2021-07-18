@@ -77,11 +77,13 @@ def _load_data_mgf(input_filename):
         mz_list = list(spectrum.peaks.mz)
         i_list = list(spectrum.peaks.intensities)
         i_max = max(i_list)
+        i_sum = sum(i_list)
 
         for i in range(len(mz_list)):
             peak_dict = {}
             peak_dict["i"] = i_list[i]
             peak_dict["i_norm"] = i_list[i] / i_max
+            peak_dict["i_tic_norm"] = i_list[i] / i_sum
             peak_dict["mz"] = mz_list[i]
             peak_dict["scan"] = spectrum.metadata["scans"]
             peak_dict["rt"] = float(spectrum.metadata["rtinseconds"]) / 60
@@ -109,6 +111,7 @@ def _load_data_gnps_json(input_filename):
         if len(peaks) == 0:
             continue
         i_max = max([peak[1] for peak in peaks])
+        i_sum = sum([peak[1] for peak in peaks])
         if i_max == 0:
             continue
 
@@ -118,6 +121,7 @@ def _load_data_gnps_json(input_filename):
             peak_dict = {}
             peak_dict["i"] = peak[1]
             peak_dict["i_norm"] = peak[1] / i_max
+            peak_dict["i_tic_norm"] = peak[i] / i_sum
             peak_dict["mz"] = peak[0]
             peak_dict["scan"] = spectrum["spectrum_id"]
             peak_dict["rt"] = 0
@@ -154,6 +158,7 @@ def _load_data_mzXML(input_filename):
             mz_list = list(spectrum["m/z array"])
             i_list = list(spectrum["intensity array"])
             i_max = max(i_list)
+            i_sum = sum(i_list)
 
             mslevel = spectrum["msLevel"]
             if mslevel == 1:
@@ -161,6 +166,7 @@ def _load_data_mzXML(input_filename):
                     peak_dict = {}
                     peak_dict["i"] = i_list[i]
                     peak_dict["i_norm"] = i_list[i] / i_max
+                    peak_dict["i_tic_norm"] = i_list[i] / i_sum
                     peak_dict["mz"] = mz_list[i]
                     peak_dict["scan"] = spectrum["id"]
                     peak_dict["rt"] = spectrum["retentionTime"]
@@ -176,6 +182,7 @@ def _load_data_mzXML(input_filename):
                     peak_dict = {}
                     peak_dict["i"] = i_list[i]
                     peak_dict["i_norm"] = i_list[i] / i_max
+                    peak_dict["i_tic_norm"] = i_list[i] / i_sum
                     peak_dict["mz"] = mz_list[i]
                     peak_dict["scan"] = spectrum["id"]
                     peak_dict["rt"] = spectrum["retentionTime"]
@@ -257,12 +264,14 @@ def _load_data_mzML(input_filename):
         mz_list = list(mz)
         i_list = list(intensity)
         i_max = max(i_list)
+        i_sum = sum(i_list)
         
         if spec.ms_level == 1:
             for i in range(len(mz_list)):
                 peak_dict = {}
                 peak_dict["i"] = i_list[i]
                 peak_dict["i_norm"] = i_list[i] / i_max
+                peak_dict["i_tic_norm"] = i_list[i] / i_sum
                 peak_dict["mz"] = mz_list[i]
                 peak_dict["scan"] = spec.ID
                 peak_dict["rt"] = rt
@@ -282,6 +291,7 @@ def _load_data_mzML(input_filename):
                 peak_dict = {}
                 peak_dict["i"] = i_list[i]
                 peak_dict["i_norm"] = i_list[i] / i_max
+                peak_dict["i_tic_norm"] = i_list[i] / i_sum
                 peak_dict["mz"] = mz_list[i]
                 peak_dict["scan"] = spec.ID
                 peak_dict["rt"] = rt
