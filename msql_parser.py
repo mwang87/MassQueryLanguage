@@ -112,7 +112,7 @@ class MassQLToJSON(Transformer):
       if len(items) == 2:
          # These are most queries
          condition_dict = {}
-         condition_dict["type"] = items[0].children[0]
+         condition_dict["type"] = items[0]
          condition_dict["value"] = [items[-1]]
       elif len(items) == 3:
          # These are for polarity
