@@ -21,6 +21,7 @@ if(params.parallel_files == "YES"){
         time '2h'
         
         // This enable multiple retries with increasing ram, and if this all fails, lets retire it
+        // https://github.com/nextflow-io/nextflow/issues/563
         maxRetries 3
         errorStrategy { (task.exitStatus in 137..140 && task.attempt <= maxRetries)  ? 'retry' : 'ignore' }
         memory { 8.GB * task.attempt }
