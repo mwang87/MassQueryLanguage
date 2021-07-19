@@ -461,7 +461,7 @@ def test_query():
         msql_engine.process_query(test_query, "test/bld_plt1_07_120_1.mzML")
 
 def test_load():
-    ms1_df, ms2_df = msql_engine._load_data("test/JB_182_2_fe.mzML", cache=False)
+    ms1_df, ms2_df = msql_fileloading.load_data("test/JB_182_2_fe.mzML", cache=False)
 
 def main():
     #msql_engine.init_ray()
