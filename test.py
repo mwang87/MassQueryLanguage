@@ -342,6 +342,7 @@ def test_gnps_pqs_library():
     print(results_df)
     assert("CCMSLIB00000072227" in list(results_df["scan"]))
 
+@pytest.mark.skip(reason="too slow")
 def test_gnps_full_library():
     query = "QUERY scaninfo(MS2DATA) WHERE \
             MS2PROD=271.06:TOLERANCEMZ=0.1:INTENSITYPERCENT=50"
