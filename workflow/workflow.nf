@@ -24,7 +24,7 @@ if(params.parallel_files == "YES"){
         // https://github.com/nextflow-io/nextflow/issues/563
         maxRetries 3
         errorStrategy { (task.exitStatus in 137..140 && task.attempt <= maxRetries)  ? 'retry' : 'ignore' }
-        memory { 8.GB * task.attempt }
+        memory { 8.GB + 12.G * task.attempt }
 
         publishDir "$params.publishdir/msql", mode: 'copy'
         
