@@ -208,7 +208,7 @@
                 <parser type="stream" contentType="text/xml"/>
             </parsers>
         </data>
-        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/report.html&amp;block=main'/>
+        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/report.html&amp;block=main&amp;process_html=false'/>
     </block>
 
     <view id="workflow_timeline" label="Workflow Timeline" group="Compute Stats">
@@ -220,7 +220,7 @@
                 <parser type="stream" contentType="text/xml"/>
             </parsers>
         </data>
-        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/timeline.html&amp;block=main'/>
+        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/timeline.html&amp;block=main&amp;process_html=false'/>
     </block>
 
     <view id="workflow_dag" label="Workflow Dag" group="Compute Stats">
@@ -232,7 +232,7 @@
                 <parser type="stream" contentType="text/xml"/>
             </parsers>
         </data>
-        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/dag.html&amp;block=main'/>
+        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/dag.html&amp;block=main&amp;process_html=false'/>
     </block>
 
 
