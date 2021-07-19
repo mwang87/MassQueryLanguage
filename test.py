@@ -185,6 +185,7 @@ def test_ms1_iron():
     assert(1223 in list(results_df["scan"]))
     assert(len(results_df) == 15)
 
+@pytest.mark.skip(reason="parallel not really supported anymore")
 def test_ms1_iron_parallel():
     msql_engine.init_ray()
 
@@ -251,6 +252,7 @@ def test_ms1_iron_min_intensity_m2_prec():
     print(results_df)
     assert(1214 in list(results_df["scan"]))
 
+@pytest.mark.skip(reason="parallel not really supported anymore")
 def test_ms1_cu():
     msql_engine.init_ray()
 
@@ -313,6 +315,7 @@ def test_charge_filter():
     print(results_df)
     assert(len(results_df) == 2)
 
+@pytest.mark.skip(reason="missing file")
 def test_neutral_loss_intensity():
     query = "QUERY scaninfo(MS2DATA) WHERE \
             MS2NL=183.096:TOLERANCEMZ=0.1:INTENSITYPERCENT=50"
@@ -330,7 +333,7 @@ def test_gnps_library():
     print(results_df)
 
 def test_gnps_library_loading():
-    ms1_df, ms2_df = msql_engine._load_data("test/gnps-library.json")
+    ms1_df, ms2_df = msq_fileloading.load_data("test/gnps-library.json")
     print(ms2_df[ms2_df["scan"] == "CCMSLIB00000072227"])
     assert(len(ms2_df[ms2_df["scan"] == "CCMSLIB00000072227"]) > 300)
 
