@@ -1,6 +1,7 @@
 import msql_parser
 import msql_engine
 import msql_visualizer
+import msql_fileloading
 import json
 import pytest
 
@@ -333,7 +334,7 @@ def test_gnps_library():
     print(results_df)
 
 def test_gnps_library_loading():
-    ms1_df, ms2_df = msq_fileloading.load_data("test/gnps-library.json")
+    ms1_df, ms2_df = msql_fileloading.load_data("test/gnps-library.json")
     print(ms2_df[ms2_df["scan"] == "CCMSLIB00000072227"])
     assert(len(ms2_df[ms2_df["scan"] == "CCMSLIB00000072227"]) > 300)
 
@@ -432,6 +433,7 @@ def test_swath():
     results_df = msql_engine.process_query(query, "test/170425_01_Edith_120417_CCF_01.mzML")
     print(results_df)
 
+@pytest.mark.skip(reason="file missing")
 def test_agilent():
     query = "QUERY scaninfo(MS2DATA)"
     results_df = msql_engine.process_query(query, "test/20190310_MSMSpos_marine_water_20180510_CBTheaFoss_1.mzML")
