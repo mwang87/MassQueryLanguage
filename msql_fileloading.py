@@ -122,7 +122,7 @@ def _load_data_gnps_json(input_filename):
             peak_dict = {}
             peak_dict["i"] = peak[1]
             peak_dict["i_norm"] = peak[1] / i_max
-            peak_dict["i_tic_norm"] = peak[i] / i_sum
+            peak_dict["i_tic_norm"] = peak[1] / i_sum
             peak_dict["mz"] = peak[0]
             peak_dict["scan"] = spectrum["spectrum_id"]
             peak_dict["rt"] = 0
