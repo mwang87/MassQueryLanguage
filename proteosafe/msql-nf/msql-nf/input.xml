@@ -22,7 +22,7 @@
             <default value="QUERY scaninfo(MS2DATA)"/>
         </parameter>
 
-        <parameter name="PARALLELFILES" label="Parallelism for Files">
+        <parameter name="PARALLELFILES" label="Parallelize Across All Files">
 			<options>
 				<option value="YES" label="YES"/>
 				<option value="NO" label="NO"/>
@@ -31,7 +31,7 @@
 			<default value="YES"/>
 		</parameter>
 
-        <parameter name="PARALLELPERFILE" label="Parallelism Per File">
+        <parameter name="PARALLELPERFILE" label="Parallelize within a single File">
 			<options>
 				<option value="NO" label="NO"/>
 			</options>
@@ -43,6 +43,15 @@
 			<options>
 				<option value="YES" label="YES"/>
 				<option value="NO" label="NO"/>
+			</options>
+			<validator type="set"/>
+			<default value="NO"/>
+		</parameter>
+
+        <parameter name="CLUSTERPARALLEL" label="Parallelize Run Across the Cluster (this is an admin thing)">
+			<options>
+				<option value="NO" label="NO"/>
+                <option value="YES" label="YES"/>
 			</options>
 			<validator type="set"/>
 			<default value="NO"/>
@@ -59,7 +68,7 @@
             <cell>
                 <input parameter="QUERY" type="textarea">
 					<attribute name="rows" value="8"/>
-					<attribute name="cols" value="120"/>
+					<attribute name="cols" value="80"/>
 				</input>
             </cell>
         </row>
@@ -111,6 +120,18 @@
                 </input>
             </cell>
         </row>
+        <row>
+            <cell>
+                <label>
+                    <content parameter="CLUSTERPARALLEL"/>
+                </label>
+            </cell>
+
+            <cell>
+                <input type="select" parameter="CLUSTERPARALLEL">
+                </input>
+            </cell>
+        </row>   
     </block>
 
 
