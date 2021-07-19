@@ -2,7 +2,6 @@
     <!-- Demangling -->
     <pathSet base="miniconda3_gamma/envs/msql2/bin">
         <toolPath tool="demangle_spectra" path="python3"/>
-        <pathVar name="massql_python_runtime" path="python3"/>
     </pathSet>
     <pathSet base="$base">
         <pathVar name="demangle.script" path="demangle_collection.py"/>
@@ -24,6 +23,7 @@
 
     <pathSet base="miniconda3_gamma/envs/msql2/bin">
         <toolPath tool="msql_nf_process" path="python3"/>
+        <pathVar name="massql_python_runtime" path="python3"/>
     </pathSet>
 
     <pathSet base="miniconda3_gamma/bin">
@@ -33,6 +33,7 @@
     <pathSet base="$base">
         <pathVar name="nextflow_wrapper.script" path="nextflow_wrapper.py"/>
         <pathVar name="nextflow.script" path="workflow.nf"/>
+        <pathVar name="cluster.config" path="cluster.config"/>
     </pathSet>
 
     <tool name="msql_nf_process">
