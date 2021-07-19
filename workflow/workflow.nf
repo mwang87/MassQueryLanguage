@@ -17,11 +17,13 @@ params.PYTHONRUNTIME = "python" // this is a hack because CCMS cluster does not 
 
 if(params.parallel_files == "YES"){
     process queryData {
-        errorStrategy 'ignore'
+        //errorStrategy 'ignore'
         time '2h'
-        //maxRetries 3
-        //memory { 6.GB * task.attempt }
-        memory { 8.GB }
+        
+        // This enable multiple retries with increasing ram, and if this all fails, lets retire it
+        maxRetries 3
+        errorStrategy { (task.attempt <= maxRetries)  ? 'retry' : 'ignore' }
+        memory { 8.GB * task.attempt }
 
         publishDir "$params.publishdir/msql", mode: 'copy'
         
