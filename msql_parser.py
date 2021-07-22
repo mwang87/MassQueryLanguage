@@ -242,6 +242,9 @@ class MassQLToJSON(Transformer):
 
 
 def parse_msql(input_query, path_to_grammar="msql.ebnf"):
+   # Force capitalization on the input_query
+   input_query = input_query.upper()
+
    msql_parser = Lark(open(path_to_grammar).read(), start='statement')
    tree = msql_parser.parse(input_query)
    parsed_list = MassQLToJSON().transform(tree)
