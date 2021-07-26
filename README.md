@@ -16,7 +16,7 @@ Mingxun Wang is the main creator and developer of MSQL. Contact me for contribut
 
 ## Docs
 
-[Here](https://ucsdccms.s3.us-west-1.amazonaws.com/msql/index.html)
+[Here](https://mwang87.github.io/MassQueryLanguage_Documentation/)
 
 ## Python API
 
