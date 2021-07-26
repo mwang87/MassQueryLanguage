@@ -40,8 +40,8 @@ qualifier: qualifier ":" qualifier
 equal: "="
 lessthan: "<"
 greaterthan: ">"
-positivepolarity: "Positive"
-negativepolarity: "Negative"
+positivepolarity: "POSITIVE"
+negativepolarity: "NEGATIVE"
 
 conditionfields: ms2productcondition
     | ms2precursorcondition
@@ -88,11 +88,11 @@ function: functionscannum
     | functionscanmz
     | functionscaninfo
 
-functionscannum: "scannum"
-functionscansum: "scansum" 
-functionscanrangesum: "scanrangesum"
-functionscanmz: "scanmz"
-functionscaninfo: "scaninfo"
+functionscannum: "SCANNUM"
+functionscansum: "SCANSUM" 
+functionscanrangesum: "SCANRANGESUM"
+functionscanmz: "SCANMZ"
+functionscaninfo: "SCANINFO"
 
 booleanconjunction: "AND"
 
