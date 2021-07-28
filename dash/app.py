@@ -343,7 +343,10 @@ def draw_parse(query):
 '''.format(json.dumps(parse_results, indent=4)))
 
     # Creating written description that is translated
-    translation = msql_translator.translate_query(query)
+    try:
+        translation = msql_translator.translate_query(query)
+    except:
+        translation = "Translation Error"
 
     return [[html.Pre(translation), html.Hr(), parse_markdown]]
 

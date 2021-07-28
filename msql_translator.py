@@ -4,18 +4,13 @@ def translate_query(query):
     parsed_query = msql_parser.parse_msql(query)
 
     sentences = []
-
     sentences.append(_translate_querytype(parsed_query["querytype"]))
-
-    print(parsed_query)
 
     if len(parsed_query["conditions"]) > 0:
         sentences.append("The following conditions are applied to find scans in the mass spec data.")
 
     for condition in parsed_query["conditions"]:
         sentences.append(_translate_condition(condition))
-
-    print(sentences)
 
     return "\n".join(sentences)
 
@@ -30,6 +25,9 @@ def _translate_querytype(querytype):
 
     if querytype["function"] == "functionscaninfo":
         return "Returning the scan information on {}.".format(ms_level)
+
+    if querytype["function"] == "functionscansum":
+        return "Returning the summed scan information on {}.".format(ms_level)
 
     return "Translator {} not implemented, contact Ming".format(querytype["function"])
 
