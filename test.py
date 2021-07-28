@@ -1,5 +1,6 @@
 import msql_parser
 import msql_engine
+import msql_translator
 import msql_visualizer
 import msql_fileloading
 import json
@@ -450,6 +451,13 @@ def test_visualize():
     ms2_fig.write_image("test_ms2_visualize.png", engine="kaleido")
     ms1_fig.write_image("test_ms1_visualize.png", engine="kaleido")
 
+def test_translator():
+    for line in open("test_queries.txt"):
+        test_query = line.rstrip()
+        translated_version = msql_translator.translate_query(test_query)
+        print(test_query, translated_version)
+        
+
 def test_parse():        
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
@@ -492,7 +500,7 @@ def main():
     #test_polarity()
     #test_scan_range()
     #test_charge_filter()
-    test_ticintmin()
+    #test_ticintmin()
     #test_parse()
     #test_ms1_filter()
     #test_intensity_int_parse()
@@ -517,6 +525,7 @@ def main():
     #test_gnps_pqs_library()
     #test_mse()
     #test_visualize()
+    test_translator()
 
 if __name__ == "__main__":
     main()
