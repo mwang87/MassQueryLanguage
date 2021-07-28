@@ -32,6 +32,7 @@ from flask_caching import Cache
 import tasks
 import msql_parser
 import msql_visualizer
+import msql_translator
 
 server = Flask(__name__)
 app = dash.Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -341,7 +342,10 @@ def draw_parse(query):
 ```
 '''.format(json.dumps(parse_results, indent=4)))
 
-    return [parse_markdown]
+    # Creating written description that is translated
+    translation = msql_translator.translate_query(query)
+
+    return [[html.Pre(translation), html.Hr(), parse_markdown]]
 
 @app.callback([
                 Output('output_parse_drawing', 'children'),
