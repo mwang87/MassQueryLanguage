@@ -70,7 +70,7 @@ def main():
     print(cmd)
     return_val = os.system(cmd)
     if return_val != 0:
-        raise Exception("Error")
+        print("Error in Nextflow")
 
     # Copying the metric output to output folder
     if args.metricoutput is not None:
