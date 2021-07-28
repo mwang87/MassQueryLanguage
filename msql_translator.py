@@ -9,6 +9,9 @@ def translate_query(query):
 
     print(parsed_query)
 
+    if len(parsed_query["conditions"]) > 0:
+        sentences.append("The following conditions are applied to find scans in the mass spec data.")
+
     for condition in parsed_query["conditions"]:
         sentences.append(_translate_condition(condition))
 
@@ -26,7 +29,7 @@ def _translate_querytype(querytype):
         ms_level = "MS2"
 
     if querytype["function"] == "functionscaninfo":
-        return "Getting the scan information on {}.".format(ms_level)
+        return "Returning the scan information on {}.".format(ms_level)
 
     return "Translator {} not implemented, contact Ming".format(querytype["function"])
 
@@ -35,8 +38,6 @@ def _translate_condition(condition):
         qualifier_string = " " + _translate_qualifiers(condition["qualifiers"])
     else:
         qualifier_string = ""
-
-    print("XXX", qualifier_string)
 
     if condition["type"] == "ms2productcondition":
         return "Finding MS2 peak at m/z {}{}.".format(condition["value"][0], qualifier_string) #TODO: add qualifiers
@@ -60,12 +61,27 @@ def _translate_qualifiers(qualifiers):
         if "qualifier" in qualifier:
             qualifier_phrases.append(_translate_qualifier(qualifiers[qualifier]))
             
-    return " ".join(qualifier_phrases)
+    return " and ".join(qualifier_phrases)
 
 
 
 def _translate_qualifier(qualifier):
     if qualifier["name"] == "qualifierppmtolerance":
-        return "with a {} PPM tolerance".format(qualifier["value"])
+        return "a {} PPM tolerance".format(qualifier["value"])
 
-    return "Translator not implemented, contact Ming"
+    if qualifier["name"] == "qualifiermztolerance":
+        return "a {} m/z tolerance".format(qualifier["value"])
+
+    if qualifier["name"] == "qualifierintensitypercent":
+        return "a minimum percent intensity relative to base peak of {}%".format(qualifier["value"])
+
+    if qualifier["name"] == "qualifierintensityreference":
+        return "this peak is used as the intensity reference for other peaks in the spectrum"
+
+    if qualifier["name"] == "qualifierintensitymatch":
+        return "an expected relative intensity to reference peak of {}".format(qualifier["value"]) #TODO: we should likely remove the Y or assume it 1.0
+
+    if qualifier["name"] == "qualifierintensitytolpercent":
+        return "accepting variability of {}% in relative intensity".format(qualifier["value"])
+
+    return "Translator {} not implemented, contact Ming".format(qualifier["name"])
