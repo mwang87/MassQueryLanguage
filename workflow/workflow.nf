@@ -100,5 +100,24 @@ if(params.extract == "YES"){
         extracted.mgf \
         extracted.tsv
         """
-    }
+    }    
+}
+
+
+process summarizeResults {
+    publishDir "$params.publishdir/summary", mode: 'copy'
+    cache false
+    echo true
+    
+    input:
+    file(merged_results) from _query_results_merged_ch
+
+    output:
+    file "summary.html" optional true
+
+    """
+    $params.PYTHONRUNTIME $TOOL_FOLDER/summarize_results.py \
+    $merged_results \
+    summary.html
+    """
 }
