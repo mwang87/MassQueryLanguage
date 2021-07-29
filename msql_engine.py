@@ -737,6 +737,7 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
 
                 result_df = ms1_df.groupby(groupby_columns).first().reset_index()
                 result_df = result_df[kept_columns]
+                result_df["mslevel"] = 1
 
                 ms1sum_df = ms1_df.groupby(groupby_columns).sum().reset_index()
                 result_df["i"] = ms1sum_df["i"]
@@ -753,6 +754,7 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
 
                 ms2sum_df = ms2_df.groupby(groupby_columns).sum().reset_index()
                 result_df["i"] = ms2sum_df["i"]
+                result_df["mslevel"] = 2
 
             return result_df
 

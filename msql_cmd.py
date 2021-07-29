@@ -40,13 +40,14 @@ def main():
 
     # Executing
     all_results_list = []
-    for query in all_queries:
+    for i, query in enumerate(all_queries):
         results_df = msql_engine.process_query(query, 
                                                 args.filename, 
                                                 path_to_grammar=grammar_path, 
                                                 cache=(args.cache == "YES"), 
                                                 parallel=PARALLEL)
 
+        results_df["query_index"] = i
         all_results_list.append(results_df)
 
     # Merging
