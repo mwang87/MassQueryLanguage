@@ -22,12 +22,13 @@ def main():
         except:
             pass
 
-        
-        #f.write(fig2.to_html(full_html=False, include_plotlyjs='cdn'))
-        #f.write(fig3.to_html(full_html=False, include_plotlyjs='cdn'))
-
-    
-
+        try:
+            fig = px.histogram(results_df, 
+                                x="comment",
+                                title='Variable Found m/z histogram')
+            f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+        except:
+            pass
 
 if __name__ == "__main__":
     main()
