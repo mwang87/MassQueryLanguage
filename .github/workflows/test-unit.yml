@@ -32,4 +32,6 @@ jobs:
     - name: Query Testing
       run: |
         cd test && sh ./get_data.sh
-        cd .. && pytest --capture=tee-sys -vv test.py
+        cd ..
+        pytest --capture=tee-sys -vv test.py
+        pytest --capture=tee-sys -vv test_extraction.py
