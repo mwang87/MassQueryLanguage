@@ -15,17 +15,21 @@ def main():
     with open(args.output_summary_html, 'a') as f:
         # Histogram of precursor m/z
         try:
+            bins = int(max(results_df["precmz"]) - min(results_df["precmz"]))
             fig = px.histogram(results_df, 
                                 x="precmz",
-                                title='Precursor m/z histogram')
+                                title='Precursor m/z histogram',
+                                nbins=bins)
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
         except:
             pass
 
         try:
+            bins = int(max(results_df["comment"]) - min(results_df["comment"]))
             fig = px.histogram(results_df, 
                                 x="comment",
-                                title='Variable Found m/z histogram')
+                                title='Variable Found m/z histogram',
+                                nbins=bins)
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
         except:
             pass

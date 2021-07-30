@@ -24,10 +24,12 @@ def main():
 
     with open(args.output_summary_html, 'a') as f:
         # Histogram of precursor m/z
+        bins = int(max(peaks_df["mz"]) - min(peaks_df["mz"]))
         try:
             fig = px.histogram(peaks_df, 
                                 x="mz",
-                                title='m/z peak histogram')
+                                title='m/z peak histogram',
+                                nbins=bins)
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
         except:
             pass
