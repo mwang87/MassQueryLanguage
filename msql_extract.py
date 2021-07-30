@@ -156,6 +156,7 @@ def _extract_spectra(results_df, input_spectra_folder,
     spectrum_list = []
 
     # TODO: reduce duplicate scans to extract
+    # TODO: Make it such that you don't have to keep reloading the same file to extract scans
 
     current_scan = 1
     results_list = results_df.to_dict(orient="records")
