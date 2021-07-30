@@ -79,7 +79,7 @@ def main():
         if args.extract_json is not None:
             msql_extract._extract_spectra(results_df, os.path.dirname(args.filename), output_json_filename=args.extract_json)
 
-    print(results_df)
+    print("ZZZ", results_df)
 
 if __name__ == "__main__":
     main()

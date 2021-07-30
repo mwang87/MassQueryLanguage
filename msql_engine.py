@@ -368,8 +368,9 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
             collated_df = _executecollate_query(parsed_dict, results_ms1_df, results_ms2_df)
             collated_list.append(collated_df)
 
+    # Concatenating all the results
     collated_df = pd.concat(collated_list)
-    collated_df = collated_df.reset_index()
+    collated_df = collated_df.reset_index(drop=True)
 
     # Lets try to remove duplicates
     try:
@@ -724,6 +725,7 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
 
             return result_df
 
+        # scaninfo return function
         if parsed_dict["querytype"]["function"] == "functionscaninfo":
             result_df = pd.DataFrame()
 
