@@ -85,11 +85,12 @@
     <view id="extract_results" label="Extract Results">
         <blockRef id="main" type="extract_results"/>
     </view>
-    <block id="extract_results" type="table">
+    <block id="extract_results" type="table_ss">
         <data>
             <source type="file" name="query_results/extracted/extracted.tsv"/>
             <parsers>
                 <parser type="genericTabular"/>
+                <parser type="SQLite"/>
             </parsers>
 
             <row>
@@ -235,8 +236,6 @@
         <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/dag.html&amp;block=main&amp;process_html=false'/>
     </block>
 
-
-
     <view id="download_data" label="Download Data" group="Advanced Views">
         <blockRef id="main" type="download_data"/>
     </view>
@@ -247,6 +246,30 @@
                 <parser type="stream" contentType="text/xml"/>
             </parsers>
         </data>
+    </block>
+
+    <view id="summary_plots" label="summary_plots" group="Visualization Summary">
+        <blockRef id="main" type="summary_plots"/>
+    </view>
+    <block id="summary_plots" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/summary/summary.html&amp;block=main&amp;process_html=false'/>
+    </block>
+
+    <view id="summary_plots_extracted" label="summary_plots_extracted" group="Visualization Summary">
+        <blockRef id="main" type="summary_plots_extracted"/>
+    </view>
+    <block id="summary_plots_extracted" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/summary/summary_extracted.html&amp;block=main&amp;process_html=false'/>
     </block>
 
 
