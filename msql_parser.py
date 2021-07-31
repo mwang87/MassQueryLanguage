@@ -5,7 +5,7 @@ from lark import Transformer
 from py_expression_eval import Parser
 math_parser = Parser()
 
-from molmass import Formula
+from pyteomics import mass
 
 
 
@@ -273,10 +273,30 @@ class MassQLToJSON(Transformer):
       return calculated_value
     
    def moleculeformula(self, items):
-      f = Formula(items[0])
-      exact_mass = f.isotope.mass
+      exact_mass = mass.calculate_mass(formula=items[0])
 
       return exact_mass
+
+   def aminoacids(self, items):
+      exact_mass = mass.calculate_mass(sequence=items[0])
+      exact_mass = exact_mass - mass.calculate_mass(formula="H2O")
+      return exact_mass
+
+   def peptide(self, items):
+      return items[0]
+
+   def peptidecharge(self, items):
+      return items[0]
+
+   def peptideion(self, items):
+      return items[0]
+
+   def peptidefunction(self, items):
+      print("AAA", items)
+      exact_mass = mass.calculate_mass(sequence=items[0], ion_type=items[2].lower(), charge=int(items[1]))
+      return exact_mass
+
+   
 
 
    def string(self, s):
