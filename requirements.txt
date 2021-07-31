@@ -10,4 +10,4 @@ pyteomics
 psims
 plotly
 kaleido
-molpass
+molmass
