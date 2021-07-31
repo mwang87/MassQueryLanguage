@@ -91,14 +91,58 @@ if(params.extract == "YES"){
         file "json/*" from _query_extract_results_ch.collect()
 
         output:
-        file "extracted.*" optional true
+        file "extracted.mzML" optional true
+        file "extracted.mgf" optional true
+        file "extracted.tsv" optional true
+        file "extracted.json" optional true into _extracted_json_ch
 
         """
         $params.PYTHONRUNTIME $TOOL_FOLDER/merged_extracted.py \
         json \
         extracted.mzML \
         extracted.mgf \
-        extracted.tsv
+        extracted.json \
+        extracted.tsv 
         """
-    }
+    }    
+}
+
+
+process summarizeResults {
+    publishDir "$params.publishdir/summary", mode: 'copy'
+    cache false
+    echo true
+    errorStrategy 'ignore'
+
+    input:
+    file(merged_results) from _query_results_merged_ch
+
+    output:
+    file "summary.html" optional true
+
+    """
+    $params.PYTHONRUNTIME $TOOL_FOLDER/summarize_results.py \
+    $merged_results \
+    summary.html
+    """
+}
+
+
+process summarizeExtracted {
+    publishDir "$params.publishdir/summary", mode: 'copy'
+    cache false
+    echo true
+    errorStrategy 'ignore'
+    
+    input:
+    file(extracted_json) from _extracted_json_ch
+
+    output:
+    file "summary_extracted.html" optional true
+
+    """
+    $params.PYTHONRUNTIME $TOOL_FOLDER/summarize_extracted.py \
+    $extracted_json \
+    summary_extracted.html
+    """
 }

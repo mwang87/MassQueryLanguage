@@ -11,6 +11,7 @@ def main():
     parser.add_argument('json_folder', help='json_folder')
     parser.add_argument('output_mzML', help='Output mzML File')
     parser.add_argument('output_mgf', help='Output mgf File')
+    parser.add_argument('output_json', help='Output merged JSON File')
     parser.add_argument('output_tsv', help='Output tsv File')
 
     args = parser.parse_args()
@@ -37,6 +38,8 @@ def main():
     results_df.drop(labels=["peaks"], inplace=True, axis=1)
     results_df.to_csv(args.output_tsv, sep="\t", index=False)
 
+    # Writing out JSON
+    open(args.output_json, "w").write(json.dumps(all_spectra))
 
 
 if __name__ == "__main__":
