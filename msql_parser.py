@@ -5,7 +5,6 @@ from lark import Transformer
 from py_expression_eval import Parser
 math_parser = Parser()
 
-from molmass import Formula
 from pyteomics import mass
 
 
