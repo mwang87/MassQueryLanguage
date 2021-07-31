@@ -43,23 +43,28 @@ def test_formula_expression_parse():
 
 
 def test_aminoacids_expression_parse():
-    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=aminoacids(G)"
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=aminoaciddelta(G)"
+    parsed_output = msql_parser.parse_msql(query)
+    print(parsed_output)
+    print(json.dumps(parsed_output, indent=4))
+    assert(parsed_output["conditions"][0]["value"][0] > 57)
+    assert(parsed_output["conditions"][0]["value"][0] < 58)
+
+def test_peptide_expression_parse():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=peptide(G, charge=1, ion=y)"
     parsed_output = msql_parser.parse_msql(query)
     print(parsed_output)
     print(json.dumps(parsed_output, indent=4))
 
-def test_peptide_expression_parse():
-    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=peptide(G, charge=1, iontype=y)"
-    parsed_output = msql_parser.parse_msql(query)
-    print(parsed_output)
-    print(json.dumps(parsed_output, indent=4))
+    assert(parsed_output["conditions"][0]["value"][0] > 76)
+    assert(parsed_output["conditions"][0]["value"][0] < 77)
 
 def main():
     #test_comment_parse()
     #test_number_expression_parse()
     #test_formula_expression_parse()
-    test_aminoacids_expression_parse()
-    #test_peptide_expression_parse()
+    #test_aminoacids_expression_parse()
+    test_peptide_expression_parse()
 
 if __name__ == "__main__":
     main()
