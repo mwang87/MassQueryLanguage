@@ -104,7 +104,7 @@ def _extract_mzXML_scan(input_filename, spectrum_identifier):
 
         peaks_list = []
         for i in range(len(mz_list)):
-            peaks_list.append([mz_list[i], i_list[i]])
+            peaks_list.append([float(mz_list[i]), float(i_list[i])])
 
         # Sorting Peaks
         peaks_list = sorted(peaks_list, key=lambda x: x[0])
@@ -186,6 +186,8 @@ def _extract_spectra(results_df, input_spectra_folder,
 
                 spectrum_list.append(spectrum_obj)
                 current_scan += 1
+        except KeyboardInterrupt:
+            raise
         except:
             print("cant find", result_obj)
             pass
