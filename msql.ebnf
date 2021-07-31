@@ -105,13 +105,17 @@ variable: /[XY]+[-+*]?(([0-9]*\.[0-9]+|[0-9]+)|([0-9]*))/
 
 // Numerical Expression
 numericalexpression: term
-    | numericalexpression "+" term
-    | numericalexpression "-" term
+    | numericalexpression plus term
+    | numericalexpression minus term
 term: factor
-    | term "*" factor
-    | term "/" factor
+    | term multiply factor
+    | term divide factor
 factor: floating
     | "(" numericalexpression ")"
+multiply: "*"
+divide: "/"
+plus: "+"
+minus: "-"
 
 // Boiler Plate
 %import common.ESCAPED_STRING   -> STRING

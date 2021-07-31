@@ -2,6 +2,9 @@
 from lark import Lark
 from lark import Transformer
 
+from py_expression_eval import Parser
+math_parser = Parser()
+
 
 #TODO: Update language definition to make it such that we can distinguish different functions
 
@@ -231,6 +234,43 @@ class MassQLToJSON(Transformer):
 
    def variable(self, s):
       return s[0].value
+
+   # Handling Numerical Expressions
+   def plus(self, s):
+      return "+"
+   def multiply(self, s):
+      return "*"
+   def subtract(self, s):
+      return "-"
+   def divide(self, s):
+      return "/"
+   
+
+   def factor(self, s):
+      return s[0]
+
+   def term(self, items):
+      if len(items) == 1:
+         return items[0]
+      
+      string_items = [str(item) for item in items]
+      full_expression = "".join(string_items)
+      calculated_value = math_parser.parse(full_expression).evaluate({})
+      
+      return calculated_value
+
+   def numericalexpression(self, items):
+      if len(items) == 1:
+         return items[0]
+
+      # Calculating the expression
+      string_items = [str(item) for item in items]
+      full_expression = "".join(string_items)
+      calculated_value = math_parser.parse(full_expression).evaluate({})
+      
+      return calculated_value
+    
+
 
    def string(self, s):
       (s,) = s
