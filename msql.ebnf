@@ -42,7 +42,11 @@ equal: "="
 lessthan: "<"
 greaterthan: ">"
 positivepolarity: "POSITIVE"
+    | "positive"
+    | "Positive"
 negativepolarity: "NEGATIVE"
+    | "negative"
+    | "negative"
 
 conditionfields: ms2productcondition
     | ms2precursorcondition
@@ -89,13 +93,15 @@ function: functionscannum
     | functionscanmz
     | functionscaninfo
 
-functionscannum: "SCANNUM"
-functionscansum: "SCANSUM" 
-functionscanrangesum: "SCANRANGESUM"
-functionscanmz: "SCANMZ"
-functionscaninfo: "SCANINFO"
+functionscannum: "scannum"
+functionscansum: "scansum" 
+functionscanrangesum: "scanrangesum"
+functionscanmz: "scanmz"
+functionscaninfo: "scaninfo"
 
 booleanconjunction: "AND"
+    | "and"
+    | "And"
 
 param: "TOLERANCE"
 floating: /[-+]?([0-9]*\.[0-9]+|[0-9]+)/
@@ -111,17 +117,17 @@ term: factor
     | term multiply factor
     | term divide factor
 factor: floating
-    | "FORMULA(" moleculeformula ")"
-    | "AMINOACIDDELTA(" aminoacids ")"
+    | "formula(" moleculeformula ")"
+    | "aminoaciddelta(" aminoacids ")"
     | peptidefunction
     | "(" numericalexpression ")"
-peptidefunction: "PEPTIDE(" peptide "," "CHARGE=" peptidecharge "," "ION=" peptideion ")"
+peptidefunction: "peptide(" peptide "," "charge=" peptidecharge "," "ion=" peptideion ")"
 multiply: "*"
 divide: "/"
 plus: "+"
 minus: "-"
 
-moleculeformula: /[A-Z][A-Z1-9]*/
+moleculeformula: /[A-Z][A-Za-z1-9]*/
 aminoacids: /[A-Z][A-Z]*/
 peptide: /[A-Z][A-Z]*/
 peptidecharge: /[1-9]/

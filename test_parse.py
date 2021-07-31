@@ -41,6 +41,11 @@ def test_formula_expression_parse():
     print(json.dumps(parsed_output, indent=4))
     assert(parsed_output["conditions"][0]["value"][0] > 28)
 
+def test_formula2_expression_parse():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=formula(Fe)"
+    parsed_output = msql_parser.parse_msql(query)
+    print(json.dumps(parsed_output, indent=4))
+    assert(parsed_output["conditions"][0]["value"][0] > 28)
 
 def test_aminoacids_expression_parse():
     query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=aminoaciddelta(G)"
@@ -64,7 +69,8 @@ def main():
     #test_number_expression_parse()
     #test_formula_expression_parse()
     #test_aminoacids_expression_parse()
-    test_peptide_expression_parse()
+    #test_peptide_expression_parse()
+    test_formula2_expression_parse()
 
 if __name__ == "__main__":
     main()
