@@ -112,6 +112,7 @@ term: factor
     | term divide factor
 factor: floating
     | "FORMULA(" moleculeformula ")"
+    | "PEPTIDE(" peptide"," "CHARGE=" peptidecharge ")"
     | "(" numericalexpression ")"
 multiply: "*"
 divide: "/"
@@ -119,6 +120,8 @@ plus: "+"
 minus: "-"
 
 moleculeformula: /[A-Z][A-Z1-9]*/
+peptide: /[A-Z][A-Z]*/
+peptidecharge: /[1-9]/
 
 // Boiler Plate
 %import common.ESCAPED_STRING   -> STRING

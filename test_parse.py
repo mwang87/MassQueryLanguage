@@ -42,10 +42,17 @@ def test_formula_expression_parse():
     assert(parsed_output["conditions"][0]["value"][0] > 28)
 
 
+def test_peptide_expression_parse():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=peptide(G)"
+    parsed_output = msql_parser.parse_msql(query)
+    print(parsed_output)
+    print(json.dumps(parsed_output, indent=4))
+
 def main():
     #test_comment_parse()
     #test_number_expression_parse()
     test_formula_expression_parse()
+    #test_peptide_expression_parse()
 
 if __name__ == "__main__":
     main()

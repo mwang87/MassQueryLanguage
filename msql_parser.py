@@ -6,6 +6,7 @@ from py_expression_eval import Parser
 math_parser = Parser()
 
 from molmass import Formula
+from pyteomics import mass
 
 
 
@@ -273,10 +274,13 @@ class MassQLToJSON(Transformer):
       return calculated_value
     
    def moleculeformula(self, items):
-      f = Formula(items[0])
-      exact_mass = f.isotope.mass
+      exact_mass = mass.calculate_mass(formula=items[0])
 
       return exact_mass
+
+   def peptide(self, items):
+      print("XXX", items[0])
+      return 0
 
 
    def string(self, s):
