@@ -112,16 +112,22 @@ term: factor
     | term divide factor
 factor: floating
     | "FORMULA(" moleculeformula ")"
-    | "PEPTIDE(" peptide"," "CHARGE=" peptidecharge ")"
+    | "AMINOACIDS(" aminoacids ")"
+//    | "PEPTIDE(" peptide ")"
+    | peptidefunction
     | "(" numericalexpression ")"
+peptidefunction:
+    "PEPTIDE(" peptide "," "CHARGE=" peptidecharge "," "ION=" peptideion ")"
 multiply: "*"
 divide: "/"
 plus: "+"
 minus: "-"
 
 moleculeformula: /[A-Z][A-Z1-9]*/
+aminoacids: /[A-Z][A-Z]*/
 peptide: /[A-Z][A-Z]*/
 peptidecharge: /[1-9]/
+peptideion: /[ABCXYZ]/
 
 // Boiler Plate
 %import common.ESCAPED_STRING   -> STRING

@@ -278,9 +278,15 @@ class MassQLToJSON(Transformer):
 
       return exact_mass
 
+   def aminoacids(self, items):
+      exact_mass = mass.calculate_mass(sequence=items[0])
+      return exact_mass
+
    def peptide(self, items):
-      print("XXX", items[0])
-      return 0
+      exact_mass = mass.calculate_mass(sequence=items[0])
+      return exact_mass
+
+   
 
 
    def string(self, s):
