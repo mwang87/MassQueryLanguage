@@ -28,7 +28,7 @@ jobs:
     - name: Parsing Testing
       run: |
         #pytest --capture=tee-sys -vv test.py::test_parse
-        pytest -vv test.py::test_parse
+        pytest -vv test_parse.py::test_parse
     - name: Query Testing
       run: |
         cd test && sh ./get_data.sh
