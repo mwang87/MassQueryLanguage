@@ -249,12 +249,9 @@ def parse_msql(input_query, path_to_grammar="msql.ebnf"):
    query_splits = input_query.split("\n")
    query_splits = [split.lstrip() for split in query_splits]
    query_splits = [split for split in query_splits if len(split) > 0]
-   #query_splits = [split for split in query_splits if split[0] != "#"]
    query_splits = [split.split("#")[0] for split in query_splits]
    query_splits = [split.lstrip() for split in query_splits]
    query_splits = [split for split in query_splits if len(split) > 0]
-
-   print(query_splits)
 
    input_query = "\n".join(query_splits)
 
