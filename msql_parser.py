@@ -2,6 +2,9 @@
 from lark import Lark
 from lark import Transformer
 
+from py_expression_eval import Parser
+math_parser = Parser()
+
 
 #TODO: Update language definition to make it such that we can distinguish different functions
 
@@ -232,6 +235,43 @@ class MassQLToJSON(Transformer):
    def variable(self, s):
       return s[0].value
 
+   # Handling Numerical Expressions
+   def plus(self, s):
+      return "+"
+   def multiply(self, s):
+      return "*"
+   def subtract(self, s):
+      return "-"
+   def divide(self, s):
+      return "/"
+   
+
+   def factor(self, s):
+      return s[0]
+
+   def term(self, items):
+      if len(items) == 1:
+         return items[0]
+      
+      string_items = [str(item) for item in items]
+      full_expression = "".join(string_items)
+      calculated_value = math_parser.parse(full_expression).evaluate({})
+      
+      return calculated_value
+
+   def numericalexpression(self, items):
+      if len(items) == 1:
+         return items[0]
+
+      # Calculating the expression
+      string_items = [str(item) for item in items]
+      full_expression = "".join(string_items)
+      calculated_value = math_parser.parse(full_expression).evaluate({})
+      
+      return calculated_value
+    
+
+
    def string(self, s):
       (s,) = s
       return s[1:-1]
@@ -249,12 +289,9 @@ def parse_msql(input_query, path_to_grammar="msql.ebnf"):
    query_splits = input_query.split("\n")
    query_splits = [split.lstrip() for split in query_splits]
    query_splits = [split for split in query_splits if len(split) > 0]
-   #query_splits = [split for split in query_splits if split[0] != "#"]
    query_splits = [split.split("#")[0] for split in query_splits]
    query_splits = [split.lstrip() for split in query_splits]
    query_splits = [split for split in query_splits if len(split) > 0]
-
-   print(query_splits)
 
    input_query = "\n".join(query_splits)
 

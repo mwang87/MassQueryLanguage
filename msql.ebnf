@@ -20,7 +20,8 @@ filterfullcondition: filterfullcondition booleanconjunction filterfullcondition
     | condition ":" qualifier
     | condition
 
-condition: conditionfields "=" floating
+condition: conditionfields "=" numericalexpression
+    | conditionfields "=" floating
     | conditionfields equal variable
     | conditionfields equal "(" statement ")"
     | polaritycondition equal positivepolarity
@@ -102,6 +103,21 @@ floating: /[-+]?([0-9]*\.[0-9]+|[0-9]+)/
 variable: /[XY]+[-+*]?(([0-9]*\.[0-9]+|[0-9]+)|([0-9]*))/
 // variable: /[A-Z]+[-+]([0-9]*\.[0-9]|[0-9]*)|([0-9]+\.[0-9])|([0-9]+)/
 
+// Numerical Expression
+numericalexpression: term
+    | numericalexpression plus term
+    | numericalexpression minus term
+term: factor
+    | term multiply factor
+    | term divide factor
+factor: floating
+    | "(" numericalexpression ")"
+multiply: "*"
+divide: "/"
+plus: "+"
+minus: "-"
+
+// Boiler Plate
 %import common.ESCAPED_STRING   -> STRING
 %import common.SIGNED_NUMBER    -> NUMBER
 %import common.WS

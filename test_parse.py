@@ -22,8 +22,24 @@ def test_comment_parse():
 
     print(parsed_output)
 
+def test_number_expression_parse():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=157.0857+10"
+    parsed_output = msql_parser.parse_msql(query)
+    print(json.dumps(parsed_output, indent=4))
+
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=16.70857*10 +(0)"
+    parsed_output = msql_parser.parse_msql(query)
+    print(json.dumps(parsed_output, indent=4))
+
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=1670.857/10 +(0)"
+    parsed_output = msql_parser.parse_msql(query)
+    print(json.dumps(parsed_output, indent=4))
+
+
+
 def main():
-    test_comment_parse()
+    #test_comment_parse()
+    test_number_expression_parse()
 
 if __name__ == "__main__":
     main()
