@@ -245,6 +245,19 @@ def parse_msql(input_query, path_to_grammar="msql.ebnf"):
    # Force capitalization on the input_query
    input_query = input_query.upper()
 
+   # Lets try to strip off any comments
+   query_splits = input_query.split("\n")
+   query_splits = [split.lstrip() for split in query_splits]
+   query_splits = [split for split in query_splits if len(split) > 0]
+   #query_splits = [split for split in query_splits if split[0] != "#"]
+   query_splits = [split.split("#")[0] for split in query_splits]
+   query_splits = [split.lstrip() for split in query_splits]
+   query_splits = [split for split in query_splits if len(split) > 0]
+
+   print(query_splits)
+
+   input_query = "\n".join(query_splits)
+
    msql_parser = Lark(open(path_to_grammar).read(), start='statement')
    tree = msql_parser.parse(input_query)
    parsed_list = MassQLToJSON().transform(tree)
