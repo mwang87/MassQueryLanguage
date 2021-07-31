@@ -111,11 +111,14 @@ term: factor
     | term multiply factor
     | term divide factor
 factor: floating
+    | "FORMULA(" moleculeformula ")"
     | "(" numericalexpression ")"
 multiply: "*"
 divide: "/"
 plus: "+"
 minus: "-"
+
+moleculeformula: /[A-Z][A-Z1-9]*/
 
 // Boiler Plate
 %import common.ESCAPED_STRING   -> STRING

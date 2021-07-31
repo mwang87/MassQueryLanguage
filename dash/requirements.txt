@@ -47,3 +47,5 @@ click==7.1.1
 py_expression_eval
 matchms
 pyteomics
+psims
+molpass
