@@ -35,11 +35,17 @@ def test_number_expression_parse():
     parsed_output = msql_parser.parse_msql(query)
     print(json.dumps(parsed_output, indent=4))
 
+def test_formula_expression_parse():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=formula(CH2)+14"
+    parsed_output = msql_parser.parse_msql(query)
+    print(json.dumps(parsed_output, indent=4))
+    assert(parsed_output["conditions"][0]["value"][0] > 28)
 
 
 def main():
     #test_comment_parse()
-    test_number_expression_parse()
+    #test_number_expression_parse()
+    test_formula_expression_parse()
 
 if __name__ == "__main__":
     main()

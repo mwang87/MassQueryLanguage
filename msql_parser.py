@@ -5,6 +5,9 @@ from lark import Transformer
 from py_expression_eval import Parser
 math_parser = Parser()
 
+from molmass import Formula
+
+
 
 #TODO: Update language definition to make it such that we can distinguish different functions
 
@@ -244,7 +247,6 @@ class MassQLToJSON(Transformer):
       return "-"
    def divide(self, s):
       return "/"
-   
 
    def factor(self, s):
       return s[0]
@@ -270,6 +272,11 @@ class MassQLToJSON(Transformer):
       
       return calculated_value
     
+   def moleculeformula(self, items):
+      f = Formula(items[0])
+      exact_mass = f.isotope.mass
+
+      return exact_mass
 
 
    def string(self, s):
