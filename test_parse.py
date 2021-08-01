@@ -92,8 +92,16 @@ def test_variable_formula_parse():
 
     parsed_output = msql_parser.parse_msql(query)
 
+def test_variable_formula_parse2():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=2*(X - formula(Fe))"
+
+    parsed_output = msql_parser.parse_msql(query)
+
+    
+
+
 def main():
-    test_parse()
+    #test_parse()
     #test_comment_parse()
     #test_number_expression_parse()
     #test_formula_expression_parse()
@@ -101,6 +109,7 @@ def main():
     #test_peptide_expression_parse()
     #test_formula2_expression_parse()
     test_variable_formula_parse()
+    test_variable_formula_parse2()
 
 if __name__ == "__main__":
     main()
