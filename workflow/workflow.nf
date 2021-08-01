@@ -105,6 +105,25 @@ if(params.extract == "YES"){
         extracted.tsv 
         """
     }
+
+    process summarizeExtracted {
+        publishDir "$params.publishdir/summary", mode: 'copy'
+        cache false
+        echo true
+        errorStrategy 'ignore'
+        
+        input:
+        file(extracted_json) from _extracted_json_ch
+
+        output:
+        file "summary_extracted.html" optional true
+
+        """
+        $params.PYTHONRUNTIME $TOOL_FOLDER/summarize_extracted.py \
+        $extracted_json \
+        summary_extracted.html
+        """
+    }
 }
 
 
@@ -127,23 +146,5 @@ process summarizeResults {
     """
 }
 
-// process summarizeExtracted {
-//     publishDir "$params.publishdir/summary", mode: 'copy'
-//     cache false
-//     echo true
-//     errorStrategy 'ignore'
-    
-//     input:
-//     file(extracted_json) from _extracted_json_ch
-
-//     output:
-//     file "summary_extracted.html" optional true
-
-//     """
-//     $params.PYTHONRUNTIME $TOOL_FOLDER/summarize_extracted.py \
-//     $extracted_json \
-//     summary_extracted.html
-//     """
-// }
 
 

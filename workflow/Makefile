@@ -1,5 +1,8 @@
 run_test:
-	nextflow run workflow.nf
+	nextflow run workflow.nf -c test.config
+
+run_test_no_extract:
+	nextflow run workflow.nf --extract="No" -c test.config
 
 run_resume_test:
 	nextflow run workflow.nf --resume
