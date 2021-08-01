@@ -1,0 +1,15 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "type": "chargecondition",
+            "value": [
+                1.0
+            ]
+        }
+    ],
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}

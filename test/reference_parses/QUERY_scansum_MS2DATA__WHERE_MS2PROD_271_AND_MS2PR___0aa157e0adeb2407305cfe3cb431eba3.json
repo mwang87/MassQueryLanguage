@@ -1,0 +1,22 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "type": "ms2productcondition",
+            "value": [
+                271.0
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "type": "ms2precursorcondition",
+            "value": [
+                500.0
+            ]
+        }
+    ],
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscansum"
+    }
+}

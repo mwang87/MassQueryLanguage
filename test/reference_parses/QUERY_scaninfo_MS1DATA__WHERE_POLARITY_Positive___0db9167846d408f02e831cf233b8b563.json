@@ -1,0 +1,15 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "type": "polaritycondition",
+            "value": [
+                "positivepolarity"
+            ]
+        }
+    ],
+    "querytype": {
+        "datatype": "datams1data",
+        "function": "functionscaninfo"
+    }
+}

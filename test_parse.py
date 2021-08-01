@@ -6,11 +6,34 @@ import msql_fileloading
 import json
 import pytest
 
-def test_parse():        
+def test_parse():
+    # This test not only performs a parse, but also tries to compare it against a reference parse
+
+    from pathvalidate import sanitize_filename
+    import os
+    import hashlib
+
+    # Writing out the queries and comparing
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
         print(test_query)
-        msql_parser.parse_msql(test_query)
+        output_parse = msql_parser.parse_msql(test_query)
+
+        hash_object = hashlib.md5(test_query.encode("ascii"))
+        hash_output = hash_object.hexdigest()
+
+        json_filename = sanitize_filename(test_query).replace(" ", "_").replace("=", "_").replace("(", "_").replace(")", "_")[:50] + "___" +  hash_output + ".json"
+
+        output_filename = os.path.join("test/test_parses", json_filename)
+        output_json_str = json.dumps(output_parse, sort_keys=True, indent=4)
+
+        with open(output_filename, "w") as o:
+            o.write(output_json_str)
+
+        reference_filename = os.path.join("test/reference_parses", json_filename)
+        reference_string = open(reference_filename).read()
+
+        assert(output_json_str == reference_string)
 
 def test_comment_parse():
     query = """
@@ -70,6 +93,7 @@ def test_variable_formula_parse():
     parsed_output = msql_parser.parse_msql(query)
 
 def main():
+    test_parse()
     #test_comment_parse()
     #test_number_expression_parse()
     #test_formula_expression_parse()

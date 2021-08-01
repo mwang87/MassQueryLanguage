@@ -46,7 +46,7 @@ positivepolarity: "POSITIVE"
     | "Positive"
 negativepolarity: "NEGATIVE"
     | "negative"
-    | "negative"
+    | "Negative"
 
 conditionfields: ms2productcondition
     | ms2precursorcondition
