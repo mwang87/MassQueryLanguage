@@ -33,7 +33,11 @@ def test_parse():
         reference_filename = os.path.join("test/reference_parses", json_filename)
         reference_string = open(reference_filename).read()
 
-        assert(output_json_str == reference_string)
+        try:
+            assert(output_json_str == reference_string)
+        except: 
+            print("Assertion error", reference_filename)
+            raise
 
 def test_comment_parse():
     query = """
