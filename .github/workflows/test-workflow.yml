@@ -35,7 +35,7 @@ jobs:
         echo "source activate msql" > ~/.bashrc
     - name: Query Testing
       run: |
-        cd test && sh ./get_data.sh
-        cd ..
+        #cd test && sh ./get_data.sh
+        #cd ..
         cd workflow
-        make run_test
+        bash -c "source activate msql" && make run_test
