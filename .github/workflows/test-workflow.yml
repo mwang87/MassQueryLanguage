@@ -27,7 +27,7 @@ jobs:
         export PATH="$HOME/miniconda/bin:$PATH"
         conda config --set always_yes yes --set changeps1 no
         conda update -q conda
-        conda create -n msql -c conda-forge -c bioconda -c nextflow python==3.8
+        conda create -n msql -c conda-forge -c bioconda nextflow python==3.8
         source activate msql
         python -m pip install --upgrade pip
         pip install flake8 pytest
