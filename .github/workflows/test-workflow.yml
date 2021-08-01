@@ -25,11 +25,6 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-        bash miniconda.sh -b -p $HOME/miniconda || true
-        export PATH="$HOME/miniconda/bin:$PATH"
-        conda config --set always_yes yes --set changeps1 no
-        conda update -q conda
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
@@ -41,5 +36,4 @@ jobs:
         #cd test && sh ./get_data.sh
         #cd ..
         cd workflow
-        export PATH="$HOME/miniconda/bin:$PATH"
         make run_test
