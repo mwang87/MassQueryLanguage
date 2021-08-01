@@ -87,6 +87,11 @@ def test_peptide_expression_parse():
     assert(parsed_output["conditions"][0]["value"][0] > 76)
     assert(parsed_output["conditions"][0]["value"][0] < 77)
 
+def test_variable_formula_parse():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X-formula(Fe)"
+
+    parsed_output = msql_parser.parse_msql(query)
+
 def main():
     test_parse()
     #test_comment_parse()
@@ -95,6 +100,7 @@ def main():
     #test_aminoacids_expression_parse()
     #test_peptide_expression_parse()
     #test_formula2_expression_parse()
+    test_variable_formula_parse()
 
 if __name__ == "__main__":
     main()
