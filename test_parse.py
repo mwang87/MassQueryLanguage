@@ -22,7 +22,7 @@ def test_parse():
         hash_object = hashlib.md5(test_query.encode("ascii"))
         hash_output = hash_object.hexdigest()
 
-        json_filename = sanitize_filename(test_query).replace(" ", "_")[:50] + "___" +  hash_output + ".json"
+        json_filename = sanitize_filename(test_query).replace(" ", "_").replace("=", "_").replace("(", "_").replace(")", "_")[:50] + "___" +  hash_output + ".json"
 
         output_filename = os.path.join("test/test_parses", json_filename)
         output_json_str = json.dumps(output_parse, sort_keys=True, indent=4)
