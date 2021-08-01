@@ -30,16 +30,16 @@ jobs:
         export PATH="$HOME/miniconda/bin:$PATH"
         conda config --set always_yes yes --set changeps1 no
         conda update -q conda
-        conda create -n msql -c conda-forge -c bioconda nextflow python==3.8
-        source activate msql
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        echo "source activate msql" > ~/.bashrc
+        wget -qO- get.nextflow.io | bash
+        sudo mv nextflow /usr/local/bin/
+        nextflow run
     - name: Workflow Testing
       run: |
         #cd test && sh ./get_data.sh
         #cd ..
         cd workflow
         export PATH="$HOME/miniconda/bin:$PATH"
-        bash -c "source activate msql" && make run_test
+        make run_test
