@@ -75,7 +75,8 @@ def main():
     #test_formula_expression_parse()
     #test_aminoacids_expression_parse()
     #test_peptide_expression_parse()
-    test_formula2_expression_parse()
+    #test_formula2_expression_parse()
+    test_variable_formula_parse()
 
 if __name__ == "__main__":
     main()
