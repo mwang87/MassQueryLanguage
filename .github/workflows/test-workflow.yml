@@ -31,7 +31,5 @@ jobs:
       run: |
         cd test && sh ./get_data.sh
         cd ../workflow
-        pwd
-        ls -l -h
         make run_test
         make run_test_no_extract
