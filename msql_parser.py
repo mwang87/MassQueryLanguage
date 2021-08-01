@@ -255,8 +255,6 @@ class MassQLToJSON(Transformer):
       if len(items) == 1:
          return items[0]
 
-      print("TERM", items)
-
       has_variable = _has_variable(items)
 
       string_items = [str(item) for item in items]
@@ -277,8 +275,6 @@ class MassQLToJSON(Transformer):
 
       string_items = [str(item) for item in items]
       full_expression = "".join(string_items)
-
-      print("NUMERICAL EXPRESSION", items, full_expression)
 
       if has_variable:
          return full_expression
