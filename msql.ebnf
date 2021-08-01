@@ -27,13 +27,9 @@ condition: conditionfields "=" numericalexpression
     
 
 qualifier: qualifier ":" qualifier
-    | qualifierfields equal floating
-    | qualifierfields equal STRING
-    | qualifierfields equal variable
-    | qualifierfields greaterthan floating
-    | qualifierfields greaterthan STRING
-    | qualifierfields lessthan floating
-    | qualifierfields lessthan STRING
+    | qualifierfields equal numericalexpression
+    | qualifierfields greaterthan numericalexpression
+    | qualifierfields lessthan numericalexpression
     | qualifierintensityreference
 
 equal: "="
