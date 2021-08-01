@@ -127,23 +127,23 @@ process summarizeResults {
     """
 }
 
-// process summarizeExtracted {
-//     publishDir "$params.publishdir/summary", mode: 'copy'
-//     cache false
-//     echo true
-//     errorStrategy 'ignore'
+process summarizeExtracted {
+    publishDir "$params.publishdir/summary", mode: 'copy'
+    cache false
+    echo true
+    errorStrategy 'ignore'
     
-//     input:
-//     file(extracted_json) from _extracted_json_ch
+    input:
+    file(extracted_json) from _extracted_json_ch
 
-//     output:
-//     file "summary_extracted.html" optional true
+    output:
+    file "summary_extracted.html" optional true
 
-//     """
-//     $params.PYTHONRUNTIME $TOOL_FOLDER/summarize_extracted.py \
-//     $extracted_json \
-//     summary_extracted.html
-//     """
-// }
+    """
+    $params.PYTHONRUNTIME $TOOL_FOLDER/summarize_extracted.py \
+    $extracted_json \
+    summary_extracted.html
+    """
+}
 
 

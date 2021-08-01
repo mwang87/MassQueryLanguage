@@ -1,6 +1,9 @@
 run_test:
 	nextflow run workflow.nf
 
+run_test_no_extract:
+	nextflow run workflow.nf --extract="No"
+
 run_resume_test:
 	nextflow run workflow.nf --resume
 
