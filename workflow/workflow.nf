@@ -49,7 +49,7 @@ if(params.parallel_files == "YES"){
 else{
     process queryData2 {
         echo true
-        errorStrategy 'ignore'
+        //errorStrategy 'ignore'
         maxForks 1
         time '2h'
         
