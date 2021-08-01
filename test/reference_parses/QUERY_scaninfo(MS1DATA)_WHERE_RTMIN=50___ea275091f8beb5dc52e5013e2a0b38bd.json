@@ -1,0 +1,15 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "type": "rtmincondition",
+            "value": [
+                50.0
+            ]
+        }
+    ],
+    "querytype": {
+        "datatype": "datams1data",
+        "function": "functionscaninfo"
+    }
+}

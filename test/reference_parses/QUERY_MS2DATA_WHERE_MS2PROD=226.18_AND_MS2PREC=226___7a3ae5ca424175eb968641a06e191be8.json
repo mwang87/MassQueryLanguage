@@ -1,0 +1,22 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "type": "ms2productcondition",
+            "value": [
+                226.18
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "type": "ms2precursorcondition",
+            "value": [
+                226.1797
+            ]
+        }
+    ],
+    "querytype": {
+        "datatype": "datams2data",
+        "function": null
+    }
+}

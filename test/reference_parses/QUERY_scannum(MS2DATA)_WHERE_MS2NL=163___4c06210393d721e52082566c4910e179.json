@@ -1,0 +1,15 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "type": "ms2neutrallosscondition",
+            "value": [
+                163.0
+            ]
+        }
+    ],
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscannum"
+    }
+}

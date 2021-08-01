@@ -1,0 +1,71 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitymatch": {
+                    "name": "qualifierintensitymatch",
+                    "value": "Y"
+                },
+                "qualifierintensitypercent": {
+                    "name": "qualifierintensitypercent",
+                    "value": 25.0
+                },
+                "qualifierintensityreference": {
+                    "name": "qualifierintensityreference"
+                },
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.1
+                },
+                "type": "qualifier"
+            },
+            "type": "ms1mzcondition",
+            "value": [
+                "X"
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitymatch": {
+                    "name": "qualifierintensitymatch",
+                    "value": "Y*0.33"
+                },
+                "qualifierintensitytolpercent": {
+                    "name": "qualifierintensitytolpercent",
+                    "value": 30.0
+                },
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.1
+                },
+                "type": "qualifier"
+            },
+            "type": "ms1mzcondition",
+            "value": [
+                "X+2"
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "type": "ms2precursorcondition",
+            "value": [
+                "X"
+            ]
+        },
+        {
+            "conditiontype": "filter",
+            "type": "ms1mzcondition",
+            "value": [
+                "X"
+            ]
+        }
+    ],
+    "querytype": {
+        "datatype": "datams1data",
+        "function": "functionscaninfo"
+    }
+}

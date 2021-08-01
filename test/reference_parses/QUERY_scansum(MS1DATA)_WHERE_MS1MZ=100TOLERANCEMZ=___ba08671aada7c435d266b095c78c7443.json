@@ -1,0 +1,23 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.1
+                },
+                "type": "qualifier"
+            },
+            "type": "ms1mzcondition",
+            "value": [
+                100.0
+            ]
+        }
+    ],
+    "querytype": {
+        "datatype": "datams1data",
+        "function": "functionscansum"
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "type": "ms2productcondition",
+            "value": [
+                226.18
+            ]
+        }
+    ],
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscanmz"
+    }
+}
