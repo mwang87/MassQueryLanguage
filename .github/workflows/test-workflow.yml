@@ -36,7 +36,7 @@ jobs:
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         echo "source activate msql" > ~/.bashrc
-    - name: Query Testing
+    - name: Workflow Testing
       run: |
         #cd test && sh ./get_data.sh
         #cd ..
