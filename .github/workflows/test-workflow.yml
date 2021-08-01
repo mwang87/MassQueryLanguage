@@ -33,6 +33,6 @@ jobs:
     - name: Workflow Testing
       run: |
         cd test && sh ./get_data.sh
-        cd ..
-        cd workflow
+        cd ../workflow
         make run_test
+        make run_test_no_extract
