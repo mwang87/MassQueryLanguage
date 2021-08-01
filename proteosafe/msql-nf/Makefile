@@ -3,5 +3,5 @@ include ../Makefile.deploytemplate
 
 WORKFLOW_NAME=msql-nf
 TOOL_FOLDER_NAME=msql-nf
-WORKFLOW_VERSION=release_29.10
+WORKFLOW_VERSION=release_29.11
 WORKFLOW_DESCRIPTION="MSQL NF - <a href='https://mwang87.github.io/MassQueryLanguage_Documentation/'>Documentation Link</a>. Currently Supports v1.0 of MassQL" 
