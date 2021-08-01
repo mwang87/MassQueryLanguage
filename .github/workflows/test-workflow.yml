@@ -10,16 +10,19 @@ on:
     branches: [ master ]
 
 jobs:
-  unit-testing-parse:
+  unit-test:
 
     runs-on: ubuntu-latest
-
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.7]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
       with:
-        python-version: 3.9
+        python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
         wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
@@ -38,4 +41,5 @@ jobs:
         #cd test && sh ./get_data.sh
         #cd ..
         cd workflow
+        export PATH="$HOME/miniconda/bin:$PATH"
         bash -c "source activate msql" && make run_test
