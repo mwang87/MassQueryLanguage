@@ -88,7 +88,7 @@ def test_peptide_expression_parse():
     assert(parsed_output["conditions"][0]["value"][0] < 77)
 
 def test_variable_formula_parse():
-    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X-formula(Fe)"
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X-formula(Fe)*2"
 
     parsed_output = msql_parser.parse_msql(query)
 
