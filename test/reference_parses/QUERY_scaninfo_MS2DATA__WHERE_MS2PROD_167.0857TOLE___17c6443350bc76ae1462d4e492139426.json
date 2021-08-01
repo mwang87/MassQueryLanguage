@@ -1,0 +1,38 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierppmtolerance": {
+                    "name": "qualifierppmtolerance",
+                    "unit": "ppm",
+                    "value": 5.0
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                167.0857
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierppmtolerance": {
+                    "name": "qualifierppmtolerance",
+                    "unit": "ppm",
+                    "value": 5.0
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2neutrallosscondition",
+            "value": [
+                176.0321
+            ]
+        }
+    ],
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}
