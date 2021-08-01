@@ -65,6 +65,7 @@ else{
         script:
         def extractflag = params.extract == 'YES' ? "--extract_json ${mangled_output_filename}_extract.json" : ''
         """
+        ls -l -h -h
         $params.PYTHONRUNTIME $TOOL_FOLDER/msql_cmd.py \
             "$input_spectrum" \
             "${params.query}" \
