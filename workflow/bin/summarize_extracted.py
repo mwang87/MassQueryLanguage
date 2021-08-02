@@ -14,20 +14,26 @@ def main():
 
     peak_list = []
     for spectrum in input_spectra:
+        sum_intensity = sum([peak[1] for peak in spectrum['peaks']])
         for peak in spectrum['peaks']:
             peak_dict = {}
             peak_dict["mz"] = peak[0]
+            peak_dict["i"] = peak[1]
+            peak_dict["i_norm"] = peak[1] / sum_intensity
+            
             if "precmz" in spectrum:
                 peak_dict["precmz"] = spectrum["precmz"]
+            if "comment" in spectrum:
+                peak_dict["comment"] = float(spectrum["comment"])
 
             peak_list.append(peak_dict)
 
     peaks_df = pd.DataFrame(peak_list)
 
-    with open(args.output_summary_html, 'a') as f:
+    with open(args.output_summary_html, 'w') as f:
         # Histogram of precursor m/z
-        peakbins = int(max(peaks_df["mz"]) - min(peaks_df["mz"]))
         try:
+            peakbins = int(max(peaks_df["mz"]) - min(peaks_df["mz"]))
             fig = px.histogram(peaks_df, 
                                 x="mz",
                                 title='m/z peak histogram',
@@ -58,7 +64,7 @@ def main():
                                     title='2D m/z peak histogram minus X',
                                     x="mzminuscomment", 
                                     y="precmz",
-                                    color_continuous_scale="Jet",
+                                    color_continuous_scale="Turbo",
                                     nbinsx=peakbins, nbinsy=precbins,
                                     marginal_x="histogram", marginal_y="histogram")
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
@@ -72,12 +78,35 @@ def main():
 
             peaks_df["mzminuscomment"] = peaks_df["mz"] - peaks_df["comment"]
             fig = px.density_heatmap(peaks_df, 
+                                    title='2D m/z peak histogram minus X with margins',
+                                    x="mzminuscomment", 
+                                    y="comment",
+                                    #color_continuous_scale="turbo",
+                                    nbinsx=mz_bins, nbinsy=comment_bins,
+                                    marginal_x="histogram", marginal_y="histogram")
+            f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+
+            fig = px.density_heatmap(peaks_df, 
                                     title='2D m/z peak histogram minus X',
                                     x="mzminuscomment", 
                                     y="comment",
-                                    color_continuous_scale="Jet",
-                                    nbinsx=mz_bins, nbinsy=comment_bins,
-                                    marginal_x="histogram", marginal_y="histogram")
+                                    color_continuous_scale="jet",
+                                    nbinsx=mz_bins, nbinsy=comment_bins,)
+            f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+
+
+            fig = px.histogram(peaks_df, 
+                                x="mzminuscomment",
+                                y="i",
+                                title='m/z peak sum spectrum minus X histogram',
+                                nbins=mz_bins*5)
+            f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+
+            fig = px.histogram(peaks_df, 
+                                x="mzminuscomment",
+                                y="i_norm",
+                                title='m/z peak average spectrum minus X histogram',
+                                nbins=mz_bins*5)
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
         except:
             pass
