@@ -127,15 +127,8 @@ def main():
                                     x="mzminuscomment", 
                                     y="comment",
                                     nbinsx=mz_bins, nbinsy=comment_bins,
+                                    color_continuous_scale=px.colors.sequential.Hot,
                                     marginal_x="histogram", marginal_y="histogram")
-            f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
-
-            fig = px.density_heatmap(peaks_df, 
-                                    title='2D m/z peak histogram minus X',
-                                    x="mzminuscomment", 
-                                    y="comment",
-                                    color_continuous_scale="Hot",
-                                    nbinsx=mz_bins, nbinsy=comment_bins,)
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
         except:
             pass
@@ -154,18 +147,9 @@ def main():
                                     y="comment",
                                     z="i_norm_log",
                                     histfunc="avg",
+                                    color_continuous_scale=px.colors.sequential.Hot,
                                     nbinsx=mz_bins, nbinsy=comment_bins,
                                     marginal_x="histogram", marginal_y="histogram")
-            f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
-
-            fig = px.density_heatmap(peaks_df, 
-                                    title='2D m/z peak histogram minus X - i_norm avg',
-                                    x="mzminuscomment", 
-                                    y="comment",
-                                    z="i_norm_log",
-                                    histfunc="avg",
-                                    color_continuous_scale="Hot",
-                                    nbinsx=mz_bins, nbinsy=comment_bins,)
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
         except:
             pass
