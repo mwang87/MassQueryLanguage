@@ -43,7 +43,8 @@ def main():
                                     title='2D m/z peak histogram',
                                     x="mz", 
                                     y="precmz",
-                                    nbinsx=bins, nbinsy=precbins)
+                                    color_continuous_scale="Turbo",
+                                    nbinsx=peakbins, nbinsy=precbins)
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
         except:
             pass
