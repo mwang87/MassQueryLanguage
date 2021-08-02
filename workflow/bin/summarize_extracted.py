@@ -17,6 +17,8 @@ def main():
         for peak in spectrum['peaks']:
             peak_dict = {}
             peak_dict["mz"] = peak[0]
+            if "precmz" in spectrum:
+                peak_dict["precmz"] = spectrum["precmz"]
 
             peak_list.append(peak_dict)
 
@@ -24,12 +26,24 @@ def main():
 
     with open(args.output_summary_html, 'a') as f:
         # Histogram of precursor m/z
-        bins = int(max(peaks_df["mz"]) - min(peaks_df["mz"]))
+        peakbins = int(max(peaks_df["mz"]) - min(peaks_df["mz"]))
         try:
             fig = px.histogram(peaks_df, 
                                 x="mz",
                                 title='m/z peak histogram',
-                                nbins=bins)
+                                nbins=peakbins)
+            f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+        except:
+            pass
+
+        # 2D histogram
+        try:
+            precbins = int(max(peaks_df["precmz"]) - min(peaks_df["precmz"]))
+            fig = px.density_heatmap(peaks_df, 
+                                    title='2D m/z peak histogram',
+                                    x="mz", 
+                                    y="precmz",
+                                    nbinsx=bins, nbinsy=precbins)
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
         except:
             pass
