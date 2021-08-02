@@ -9,3 +9,4 @@ wget --no-verbose --output-document=specs_ms.mgf "http://massive.ucsd.edu/Proteo
 wget --no-verbose --output-document=1810E-II.mzML "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000084691/ccms_peak/1810E-II.mzML&forceDownload=true"
 wget --no-verbose --output-document=KoLRI_24666_Cent.mzML "http://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?task=5fc1673650f446c1b803c6391d15d0e7&block=main&file=kbkang/Lichen_library/KoLRI_24666_Cent.mzML"
 wget --no-verbose --output-document=T04251505.mzXML "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000082797/ccms_peak/raw/MTBLS368/T04251505.mzXML&forceDownload=true"
+wget --no-verbose --output-document=isa_9_fe.mzML "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000084030/ccms_peak/isa_9_fe.mzML&forceDownload=true"

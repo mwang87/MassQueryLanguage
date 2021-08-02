@@ -178,6 +178,7 @@ def _extract_spectra(results_df, input_spectra_folder,
                 spectrum_obj = _extract_mgf_scan(input_spectra_filename, scan_number)
 
             if spectrum_obj is not None:
+                # These are a new scan number in the file, not sure if we need this
                 spectrum_obj["new_scan"] = current_scan
                 result_obj["new_scan"] = current_scan
 
