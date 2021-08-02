@@ -28,10 +28,10 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements_test.txt; fi
     - name: Parsing Testing
       run: |
-        pytest -vv test_parse.py -n 4
+        pytest -vv test_parse.py -n 2
     - name: Query Testing
       run: |
         cd test && sh ./get_data.sh
         cd ..
-        pytest --capture=tee-sys -vv test.py -n 4
-        pytest --capture=tee-sys -vv test_extraction.py -n 4
+        pytest --capture=tee-sys -vv test.py -n 2
+        pytest --capture=tee-sys -vv test_extraction.py -n 2
