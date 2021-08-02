@@ -38,7 +38,7 @@ if(params.parallel_files == "YES"){
         $params.PYTHONRUNTIME $TOOL_FOLDER/msql_cmd.py \
             "$input_spectrum" \
             "${params.query}" \
-            --output_file ${mangled_output_filename}_output.tsv \
+            --output_file "${mangled_output_filename}_output.tsv" \
             --parallel_query $params.parallel_query \
             --cache NO \
             --original_path "$filepath" \
@@ -68,7 +68,7 @@ else{
         $params.PYTHONRUNTIME $TOOL_FOLDER/msql_cmd.py \
             "$input_spectrum" \
             "${params.query}" \
-            --output_file ${mangled_output_filename}_output.tsv \
+            --output_file "${mangled_output_filename}_output.tsv" \
             --parallel_query $params.parallel_query \
             --cache NO \
             --original_path "$filepath" \
