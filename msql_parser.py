@@ -243,7 +243,7 @@ class MassQLToJSON(Transformer):
       return "+"
    def multiply(self, s):
       return "*"
-   def subtract(self, s):
+   def minus(self, s):
       return "-"
    def divide(self, s):
       return "/"
@@ -254,9 +254,15 @@ class MassQLToJSON(Transformer):
    def term(self, items):
       if len(items) == 1:
          return items[0]
-      
+
+      has_variable = _has_variable(items)
+
       string_items = [str(item) for item in items]
       full_expression = "".join(string_items)
+
+      if has_variable:
+         return full_expression
+
       calculated_value = math_parser.parse(full_expression).evaluate({})
       
       return calculated_value
@@ -265,9 +271,15 @@ class MassQLToJSON(Transformer):
       if len(items) == 1:
          return items[0]
 
-      # Calculating the expression
+      has_variable = _has_variable(items)
+
       string_items = [str(item) for item in items]
       full_expression = "".join(string_items)
+
+      if has_variable:
+         return full_expression
+
+      # Calculating the expression
       calculated_value = math_parser.parse(full_expression).evaluate({})
       
       return calculated_value
@@ -292,10 +304,8 @@ class MassQLToJSON(Transformer):
       return items[0]
 
    def peptidefunction(self, items):
-      print("AAA", items)
       exact_mass = mass.calculate_mass(sequence=items[0], ion_type=items[2].lower(), charge=int(items[1]))
       return exact_mass
-
    
 
 
@@ -307,6 +317,16 @@ class MassQLToJSON(Transformer):
       (n,) = n
       return float(n)
 
+
+def _has_variable(items):
+   acceptable_variables = ["X", "Y"]
+
+   for item in items:
+      for variable in acceptable_variables:
+         if variable in str(item):
+            return True
+
+   return False 
 
 def parse_msql(input_query, path_to_grammar="msql.ebnf"):
    # Force capitalization on the input_query, turning this off due to needing lower case in formulas

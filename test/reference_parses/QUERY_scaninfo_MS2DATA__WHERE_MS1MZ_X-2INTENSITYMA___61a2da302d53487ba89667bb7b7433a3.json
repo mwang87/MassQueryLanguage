@@ -1,0 +1,54 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitymatch": {
+                    "name": "qualifierintensitymatch",
+                    "value": "Y*0.0608+2e-06*X"
+                },
+                "qualifierintensitytolpercent": {
+                    "name": "qualifierintensitytolpercent",
+                    "value": 25.0
+                },
+                "type": "qualifier"
+            },
+            "type": "ms1mzcondition",
+            "value": [
+                "X-2.0"
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitymatch": {
+                    "name": "qualifierintensitymatch",
+                    "value": "Y"
+                },
+                "qualifierintensitypercent": {
+                    "name": "qualifierintensitypercent",
+                    "value": 5.0
+                },
+                "qualifierintensityreference": {
+                    "name": "qualifierintensityreference"
+                },
+                "type": "qualifier"
+            },
+            "type": "ms1mzcondition",
+            "value": [
+                "X"
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "type": "ms2precursorcondition",
+            "value": [
+                "X"
+            ]
+        }
+    ],
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}

@@ -33,7 +33,11 @@ def test_parse():
         reference_filename = os.path.join("test/reference_parses", json_filename)
         reference_string = open(reference_filename).read()
 
-        assert(output_json_str == reference_string)
+        try:
+            assert(output_json_str == reference_string)
+        except: 
+            print("Assertion error", reference_filename)
+            raise
 
 def test_comment_parse():
     query = """
@@ -88,9 +92,19 @@ def test_peptide_expression_parse():
     assert(parsed_output["conditions"][0]["value"][0] < 77)
 
 def test_variable_formula_parse():
-    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X-formula(Fe)"
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X-formula(Fe)*2"
 
     parsed_output = msql_parser.parse_msql(query)
+    print(json.dumps(parsed_output, indent=4))
+
+def test_variable_formula_parse2():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=2.0*(X - formula(Fe))"
+
+    parsed_output = msql_parser.parse_msql(query)
+    print(json.dumps(parsed_output, indent=4))
+
+    
+
 
 def main():
     test_parse()
@@ -100,7 +114,8 @@ def main():
     #test_aminoacids_expression_parse()
     #test_peptide_expression_parse()
     #test_formula2_expression_parse()
-    test_variable_formula_parse()
+    #test_variable_formula_parse()
+    #test_variable_formula_parse2()
 
 if __name__ == "__main__":
     main()

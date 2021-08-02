@@ -21,21 +21,15 @@ filterfullcondition: filterfullcondition booleanconjunction filterfullcondition
     | condition
 
 condition: conditionfields "=" numericalexpression
-    | conditionfields "=" floating
-    | conditionfields equal variable
     | conditionfields equal "(" statement ")"
     | polaritycondition equal positivepolarity
     | polaritycondition equal negativepolarity
     
 
 qualifier: qualifier ":" qualifier
-    | qualifierfields equal floating
-    | qualifierfields equal STRING
-    | qualifierfields equal variable
-    | qualifierfields greaterthan floating
-    | qualifierfields greaterthan STRING
-    | qualifierfields lessthan floating
-    | qualifierfields lessthan STRING
+    | qualifierfields equal numericalexpression
+    | qualifierfields greaterthan numericalexpression
+    | qualifierfields lessthan numericalexpression
     | qualifierintensityreference
 
 equal: "="
@@ -105,8 +99,8 @@ booleanconjunction: "AND"
 
 param: "TOLERANCE"
 floating: /[-+]?([0-9]*\.[0-9]+|[0-9]+)/
-// variable: /[A-Z]+/
-variable: /[XY]+[-+*]?(([0-9]*\.[0-9]+|[0-9]+)|([0-9]*))/
+variable: /[XY]/
+//variable: /[XY]+[-+*]?(([0-9]*\.[0-9]+|[0-9]+)|([0-9]*))/
 // variable: /[A-Z]+[-+]([0-9]*\.[0-9]|[0-9]*)|([0-9]+\.[0-9])|([0-9]+)/
 
 // Numerical Expression
@@ -117,6 +111,7 @@ term: factor
     | term multiply factor
     | term divide factor
 factor: floating
+    | variable
     | "formula(" moleculeformula ")"
     | "aminoaciddelta(" aminoacids ")"
     | peptidefunction
@@ -131,7 +126,7 @@ moleculeformula: /[A-Z][A-Za-z1-9]*/
 aminoacids: /[A-Z][A-Z]*/
 peptide: /[A-Z][A-Z]*/
 peptidecharge: /[1-9]/
-peptideion: /[A-Z]/
+peptideion: /[A-Za-z]/
 
 // Boiler Plate
 %import common.ESCAPED_STRING   -> STRING

@@ -209,7 +209,6 @@ def test_ms1_iron_parallel():
     assert(1223 in list(results_df["scan"]))
     assert(len(results_df) == 15)
 
-@pytest.mark.skip(reason="not implemented")
 def test_ms1_iron_X_changes_intensity():
     query = "QUERY scaninfo(MS2DATA) WHERE \
         MS1MZ=X-2:INTENSITYMATCH=Y*(0.0608+(.000002*X)):INTENSITYMATCHPERCENT=25 AND \
@@ -217,6 +216,8 @@ def test_ms1_iron_X_changes_intensity():
         MS2PREC=X"
     parse_obj = msql_parser.parse_msql(query)
     print(parse_obj)
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+
 
 def test_ms1_iron_min_intensity():
     #msql_engine.init_ray()
@@ -441,6 +442,10 @@ def test_agilent():
     query = "QUERY scaninfo(MS2DATA)"
     results_df = msql_engine.process_query(query, "test/20190310_MSMSpos_marine_water_20180510_CBTheaFoss_1.mzML")
 
+def test_formula():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=2.0*(X - formula(Fe))"
+    results_df = msql_engine.process_query(query, "test/bld_plt1_07_120_1.mzML")
+
 def test_visualize():
     #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=177 AND MS2PROD=270 AND MS2NL=163"
     #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X+14"
@@ -466,7 +471,7 @@ def test_query():
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
         print(test_query)
-        msql_engine.process_query(test_query, "test/bld_plt1_07_120_1.mzML")
+        msql_engine.process_query(test_query, "test/GNPS00002_A3_p.mzML")
 
 def test_load():
     ms1_df, ms2_df = msql_fileloading.load_data("test/JB_182_2_fe.mzML", cache=False)
@@ -523,7 +528,8 @@ def main():
     #test_gnps_pqs_library()
     #test_mse()
     #test_visualize()
-    test_translator()
+    #test_translator()
+    test_ms1_iron_X_changes_intensity()
 
 if __name__ == "__main__":
     main()

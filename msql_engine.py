@@ -245,7 +245,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
             for value in condition["value"]:
                 try:
                     # Checking if X is in any string
-                    if "X" in value[0]:
+                    if "X" in value:
                         continue
                 except TypeError:
                     # This is when the target is actually a float
@@ -287,12 +287,15 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
             if running_max_mz > masses_obj["mz"]:
                 continue
 
+            #######################
             # Writing new query
+            #######################
             substituted_parse = copy.deepcopy(parsed_dict)
             mz_val = masses_obj["mz"]
 
             for condition in substituted_parse["conditions"]:
                 for i, value in enumerate(condition["value"]):
+                    # Rewriting the condition value
                     try:
                         if "X" in value:
                             new_value = math_parser.parse(value).evaluate({
@@ -303,9 +306,16 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
                         # This is when the target is actually a float
                         pass
 
-            # DEBUG
-            # if mz_val < 614.75 or mz_val > 614.8:
-            #     continue
+                    # Rewriting the qualifier values
+                    try:
+                        if "qualifiers" in condition:
+                            for qualifier in condition["qualifiers"]:
+                                if "qualifier" in qualifier:
+                                    if "value" in condition["qualifiers"][qualifier]:
+                                        old_value = condition["qualifiers"][qualifier]["value"]
+                                        condition["qualifiers"][qualifier]["value"] = old_value.replace("X", str(mz_val))
+                    except AttributeError:
+                        pass
 
             substituted_parse["comment"] = str(mz_val)
             all_concrete_queries.append(substituted_parse)

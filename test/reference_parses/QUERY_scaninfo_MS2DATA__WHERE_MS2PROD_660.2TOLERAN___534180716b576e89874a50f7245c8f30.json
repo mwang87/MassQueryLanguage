@@ -1,0 +1,46 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitypercent": {
+                    "name": "qualifierintensitypercent",
+                    "value": 1.0
+                },
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.1
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                660.2
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitypercent": {
+                    "name": "qualifierintensitypercent",
+                    "value": 1.0
+                },
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.1
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                468.2
+            ]
+        }
+    ],
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}

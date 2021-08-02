@@ -5,19 +5,37 @@
             "qualifiers": {
                 "qualifierintensitymatch": {
                     "name": "qualifierintensitymatch",
+                    "value": "Y*0.063"
+                },
+                "qualifierintensitytolpercent": {
+                    "name": "qualifierintensitytolpercent",
+                    "value": 25.0
+                },
+                "qualifierppmtolerance": {
+                    "name": "qualifierppmtolerance",
+                    "unit": "ppm",
+                    "value": 10.0
+                },
+                "type": "qualifier"
+            },
+            "type": "ms1mzcondition",
+            "value": [
+                "X-1.993"
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitymatch": {
+                    "name": "qualifierintensitymatch",
                     "value": "Y"
                 },
                 "qualifierintensitypercent": {
                     "name": "qualifierintensitypercent",
-                    "value": 25.0
+                    "value": 5.0
                 },
                 "qualifierintensityreference": {
                     "name": "qualifierintensityreference"
-                },
-                "qualifiermztolerance": {
-                    "name": "qualifiermztolerance",
-                    "unit": "mz",
-                    "value": 0.1
                 },
                 "type": "qualifier"
             },
@@ -31,22 +49,32 @@
             "qualifiers": {
                 "qualifierintensitymatch": {
                     "name": "qualifierintensitymatch",
-                    "value": "Y*0.33"
+                    "value": "Y*0.5"
                 },
                 "qualifierintensitytolpercent": {
                     "name": "qualifierintensitytolpercent",
-                    "value": 30.0
-                },
-                "qualifiermztolerance": {
-                    "name": "qualifiermztolerance",
-                    "unit": "mz",
-                    "value": 0.1
+                    "value": 60.0
                 },
                 "type": "qualifier"
             },
             "type": "ms1mzcondition",
             "value": [
-                "X+2.0"
+                "X+1.0"
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierppmtolerance": {
+                    "name": "qualifierppmtolerance",
+                    "unit": "ppm",
+                    "value": 10.0
+                },
+                "type": "qualifier"
+            },
+            "type": "ms1mzcondition",
+            "value": [
+                "X-52.91"
             ]
         },
         {
