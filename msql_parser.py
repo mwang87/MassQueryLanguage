@@ -326,4 +326,8 @@ def parse_msql(input_query, path_to_grammar="msql.ebnf"):
    tree = msql_parser.parse(input_query)
    parsed_list = MassQLToJSON().transform(tree)
 
+   parsed_list["query"] = input_query
+
+   print(parsed_list)
+
    return parsed_list
