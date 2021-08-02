@@ -209,7 +209,6 @@ def test_ms1_iron_parallel():
     assert(1223 in list(results_df["scan"]))
     assert(len(results_df) == 15)
 
-@pytest.mark.skip(reason="not implemented")
 def test_ms1_iron_X_changes_intensity():
     query = "QUERY scaninfo(MS2DATA) WHERE \
         MS1MZ=X-2:INTENSITYMATCH=Y*(0.0608+(.000002*X)):INTENSITYMATCHPERCENT=25 AND \
@@ -217,6 +216,8 @@ def test_ms1_iron_X_changes_intensity():
         MS2PREC=X"
     parse_obj = msql_parser.parse_msql(query)
     print(parse_obj)
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+
 
 def test_ms1_iron_min_intensity():
     #msql_engine.init_ray()
@@ -527,7 +528,8 @@ def main():
     #test_gnps_pqs_library()
     #test_mse()
     #test_visualize()
-    test_translator()
+    #test_translator()
+    test_ms1_iron_X_changes_intensity()
 
 if __name__ == "__main__":
     main()
