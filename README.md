@@ -1,5 +1,8 @@
 # MASS Query Languge
 
+[![Unit Testing](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-unit.yml/badge.svg)](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-unit.yml)
+[![NF Workflow Testing](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-workflow.yml/badge.svg)](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-workflow.yml)
+
 This is the repository to define the language and reference implementation. This contains several parts
 
 1. Language Grammar
@@ -20,6 +23,7 @@ Mingxun Wang is the main creator and developer of MSQL. Contact me for contribut
 
 ## Python API
 
+TODO
 
 ## License
 
