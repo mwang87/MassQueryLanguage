@@ -11,7 +11,6 @@ This is the repository to define the language and reference implementation. This
 1. NextFlow Workflow For Large Scale Analysis
 1. ProteoSAFe workflow
 1. Dash interactive exploration
-1. Documentation for MSQL
 
 ## Developers/Contact
 
