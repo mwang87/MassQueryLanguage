@@ -328,6 +328,4 @@ def parse_msql(input_query, path_to_grammar="msql.ebnf"):
 
    parsed_list["query"] = input_query
 
-   print(parsed_list)
-
    return parsed_list
