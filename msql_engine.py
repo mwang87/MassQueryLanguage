@@ -245,7 +245,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
             for value in condition["value"]:
                 try:
                     # Checking if X is in any string
-                    if "X" in value[0]:
+                    if "X" in value:
                         continue
                 except TypeError:
                     # This is when the target is actually a float

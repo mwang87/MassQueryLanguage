@@ -441,6 +441,10 @@ def test_agilent():
     query = "QUERY scaninfo(MS2DATA)"
     results_df = msql_engine.process_query(query, "test/20190310_MSMSpos_marine_water_20180510_CBTheaFoss_1.mzML")
 
+def test_formula():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=2.0*(X - formula(Fe))"
+    results_df = msql_engine.process_query(query, "test/bld_plt1_07_120_1.mzML")
+
 def test_visualize():
     #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=177 AND MS2PROD=270 AND MS2NL=163"
     #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X+14"
@@ -466,7 +470,7 @@ def test_query():
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
         print(test_query)
-        msql_engine.process_query(test_query, "test/bld_plt1_07_120_1.mzML")
+        msql_engine.process_query(test_query, "test/GNPS00002_A3_p.mzML")
 
 def test_load():
     ms1_df, ms2_df = msql_fileloading.load_data("test/JB_182_2_fe.mzML", cache=False)

@@ -126,7 +126,7 @@ moleculeformula: /[A-Z][A-Za-z1-9]*/
 aminoacids: /[A-Z][A-Z]*/
 peptide: /[A-Z][A-Z]*/
 peptidecharge: /[1-9]/
-peptideion: /[A-Z]/
+peptideion: /[A-Za-z]/
 
 // Boiler Plate
 %import common.ESCAPED_STRING   -> STRING
