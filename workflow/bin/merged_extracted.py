@@ -25,6 +25,7 @@ def main():
     for json_filename in all_json_files:
         all_spectra += json.loads(open(json_filename).read())
 
+    # Renumbering the scans when merging
     scan = 1
     for spectrum in all_spectra:
         spectrum["new_scan"] = scan
