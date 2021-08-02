@@ -31,6 +31,7 @@
             ]
         }
     ],
+    "query": "QUERY scaninfo(MS2DATA) WHERE MS2PROD=167.0857:TOLERANCEPPM=5 AND MS2NL=176.0321:TOLERANCEPPM=5",
     "querytype": {
         "datatype": "datams2data",
         "function": "functionscaninfo"

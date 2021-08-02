@@ -15,6 +15,7 @@
             ]
         }
     ],
+    "query": "QUERY scaninfo(MS1DATA) WHERE SCANMIN=100 AND SCANMAX=105",
     "querytype": {
         "datatype": "datams1data",
         "function": "functionscaninfo"

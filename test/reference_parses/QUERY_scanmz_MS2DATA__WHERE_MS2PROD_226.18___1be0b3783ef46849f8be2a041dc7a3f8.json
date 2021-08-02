@@ -8,6 +8,7 @@
             ]
         }
     ],
+    "query": "QUERY scanmz(MS2DATA) WHERE MS2PROD=226.18",
     "querytype": {
         "datatype": "datams2data",
         "function": "functionscanmz"

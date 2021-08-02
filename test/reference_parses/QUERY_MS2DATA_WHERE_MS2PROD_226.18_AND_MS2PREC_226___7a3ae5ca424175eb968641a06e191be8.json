@@ -15,6 +15,7 @@
             ]
         }
     ],
+    "query": "QUERY MS2DATA WHERE MS2PROD=226.18 AND MS2PREC=226.1797",
     "querytype": {
         "datatype": "datams2data",
         "function": null

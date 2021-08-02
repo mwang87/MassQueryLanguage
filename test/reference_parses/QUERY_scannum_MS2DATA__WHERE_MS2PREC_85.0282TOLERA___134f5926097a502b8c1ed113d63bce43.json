@@ -16,6 +16,7 @@
             ]
         }
     ],
+    "query": "QUERY scannum(MS2DATA) WHERE MS2PREC=85.0282:TOLERANCEMZ=0.1",
     "querytype": {
         "datatype": "datams2data",
         "function": "functionscannum"

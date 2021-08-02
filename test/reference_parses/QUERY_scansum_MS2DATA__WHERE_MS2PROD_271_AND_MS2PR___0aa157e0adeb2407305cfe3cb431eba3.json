@@ -15,6 +15,7 @@
             ]
         }
     ],
+    "query": "QUERY scansum(MS2DATA) WHERE MS2PROD=271 AND MS2PREC=500",
     "querytype": {
         "datatype": "datams2data",
         "function": "functionscansum"

@@ -20,6 +20,7 @@
             ]
         }
     ],
+    "query": "QUERY scaninfo(MS1DATA) WHERE MS1MZ=425.2898:TOLERANCEMZ=0.1:INTENSITYPERCENT>0.1",
     "querytype": {
         "datatype": "datams1data",
         "function": "functionscaninfo"

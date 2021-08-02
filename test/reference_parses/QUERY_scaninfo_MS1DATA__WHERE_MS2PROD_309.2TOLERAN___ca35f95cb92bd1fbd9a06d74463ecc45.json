@@ -20,6 +20,7 @@
             ]
         }
     ],
+    "query": "QUERY scaninfo(MS1DATA) WHERE MS2PROD=309.2:TOLERANCEMZ=0.1:INTENSITYTICPERCENT=10",
     "querytype": {
         "datatype": "datams1data",
         "function": "functionscaninfo"

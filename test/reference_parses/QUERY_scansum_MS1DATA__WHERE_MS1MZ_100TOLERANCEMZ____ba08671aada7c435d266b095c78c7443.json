@@ -16,6 +16,7 @@
             ]
         }
     ],
+    "query": "QUERY scansum(MS1DATA) WHERE MS1MZ=100:TOLERANCEMZ=0.1",
     "querytype": {
         "datatype": "datams1data",
         "function": "functionscansum"

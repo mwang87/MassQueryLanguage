@@ -8,6 +8,7 @@
             ]
         }
     ],
+    "query": "QUERY scannum(MS2DATA) WHERE MS2NL=163",
     "querytype": {
         "datatype": "datams2data",
         "function": "functionscannum"

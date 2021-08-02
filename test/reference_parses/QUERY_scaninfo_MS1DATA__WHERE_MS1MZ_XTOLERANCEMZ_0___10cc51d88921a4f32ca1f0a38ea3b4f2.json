@@ -64,6 +64,7 @@
             ]
         }
     ],
+    "query": "QUERY scaninfo(MS1DATA) WHERE MS1MZ=X:TOLERANCEMZ=0.1:INTENSITYPERCENT=25:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE AND MS1MZ=X+2:TOLERANCEMZ=0.1:INTENSITYMATCH=Y*0.33:INTENSITYMATCHPERCENT=30 AND MS2PREC=X FILTER MS1MZ=X",
     "querytype": {
         "datatype": "datams1data",
         "function": "functionscaninfo"

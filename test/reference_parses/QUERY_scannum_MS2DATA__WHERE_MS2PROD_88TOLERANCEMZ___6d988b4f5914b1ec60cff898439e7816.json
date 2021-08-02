@@ -27,6 +27,7 @@
             ]
         }
     ],
+    "query": "QUERY scannum(MS2DATA) WHERE MS2PROD=88:TOLERANCEMZ=0.1:INTENSITYPERCENT>10 AND MS2PREC=600",
     "querytype": {
         "datatype": "datams2data",
         "function": "functionscannum"

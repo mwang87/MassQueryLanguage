@@ -47,6 +47,7 @@
             ]
         }
     ],
+    "query": "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X-2:INTENSITYMATCH=Y*(0.0608+(.000002*X)):INTENSITYMATCHPERCENT=25 AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=5 AND MS2PREC=X",
     "querytype": {
         "datatype": "datams2data",
         "function": "functionscaninfo"
