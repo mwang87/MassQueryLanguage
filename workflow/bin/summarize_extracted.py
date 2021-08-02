@@ -49,16 +49,35 @@ def main():
         except:
             pass
 
-        # 2D histogram with comment
+        # 2D histogram with MS2 comment
         try:
             precbins = int(max(peaks_df["precmz"]) - min(peaks_df["precmz"]))
+            
             peaks_df["mzminuscomment"] = peaks_df["mz"] - peaks_df["comment"]
             fig = px.density_heatmap(peaks_df, 
                                     title='2D m/z peak histogram minus X',
                                     x="mzminuscomment", 
                                     y="precmz",
-                                    color_continuous_scale="Turbo",
-                                    nbinsx=peakbins, nbinsy=precbins)
+                                    color_continuous_scale="Jet",
+                                    nbinsx=peakbins, nbinsy=precbins,
+                                    marginal_x="histogram", marginal_y="histogram")
+            f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+        except:
+            pass
+
+        # 2D histogram with MS1 peaks comment
+        try:
+            mz_bins = int(max(peaks_df["mz"]) - min(peaks_df["mz"]))
+            comment_bins = int(max(peaks_df["comment"]) - min(peaks_df["comment"]))
+
+            peaks_df["mzminuscomment"] = peaks_df["mz"] - peaks_df["comment"]
+            fig = px.density_heatmap(peaks_df, 
+                                    title='2D m/z peak histogram minus X',
+                                    x="mzminuscomment", 
+                                    y="comment",
+                                    color_continuous_scale="Jet",
+                                    nbinsx=mz_bins, nbinsy=comment_bins,
+                                    marginal_x="histogram", marginal_y="histogram")
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
         except:
             pass
