@@ -9,7 +9,7 @@ params.extract = 'YES'
 _spectra_ch = Channel.fromPath( params.input_spectra )
 _spectra_ch.into{_spectra_ch1;_spectra_ch2}
 
-_spectra_ch3 = _spectra_ch1.map { file -> tuple(file, file.toString().replaceAll("/", "_"), file) }
+_spectra_ch3 = _spectra_ch1.map { file -> tuple(file, file.toString().replaceAll("/", "_").replaceAll(" ", "_"), file) }
 
 TOOL_FOLDER = "$baseDir/bin"
 params.publishdir = "nf_output"
