@@ -94,7 +94,6 @@ def main():
                                     nbinsx=mz_bins, nbinsy=comment_bins,)
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
-
             fig = px.histogram(peaks_df, 
                                 x="mzminuscomment",
                                 y="i",
