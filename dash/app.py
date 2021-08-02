@@ -8,15 +8,15 @@ import plotly.express as px
 import plotly.graph_objects as go 
 import dash_daq as daq
 from dash.dependencies import Input, Output, State
+
+
+from flask import Flask, request
+
 import os
-from zipfile import ZipFile
 import urllib.parse
-from flask import Flask, send_from_directory, request
 
 import pandas as pd
 import requests
-import uuid
-import werkzeug
 import glob
 
 import pymzml
@@ -24,9 +24,6 @@ import numpy as np
 from tqdm import tqdm
 import urllib
 import json
-
-from collections import defaultdict
-import uuid
 
 from flask_caching import Cache
 import tasks
@@ -69,7 +66,7 @@ DATASELECTION_CARD = [
     dbc.CardHeader(html.H5("Data Selection")),
     dbc.CardBody(
         [   
-            html.H5(children='GNPS Data Selection'),
+            html.H5(children='Query Sandbox'),
             dbc.InputGroup(
                 [
                     dbc.InputGroupAddon("Query", addon_type="prepend"),
@@ -251,7 +248,7 @@ BODY = dbc.Container(
         dbc.Row([
             dbc.Col(
                 dbc.Card(LEFT_DASHBOARD),
-                className="w-50"
+                className="col-6"
             ),
             dbc.Col(
                 [
@@ -261,7 +258,7 @@ BODY = dbc.Container(
                     html.Br(),
                     dbc.Card(EXAMPLES_DASHBOARD)
                 ],
-                className="w-50"
+                className="col-6"
             ),
         ], style={"marginTop": 30}),
     ],
@@ -296,7 +293,7 @@ def determine_params(search):
         query_dict = {}
 
     query = _get_url_param(query_dict, "query", 'QUERY scaninfo(MS2DATA) WHERE MS2PROD=226.18:TOLERANCEPPM=5')
-    filename = _get_url_param(query_dict, "filename", 'QUERY scaninfo(MS2DATA) WHERE MS2PROD=226.18:TOLERANCEPPM=5')
+    filename = _get_url_param(query_dict, "filename", dash.no_update)
     x_axis = _get_url_param(query_dict, "x_axis", dash.no_update)
     y_axis = _get_url_param(query_dict, "y_axis", dash.no_update)
     facet_column = _get_url_param(query_dict, "facet_column", dash.no_update)
@@ -323,13 +320,9 @@ def determine_files(search):
 
     return [file_list]
 
-@app.callback([
-                Output('output_parse', 'children'),
-              ],
-              [
-                  Input('query', 'value')
-            ])
-def draw_parse(query):
+def _render_parse(query):
+    response_list = []
+
     try:
         parse_results = msql_parser.parse_msql(query)
     except:
@@ -347,8 +340,43 @@ def draw_parse(query):
         translation = msql_translator.translate_query(query)
     except:
         translation = "Translation Error"
+    
+    return [html.Pre(query), html.Hr(), html.Pre(translation), html.Hr(), parse_markdown, html.Hr()]
 
-    return [[html.Pre(translation), html.Hr(), parse_markdown]]
+@app.callback([
+                Output('output_parse', 'children'),
+              ],
+              [
+                  Input('query', 'value')
+            ])
+def draw_parse(query):
+    all_queries = query.split("|||")
+
+    # Let's parse first
+    merged_list = []
+    for split_query in all_queries:
+        parse_render_list = _render_parse(split_query)
+        merged_list += parse_render_list
+    
+    return [merged_list]
+
+
+def _render_parse_visualizations(query, x_value, y_value, ms1_peaks, ms2_peaks):
+    try:
+        ms1_fig, ms2_fig = msql_visualizer.visualize_query(query, 
+                                                            variable_x=float(x_value), 
+                                                            variable_y=float(y_value),
+                                                            ms1_peaks=ms1_peaks,
+                                                            ms2_peaks=ms2_peaks)
+    except:
+        ["Parse Error"]
+
+    ms1_graph = dcc.Graph(figure=ms1_fig)
+    ms2_graph = dcc.Graph(figure=ms2_fig)
+
+    return [ms1_graph, ms2_graph]
+
+    
 
 @app.callback([
                 Output('output_parse_drawing', 'children'),
@@ -377,20 +405,15 @@ def draw_parse_drawing(query, x_value, y_value, ms1_usi, ms2_usi):
     except:
         pass
 
-    try:
-        ms1_fig, ms2_fig = msql_visualizer.visualize_query(query, 
-                                                            variable_x=float(x_value), 
-                                                            variable_y=float(y_value),
-                                                            ms1_peaks=ms1_peaks,
-                                                            ms2_peaks=ms2_peaks)
-    except:
-        raise
-        return ["Parse Error"]
+    all_queries = query.split("|||")
 
-    ms1_graph = dcc.Graph(figure=ms1_fig)
-    ms2_graph = dcc.Graph(figure=ms2_fig)
-
-    return [[ms1_graph, ms2_graph]]
+    # Let's parse first
+    merged_list = []
+    for split_query in all_queries:
+        parse_render_list = _render_parse_visualizations(split_query, x_value, y_value, ms1_peaks, ms2_peaks)
+        merged_list += parse_render_list
+        
+    return [merged_list]
 
 @app.callback([
                 Output('output', 'children'),
@@ -435,15 +458,16 @@ def draw_output(query, filename):
                   Input('facet_column', 'value')
             ])
 def draw_plot(query, filename, x_axis, y_axis, facet_column):
-    parse_results = msql_parser.parse_msql(query)
+    try:
+        parse_results = msql_parser.parse_msql(query)
+    except:
+        return ["Parse Error"]
 
     full_filepath = os.path.join("test", filename)
     results_list = tasks.task_executequery.delay(query, full_filepath)
     results_list = results_list.get()
 
     results_df = pd.DataFrame(results_list)
-
-    import plotly.express as px
 
     try:
         fig = px.scatter(results_df, x=x_axis, y=y_axis, facet_row=facet_column)
