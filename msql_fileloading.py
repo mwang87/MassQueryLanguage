@@ -107,6 +107,10 @@ def _load_data_gnps_json(input_filename):
     ms2_df_list = []
 
     for spectrum in tqdm(all_spectra):
+        # Skipping spectra bigger than 1MB of peaks
+        if len(spectrum["peaks_json"]) > 1000000:
+            continue
+
         peaks = json.loads(spectrum["peaks_json"])
         peaks = [peak for peak in peaks if peak[1] > 0]
         if len(peaks) == 0:
@@ -130,7 +134,6 @@ def _load_data_gnps_json(input_filename):
             peak_dict["ms1scan"] = 0
             peak_dict["charge"] = 1 # TODO: Add Charge Correctly here
             peak_dict["polarity"] = 1 # TODO: Add Polarity Correctly here
-            
 
             ms2mz_list.append(peak_dict)
         
