@@ -238,6 +238,9 @@ EXAMPLES_DASHBOARD = [
             html.A('Get MS1 peaks where a MS2 with product ion is present', 
                     href="/?query=QUERY MS1DATA WHERE MS2PROD=226.18"),
             html.Br(),
+            html.A('Query with Formula and arithmetic',
+                    href="/?query=QUERY+scaninfo%28MS2DATA%29+WHERE+MS2PROD%3D144%2Bformula%28CH2%29&filename=GNPS00002_A3_p.mzML&x_axis=&y_axis=&facet_column=&scan=&x_value=500&y_value=1&ms1_usi=&ms2_usi="),
+            html.Br(),
             html.A('Sub Query', 
                     href="/?query=QUERY scanrangesum(MS1DATA, TOLERANCE=0.1) WHERE MS1MZ=(QUERY scanmz(MS2DATA) WHERE MS2NL=176.0321 AND MS2PROD=85.02915)")
         ]
