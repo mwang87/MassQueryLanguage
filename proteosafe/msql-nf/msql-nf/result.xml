@@ -160,7 +160,8 @@
                 <parser type="stream" contentType="text/xml"/>
             </parsers>
         </data>
-        <parameter name="URLBASE" value='https://msql.ucsd.edu/?query=@QUERY'/>
+        <parameter name="URLBASE" value='https://msql.ucsd.edu/'/>
+        <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
     </block>
 
     <!-- Summary Stats for Compute -->

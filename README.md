@@ -15,7 +15,6 @@ This is the repository to define the language and reference implementation. This
 ## Developers/Contact
 
 Mingxun Wang is the main creator and developer of MSQL. Contact me for contributing or using it!
-
 ## Docs
 
 [Here](https://mwang87.github.io/MassQueryLanguage_Documentation/)
