@@ -549,7 +549,7 @@ def draw_spectrum(filename, scan):
 
 
 ### Rendering URL
-@dash_app.callback([
+@app.callback([
                 Output('query_link', 'href'),
               ],
                 [
