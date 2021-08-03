@@ -33,7 +33,7 @@ import msql_translator
 
 server = Flask(__name__)
 app = dash.Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
-app.title = 'GNPS - Template'
+app.title = 'GNPS - MassQL Sandbox Dashboard'
 
 cache = Cache(app.server, config={
     'CACHE_TYPE': 'filesystem',
@@ -52,7 +52,7 @@ NAVBAR = dbc.Navbar(
         ),
         dbc.Nav(
             [
-                dbc.NavItem(dbc.NavLink("GNPS - MSQL Dashboard - Version 0.2", href="#")),
+                dbc.NavItem(dbc.NavLink("GNPS - MassQL Sandbox Dashboard - Version 0.3", href="#")),
                 dbc.NavItem(dbc.NavLink("Documentation", href="https://mwang87.github.io/MassQueryLanguage_Documentation/")),
             ],
         navbar=True)
@@ -432,14 +432,17 @@ def draw_parse_drawing(query, x_value, y_value, ms1_usi, ms2_usi):
                   Input('filename', 'value')
             ])
 def draw_output(query, filename):
-    parse_results = msql_parser.parse_msql(query)
+    try:
+        parse_results = msql_parser.parse_msql(query)
 
-    full_filepath = os.path.join("test", filename)
-    results_list = tasks.task_executequery.delay(query, full_filepath)
-    results_list = results_list.get()
+        full_filepath = os.path.join("test", filename)
+        results_list = tasks.task_executequery.delay(query, full_filepath)
+        results_list = results_list.get()
 
-    if len(results_list) == 0:
-        return ["No Matches"]
+        if len(results_list) == 0:
+            return ["No Matches"]
+    except:
+        return ["Query Error"]
 
     # Doing enrichment if possible
 
