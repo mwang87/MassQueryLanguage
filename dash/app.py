@@ -116,6 +116,7 @@ DATASELECTION_CARD = [
                 className="mb-3",
             ),
             html.Br(),
+            dbc.Button("Copy Link", block=True, color="info", id="copy_link_button", n_clicks=0),
             html.Hr(),
             html.H5("Parse Viz Options"),
             dbc.InputGroup(
@@ -146,6 +147,7 @@ DATASELECTION_CARD = [
                 ],
                 className="mb-3",
             ),
+            html.Hr(),
             html.H5(children='Query Parse Visualization'),
             dcc.Loading(
                 id="output_parse_drawing",
@@ -245,6 +247,12 @@ EXAMPLES_DASHBOARD = [
 BODY = dbc.Container(
     [
         dcc.Location(id='url', refresh=False),
+        html.Div(
+            [
+                dcc.Link(id="query_link", href="#", target="_blank"),
+            ],
+            style="display:none"
+        ),
         dbc.Row([
             dbc.Col(
                 dbc.Card(LEFT_DASHBOARD),
@@ -261,6 +269,7 @@ BODY = dbc.Container(
                 className="col-6"
             ),
         ], style={"marginTop": 30}),
+        
     ],
     fluid=True,
     className="",
@@ -537,6 +546,71 @@ def draw_spectrum(filename, scan):
     interactive_fig.update_yaxes(range=[0, max(ints) * 1.2])
 
     return [dcc.Graph(figure=interactive_fig)]
+
+
+### Rendering URL
+@dash_app.callback([
+                Output('query_link', 'href'),
+              ],
+                [
+                    Input('query', 'value'),
+                    Input('filename', 'value'),
+                    Input('x_axis', 'value'),
+                    Input('y_axis', 'value'),
+                    Input('facet_column', 'value'),
+                    Input('scan', 'value'),
+                    Input('x_value', 'value'),
+                    Input('y_value', 'value'),
+                    Input('ms1_usi', 'value'),
+                    Input('ms2_usi', 'value'),
+                ])
+def draw_url(query, filename, x_axis, y_axis, facet_column, scan, x_value, y_value, ms1_usi, ms2_usi):
+    params = {}
+    params["query"] = query
+    params["filename"] = filename
+    params["x_axis"] = x_axis
+    params["y_axis"] = y_axis
+    params["facet_column"] = facet_column
+    params["scan"] = scan
+    params["x_value"] = x_value
+    params["y_value"] = y_value
+    params["ms1_usi"] = ms1_usi
+    params["ms2_usi"] = ms2_usi
+
+    url_params = urllib.parse.urlencode(params)
+
+    return [request.host_url + "/?" + url_params]
+
+app.clientside_callback(
+    """
+    function(n_clicks, text_to_copy) {
+        original_text = "Copy Link"
+        if (n_clicks > 0) {
+            const el = document.createElement('textarea');
+            el.value = text_to_copy;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            setTimeout(function(){ 
+                    document.getElementById("copy_link_button").textContent = original_text
+                }, 1000);
+            document.getElementById("copy_link_button").textContent = "Copied!"
+            return 'Copied!';
+        } else {
+            document.getElementById("copy_link_button").textContent = original_text
+            return original_text;
+        }
+    }
+    """,
+    Output('copy_link_button', 'children'),
+    [
+        Input('copy_link_button', 'n_clicks')
+    ],
+    [
+        State('query_link', 'href'),
+    ]
+)
 
 # API
 @server.route("/api")
