@@ -83,7 +83,7 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
         neg_ints = [intensity * -1 for intensity in ints]
 
         # Hover data
-        hover_labels = ["{:.4f} m/z, {:.2f} int".format(mzs[i], ints[i]) for i in range(len(mzs))]
+        hover_labels = ["{:.4f} m/z, {:.3f} int".format(mzs[i], ints[i]) for i in range(len(mzs))]
 
         ms2_fig = go.Figure(
             data=go.Scatter(x=mzs, y=ints, 
@@ -117,6 +117,7 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
                 if "qualifierintensitymatch" in condition["qualifiers"]:
                     intensity = condition["qualifiers"]["qualifierintensitymatch"]["value"]
 
+            # Draw the bounds of the for the MS2 Product
             ms2_fig.add_shape(type="rect",
                 x0=mz_min, y0=0, x1=mz_max, y1=intensity,
                 line=dict(
@@ -167,6 +168,32 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
                     width=2,
                 )
             )
+
+            # Determining if we should draw intensity bounds
+            if "qualifiers" in condition:
+                if "qualifierintensitytolpercent" in condition["qualifiers"]:
+                    percent_tolerance = condition["qualifiers"]["qualifierintensitytolpercent"]["value"]
+                    percent_tolerance = percent_tolerance / 100
+                    min_intensity = intensity - intensity * percent_tolerance
+                    max_intensity = intensity + intensity * percent_tolerance
+
+                    ms1_fig.add_shape(type="line",
+                        x0=mz_min, y0=min_intensity, x1=mz_max, y1=min_intensity,
+                        line=dict(
+                            color="purple",
+                            width=2,
+                            dash="dot",
+                        )
+                    )
+
+                    ms1_fig.add_shape(type="line",
+                        x0=mz_min, y0=max_intensity, x1=mz_max, y1=max_intensity,
+                        line=dict(
+                            color="purple",
+                            width=2,
+                            dash="dot",
+                        )
+                    )
 
     # Set axes properties
     ms2_fig.update_xaxes(range=[0, 1000], showgrid=False)
