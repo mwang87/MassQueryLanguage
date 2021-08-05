@@ -91,6 +91,9 @@ def _get_minintensity(qualifier):
     if "qualifierintensityticpercent" in qualifier:
         min_tic_percent_intensity = float(qualifier["qualifierintensityticpercent"]["value"]) / 100
 
+    # since the subsequent comparison is a strict greater than, if people set it to 100, then they won't get anything. 
+    min_percent_intensity = min(min_percent_intensity, 0.99)
+
     return min_intensity, min_percent_intensity, min_tic_percent_intensity
 
 def _get_intensitymatch_range(qualifiers, match_intensity):
