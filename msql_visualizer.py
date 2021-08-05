@@ -194,6 +194,18 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
                             dash="dot",
                         )
                     )
+                if "qualifierintensitypercent" in condition["qualifiers"]:
+                    value = condition["qualifiers"]["qualifierintensitypercent"]["value"] / 100
+
+                    ms1_fig.add_shape(type="line",
+                        x0=mz_min, y0=value, x1=mz_max, y1=value,
+                        line=dict(
+                            color="red",
+                            width=2,
+                            dash="dot",
+                        )
+                    )
+
 
     # Set axes properties
     ms2_fig.update_xaxes(range=[0, 1000], showgrid=False)
