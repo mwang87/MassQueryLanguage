@@ -446,18 +446,6 @@ def test_formula():
     query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=2.0*(X - formula(Fe))"
     results_df = msql_engine.process_query(query, "test/bld_plt1_07_120_1.mzML")
 
-def test_visualize():
-    #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=177 AND MS2PROD=270 AND MS2NL=163"
-    #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X+14"
-    #query = "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X AND MS1MZ=X+14"
-    query = "QUERY scaninfo(MS1DATA) WHERE \
-            MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25 \
-            AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE"
-
-    ms1_fig, ms2_fig = msql_visualizer.visualize_query(query)
-    ms2_fig.write_image("test_ms2_visualize.png", engine="kaleido")
-    ms1_fig.write_image("test_ms1_visualize.png", engine="kaleido")
-
 def test_translator():
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
