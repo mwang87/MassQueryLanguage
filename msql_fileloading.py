@@ -38,6 +38,7 @@ def load_data(input_filename, cache=False):
     # Actually loading
     if input_filename[-5:] == ".mzML":
         ms1_df, ms2_df = _load_data_mzML(input_filename)
+        #ms1_df, ms2_df = _load_data_mzML2(input_filename)
 
     if input_filename[-6:] == ".mzXML":
         ms1_df, ms2_df = _load_data_mzXML(input_filename)
@@ -239,7 +240,7 @@ def _determine_scan_polarity_mzXML(spec):
         polarity = 2
     return polarity
 
-def _load_data_mzML(input_filename):
+def _load_data_mzML2(input_filename):
     MS_precisions = {
         1: 5e-6,
         2: 20e-6,
@@ -251,14 +252,30 @@ def _load_data_mzML(input_filename):
     }
     run = pymzml.run.Reader(input_filename, MS_precisions=MS_precisions)
 
-    ms1_df_list = []
-    ms2_df_list = []
     previous_ms1_scan = 0
 
-    for i, spec in tqdm(enumerate(run)):
-        ms1mz_list = []
-        ms2mz_list = []
+    # MS1
+    all_mz = []
+    all_rt = []
+    all_polarity = []
+    all_i = []
+    all_i_norm = []
+    all_i_tic_norm = []
+    all_scan = []
 
+    # MS2
+    all_msn_mz = []
+    all_msn_rt = []
+    all_msn_polarity = []
+    all_msn_i = []
+    all_msn_i_norm = []
+    all_msn_i_tic_norm = []
+    all_msn_scan = []
+    all_msn_precmz = []
+    all_msn_ms1scan = []
+    all_msn_charge = []
+
+    for i, spec in tqdm(enumerate(run)):
         # Getting RT
         rt = spec.scan_time_in_minutes()
 
@@ -280,27 +297,27 @@ def _load_data_mzML(input_filename):
         if len(peaks) == 0:
             continue
 
+        # Filtering out zero rows
+        peaks = peaks[~np.any(peaks < 1.0, axis=1)]
+
+        # Sorting by intensity
+        peaks = peaks[peaks[:,1].argsort()]
+
         mz, intensity = zip(*peaks)
 
-        mz_list = list(mz)
-        i_list = list(intensity)
-        i_max = max(i_list)
-        i_sum = sum(i_list)
-        
+        i_max = max(intensity)
+        i_sum = sum(intensity)
+
         if spec.ms_level == 1:
-            for i in range(len(mz_list)):
-                peak_dict = {}
-                peak_dict["i"] = i_list[i]
-                peak_dict["i_norm"] = i_list[i] / i_max
-                peak_dict["i_tic_norm"] = i_list[i] / i_sum
-                peak_dict["mz"] = mz_list[i]
-                peak_dict["scan"] = spec.ID
-                peak_dict["rt"] = rt
-                peak_dict["polarity"] = _determine_scan_polarity_mzML(spec)
+            all_mz += list(mz)
+            all_i += list(intensity)
+            all_i_norm += list(intensity / i_max)
+            all_i_tic_norm += list(intensity / i_sum)
+            all_rt += len(mz) * [rt]
+            all_scan += len(mz) * [spec.ID]
+            all_polarity += len(mz) * [_determine_scan_polarity_mzML(spec)]
 
-                ms1mz_list.append(peak_dict)
-
-                previous_ms1_scan = spec.ID
+            previous_ms1_scan = spec.ID
 
         if spec.ms_level == 2:
             msn_mz = spec.selected_precursors[0]["mz"]
@@ -308,28 +325,120 @@ def _load_data_mzML(input_filename):
             if "charge" in spec.selected_precursors[0]:
                 charge = spec.selected_precursors[0]["charge"]
 
-            for i in range(len(mz_list)):
-                peak_dict = {}
-                peak_dict["i"] = i_list[i]
-                peak_dict["i_norm"] = i_list[i] / i_max
-                peak_dict["i_tic_norm"] = i_list[i] / i_sum
-                peak_dict["mz"] = mz_list[i]
-                peak_dict["scan"] = spec.ID
-                peak_dict["rt"] = rt
-                peak_dict["precmz"] = msn_mz
-                peak_dict["ms1scan"] = previous_ms1_scan
-                peak_dict["polarity"] = _determine_scan_polarity_mzML(spec)
-                peak_dict["charge"] = charge
+            all_msn_mz += list(mz)
+            all_msn_i += list(intensity)
+            all_msn_i_norm += list(intensity / i_max)
+            all_msn_i_tic_norm += list(intensity / i_sum)
+            all_msn_rt += len(mz) * [rt]
+            all_msn_scan += len(mz) * [spec.ID]
+            all_msn_polarity += len(mz) * [_determine_scan_polarity_mzML(spec)]
+            all_msn_precmz += len(mz) * [msn_mz]
+            all_msn_ms1scan += len(mz) * [previous_ms1_scan] 
+            all_msn_charge += len(mz) * [charge]
 
-                ms2mz_list.append(peak_dict)
+
+    ms1_df = pd.DataFrame()
+    if len(all_mz) > 0:
+        ms1_df['i'] = all_i
+        ms1_df['i_norm'] = all_i_norm
+        ms1_df['i_tic_norm'] = all_i_tic_norm
+        ms1_df['mz'] = all_mz
+        ms1_df['scan'] = all_scan
+        ms1_df['rt'] = all_rt
+        ms1_df['polarity'] = all_polarity
+
+    ms2_df = pd.DataFrame()
+    if len(all_msn_mz) > 0:
+        ms2_df['i'] = all_msn_i
+        ms2_df['i_norm'] = all_msn_i_norm
+        ms2_df['i_tic_norm'] = all_msn_i_tic_norm
+        ms2_df['mz'] = all_msn_mz
+        ms2_df['scan'] = all_msn_scan
+        ms2_df['rt'] = all_msn_rt
+        ms2_df["polarity"] = all_msn_polarity
+        ms2_df["precmz"] = all_msn_precmz
+        ms2_df["ms1scan"] = all_msn_ms1scan
+        ms2_df["charge"] = all_msn_charge
+    
+    return ms1_df, ms2_df
+
+def _load_data_mzML(input_filename):
+    MS_precisions = {
+        1: 5e-6,
+        2: 20e-6,
+        3: 20e-6,
+        4: 20e-6,
+        5: 20e-6,
+        6: 20e-6,
+        7: 20e-6,
+    }
+    run = pymzml.run.Reader(input_filename, MS_precisions=MS_precisions)
+
+    ms1_df_list = []
+    ms2_df_list = []
+    previous_ms1_scan = 0
+
+    for i, spec in tqdm(enumerate(run)):
+        ms1_df = pd.DataFrame()
+        ms2_df = pd.DataFrame()
+
+        # Getting RT
+        rt = spec.scan_time_in_minutes()
+
+        # Getting peaks
+        peaks = spec.peaks("raw")
+
+        # Filtering out zero rows
+        peaks = peaks[~np.any(peaks < 1.0, axis=1)]
+
+        # Sorting by intensity
+        peaks = peaks[peaks[:, 1].argsort()]
+
+        if spec.ms_level == 2:
+            # Getting top 1000
+            peaks = peaks[-1000:]
+
+        if len(peaks) == 0:
+            continue
+
+        mz, intensity = zip(*peaks)
+
+        i_max = max(intensity)
+        i_sum = sum(intensity)
+        
+        if spec.ms_level == 1:
+            ms1_df['i'] = intensity
+            ms1_df['i_norm'] = intensity / i_max
+            ms1_df['i_tic_norm'] = intensity / i_sum
+            ms1_df['mz'] = mz
+            ms1_df['scan'] = spec.ID
+            ms1_df['rt'] = rt
+            ms1_df['polarity'] = _determine_scan_polarity_mzML(spec)
+            
+            previous_ms1_scan = spec.ID
+
+        if spec.ms_level == 2:
+            msn_mz = spec.selected_precursors[0]["mz"]
+            charge = 0
+            if "charge" in spec.selected_precursors[0]:
+                charge = spec.selected_precursors[0]["charge"]
+
+            ms2_df['i'] = intensity
+            ms2_df['i_norm'] = intensity / i_max
+            ms2_df['i_tic_norm'] = intensity / i_sum
+            ms2_df['mz'] = mz
+            ms2_df['scan'] = spec.ID
+            ms2_df['rt'] = rt
+            ms2_df["polarity"] = _determine_scan_polarity_mzML(spec)
+            ms2_df["precmz"] = msn_mz
+            ms2_df["ms1scan"] = previous_ms1_scan
+            ms2_df["charge"] = charge
 
         # Turning into pandas data frames
-        if len(ms1mz_list) > 0:
-            ms1_df = pd.DataFrame(ms1mz_list)
+        if len(ms1_df) > 0:
             ms1_df_list.append(ms1_df)
         
-        if len(ms2mz_list) > 0:
-            ms2_df = pd.DataFrame(ms2mz_list)
+        if len(ms2_df) > 0:
             ms2_df_list.append(ms2_df)
 
     if len(ms1_df_list) > 0:

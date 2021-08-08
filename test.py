@@ -393,6 +393,8 @@ def test_nocache():
     results_df = msql_engine.process_query(query, "test/QC_0.mzML", cache=False, parallel=False)
     #results_df = msql_engine.process_query(query, "test/QC_0.mzML", cache=True, parallel=True)
 
+    print(results_df)
+
 
 
 @pytest.mark.skip(reason="too slow")
