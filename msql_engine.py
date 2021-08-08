@@ -7,7 +7,6 @@ import copy
 import logging
 from tqdm import tqdm
 
-import ray
 from py_expression_eval import Parser
 
 import msql_fileloading
@@ -23,6 +22,7 @@ def DEBUG_MSG(msg):
     print(msg, file=sys.stderr, flush=True)
 
 def init_ray():
+    import ray
     if not ray.is_initialized():
         ray.init(ignore_reinit_error=True, object_store_memory=8000000000, num_cpus=8)
 
@@ -364,16 +364,25 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
     collated_list = [] # This list holds the collated set of results from each query, final result is a concat of all of them
 
     # Ray Parallel Version
-    if ray.is_initialized() and parallel:
-        # TODO: Divide up the parallel thing
-        chunk_size = 100
-        concrete_query_lists = [all_concrete_queries[i:i + chunk_size] for i in range(0, len(all_concrete_queries), chunk_size)]
-        futures = [_executeconditions_query_ray.remote(concrete_query_list, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache) for concrete_query_list in concrete_query_lists]
-        all_ray_results = ray.get(futures)
+    execute_serial = True
+    if parallel:
+        import ray
+        import msql_engine_ray
 
-        # Flattening this list of lists
-        collated_list = [item for sublist in all_ray_results for item in sublist]
-    else:
+        if ray.is_initialized():
+            # TODO: Divide up the parallel thing
+            chunk_size = 100
+            concrete_query_lists = [all_concrete_queries[i:i + chunk_size] for i in range(0, len(all_concrete_queries), chunk_size)]
+            futures = [msql_engine_ray._executeconditions_query_ray.remote(concrete_query_list, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache) for concrete_query_list in concrete_query_lists]
+            all_ray_results = ray.get(futures)
+
+            # Flattening this list of lists
+            collated_list = [item for sublist in all_ray_results for item in sublist]
+
+            execute_serial = False
+    
+    # This is the fallback
+    if execute_serial:
         # Serial Version
         for concrete_query in tqdm(all_concrete_queries):
             results_ms1_df, results_ms2_df = _executeconditions_query(concrete_query, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache)
@@ -396,32 +405,6 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
         
     return collated_df
 
-
-@ray.remote
-def _executeconditions_query_ray(parsed_dict_list, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
-    """
-    Here we will use parallel ray, we will give a list of dictionaries to query, and return a list of results that are collated
-
-    Args:
-        parsed_dict_list ([type]): [description]
-        input_filename ([type]): [description]
-        ms1_input_df ([type], optional): [description]. Defaults to None.
-        ms2_input_df ([type], optional): [description]. Defaults to None.
-        cache (bool, optional): [description]. Defaults to True.
-
-    Returns:
-        [type]: [description]
-    """
-
-    collated_list = []
-
-    for parsed_dict in parsed_dict_list:
-        ms1_df, ms2_df = _executeconditions_query(parsed_dict, input_filename, ms1_input_df=ms1_input_df, ms2_input_df=ms2_input_df, cache=cache)
-
-        collated_df = _executecollate_query(parsed_dict, ms1_df, ms2_df)
-        collated_list.append(collated_df)
-
-    return collated_list
 
 def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
     # This function attempts to find the data that the query specifies in the conditions

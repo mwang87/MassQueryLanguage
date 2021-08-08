@@ -388,6 +388,12 @@ def test_ticintmin():
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     assert(len(results_df) == 0)
 
+def test_nocache():
+    query = "QUERY scaninfo(MS2DATA)"
+    #results_df = msql_engine.process_query(query, "test/QC_0.mzML", cache=False, parallel=False)
+    results_df = msql_engine.process_query(query, "test/QC_0.mzML", cache=True, parallel=True)
+
+
 
 @pytest.mark.skip(reason="too slow")
 def test_double_brominated():
@@ -517,7 +523,8 @@ def main():
     #test_mse()
     #test_visualize()
     #test_translator()
-    test_ms1_iron_X_changes_intensity()
+    #test_ms1_iron_X_changes_intensity()
+    test_nocache()
 
 if __name__ == "__main__":
     main()
