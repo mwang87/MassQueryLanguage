@@ -37,8 +37,8 @@ def load_data(input_filename, cache=False):
 
     # Actually loading
     if input_filename[-5:] == ".mzML":
-        ms1_df, ms2_df = _load_data_mzML(input_filename)
-        #ms1_df, ms2_df = _load_data_mzML2(input_filename)
+        #ms1_df, ms2_df = _load_data_mzML(input_filename)
+        ms1_df, ms2_df = _load_data_mzML2(input_filename)
 
     if input_filename[-6:] == ".mzXML":
         ms1_df, ms2_df = _load_data_mzXML(input_filename)
@@ -241,6 +241,16 @@ def _determine_scan_polarity_mzXML(spec):
     return polarity
 
 def _load_data_mzML2(input_filename):
+    """This is a faster loading version, but a bit more memory intensive
+
+    Args:
+        input_filename ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
+
+
     MS_precisions = {
         1: 5e-6,
         2: 20e-6,
@@ -285,23 +295,19 @@ def _load_data_mzML2(input_filename):
         # Filtering out zero rows
         peaks = peaks[~np.any(peaks < 1.0, axis=1)]
 
-        # Sorting by intensity
-        peaks = peaks[peaks[:, 1].argsort()]
-
-        #print(spec.ms_level, len(peaks))
-
         if spec.ms_level == 2:
-            # Getting top 1000
-            peaks = peaks[-1000:]
+            if len(peaks) > 1000:
+                # Sorting by intensity
+                peaks = peaks[peaks[:,1].argsort()]
+                
+                # Getting top 1000
+                peaks = peaks[-1000:]
 
         if len(peaks) == 0:
             continue
 
-        # Filtering out zero rows
-        peaks = peaks[~np.any(peaks < 1.0, axis=1)]
-
-        # Sorting by intensity
-        peaks = peaks[peaks[:,1].argsort()]
+        if len(peaks) > 2000:
+            print(len(peaks))
 
         mz, intensity = zip(*peaks)
 
