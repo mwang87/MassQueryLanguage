@@ -390,8 +390,8 @@ def test_ticintmin():
 
 def test_nocache():
     query = "QUERY scaninfo(MS2DATA)"
-    #results_df = msql_engine.process_query(query, "test/QC_0.mzML", cache=False, parallel=False)
-    results_df = msql_engine.process_query(query, "test/QC_0.mzML", cache=True, parallel=True)
+    results_df = msql_engine.process_query(query, "test/QC_0.mzML", cache=False, parallel=False)
+    #results_df = msql_engine.process_query(query, "test/QC_0.mzML", cache=True, parallel=True)
 
 
 
