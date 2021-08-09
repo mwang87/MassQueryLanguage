@@ -177,6 +177,18 @@
         </data>
         <row/>
     </block>
+
+    <view id="workflow_stdout" label="Workflow StdOut" group="Compute Stats">
+        <blockRef id="main" type="workflow_stdout"/>
+    </view>
+    <block id="workflow_stdout" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/stdout.log&amp;block=main&amp;process_html=false'/>
+    </block>
             
     <!-- <block id="proteosafe_workflow_trace" type="stream">
     

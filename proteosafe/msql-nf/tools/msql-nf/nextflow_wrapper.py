@@ -33,6 +33,8 @@ def main():
     os.system("pwd")
     os.system("ls -l -h")
 
+    output_stdout_file = os.path.join(args.metricoutput, "stdout.log")
+
     if args.runcluster == "YES" and args.user in ["mwang87"]:
         pbs_cluster_work_dir = os.path.join(args.clusterworkprefix, args.task, "work")
 
@@ -42,15 +44,17 @@ def main():
                 -with-trace \
                 -with-dag dag.html \
                 -with-report report.html \
-                -with-timeline timeline.html".format(args.conda_activate, args.nextflow_conda_environment,
-                            args.nextflow_script, args.clusterconfig, pbs_cluster_work_dir, args.clusterpythonruntime)
+                -with-timeline timeline.html > {} 2>&1".format(args.conda_activate, args.nextflow_conda_environment,
+                            args.nextflow_script, args.clusterconfig, pbs_cluster_work_dir, args.clusterpythonruntime,
+                            output_stdout_file)
     else:
         cmd = "source {} {} && nextflow run {} \
                 -with-trace \
                 -with-dag dag.html \
                 -with-report report.html \
-                -with-timeline timeline.html".format(args.conda_activate, args.nextflow_conda_environment,
-                            args.nextflow_script)
+                -with-timeline timeline.html > {} 2>&1".format(args.conda_activate, args.nextflow_conda_environment,
+                            args.nextflow_script,
+                            output_stdout_file)
     for parameter in args.newparameters:
         print(parameter)
         cmd += ' --{} "{}"'.format(parameter.split(":")[0], parameter.split(":")[1].replace("\n", ""))
@@ -62,10 +66,6 @@ def main():
         old_param = parameter.split(":")[0]
 
         cmd += ' --{} "{}"'.format(new_param, params_obj[old_param][0].replace("\n", ""))
-
-
-    #if args.conda is not None:
-    #    cmd += " -with-conda {}".format(args.conda)
 
     print(cmd)
     return_val = os.system(cmd)
