@@ -299,16 +299,13 @@ def _load_data_mzML2(input_filename):
             if len(peaks) > 1000:
                 # Sorting by intensity
                 peaks = peaks[peaks[:,1].argsort()]
-                
+
                 # Getting top 1000
                 peaks = peaks[-1000:]
 
         if len(peaks) == 0:
             continue
-
-        if len(peaks) > 2000:
-            print(len(peaks))
-
+        
         mz, intensity = zip(*peaks)
 
         i_max = max(intensity)
