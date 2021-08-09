@@ -86,6 +86,8 @@ if(params.extract == "YES"){
     process formatExtractedSpectra {
         publishDir "$params.publishdir/extracted", mode: 'copy'
         cache false
+
+        memory { 64.GB }
         
         input:
         file "json/*" from _query_extract_results_ch.collect()
@@ -111,6 +113,8 @@ if(params.extract == "YES"){
         cache false
         echo true
         errorStrategy 'ignore'
+
+        memory { 64.GB }
         
         input:
         file(extracted_json) from _extracted_json_ch
