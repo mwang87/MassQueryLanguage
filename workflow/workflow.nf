@@ -21,9 +21,9 @@ if(params.parallel_files == "YES"){
         time '2h'
         //maxRetries 3
         //memory { 6.GB * task.attempt }
-        memory { 8.GB }
+        memory { 12.GB }
 
-        publishDir "$params.publishdir/msql", mode: 'copy'
+        publishDir "$params.publishdir/msql_temp", mode: 'copy'
         
         input:
         set val(filepath), val(mangled_output_filename), file(input_spectrum) from _spectra_ch3
@@ -86,6 +86,7 @@ if(params.extract == "YES"){
     process formatExtractedSpectra {
         publishDir "$params.publishdir/extracted", mode: 'copy'
         cache false
+        errorStrategy 'ignore'
 
         memory { 64.GB }
         
