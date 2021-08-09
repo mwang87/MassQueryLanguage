@@ -72,7 +72,7 @@ def main():
             # Cleanup for repository search
             useful_filename = useful_filename.replace("/data/ccms-data/uploads/", "")
             
-
+            # Saving output
             results_df["original_path"] = useful_filename
 
             
