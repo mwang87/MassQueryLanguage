@@ -5,6 +5,8 @@ import glob
 import sys
 import pandas as pd
 import ming_proteosafe_library
+import pathlib
+
 
 def main():
     parser = argparse.ArgumentParser(description="Proteosafe Wrapper for Nextflow")
@@ -33,18 +35,25 @@ def main():
     os.system("pwd")
     os.system("ls -l -h")
 
-    output_stdout_file = os.path.join(args.metricoutput, "stdout.log")
+    output_stdout_file = os.path.abspath(os.path.join(args.metricoutput, "stdout.log"))
+    workflow_task_directory = "."
+    original_directory = os.getcwd()
 
     if args.runcluster == "YES" and args.user in ["mwang87"]:
+        # Staging all files on gscratch because they might not be seen if we schedule outputs from local scratch disk
+        workflow_task_directory = os.path.join("/gscratch/nextflow_staging", args.task)
+        pathlib.Path(workflow_task_directory).mkdir(parents=True, exist_ok=True)
+
         pbs_cluster_work_dir = os.path.join(args.clusterworkprefix, args.task, "work")
 
-        cmd = "source {} {} && nextflow run {} -c {} \
+        cmd = "source {} {} && cd {} && nextflow run {} -c {} \
                 -work-dir {} \
                 --PYTHONRUNTIME={} \
                 -with-trace \
                 -with-dag dag.html \
                 -with-report report.html \
                 -with-timeline timeline.html > {} 2>&1".format(args.conda_activate, args.nextflow_conda_environment,
+                            workflow_task_directory, 
                             args.nextflow_script, args.clusterconfig, pbs_cluster_work_dir, args.clusterpythonruntime,
                             output_stdout_file)
     else:
@@ -71,6 +80,15 @@ def main():
     return_val = os.system(cmd)
     if return_val != 0:
         print("Error in Nextflow")
+
+    # Copying back results
+    if workflow_task_directory != ".":
+        try:
+            cmd = "rsync -avp {}/ {}".format(workflow_task_directory, original_directory)
+            print(cmd)
+            os.system(cmd)
+        except:
+            pass
 
     # Copying the metric output to output folder
     if args.metricoutput is not None:
