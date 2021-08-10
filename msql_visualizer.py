@@ -254,7 +254,7 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
                     # Up Arrow
                     ms1_fig.add_annotation(
                         x=mz_min + mz_gap / 5,  # arrows' head
-                        y=min_intensity + 0.01,  # arrows' head
+                        y=min_intensity + 0.2 * min_intensity,  # arrows' head
                         ax=mz_min + mz_gap / 5,  # arrows' tail
                         ay=min_intensity,  # arrows' tail
                         xref='x',
