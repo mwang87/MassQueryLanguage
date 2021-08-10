@@ -176,6 +176,10 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
                     percent_tolerance = percent_tolerance / 100
                     min_intensity = intensity - intensity * percent_tolerance
                     max_intensity = intensity + intensity * percent_tolerance
+                    intensity_gap = max_intensity - min_intensity
+                    mz_gap = mz_max - mz_min
+
+                    # Top and bottom bounds
 
                     ms1_fig.add_shape(type="line",
                         x0=mz_min, y0=min_intensity, x1=mz_max, y1=min_intensity,
@@ -194,8 +198,49 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
                             dash="dot",
                         )
                     )
+
+                    # Drawing arrows
+                    
+                    # Down Arrow
+                    ms1_fig.add_annotation(
+                        x=mz_min + mz_gap / 5,  # arrows' head
+                        y=max_intensity - intensity_gap / 4,  # arrows' head
+                        ax=mz_min + mz_gap / 5,  # arrows' tail
+                        ay=max_intensity,  # arrows' tail
+                        xref='x',
+                        yref='y',
+                        axref='x',
+                        ayref='y',
+                        text='',  # if you want only the arrow
+                        showarrow=True,
+                        arrowhead=3,
+                        arrowsize=1,
+                        arrowwidth=1,
+                        arrowcolor='purple'
+                    )
+
+                    # Up Arrow
+                    ms1_fig.add_annotation(
+                        x=mz_min + mz_gap / 5,  # arrows' head
+                        y=min_intensity + intensity_gap / 4,  # arrows' head
+                        ax=mz_min + mz_gap / 5,  # arrows' tail
+                        ay=min_intensity,  # arrows' tail
+                        xref='x',
+                        yref='y',
+                        axref='x',
+                        ayref='y',
+                        text='',  # if you want only the arrow
+                        showarrow=True,
+                        arrowhead=3,
+                        arrowsize=1,
+                        arrowwidth=1,
+                        arrowcolor='purple'
+                    )
+
                 if "qualifierintensitypercent" in condition["qualifiers"]:
                     value = condition["qualifiers"]["qualifierintensitypercent"]["value"] / 100
+                    min_intensity = value
+                    mz_gap = mz_max - mz_min
 
                     ms1_fig.add_shape(type="line",
                         x0=mz_min, y0=value, x1=mz_max, y1=value,
@@ -204,6 +249,24 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
                             width=2,
                             dash="dot",
                         )
+                    )
+
+                    # Up Arrow
+                    ms1_fig.add_annotation(
+                        x=mz_min + mz_gap / 5,  # arrows' head
+                        y=min_intensity + 0.01,  # arrows' head
+                        ax=mz_min + mz_gap / 5,  # arrows' tail
+                        ay=min_intensity,  # arrows' tail
+                        xref='x',
+                        yref='y',
+                        axref='x',
+                        ayref='y',
+                        text='',  # if you want only the arrow
+                        showarrow=True,
+                        arrowhead=3,
+                        arrowsize=1,
+                        arrowwidth=1,
+                        arrowcolor='red'
                     )
 
 
