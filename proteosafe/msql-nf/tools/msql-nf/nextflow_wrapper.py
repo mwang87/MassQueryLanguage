@@ -106,7 +106,7 @@ def main():
     # Copying the metric output to output folder
     if args.metricoutput is not None:
         try:
-            shutil.shutil(output_trace_filename, os.path.join(args.metricoutput, "trace.txt"))
+            shutil.copyfile(output_trace_filename, os.path.join(args.metricoutput, "trace.txt"))
         except:
             pass
 
