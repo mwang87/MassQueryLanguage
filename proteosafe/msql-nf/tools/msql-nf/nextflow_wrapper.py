@@ -3,6 +3,7 @@ import os
 import argparse
 import glob
 import sys
+import shutil
 import pandas as pd
 import ming_proteosafe_library
 import pathlib
@@ -105,7 +106,11 @@ def main():
     # Copying the metric output to output folder
     if args.metricoutput is not None:
         try:
-            os.rename(output_trace_filename, os.path.join(args.metricoutput, "trace.txt"))
+            shutil.shutil(output_trace_filename, os.path.join(args.metricoutput, "trace.txt"))
+        except:
+            pass
+
+        try:
             os.rename("report.html", os.path.join(args.metricoutput, "report.html"))
             os.rename("timeline.html", os.path.join(args.metricoutput, "timeline.html"))
             os.rename("dag.html", os.path.join(args.metricoutput, "dag.html"))

@@ -200,6 +200,19 @@
         </data>
     </block> -->
 
+    <view id="workflow_trace_runtime" label="Workflow Trace" group="Compute Stats" display="hidden">
+        <blockRef id="main" type="workflow_trace_runtime"/>
+    </view>
+    <block id="workflow_trace_runtime" type="table">
+        <data>
+            <source type="file" name="nextflow/trace.txt"/>
+            <parsers>
+                <parser type="genericTabular"/>
+            </parsers>
+        </data>
+        <row/>
+    </block>
+
     <view id="workflow_trace" label="Workflow Trace" group="Compute Stats">
         <blockRef id="main" type="workflow_trace"/>
     </view>
