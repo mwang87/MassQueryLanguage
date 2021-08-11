@@ -18,7 +18,7 @@ params.PYTHONRUNTIME = "python" // this is a hack because CCMS cluster does not 
 if(params.parallel_files == "YES"){
     process queryData {
         errorStrategy 'ignore'
-        time '2h'
+        time '4h'
         //maxRetries 3
         //memory { 6.GB * task.attempt }
         memory { 12.GB }
@@ -51,7 +51,7 @@ else{
         echo true
         errorStrategy 'ignore'
         maxForks 1
-        time '2h'
+        time '4h'
         
         publishDir "$params.publishdir/msql_temp", mode: 'copy'
         
