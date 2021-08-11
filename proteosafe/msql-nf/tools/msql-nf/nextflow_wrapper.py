@@ -50,6 +50,8 @@ def main():
         pathlib.Path(output_trace_folder).mkdir(parents=True, exist_ok=True)
         output_trace_filename = os.path.join(output_trace_folder, "trace.txt")
 
+        output_stdout_file = os.path.join(output_trace_folder, "stdout.log")
+
     if args.runcluster == "YES" and args.user in ["mwang87"]:
         # Staging all files on gscratch because they might not be seen if we schedule outputs from local scratch disk
         workflow_task_directory = os.path.join("/gscratch/nextflow_staging", args.task)
@@ -107,6 +109,11 @@ def main():
     if args.metricoutput is not None:
         try:
             shutil.copyfile(output_trace_filename, os.path.join(args.metricoutput, "trace.txt"))
+        except:
+            pass
+
+        try:
+            shutil.copyfile(output_stdout_file, os.path.join(args.metricoutput, "stdout.log"))
         except:
             pass
 

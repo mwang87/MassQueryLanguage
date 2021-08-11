@@ -200,6 +200,7 @@
         </data>
     </block> -->
 
+    <!-- Active Runtime Status -->
     <view id="workflow_trace_runtime" label="Workflow Trace" group="Compute Stats" display="hidden">
         <blockRef id="main" type="workflow_trace_runtime"/>
     </view>
@@ -213,6 +214,19 @@
         <row/>
     </block>
 
+    <view id="workflow_stdout_runtime" label="Workflow StdOut" group="Compute Stats" display="hidden">
+        <blockRef id="main" type="workflow_stdout_runtime"/>
+    </view>
+    <block id="workflow_stdout_runtime" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=nextflow/stdout.log&amp;block=main&amp;process_html=false'/>
+    </block>
+
+    <!-- Workflow Status -->
     <view id="workflow_trace" label="Workflow Trace" group="Compute Stats">
         <blockRef id="main" type="workflow_trace"/>
     </view>
