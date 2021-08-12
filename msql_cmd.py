@@ -75,12 +75,20 @@ def main():
             # Saving output
             results_df["original_path"] = useful_filename
 
-            
+        # Forcing Types
+        try:
+            results_df["scan"] = results_df["scan"].astype(int)
+        except:
+            pass
+
+        # Forcing the column order
+        columns = list(results_df.columns)
+        columns.sort()
 
         if ".tsv" in args.output_file:
-            results_df.to_csv(args.output_file, index=False, sep="\t")
+            results_df.to_csv(args.output_file, index=False, sep="\t", columns=columns)
         else:
-            results_df.to_csv(args.output_file, index=False)
+            results_df.to_csv(args.output_file, index=False, columns=columns)
 
         # Extracting
         if args.extract_json is not None:
