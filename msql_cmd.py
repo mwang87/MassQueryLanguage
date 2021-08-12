@@ -81,6 +81,21 @@ def main():
         except:
             pass
 
+        try:
+            results_df["ms1scan"] = results_df["ms1scan"].astype(int)
+        except:
+            pass
+
+        try:
+            results_df["charge"] = results_df["charge"].astype(int)
+        except:
+            pass
+            
+        try:
+            results_df["mslevel"] = results_df["mslevel"].astype(int)
+        except:
+            pass
+
         # Forcing the column order
         columns = list(results_df.columns)
         columns.sort()
