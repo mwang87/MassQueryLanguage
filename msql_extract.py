@@ -35,7 +35,7 @@ def main():
         print("FAILURE ON EXTRACTION")
         pass
 
-def _extract_mzML_scan(input_filename, spectrum_identifier):
+def _extract_mzML_scan(input_filename, spectrum_identifier_list):
     MS_precisions = {
         1: 5e-6,
         2: 20e-6,
@@ -46,51 +46,56 @@ def _extract_mzML_scan(input_filename, spectrum_identifier):
         7: 20e-6,
     }
     
+    output_list = []
+
+    spectrum_identifier_set = set([str(spectrum_scan) for spectrum_scan in spectrum_identifier_list])
+
     run = pymzml.run.Reader(input_filename, MS_precisions=MS_precisions)
 
-    try:
-        for spec in run:
-            if str(spec.ID) == str(spectrum_identifier):
-                break
-    except:
-        raise
+    
+    for spec in run:
+        if str(spec.ID) in spectrum_identifier_set:
+            try:
+                peaks = spec.peaks("raw")
 
-    peaks = spec.peaks("raw")
+                # Filtering out zero rows
+                peaks = peaks[~np.any(peaks < 1.0, axis=1)]
 
-    # Filtering out zero rows
-    peaks = peaks[~np.any(peaks < 1.0, axis=1)]
+                # Sorting by intensity
+                peaks = peaks[peaks[:, 1].argsort()]
 
-    # Sorting by intensity
-    peaks = peaks[peaks[:, 1].argsort()]
+                # Getting top 1000
+                #peaks = peaks[-1000:]
 
-    # Getting top 1000
-    #peaks = peaks[-1000:]
+                if len(peaks) == 0:
+                    return None
 
-    if len(peaks) == 0:
-        return None
+                mz, intensity = zip(*peaks)
 
-    mz, intensity = zip(*peaks)
+                mz_list = list(mz)
+                i_list = list(intensity)
 
-    mz_list = list(mz)
-    i_list = list(intensity)
+                peaks_list = []
+                for i in range(len(mz_list)):
+                    peaks_list.append([float(mz_list[i]), float(i_list[i])])
 
-    peaks_list = []
-    for i in range(len(mz_list)):
-        peaks_list.append([float(mz_list[i]), float(i_list[i])])
+                # Sorting Peaks
+                peaks_list = sorted(peaks_list, key=lambda x: x[0])
 
-    # Sorting Peaks
-    peaks_list = sorted(peaks_list, key=lambda x: x[0])
+                spectrum_obj = {}
+                spectrum_obj["peaks"] = peaks_list
+                spectrum_obj["mslevel"] = spec.ms_level
+                spectrum_obj["scan"] = str(spec.ID)
 
-    spectrum_obj = {}
-    spectrum_obj["peaks"] = peaks_list
-    spectrum_obj["mslevel"] = spec.ms_level
-    spectrum_obj["scan"] = spectrum_identifier
+                if spec.ms_level > 1:
+                    msn_mz = spec.selected_precursors[0]["mz"]
+                    spectrum_obj["precursor_mz"] = msn_mz
 
-    if spec.ms_level > 1:
-        msn_mz = spec.selected_precursors[0]["mz"]
-        spectrum_obj["precursor_mz"] = msn_mz
+                output_list.append(spectrum_obj)
+            except:
+                raise
 
-    return spectrum_obj
+    return output_list
 
 def _extract_mzXML_scan(input_filename, spectrum_identifier):
     with mzxml.read(input_filename) as reader:
@@ -154,48 +159,51 @@ def _extract_spectra(results_df, input_spectra_folder,
                     output_json_filename=None,
                     output_summary=None):
     spectrum_list = []
+    result_df_list = []
 
     # TODO: reduce duplicate scans to extract
-    # TODO: Make it such that you don't have to keep reloading the same file to extract scans
+
+    # Lets group by file name so we only have to load the files once
+    grouped_results_df = results_df.groupby("filename")
 
     current_scan = 1
-    results_list = results_df.to_dict(orient="records")
-    for result_obj in results_list:
+    for filename, results_by_file_df in grouped_results_df:
+        print(filename, results_by_file_df)
+
         try:
-            if "mangled_filename" in result_obj:
-                input_spectra_filename = os.path.join(input_spectra_folder, result_obj["mangled_filename"])
+            if "mangled_filename" in results_by_file_df:
+                input_spectra_filename = os.path.join(input_spectra_folder, results_by_file_df["mangled_filename"][0])
             else:
-                input_spectra_filename = os.path.join(input_spectra_folder, result_obj["filename"])
+                input_spectra_filename = os.path.join(input_spectra_folder, results_by_file_df["filename"][0])
 
-            scan_number = result_obj["scan"]
-
-            spectrum_obj = None
+            spectrum_obj_list = []
             if ".mzML" in input_spectra_filename:
-                spectrum_obj = _extract_mzML_scan(input_spectra_filename, scan_number)
+                spectrum_obj_list = _extract_mzML_scan(input_spectra_filename, list(results_by_file_df["scan"]))
             if ".mzXML" in input_spectra_filename:
-                spectrum_obj = _extract_mzXML_scan(input_spectra_filename, scan_number)
+                spectrum_obj_list = _extract_mzXML_scan(input_spectra_filename, list(results_by_file_df["scan"]))
             if ".mgf" in input_spectra_filename:
-                spectrum_obj = _extract_mgf_scan(input_spectra_filename, scan_number)
+                spectrum_obj_list = _extract_mgf_scan(input_spectra_filename, list(results_by_file_df["scan"]))
 
-            if spectrum_obj is not None:
+            for spectrum_obj in spectrum_obj_list:                
                 # These are a new scan number in the file, not sure if we need this
                 spectrum_obj["new_scan"] = current_scan
-                result_obj["new_scan"] = current_scan
 
-                for key in result_obj:
-                    spectrum_obj[key] = result_obj[key]
+                filtered_by_scan_df = results_by_file_df[results_by_file_df["scan"].astype(str) == str(spectrum_obj["scan"])]
+                filtered_by_scan_df["new_scan"] = current_scan
+                result_df_list.append(filtered_by_scan_df)
 
                 spectrum_list.append(spectrum_obj)
                 current_scan += 1
+
         except KeyboardInterrupt:
             raise
         except:
-            print("cant find", result_obj)
+            print("Error", filename)
             pass
 
     # Writing the updated extraction
     if output_summary is not None:
-        df = pd.DataFrame(results_list)
+        df = pd.concat(result_df_list)
         df.to_csv(output_summary, sep='\t', index=False)
 
     if len(spectrum_list) > 1000:
