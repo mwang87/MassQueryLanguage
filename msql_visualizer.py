@@ -28,15 +28,16 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
     # Cleaning up variables
     for condition in parsed_query["conditions"]:
         # Setting m/z variables
-        for i, value in enumerate(condition["value"]):
-            try:
-                # Checking if X is in any string
-                if "X" in value:
-                    condition["value"][i] = math_parser.parse(value ).evaluate({
-                                "X" : variable_x
-                            })    
-            except:
-                pass
+        if "value" in condition:
+            for i, value in enumerate(condition["value"]):
+                try:
+                    # Checking if X is in any string
+                    if "X" in value:
+                        condition["value"][i] = math_parser.parse(value).evaluate({
+                                    "X" : variable_x
+                                })    
+                except:
+                    pass
 
         # Setting intensity variables
         if "qualifiers" in condition:

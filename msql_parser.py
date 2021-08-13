@@ -131,7 +131,6 @@ class MassQLToJSON(Transformer):
       elif len(items) == 4:
          # These are for the x range clauses
          if items[0] == "xcondition":
-            print(items)
             condition_dict = {}
             condition_dict["type"] = items[0]
             condition_dict["min"] = float(items[2])
