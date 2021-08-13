@@ -199,14 +199,27 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
         except:
             pass
 
-    # Here we will check if there is a variable in the expression
+    # Variable Expression Parameters
     variable_properties = {}
     variable_properties["has_variable"] = False
     variable_properties["ppm_tolerance"] = 100000
     variable_properties["da_tolerance"] = 100000
     variable_properties["query_ms1"] = False
     variable_properties["query_ms2"] = False
-    
+    variable_properties["min"] = 0
+    variable_properties["max"] = 1000000
+
+    # Checking for ranges in query
+    new_conditions = []
+    for condition in parsed_dict["conditions"]:
+        if condition["type"] == "xcondition":
+            variable_properties["min"] = condition["min"]
+            variable_properties["max"] = condition["max"]
+        else:
+            new_conditions.append(condition)
+    parsed_dict["conditions"] = new_conditions
+
+    # Here we will check if there is a variable in the expression
     for condition in parsed_dict["conditions"]:
         for value in condition["value"]:
             try:
@@ -319,42 +332,15 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
                                         condition["qualifiers"][qualifier]["value"] = old_value.replace("X", str(mz_val))
                     except AttributeError:
                         pass
-
-            substituted_parse["comment"] = str(mz_val)
-            all_concrete_queries.append(substituted_parse)
             
             # Let's consider this mz
             running_max_mz = masses_obj["mz_max"]
 
+            substituted_parse["comment"] = str(mz_val)
+            if mz_val < variable_properties["min"] or mz_val > variable_properties["max"]:
+                continue
 
-        # DELTA_VAL = 0.1
-        # # Lets iterate through all values of the variable
-        # #MAX_MZ = 10
-        # #MAX_MZ = 200
-        # MAX_MZ = 1000
-
-        # for i in tqdm(range(int(MAX_MZ / DELTA_VAL))):
-        #     x_val = i * DELTA_VAL + 150
-
-        #     # Writing new query
-        #     substituted_parse = copy.deepcopy(parsed_dict)
-
-        #     for condition in substituted_parse["conditions"]:
-        #         for i, value in enumerate(condition["value"]):
-        #             try:
-        #                 if "X" in value:
-        #                     if "+" in value:
-        #                         new_value = x_val + float(value.split("+")[-1])
-        #                     else:
-        #                         new_value = x_val
-        #                     # print("SUBSTITUTE", condition, value, i, new_value)
-        #                     condition["value"][i] = new_value
-        #             except TypeError:
-        #                 # This is when the target is actually a float
-        #                 pass
-
-        #     #print(substituted_parse)
-        #     all_concrete_queries.append(substituted_parse)
+            all_concrete_queries.append(substituted_parse)
     else:
         all_concrete_queries.append(parsed_dict)
 
