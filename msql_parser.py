@@ -72,6 +72,9 @@ class MassQLToJSON(Transformer):
    def negativepolarity(self, items):
       return "negativepolarity"
 
+   def xcondition(self, items):
+      return "xcondition"
+
    def qualifier(self, items):
       if len(items) == 1 and items[0] == "qualifierintensityreference":
          qualifier_type = items[0]
@@ -125,6 +128,14 @@ class MassQLToJSON(Transformer):
          condition_dict = {}
          condition_dict["type"] = items[0]
          condition_dict["value"] = [items[-1]]
+      elif len(items) == 4:
+         # These are for the x range clauses
+         if items[0] == "xcondition":
+            print(items)
+            condition_dict = {}
+            condition_dict["type"] = items[0]
+            condition_dict["min"] = float(items[2])
+            condition_dict["max"] = float(items[3])
    
       return condition_dict
 

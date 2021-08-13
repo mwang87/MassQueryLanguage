@@ -257,6 +257,21 @@ def test_ms1_iron_min_intensity_m2_prec():
     print(results_df)
     assert(1214 in list(results_df["scan"]))
 
+def test_ms1_iron_min_intensity_m2_prec_xrange():
+    query = "QUERY scaninfo(MS2DATA) \
+            WHERE \
+            RTMIN=2.8 \
+            AND RTMAX=3.05 \
+            AND MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=30 \
+            AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=5 \
+            AND MS2PREC=X AND X=range(min=650, max=660)"
+    parse_obj = msql_parser.parse_msql(query)
+    print(parse_obj)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/JB_182_2_fe.mzML")
+    print(results_df)
+    assert(1214 in list(results_df["scan"]))
+
 @pytest.mark.skip(reason="parallel not really supported anymore")
 def test_ms1_cu():
     msql_engine.init_ray()
@@ -510,6 +525,7 @@ def main():
     #test_ms1_iron()
     #test_ms1_iron_min_intensity()
     #test_ms1_iron_min_intensity_m2_prec()
+    test_ms1_iron_min_intensity_m2_prec_xrange()
     #test_ms1_filtered_by_ms2()
     #test_ms1_cu()
     #test_neutral_loss_intensity()
@@ -526,7 +542,7 @@ def main():
     #test_visualize()
     #test_translator()
     #test_ms1_iron_X_changes_intensity()
-    test_nocache()
+    #test_nocache()
 
 if __name__ == "__main__":
     main()
