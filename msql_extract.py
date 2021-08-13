@@ -97,60 +97,68 @@ def _extract_mzML_scan(input_filename, spectrum_identifier_list):
 
     return output_list
 
-def _extract_mzXML_scan(input_filename, spectrum_identifier):
+def _extract_mzXML_scan(input_filename, spectrum_identifier_list):
+    output_list = []
+    spectrum_identifier_set = set([str(spectrum_scan) for spectrum_scan in spectrum_identifier_list])
+
     with mzxml.read(input_filename) as reader:
         for spectrum in reader:
-            if str(spectrum["id"]) == str(spectrum_identifier):
+            if str(spectrum["id"]) in spectrum_identifier_set:
                 spec = spectrum
-                break
 
-        mz_list = list(spec["m/z array"])
-        i_list = list(spec["intensity array"])
+                mz_list = list(spec["m/z array"])
+                i_list = list(spec["intensity array"])
 
-        peaks_list = []
-        for i in range(len(mz_list)):
-            peaks_list.append([float(mz_list[i]), float(i_list[i])])
+                peaks_list = []
+                for i in range(len(mz_list)):
+                    peaks_list.append([float(mz_list[i]), float(i_list[i])])
 
-        # Sorting Peaks
-        peaks_list = sorted(peaks_list, key=lambda x: x[0])
+                # Sorting Peaks
+                peaks_list = sorted(peaks_list, key=lambda x: x[0])
 
-        # Loading Data
-        spectrum_obj = {}
-        spectrum_obj["peaks"] = peaks_list
-        spectrum_obj["mslevel"] = spec["msLevel"]
-        spectrum_obj["scan"] = spectrum_identifier
+                # Loading Data
+                spectrum_obj = {}
+                spectrum_obj["peaks"] = peaks_list
+                spectrum_obj["mslevel"] = spec["msLevel"]
+                spectrum_obj["scan"] = str(spectrum["id"])
 
-        if spec["msLevel"] > 1:
-            msn_mz = spec["precursorMz"][0]["precursorMz"]
-            spectrum_obj["precursor_mz"] = msn_mz
+                if spec["msLevel"] > 1:
+                    msn_mz = spec["precursorMz"][0]["precursorMz"]
+                    spectrum_obj["precursor_mz"] = msn_mz
 
-        return spectrum_obj
+                output_list.append(spectrum_obj)
 
-def _extract_mgf_scan(input_filename, spectrum_identifier):
+    return output_list
+
+def _extract_mgf_scan(input_filename, spectrum_identifier_list):
+    output_list = []
+    spectrum_identifier_set = set([str(spectrum_scan) for spectrum_scan in spectrum_identifier_list])
+
     file = load_from_mgf(input_filename)
 
     spec = None
     for spectrum in file:
         scan_number = spectrum.metadata["scans"]
-        if str(scan_number) == str(spectrum_identifier):
+        if str(scan_number) in spectrum_identifier_set:
             spec = spectrum
-            break
 
-    mz_list = list(spec.peaks.mz)
-    i_list = list(spec.peaks.intensities)
+            mz_list = list(spec.peaks.mz)
+            i_list = list(spec.peaks.intensities)
 
-    peaks_list = []
-    for i in range(len(mz_list)):
-        peaks_list.append([mz_list[i], i_list[i]])
+            peaks_list = []
+            for i in range(len(mz_list)):
+                peaks_list.append([mz_list[i], i_list[i]])
 
-    # Loading Data
-    spectrum_obj = {}
-    spectrum_obj["peaks"] = peaks_list
-    spectrum_obj["mslevel"] = 2
-    spectrum_obj["scan"] = spectrum_identifier
-    spectrum_obj["precursor_mz"] = float(spec.metadata["pepmass"][0])
+            # Loading Data
+            spectrum_obj = {}
+            spectrum_obj["peaks"] = peaks_list
+            spectrum_obj["mslevel"] = 2
+            spectrum_obj["scan"] = scan_number
+            spectrum_obj["precursor_mz"] = float(spec.metadata["pepmass"][0])
 
-    return spectrum_obj
+            output_list.append(spectrum_obj)
+
+    return output_list
 
 
 def _extract_spectra(results_df, input_spectra_folder, 
@@ -168,7 +176,6 @@ def _extract_spectra(results_df, input_spectra_folder,
 
     current_scan = 1
     for filename, results_by_file_df in grouped_results_df:
-        print(filename, results_by_file_df)
 
         try:
             if "mangled_filename" in results_by_file_df:
@@ -183,6 +190,7 @@ def _extract_spectra(results_df, input_spectra_folder,
                 spectrum_obj_list = _extract_mzXML_scan(input_spectra_filename, list(results_by_file_df["scan"]))
             if ".mgf" in input_spectra_filename:
                 spectrum_obj_list = _extract_mgf_scan(input_spectra_filename, list(results_by_file_df["scan"]))
+
 
             for spectrum_obj in spectrum_obj_list:                
                 # These are a new scan number in the file, not sure if we need this
@@ -201,14 +209,14 @@ def _extract_spectra(results_df, input_spectra_folder,
             print("Error", filename)
             pass
 
+    merged_summary_df = pd.concat(result_df_list)
     # Writing the updated extraction
     if output_summary is not None:
-        df = pd.concat(result_df_list)
-        df.to_csv(output_summary, sep='\t', index=False)
+        merged_summary_df.to_csv(output_summary, sep='\t', index=False)
 
     if len(spectrum_list) > 1000:
         print("Not Extracting, too many spectra")
-        return
+        return None
 
     if output_json_filename is not None:
         with open(output_json_filename, "w") as o:
@@ -220,6 +228,10 @@ def _extract_spectra(results_df, input_spectra_folder,
 
     if output_mzML_filename is not None:
         _export_mzML(spectrum_list, output_mzML_filename)
+
+    return merged_summary_df
+
+    
 
 def _export_mgf(spectrum_list, output_mgf_filename):
     with open(output_mgf_filename, "w") as o:
