@@ -149,6 +149,26 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
                     width=2,
                 )
             )
+        
+        if condition["type"] == "xcondition":
+            print(condition)
+            ms1_fig.add_shape(type="line",
+                x0=condition["min"], y0=0, x1=condition["min"], y1=1,
+                line=dict(
+                    color="pink",
+                    width=2,
+                    dash="dot",
+                )
+            )
+
+            ms1_fig.add_shape(type="line",
+                x0=condition["max"], y0=0, x1=condition["max"], y1=1,
+                line=dict(
+                    color="pink",
+                    width=2,
+                    dash="dot",
+                )
+            )
 
         if condition["type"] == "ms1mzcondition":
             mz = condition["value"][0]
