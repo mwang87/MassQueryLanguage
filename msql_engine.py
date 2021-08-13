@@ -170,7 +170,7 @@ def _set_intensity_register(ms_filtered_df, register_dict, condition):
                 register_dict[key] = grouped_scan["i"]
     return
 
-def process_query(input_query, input_filename, path_to_grammar="msql.ebnf", cache=True, parallel=True):
+def process_query(input_query, input_filename, path_to_grammar="msql.ebnf", cache=True, parallel=False):
     parsed_dict = msql_parser.parse_msql(input_query, path_to_grammar=path_to_grammar)
 
     return _evalute_variable_query(parsed_dict, input_filename, cache=cache, parallel=parallel)
@@ -185,7 +185,7 @@ def _determine_mz_max(mz, ppm_tol, da_tol):
 
     return mz + half_delta
 
-def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=True):
+def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=False):
     # Lets check if there is a variable in here, the only one allowed is X
     for condition in parsed_dict["conditions"]:
         try:
