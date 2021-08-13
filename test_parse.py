@@ -103,11 +103,22 @@ def test_variable_formula_parse2():
     parsed_output = msql_parser.parse_msql(query)
     print(json.dumps(parsed_output, indent=4))
 
-    
+def test_xrange_parse():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=2.0*(X - formula(Fe)) AND X=range(min=5, max=100)"
 
+    parsed_output = msql_parser.parse_msql(query)
+    print(json.dumps(parsed_output, indent=4))
+
+    query = "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYVALUE=10000 \
+AND \
+MS1MZ=X+1:INTENSITYMATCH=Y*0.4:INTENSITYMATCHPERCENT=50:TOLERANCEPPM=10 AND MS1MZ=X+1.998:INTENSITYMATCH=Y*0.446:INTENSITYMATCHPERCENT=50:TOLERANCEPPM=10 AND X=range(min=300,max=900)"
+
+    parsed_output = msql_parser.parse_msql(query)
+    print(json.dumps(parsed_output, indent=4))
 
 def main():
-    test_parse()
+    test_xrange_parse()
+    #test_parse()
     #test_comment_parse()
     #test_number_expression_parse()
     #test_formula_expression_parse()

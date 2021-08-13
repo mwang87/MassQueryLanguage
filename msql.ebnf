@@ -24,7 +24,7 @@ condition: conditionfields "=" numericalexpression
     | conditionfields equal "(" statement ")"
     | polaritycondition equal positivepolarity
     | polaritycondition equal negativepolarity
-    
+    | xcondition equal "range(min=" numericalexpression "," "max=" numericalexpression ")"
 
 qualifier: qualifier ":" qualifier
     | qualifierfields equal numericalexpression
@@ -62,6 +62,7 @@ scanmincondition: "SCANMIN"
 scanmaxcondition: "SCANMAX"
 polaritycondition: "POLARITY"
 chargecondition: "CHARGE"
+xcondition: "X"
 
 qualifierfields: qualifiermztolerance
     | qualifierppmtolerance
