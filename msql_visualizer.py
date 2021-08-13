@@ -28,15 +28,16 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
     # Cleaning up variables
     for condition in parsed_query["conditions"]:
         # Setting m/z variables
-        for i, value in enumerate(condition["value"]):
-            try:
-                # Checking if X is in any string
-                if "X" in value:
-                    condition["value"][i] = math_parser.parse(value ).evaluate({
-                                "X" : variable_x
-                            })    
-            except:
-                pass
+        if "value" in condition:
+            for i, value in enumerate(condition["value"]):
+                try:
+                    # Checking if X is in any string
+                    if "X" in value:
+                        condition["value"][i] = math_parser.parse(value).evaluate({
+                                    "X" : variable_x
+                                })    
+                except:
+                    pass
 
         # Setting intensity variables
         if "qualifiers" in condition:
@@ -146,6 +147,26 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
                 line=dict(
                     color="Red",
                     width=2,
+                )
+            )
+        
+        if condition["type"] == "xcondition":
+            print(condition)
+            ms1_fig.add_shape(type="line",
+                x0=condition["min"], y0=0, x1=condition["min"], y1=1,
+                line=dict(
+                    color="pink",
+                    width=2,
+                    dash="dot",
+                )
+            )
+
+            ms1_fig.add_shape(type="line",
+                x0=condition["max"], y0=0, x1=condition["max"], y1=1,
+                line=dict(
+                    color="pink",
+                    width=2,
+                    dash="dot",
                 )
             )
 

@@ -18,6 +18,16 @@ def test_visualize():
     ms2_fig.write_image("test_ms2_visualize.png", engine="kaleido")
     ms1_fig.write_image("test_ms1_visualize.png", engine="kaleido")
 
+def test_visualize_xrange():
+    query = "QUERY scaninfo(MS1DATA) WHERE \
+            MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25 \
+            AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE AND \
+            X=range(min=100, max=500)"
+
+    ms1_fig, ms2_fig = msql_visualizer.visualize_query(query)
+    ms2_fig.write_image("test_ms2_visualize.png", engine="kaleido")
+    ms1_fig.write_image("test_ms1_visualize.png", engine="kaleido")
+
 def test_visualize_y_set():
     query = "QUERY scaninfo(MS1DATA) WHERE \
             MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25 \
@@ -45,7 +55,8 @@ def test_visualize_usi():
     
 def main():
     #test_visualize_y_set()
-    test_visualize_usi()
+    test_visualize_xrange()
+    #test_visualize_usi()
 
 if __name__ == "__main__":
     main()
