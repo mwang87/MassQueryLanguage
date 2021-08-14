@@ -200,6 +200,7 @@ def _extract_spectra(results_df, input_spectra_folder,
                 filtered_by_scan_df["new_scan"] = current_scan
                 result_df_list.append(filtered_by_scan_df)
 
+                spectrum_obj["query_results"] = filtered_by_scan_df.to_dict(orient="records")
                 spectrum_list.append(spectrum_obj)
                 current_scan += 1
 

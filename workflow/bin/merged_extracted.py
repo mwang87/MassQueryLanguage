@@ -35,8 +35,14 @@ def main():
     msql_extract._export_mgf(all_spectra, args.output_mgf)
 
     # Formatting output for tsv
-    results_df = pd.DataFrame(all_spectra)
-    results_df.drop(labels=["peaks"], inplace=True, axis=1)
+    results_list = []
+
+    for spectrum in all_spectra:
+        for query_result in spectrum["query_results"]:
+            query_result["new_scan"] = spectrum["new_scan"]
+            results_list.append(query_result)
+
+    results_df = pd.DataFrame(results_list)
     results_df.to_csv(args.output_tsv, sep="\t", index=False)
 
     # Writing out JSON
