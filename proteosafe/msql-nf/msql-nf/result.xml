@@ -330,5 +330,17 @@
         <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/summary/summary_extracted.html&amp;block=main&amp;process_html=false'/>
     </block>
 
+    <view id="summary_plots_interactive" label="summary_plots_interactive" group="Visualization Summary">
+        <blockRef id="main" type="summary_plots_interactive"/>
+    </view>
+    <block id="summary_plots_interactive" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='http://dorresteinappshub.ucsd.edu:8843/msqlplot/?task=[task]'/>
+    </block>
+
 
 </interface>

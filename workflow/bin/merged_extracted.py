@@ -12,6 +12,7 @@ def main():
     parser.add_argument('output_mzML', help='Output mzML File')
     parser.add_argument('output_mgf', help='Output mgf File')
     parser.add_argument('output_json', help='Output merged JSON File')
+    parser.add_argument('output_parquet', help='Output Parquet File')
     parser.add_argument('output_tsv', help='Output tsv File')
 
     args = parser.parse_args()
@@ -47,6 +48,26 @@ def main():
 
     # Writing out JSON
     open(args.output_json, "w").write(json.dumps(all_spectra))
+
+    # Formatting the json peaks into a parquet data frame file
+    peak_list = []
+    for spectrum in all_spectra:
+        sum_intensity = sum([peak[1] for peak in spectrum['peaks']])
+        for peak in spectrum['peaks']:
+            peak_dict = {}
+            peak_dict["mz"] = peak[0]
+            peak_dict["i"] = peak[1]
+            peak_dict["i_norm"] = peak[1] / sum_intensity
+            
+            if "precursor_mz" in spectrum:
+                peak_dict["precursor_mz"] = spectrum["precursor_mz"]
+            if "comment" in spectrum:
+                peak_dict["comment"] = float(spectrum["comment"])
+
+            peak_list.append(peak_dict)
+
+    peaks_df = pd.DataFrame(peak_list)
+    peaks_df.to_parquet(args.output_parquet)
 
 
 if __name__ == "__main__":

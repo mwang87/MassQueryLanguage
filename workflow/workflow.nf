@@ -95,6 +95,7 @@ if(params.extract == "YES"){
         file "extracted.mzML" optional true
         file "extracted.mgf" optional true
         file "extracted.tsv" optional true
+        file "extracted.parquet" optional true
         file "extracted.json" optional true into _extracted_json_ch
 
         """
@@ -103,6 +104,7 @@ if(params.extract == "YES"){
         extracted.mzML \
         extracted.mgf \
         extracted.json \
+        extracted.parquet \
         extracted.tsv 
         """
     }
