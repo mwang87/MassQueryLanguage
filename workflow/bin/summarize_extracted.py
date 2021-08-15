@@ -22,8 +22,8 @@ def main():
             peak_dict["i"] = peak[1]
             peak_dict["i_norm"] = peak[1] / sum_intensity
             
-            if "precmz" in spectrum:
-                peak_dict["precmz"] = spectrum["precmz"]
+            if "precursor_mz" in spectrum:
+                peak_dict["precursor_mz"] = spectrum["precursor_mz"]
             if "comment" in spectrum:
                 peak_dict["comment"] = float(spectrum["comment"])
 
@@ -73,11 +73,11 @@ def main():
 
         # 2D histogram of peak m/z vs precuror m/z, useful in MS2 spectra
         try:
-            precbins = int(max(peaks_df["precmz"]) - min(peaks_df["precmz"]))
+            precbins = int(max(peaks_df["precursor_mz"]) - min(peaks_df["precursor_mz"]))
             fig = px.density_heatmap(peaks_df, 
                                     title='2D m/z peak histogram',
                                     x="mz", 
-                                    y="precmz",
+                                    y="precursor_mz",
                                     color_continuous_scale="Jet",
                                     nbinsx=peakbins, nbinsy=precbins)
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
@@ -105,11 +105,11 @@ def main():
 
         # 2D histogram of peak minus X, marginalized on precursor m/z, useful in MS2 spectra
         try:
-            precbins = int(max(peaks_df["precmz"]) - min(peaks_df["precmz"]))
+            precbins = int(max(peaks_df["precursor_mz"]) - min(peaks_df["precursor_mz"]))
             fig = px.density_heatmap(peaks_df, 
                                     title='2D m/z peak histogram minus X by X',
                                     x="mzminuscomment", 
-                                    y="precmz",
+                                    y="precursor_mz",
                                     nbinsx=peakbins, nbinsy=precbins,
                                     marginal_x="histogram", marginal_y="histogram")
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
