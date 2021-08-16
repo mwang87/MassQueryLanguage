@@ -105,7 +105,7 @@
                 </column>
             </row>
 
-            <row expander="Simple Viz Links" expandericontype="text">
+            <row expander="Simple Viz" expandericontype="text">
                 <column type="genericimagedisplayer" label="Visualization as MS1">
                     <parameter name="URLBASE" value="https://msql.ucsd.edu/visualize/ms1"/>
                     <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
