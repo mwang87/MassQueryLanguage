@@ -382,7 +382,7 @@ def _render_parse_visualizations(query, x_value, y_value, ms1_peaks, ms2_peaks):
                                                             ms1_peaks=ms1_peaks,
                                                             ms2_peaks=ms2_peaks)
     except:
-        ["Parse Error"]
+        return ["Viz Error"]
 
     ms1_graph = dcc.Graph(figure=ms1_fig)
     ms2_graph = dcc.Graph(figure=ms2_fig)
@@ -398,7 +398,6 @@ def _get_usi_peaks(ms1_usi, ms2_usi):
         r = requests.get("https://metabolomics-usi.ucsd.edu/json/?usi1={}".format(ms1_usi))
         ms1_peaks = r.json()["peaks"]
     except:
-        raise
         pass
 
     try:
@@ -422,10 +421,13 @@ def _get_usi_peaks(ms1_usi, ms2_usi):
             ])
 def draw_parse_drawing(query, x_value, y_value, ms1_usi, ms2_usi):
     # Getting the peaks
+    print("HERE")
     ms1_peaks, ms2_peaks = _get_usi_peaks(ms1_usi, ms2_usi)
+    print("HERE2")
     
     all_queries = query.split("|||")
 
+    print("HERE3")
     # Let's parse first
     merged_list = []
     for split_query in all_queries:
