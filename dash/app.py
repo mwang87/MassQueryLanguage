@@ -10,7 +10,7 @@ import dash_daq as daq
 from dash.dependencies import Input, Output, State
 
 
-from flask import Flask, request
+from flask import Flask, request, send_file
 
 import os
 import urllib.parse
@@ -24,6 +24,7 @@ import numpy as np
 from tqdm import tqdm
 import urllib
 import json
+import uuid
 
 from flask_caching import Cache
 import tasks
@@ -388,7 +389,26 @@ def _render_parse_visualizations(query, x_value, y_value, ms1_peaks, ms2_peaks):
 
     return [ms1_graph, ms2_graph]
 
-    
+
+def _get_usi_peaks(ms1_usi, ms2_usi):
+    ms1_peaks = None
+    ms2_peaks = None
+
+    try:
+        r = requests.get("https://metabolomics-usi.ucsd.edu/json/?usi1={}".format(ms1_usi))
+        ms1_peaks = r.json()["peaks"]
+    except:
+        raise
+        pass
+
+    try:
+        r = requests.get("https://metabolomics-usi.ucsd.edu/json/?usi1={}".format(ms2_usi))
+        ms2_peaks = r.json()["peaks"]
+    except:
+        pass
+
+    return ms1_peaks, ms2_peaks
+
 
 @app.callback([
                 Output('output_parse_drawing', 'children'),
@@ -402,21 +422,8 @@ def _render_parse_visualizations(query, x_value, y_value, ms1_peaks, ms2_peaks):
             ])
 def draw_parse_drawing(query, x_value, y_value, ms1_usi, ms2_usi):
     # Getting the peaks
-    ms1_peaks = None
-    ms2_peaks = None
-
-    try:
-        r = requests.get("https://metabolomics-usi.ucsd.edu/json/?usi1={}".format(ms1_usi))
-        ms1_peaks = r.json()["peaks"]
-    except:
-        pass
-
-    try:
-        r = requests.get("https://metabolomics-usi.ucsd.edu/json/?usi1={}".format(ms2_usi))
-        ms2_peaks = r.json()["peaks"]
-    except:
-        pass
-
+    ms1_peaks, ms2_peaks = _get_usi_peaks(ms1_usi, ms2_usi)
+    
     all_queries = query.split("|||")
 
     # Let's parse first
@@ -637,6 +644,55 @@ def parse_api():
     return json.dumps(parse_results)
 
 
+@server.route("/visualize/<mslevel>")
+def visualize_ms1_api(mslevel):
+    # Getting all the parameters if possible
+    query = request.args.get("query")
+    ms1_usi = request.args.get("ms1_usi", None)
+    ms2_usi = request.args.get("ms2_usi", None)
+    try:
+        variable_y = float(request.args.get("y_value", 1))
+    except:
+        variable_y = 1
+    try:
+        variable_x = float(request.args.get("x_value", 500))
+    except:
+        variable_x = -1
+    precursor_mz = float(request.args.get("precursor_mz", 800))
+    zoom = request.args.get("zoom", "No") == "Yes" and variable_x > 0
+
+    ms1_peaks, ms2_peaks = _get_usi_peaks(ms1_usi, ms2_usi)
+
+    try:
+        ms1_fig, ms2_fig = msql_visualizer.visualize_query(query, 
+            variable_x=variable_x,
+            variable_y=variable_y,
+            precursor_mz=precursor_mz,
+            ms1_peaks=ms1_peaks,
+            ms2_peaks=ms2_peaks)
+    except:
+        return ["Parse Error"]
+
+    if zoom:
+        # Y axis
+        ms1_fig.update_xaxes(range=[variable_x - 10, variable_x + 10])
+        ms2_fig.update_xaxes(range=[variable_x - 10, variable_x + 10])
+
+        ms1_fig.update_yaxes(range=[0, variable_y])
+        ms2_fig.update_yaxes(range=[0, variable_y])
+
+        
+    temp_image_dir = "temp/visualizer"
+    output_temp_filename = os.path.join(temp_image_dir, str(uuid.uuid4()) + ".png")
+
+    if mslevel == "ms1":
+        ms1_fig.write_image(output_temp_filename, engine="kaleido")
+    else:
+        ms2_fig.write_image(output_temp_filename, engine="kaleido")
+
+    # TODO: Clean up images written
+
+    return send_file(output_temp_filename, mimetype='image/png')
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=5000, host="0.0.0.0")

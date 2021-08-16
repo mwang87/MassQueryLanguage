@@ -4,7 +4,7 @@ import sys
 import os
 import requests
 import requests_cache
-requests_cache.install_cache('/app/test/demo_cache')
+requests_cache.install_cache('temp/demo_cache')
 
 import msql_parser
 import msql_engine
