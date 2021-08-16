@@ -650,10 +650,16 @@ def visualize_ms1_api(mslevel):
     query = request.args.get("query")
     ms1_usi = request.args.get("ms1_usi", None)
     ms2_usi = request.args.get("ms2_usi", None)
-    variable_y = float(request.args.get("y_value", 1))
-    variable_x = float(request.args.get("x_value", 500))
+    try:
+        variable_y = float(request.args.get("y_value", 1))
+    except:
+        variable_y = 1
+    try:
+        variable_x = float(request.args.get("x_value", 500))
+    except:
+        variable_x = -1
     precursor_mz = float(request.args.get("precursor_mz", 800))
-    zoom = request.args.get("zoom", "No") == "Yes"
+    zoom = request.args.get("zoom", "No") == "Yes" and variable_x > 0
 
     ms1_peaks, ms2_peaks = _get_usi_peaks(ms1_usi, ms2_usi)
 
