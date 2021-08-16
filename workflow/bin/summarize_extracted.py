@@ -71,6 +71,8 @@ def main():
         except:
             pass
 
+        # 2D Histograms
+
         # 2D histogram of peak m/z vs precuror m/z, useful in MS2 spectra
         try:
             precbins = int(max(peaks_df["precursor_mz"]) - min(peaks_df["precursor_mz"]))
@@ -116,7 +118,7 @@ def main():
         except:
             pass
 
-        # 2D histogram with MS1 peaks minus comment
+        # 2D histogram with MS1 peaks minus comment vs comment
         try:
             mz_bins = int(max(peaks_df["mz"]) - min(peaks_df["mz"]))
             comment_bins = int(max(peaks_df["comment"]) - min(peaks_df["comment"]))

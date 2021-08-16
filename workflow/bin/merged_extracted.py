@@ -61,8 +61,13 @@ def main():
             
             if "precursor_mz" in spectrum:
                 peak_dict["precursor_mz"] = spectrum["precursor_mz"]
-            if "comment" in spectrum:
-                peak_dict["comment"] = float(spectrum["comment"])
+
+            # TODO: There could be multiple comments per spectrum
+            try:
+                if "comment" in spectrum["query_results"][0]:
+                    peak_dict["comment"] = float(spectrum["query_results"][0]["comment"])
+            except:
+                pass
 
             peak_list.append(peak_dict)
 
