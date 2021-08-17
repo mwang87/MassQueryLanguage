@@ -348,13 +348,25 @@ def _render_parse(query):
 ```
 '''.format(json.dumps(parse_results, indent=4)))
 
+    output_list = [html.Hr(), parse_markdown]
+
     # Creating written description that is translated
-    try:
-        translation = msql_translator.translate_query(query)
-    except:
-        translation = "Translation Error"
+    languages = ["korean", "chinese", "french", "german", "spanish", "portuguese", "english"]
+
+    for language in languages:
+        try:
+            translation = msql_translator.translate_query(query, language=language)
+        except:
+            translation = "Translation Error"
+        
+        output_list.insert(0, html.Pre(translation))
+        output_list.insert(0, html.H4("{} translation".format(language)))
+        
+    output_list.append(html.Pre(query))
+    output_list.append(html.Hr())
     
-    return [html.Pre(query), html.Hr(), html.Pre(translation), html.Hr(), parse_markdown, html.Hr()]
+    return [output_list]
+
 
 @app.callback([
                 Output('output_parse', 'children'),

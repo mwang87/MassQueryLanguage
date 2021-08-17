@@ -488,6 +488,11 @@ def test_translator():
         translated_version = msql_translator.translate_query(test_query)
         print(test_query, translated_version)
         
+def test_translator_portuguese():
+    for line in open("test_queries.txt"):
+        test_query = line.rstrip()
+        translated_version = msql_translator.translate_query(test_query, language="portuguese")
+        print(test_query, translated_version)
 
 
 
