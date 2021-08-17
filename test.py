@@ -13,6 +13,9 @@ def test_noquery():
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
 
+    assert("i" in results_df)
+    assert("i_norm" in results_df)
+
 def test_simple_ms2():
     query = "QUERY MS2DATA WHERE MS2PROD=226.18"
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
@@ -490,7 +493,7 @@ def test_load():
 def main():
     #msql_engine.init_ray()
     
-    #test_noquery()
+    test_noquery()
     #test_simple_ms2_twoqualifier()
     #test_simple_ms2_twoconditions()
     #test_diphen()

@@ -724,7 +724,9 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
                 result_df["mslevel"] = 1
 
                 ms1sum_df = ms1_df.groupby(groupby_columns).sum().reset_index()
+                ms1norm_df = ms1_df.groupby(groupby_columns).max().reset_index()
                 result_df["i"] = ms1sum_df["i"]
+                result_df["i_norm"] = ms1norm_df["i_norm"]
             if parsed_dict["querytype"]["datatype"] == "datams2data":
                 kept_columns = ["scan", "precmz", "ms1scan", "rt", "charge"]
                 groupby_columns = ["scan"]
@@ -737,7 +739,9 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
                 result_df = result_df[kept_columns]
 
                 ms2sum_df = ms2_df.groupby(groupby_columns).sum().reset_index()
+                ms2norm_df = ms2_df.groupby(groupby_columns).max().reset_index()
                 result_df["i"] = ms2sum_df["i"]
+                result_df["i_norm"] = ms2norm_df["i_norm"]
                 result_df["mslevel"] = 2
 
             return result_df
