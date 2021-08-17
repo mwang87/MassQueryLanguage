@@ -629,6 +629,10 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
             ms1_df = ms1_df[(ms1_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
+
+            print("FILTER", mz_min, mz_max, len(ms1_df))
+
+            continue
         
         if condition["type"] == "ms2productcondition":
             mz = condition["value"][0]
@@ -740,9 +744,20 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
 
                 ms2sum_df = ms2_df.groupby(groupby_columns).sum().reset_index()
                 ms2norm_df = ms2_df.groupby(groupby_columns).max().reset_index()
+
                 result_df["i"] = ms2sum_df["i"]
                 result_df["i_norm"] = ms2norm_df["i_norm"]
                 result_df["mslevel"] = 2
+
+                # Calculating the MS1 i_norm and then joining on the ms1scan
+                try:
+                    ms1norm_df = ms1_df.groupby(groupby_columns).max().reset_index()
+                    ms1norm_df["ms1scan"] = ms1norm_df["scan"]
+                    ms1norm_df["i_norm_ms1"] = ms1norm_df["i_norm"]
+                    ms1norm_df = ms1norm_df[["ms1scan", "i_norm_ms1"]]
+                    result_df = result_df.merge(ms1norm_df, how="left", on="ms1scan")
+                except:
+                    pass
 
             return result_df
 

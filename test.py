@@ -275,6 +275,16 @@ def test_ms1_iron_min_intensity_m2_prec_xrange():
     print(results_df)
     assert(1214 in list(results_df["scan"]))
 
+def test_i_norm_iron_xrange():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25 AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=5 \
+            AND MS1MZ=X+1:INTENSITYMATCH=Y*0.5:INTENSITYMATCHPERCENT=60 AND MS1MZ=X-52.91:TOLERANCEMZ=0.1 AND MS2PREC=X AND X=range(min=220, max=230) \
+            FILTER MS1MZ=X"
+
+    parse_obj = msql_parser.parse_msql(query)
+    results_df = msql_engine.process_query(query, "test/isa_9_fe.mzML")
+
+    assert(results_df["i_norm_ms1"][0] < 0.4)
+
 @pytest.mark.skip(reason="parallel not really supported anymore")
 def test_ms1_cu():
     msql_engine.init_ray()
@@ -493,7 +503,7 @@ def test_load():
 def main():
     #msql_engine.init_ray()
     
-    test_noquery()
+    #test_noquery()
     #test_simple_ms2_twoqualifier()
     #test_simple_ms2_twoconditions()
     #test_diphen()
@@ -528,7 +538,8 @@ def main():
     #test_ms1_iron()
     #test_ms1_iron_min_intensity()
     #test_ms1_iron_min_intensity_m2_prec()
-    test_ms1_iron_min_intensity_m2_prec_xrange()
+    #test_ms1_iron_min_intensity_m2_prec_xrange()
+    test_i_norm_iron_xrange()
     #test_ms1_filtered_by_ms2()
     #test_ms1_cu()
     #test_neutral_loss_intensity()
