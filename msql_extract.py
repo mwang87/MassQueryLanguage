@@ -185,11 +185,11 @@ def _extract_spectra(results_df, input_spectra_folder,
 
             spectrum_obj_list = []
             if ".mzML" in input_spectra_filename:
-                spectrum_obj_list = _extract_mzML_scan(input_spectra_filename, list(results_by_file_df["scan"]))
+                spectrum_obj_list = _extract_mzML_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
             if ".mzXML" in input_spectra_filename:
-                spectrum_obj_list = _extract_mzXML_scan(input_spectra_filename, list(results_by_file_df["scan"]))
+                spectrum_obj_list = _extract_mzXML_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
             if ".mgf" in input_spectra_filename:
-                spectrum_obj_list = _extract_mgf_scan(input_spectra_filename, list(results_by_file_df["scan"]))
+                spectrum_obj_list = _extract_mgf_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
 
 
             for spectrum_obj in spectrum_obj_list:                
@@ -215,7 +215,7 @@ def _extract_spectra(results_df, input_spectra_folder,
     if output_summary is not None:
         merged_summary_df.to_csv(output_summary, sep='\t', index=False)
 
-    if len(spectrum_list) > 1000:
+    if len(spectrum_list) > 5000:
         print("Not Extracting, too many spectra")
         return None
 
