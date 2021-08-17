@@ -342,13 +342,21 @@ def draw_parse(query):
 ```
 '''.format(json.dumps(parse_results, indent=4)))
 
-    # Creating written description that is translated
-    try:
-        translation = msql_translator.translate_query(query)
-    except:
-        translation = "Translation Error"
+    output_list = [html.Hr(), parse_markdown]
 
-    return [[html.Pre(translation), html.Hr(), parse_markdown]]
+    # Creating written description that is translated
+    languages = ["korean", "chinese", "french", "german", "spanish", "portuguese", "english"]
+
+    for language in languages:
+        try:
+            translation = msql_translator.translate_query(query, language=language)
+        except:
+            translation = "Translation Error"
+        
+        output_list.insert(0, html.Pre(translation))
+        output_list.insert(0, html.H4("{} translation".format(language)))
+        
+    return [output_list]
 
 @app.callback([
                 Output('output_parse_drawing', 'children'),
