@@ -71,7 +71,7 @@ def _load_data_mgf(input_filename):
     file = load_from_mgf(input_filename)
 
     ms2mz_list = []
-    for spectrum in file:
+    for i, spectrum in enumerage(file):
         if len(spectrum.peaks.mz) == 0:
             continue
 
@@ -86,9 +86,21 @@ def _load_data_mgf(input_filename):
             peak_dict["i_norm"] = i_list[i] / i_max
             peak_dict["i_tic_norm"] = i_list[i] / i_sum
             peak_dict["mz"] = mz_list[i]
-            peak_dict["scan"] = spectrum.metadata["scans"]
-            peak_dict["rt"] = float(spectrum.metadata["rtinseconds"]) / 60
-            peak_dict["precmz"] = float(spectrum.metadata["pepmass"][0])
+
+            # Handling malformed mgf files
+            try:
+                peak_dict["scan"] = spectrum.metadata["scans"]
+            except:
+                peak_dict["scan"] = i + 1
+            try:
+                peak_dict["rt"] = float(spectrum.metadata["rtinseconds"]) / 60
+            except:
+                peak_dict["rt"] = 0
+            try:
+                peak_dict["precmz"] = float(spectrum.metadata["pepmass"][0])
+            except:
+                peak_dict["precmz"] = 0
+
             peak_dict["ms1scan"] = 0
             peak_dict["charge"] = 1 # TODO: Add Charge Correctly here
             peak_dict["polarity"] = 1 # TODO: Add Polarity Correctly here
