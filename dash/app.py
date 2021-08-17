@@ -364,8 +364,8 @@ def _render_parse(query):
         output_list.insert(0, html.Pre(translation))
         output_list.insert(0, html.H4("{} translation".format(language)))
         
-    output_list.append(html.Pre(query))
-    output_list.append(html.Hr())
+    output_list.insert(0, html.Hr())
+    output_list.insert(0, html.Pre(query))
     
     return output_list
 
