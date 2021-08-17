@@ -1,0 +1,24 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.1
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2precursorcondition",
+            "value": [
+                85.0282
+            ]
+        }
+    ],
+    "query": "QUERY scannum(MS2DATA) WHERE MS2PREC=85.0282:TOLERANCEMZ=0.1",
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscannum"
+    }
+}

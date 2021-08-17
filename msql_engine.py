@@ -7,7 +7,6 @@ import copy
 import logging
 from tqdm import tqdm
 
-import ray
 from py_expression_eval import Parser
 
 import msql_fileloading
@@ -23,6 +22,7 @@ def DEBUG_MSG(msg):
     print(msg, file=sys.stderr, flush=True)
 
 def init_ray():
+    import ray
     if not ray.is_initialized():
         ray.init(ignore_reinit_error=True, object_store_memory=8000000000, num_cpus=8)
 
@@ -90,6 +90,9 @@ def _get_minintensity(qualifier):
 
     if "qualifierintensityticpercent" in qualifier:
         min_tic_percent_intensity = float(qualifier["qualifierintensityticpercent"]["value"]) / 100
+
+    # since the subsequent comparison is a strict greater than, if people set it to 100, then they won't get anything. 
+    min_percent_intensity = min(min_percent_intensity, 0.99)
 
     return min_intensity, min_percent_intensity, min_tic_percent_intensity
 
@@ -167,7 +170,7 @@ def _set_intensity_register(ms_filtered_df, register_dict, condition):
                 register_dict[key] = grouped_scan["i"]
     return
 
-def process_query(input_query, input_filename, path_to_grammar="msql.ebnf", cache=True, parallel=True):
+def process_query(input_query, input_filename, path_to_grammar="msql.ebnf", cache=True, parallel=False):
     parsed_dict = msql_parser.parse_msql(input_query, path_to_grammar=path_to_grammar)
 
     return _evalute_variable_query(parsed_dict, input_filename, cache=cache, parallel=parallel)
@@ -182,7 +185,7 @@ def _determine_mz_max(mz, ppm_tol, da_tol):
 
     return mz + half_delta
 
-def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=True):
+def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=False):
     # Lets check if there is a variable in here, the only one allowed is X
     for condition in parsed_dict["conditions"]:
         try:
@@ -196,14 +199,27 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
         except:
             pass
 
-    # Here we will check if there is a variable in the expression
+    # Variable Expression Parameters
     variable_properties = {}
     variable_properties["has_variable"] = False
     variable_properties["ppm_tolerance"] = 100000
     variable_properties["da_tolerance"] = 100000
     variable_properties["query_ms1"] = False
     variable_properties["query_ms2"] = False
-    
+    variable_properties["min"] = 0
+    variable_properties["max"] = 1000000
+
+    # Checking for ranges in query
+    new_conditions = []
+    for condition in parsed_dict["conditions"]:
+        if condition["type"] == "xcondition":
+            variable_properties["min"] = condition["min"]
+            variable_properties["max"] = condition["max"]
+        else:
+            new_conditions.append(condition)
+    parsed_dict["conditions"] = new_conditions
+
+    # Here we will check if there is a variable in the expression
     for condition in parsed_dict["conditions"]:
         for value in condition["value"]:
             try:
@@ -245,7 +261,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
             for value in condition["value"]:
                 try:
                     # Checking if X is in any string
-                    if "X" in value[0]:
+                    if "X" in value:
                         continue
                 except TypeError:
                     # This is when the target is actually a float
@@ -287,12 +303,15 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
             if running_max_mz > masses_obj["mz"]:
                 continue
 
+            #######################
             # Writing new query
+            #######################
             substituted_parse = copy.deepcopy(parsed_dict)
             mz_val = masses_obj["mz"]
 
             for condition in substituted_parse["conditions"]:
                 for i, value in enumerate(condition["value"]):
+                    # Rewriting the condition value
                     try:
                         if "X" in value:
                             new_value = math_parser.parse(value).evaluate({
@@ -303,45 +322,25 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
                         # This is when the target is actually a float
                         pass
 
-            # DEBUG
-            # if mz_val < 614.75 or mz_val > 614.8:
-            #     continue
-
-            substituted_parse["comment"] = str(mz_val)
-            all_concrete_queries.append(substituted_parse)
+                    # Rewriting the qualifier values
+                    try:
+                        if "qualifiers" in condition:
+                            for qualifier in condition["qualifiers"]:
+                                if "qualifier" in qualifier:
+                                    if "value" in condition["qualifiers"][qualifier]:
+                                        old_value = condition["qualifiers"][qualifier]["value"]
+                                        condition["qualifiers"][qualifier]["value"] = old_value.replace("X", str(mz_val))
+                    except AttributeError:
+                        pass
             
             # Let's consider this mz
             running_max_mz = masses_obj["mz_max"]
 
+            substituted_parse["comment"] = str(mz_val)
+            if mz_val < variable_properties["min"] or mz_val > variable_properties["max"]:
+                continue
 
-        # DELTA_VAL = 0.1
-        # # Lets iterate through all values of the variable
-        # #MAX_MZ = 10
-        # #MAX_MZ = 200
-        # MAX_MZ = 1000
-
-        # for i in tqdm(range(int(MAX_MZ / DELTA_VAL))):
-        #     x_val = i * DELTA_VAL + 150
-
-        #     # Writing new query
-        #     substituted_parse = copy.deepcopy(parsed_dict)
-
-        #     for condition in substituted_parse["conditions"]:
-        #         for i, value in enumerate(condition["value"]):
-        #             try:
-        #                 if "X" in value:
-        #                     if "+" in value:
-        #                         new_value = x_val + float(value.split("+")[-1])
-        #                     else:
-        #                         new_value = x_val
-        #                     # print("SUBSTITUTE", condition, value, i, new_value)
-        #                     condition["value"][i] = new_value
-        #             except TypeError:
-        #                 # This is when the target is actually a float
-        #                 pass
-
-        #     #print(substituted_parse)
-        #     all_concrete_queries.append(substituted_parse)
+            all_concrete_queries.append(substituted_parse)
     else:
         all_concrete_queries.append(parsed_dict)
 
@@ -351,16 +350,25 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
     collated_list = [] # This list holds the collated set of results from each query, final result is a concat of all of them
 
     # Ray Parallel Version
-    if ray.is_initialized() and parallel:
-        # TODO: Divide up the parallel thing
-        chunk_size = 100
-        concrete_query_lists = [all_concrete_queries[i:i + chunk_size] for i in range(0, len(all_concrete_queries), chunk_size)]
-        futures = [_executeconditions_query_ray.remote(concrete_query_list, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache) for concrete_query_list in concrete_query_lists]
-        all_ray_results = ray.get(futures)
+    execute_serial = True
+    if parallel:
+        import ray
+        import msql_engine_ray
 
-        # Flattening this list of lists
-        collated_list = [item for sublist in all_ray_results for item in sublist]
-    else:
+        if ray.is_initialized():
+            # TODO: Divide up the parallel thing
+            chunk_size = 100
+            concrete_query_lists = [all_concrete_queries[i:i + chunk_size] for i in range(0, len(all_concrete_queries), chunk_size)]
+            futures = [msql_engine_ray._executeconditions_query_ray.remote(concrete_query_list, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache) for concrete_query_list in concrete_query_lists]
+            all_ray_results = ray.get(futures)
+
+            # Flattening this list of lists
+            collated_list = [item for sublist in all_ray_results for item in sublist]
+
+            execute_serial = False
+    
+    # This is the fallback
+    if execute_serial:
         # Serial Version
         for concrete_query in tqdm(all_concrete_queries):
             results_ms1_df, results_ms2_df = _executeconditions_query(concrete_query, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache)
@@ -368,8 +376,9 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
             collated_df = _executecollate_query(parsed_dict, results_ms1_df, results_ms2_df)
             collated_list.append(collated_df)
 
+    # Concatenating all the results
     collated_df = pd.concat(collated_list)
-    collated_df = collated_df.reset_index()
+    collated_df = collated_df.reset_index(drop=True)
 
     # Lets try to remove duplicates
     try:
@@ -382,32 +391,6 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Tr
         
     return collated_df
 
-
-@ray.remote
-def _executeconditions_query_ray(parsed_dict_list, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
-    """
-    Here we will use parallel ray, we will give a list of dictionaries to query, and return a list of results that are collated
-
-    Args:
-        parsed_dict_list ([type]): [description]
-        input_filename ([type]): [description]
-        ms1_input_df ([type], optional): [description]. Defaults to None.
-        ms2_input_df ([type], optional): [description]. Defaults to None.
-        cache (bool, optional): [description]. Defaults to True.
-
-    Returns:
-        [type]: [description]
-    """
-
-    collated_list = []
-
-    for parsed_dict in parsed_dict_list:
-        ms1_df, ms2_df = _executeconditions_query(parsed_dict, input_filename, ms1_input_df=ms1_input_df, ms2_input_df=ms2_input_df, cache=cache)
-
-        collated_df = _executecollate_query(parsed_dict, ms1_df, ms2_df)
-        collated_list.append(collated_df)
-
-    return collated_list
 
 def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
     # This function attempts to find the data that the query specifies in the conditions
@@ -646,6 +629,10 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
             ms1_df = ms1_df[(ms1_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
+
+            print("FILTER", mz_min, mz_max, len(ms1_df))
+
+            continue
         
         if condition["type"] == "ms2productcondition":
             mz = condition["value"][0]
@@ -724,6 +711,7 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
 
             return result_df
 
+        # scaninfo return function
         if parsed_dict["querytype"]["function"] == "functionscaninfo":
             result_df = pd.DataFrame()
 
@@ -737,9 +725,12 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
 
                 result_df = ms1_df.groupby(groupby_columns).first().reset_index()
                 result_df = result_df[kept_columns]
+                result_df["mslevel"] = 1
 
                 ms1sum_df = ms1_df.groupby(groupby_columns).sum().reset_index()
+                ms1norm_df = ms1_df.groupby(groupby_columns).max().reset_index()
                 result_df["i"] = ms1sum_df["i"]
+                result_df["i_norm"] = ms1norm_df["i_norm"]
             if parsed_dict["querytype"]["datatype"] == "datams2data":
                 kept_columns = ["scan", "precmz", "ms1scan", "rt", "charge"]
                 groupby_columns = ["scan"]
@@ -752,7 +743,21 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
                 result_df = result_df[kept_columns]
 
                 ms2sum_df = ms2_df.groupby(groupby_columns).sum().reset_index()
+                ms2norm_df = ms2_df.groupby(groupby_columns).max().reset_index()
+
                 result_df["i"] = ms2sum_df["i"]
+                result_df["i_norm"] = ms2norm_df["i_norm"]
+                result_df["mslevel"] = 2
+
+                # Calculating the MS1 i_norm and then joining on the ms1scan
+                try:
+                    ms1norm_df = ms1_df.groupby(groupby_columns).max().reset_index()
+                    ms1norm_df["ms1scan"] = ms1norm_df["scan"]
+                    ms1norm_df["i_norm_ms1"] = ms1norm_df["i_norm"]
+                    ms1norm_df = ms1norm_df[["ms1scan", "i_norm_ms1"]]
+                    result_df = result_df.merge(ms1norm_df, how="left", on="ms1scan")
+                except:
+                    pass
 
             return result_df
 

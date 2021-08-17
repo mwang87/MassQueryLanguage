@@ -35,6 +35,8 @@
             <arg option="-parametermapping" value="PARALLELPERFILE:parallel_query"/>
             <arg option="-parametermapping" value="EXTRACT:extract"/>
 
+            <arg option="-updateproteosafefronteendstatus" value="YES"/>
+
             <arg option="-runcluster" valueRef="@CLUSTERPARALLEL"/>
             <arg option="-clusterconfig" pathRef="cluster.config"/>
             <arg option="-user" valueRef="@user"/>

@@ -1,0 +1,61 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "max": 500.0,
+            "min": 100.0,
+            "type": "xcondition"
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitymatch": {
+                    "name": "qualifierintensitymatch",
+                    "value": "Y*0.0608+2e-06*X"
+                },
+                "qualifierintensitytolpercent": {
+                    "name": "qualifierintensitytolpercent",
+                    "value": 25.0
+                },
+                "type": "qualifier"
+            },
+            "type": "ms1mzcondition",
+            "value": [
+                "X-2.0"
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitymatch": {
+                    "name": "qualifierintensitymatch",
+                    "value": "Y"
+                },
+                "qualifierintensitypercent": {
+                    "name": "qualifierintensitypercent",
+                    "value": 5.0
+                },
+                "qualifierintensityreference": {
+                    "name": "qualifierintensityreference"
+                },
+                "type": "qualifier"
+            },
+            "type": "ms1mzcondition",
+            "value": [
+                "X"
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "type": "ms2precursorcondition",
+            "value": [
+                "X"
+            ]
+        }
+    ],
+    "query": "QUERY scaninfo(MS2DATA) WHERE X=range(min=100, max=500) AND MS1MZ=X-2:INTENSITYMATCH=Y*(0.0608+(.000002*X)):INTENSITYMATCHPERCENT=25 AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=5 AND MS2PREC=X",
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}

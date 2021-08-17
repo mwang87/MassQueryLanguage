@@ -1,0 +1,72 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitymatch": {
+                    "name": "qualifierintensitymatch",
+                    "value": "Y"
+                },
+                "qualifierintensitypercent": {
+                    "name": "qualifierintensitypercent",
+                    "value": 25.0
+                },
+                "qualifierintensityreference": {
+                    "name": "qualifierintensityreference"
+                },
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.1
+                },
+                "type": "qualifier"
+            },
+            "type": "ms1mzcondition",
+            "value": [
+                "X"
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitymatch": {
+                    "name": "qualifierintensitymatch",
+                    "value": "Y*0.33"
+                },
+                "qualifierintensitytolpercent": {
+                    "name": "qualifierintensitytolpercent",
+                    "value": 30.0
+                },
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.1
+                },
+                "type": "qualifier"
+            },
+            "type": "ms1mzcondition",
+            "value": [
+                "X+2.0"
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "type": "ms2precursorcondition",
+            "value": [
+                "X"
+            ]
+        },
+        {
+            "conditiontype": "filter",
+            "type": "ms1mzcondition",
+            "value": [
+                "X"
+            ]
+        }
+    ],
+    "query": "QUERY scaninfo(MS1DATA) WHERE MS1MZ=X:TOLERANCEMZ=0.1:INTENSITYPERCENT=25:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE AND MS1MZ=X+2:TOLERANCEMZ=0.1:INTENSITYMATCH=Y*0.33:INTENSITYMATCHPERCENT=30 AND MS2PREC=X FILTER MS1MZ=X",
+    "querytype": {
+        "datatype": "datams1data",
+        "function": "functionscaninfo"
+    }
+}

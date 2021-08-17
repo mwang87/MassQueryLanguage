@@ -59,6 +59,7 @@
                     <parameter name="URLBASE" value="https://msql.ucsd.edu/"/>
                     <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
                     <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
+                    <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm]"/>
                     <parameter name="REQUESTPARAMETER=ms1_usi" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]:scan:[_dyn_#scan]"/>
                     <parameter name="LABEL" value="Visualize Query as MS1"/>
                 </column>
@@ -67,8 +68,20 @@
                     <parameter name="URLBASE" value="https://msql.ucsd.edu/"/>
                     <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
                     <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
+                    <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm]"/>
+                    <parameter name="REQUESTPARAMETER=ms1_usi" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]:scan:[_dyn_#ms1scan]"/>
                     <parameter name="REQUESTPARAMETER=ms2_usi" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]:scan:[_dyn_#scan]"/>
                     <parameter name="LABEL" value="Visualize Query as MS2"/>
+                </column>
+
+                <column label="USI-Spectrum" type="genericurlgenerator" width="3">
+                    <parameter name="URLBASE" value="https://msql.ucsd.edu/"/>
+                    <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
+                    <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
+                    <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm_ms1]"/>
+                    <parameter name="REQUESTPARAMETER=ms1_usi" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]:scan:[_dyn_#ms1scan]"/>
+                    <parameter name="REQUESTPARAMETER=ms2_usi" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]:scan:[_dyn_#scan]"/>
+                    <parameter name="LABEL" value="Visualize Query as MS2 with MS1 norms"/>
                 </column>
                 
                 <!-- <column type="genericimagedisplayer" label="Structure">
@@ -85,11 +98,12 @@
     <view id="extract_results" label="Extract Results">
         <blockRef id="main" type="extract_results"/>
     </view>
-    <block id="extract_results" type="table">
+    <block id="extract_results" type="table_ss">
         <data>
             <source type="file" name="query_results/extracted/extracted.tsv"/>
             <parsers>
                 <parser type="genericTabular"/>
+                <parser type="SQLite"/>
             </parsers>
 
             <row>
@@ -97,30 +111,70 @@
 
             <row expander="image">
                 <column type="jscolumnspectrumviewer" colspan="5" width="600" height="500">
-                    <parameter name="file"      file="query_results/extracted/extracted.mgf"/>
+                    <parameter name="file"      file="query_results/extracted/extracted.mzML"/>
                     <parameter name="scan"      value="[_dyn_#new_scan]"/>
                     <parameter name="modformat" value="inspect"/>
                     <parameter name="trim"      value="true"/>
                 </column>
             </row>
 
-            <row expander="USI Links" expandericontype="text">
+            <row expander="Simple Viz" expandericontype="text">
+                <column type="genericimagedisplayer" label="Visualization as MS1">
+                    <parameter name="URLBASE" value="https://msql.ucsd.edu/visualize/ms1"/>
+                    <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
+                    <parameter name="REQUESTPARAMETER=zoom" value="Yes"/>
+                    <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
+                    <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm]"/>
+                    <parameter name="REQUESTPARAMETER=ms1_usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mzML:scan:[_dyn_#new_scan]"/>
+                </column>
+
+                <column type="genericimagedisplayer" label="Visualization as MS2">
+                    <parameter name="URLBASE" value="https://msql.ucsd.edu/visualize/ms2"/>
+                    <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
+                    <parameter name="REQUESTPARAMETER=zoom" value="Yes"/>
+                    <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
+                    <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm]"/>
+                    <parameter name="REQUESTPARAMETER=ms2_usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mzML:scan:[_dyn_#new_scan]"/>
+                </column>
+            </row>
+
+            <row expander="Advanced Viz Links" expandericontype="text">
                 <column label="USI-Spectrum" type="genericurlgenerator" width="3">
                     <parameter name="URLBASE" value="https://metabolomics-usi.ucsd.edu/spectrum/"/>
-                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-f.query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
+                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
                     <parameter name="LABEL" value="Spectrum USI"/>
                 </column>
+
                 <column label="USI-Spectrum" type="genericurlgenerator" width="3">
                     <parameter name="URLBASE" value="https://metabolomics-usi.ucsd.edu/spectrum/"/>
-                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-f.query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
+                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
                     <parameter name="REQUESTPARAMETER=mz_min" value="[_dyn_#mz_lower]"/>
                     <parameter name="REQUESTPARAMETER=mz_max" value="[_dyn_#mz_upper]"/>
                     <parameter name="LABEL" value="Spectrum USI - With Range"/>
                 </column>
+
                 <column label="USI-Spectrum" type="genericurlgenerator" width="3">
                     <parameter name="URLBASE" value="https://fastlibrarysearch.ucsd.edu/fastsearch/"/>
-                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-f.query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
+                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
                     <parameter name="LABEL" value="Library Search MS/MS"/>
+                </column>
+
+                <column label="USI-Spectrum" type="genericurlgenerator" width="3">
+                    <parameter name="URLBASE" value="https://msql.ucsd.edu/"/>
+                    <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
+                    <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
+                    <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm]"/>
+                    <parameter name="REQUESTPARAMETER=ms1_usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
+                    <parameter name="LABEL" value="Visualize Query as MS1"/>
+                </column>
+
+                <column label="USI-Spectrum" type="genericurlgenerator" width="3">
+                    <parameter name="URLBASE" value="https://msql.ucsd.edu/"/>
+                    <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
+                    <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
+                    <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm]"/>
+                    <parameter name="REQUESTPARAMETER=ms2_usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
+                    <parameter name="LABEL" value="Visualize Query as MS2"/>
                 </column>
             </row>
         </data>
@@ -159,7 +213,8 @@
                 <parser type="stream" contentType="text/xml"/>
             </parsers>
         </data>
-        <parameter name="URLBASE" value='https://msql.ucsd.edu/?query=@QUERY'/>
+        <parameter name="URLBASE" value='https://msql.ucsd.edu/'/>
+        <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
     </block>
 
     <!-- Summary Stats for Compute -->
@@ -175,6 +230,18 @@
         </data>
         <row/>
     </block>
+
+    <view id="workflow_stdout" label="Workflow StdOut" group="Compute Stats">
+        <blockRef id="main" type="workflow_stdout"/>
+    </view>
+    <block id="workflow_stdout" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/stdout.log&amp;block=main&amp;process_html=false'/>
+    </block>
             
     <!-- <block id="proteosafe_workflow_trace" type="stream">
     
@@ -186,6 +253,33 @@
         </data>
     </block> -->
 
+    <!-- Active Runtime Status -->
+    <view id="workflow_trace_runtime" label="Workflow Trace" group="Compute Stats" display="hidden">
+        <blockRef id="main" type="workflow_trace_runtime"/>
+    </view>
+    <block id="workflow_trace_runtime" type="table">
+        <data>
+            <source type="file" name="nextflow/trace.txt"/>
+            <parsers>
+                <parser type="genericTabular"/>
+            </parsers>
+        </data>
+        <row/>
+    </block>
+
+    <view id="workflow_stdout_runtime" label="Workflow StdOut" group="Compute Stats" display="hidden">
+        <blockRef id="main" type="workflow_stdout_runtime"/>
+    </view>
+    <block id="workflow_stdout_runtime" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=nextflow/stdout.log&amp;block=main&amp;process_html=false'/>
+    </block>
+
+    <!-- Workflow Status -->
     <view id="workflow_trace" label="Workflow Trace" group="Compute Stats">
         <blockRef id="main" type="workflow_trace"/>
     </view>
@@ -235,8 +329,6 @@
         <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/dag.html&amp;block=main&amp;process_html=false'/>
     </block>
 
-
-
     <view id="download_data" label="Download Data" group="Advanced Views">
         <blockRef id="main" type="download_data"/>
     </view>
@@ -247,6 +339,42 @@
                 <parser type="stream" contentType="text/xml"/>
             </parsers>
         </data>
+    </block>
+
+    <view id="summary_plots" label="summary_plots" group="Visualization Summary">
+        <blockRef id="main" type="summary_plots"/>
+    </view>
+    <block id="summary_plots" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/summary/summary.html&amp;block=main&amp;process_html=false'/>
+    </block>
+
+    <view id="summary_plots_extracted" label="summary_plots_extracted" group="Visualization Summary">
+        <blockRef id="main" type="summary_plots_extracted"/>
+    </view>
+    <block id="summary_plots_extracted" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='/ProteoSAFe/DownloadResultFile?task=[task]&amp;file=query_results/summary/summary_extracted.html&amp;block=main&amp;process_html=false'/>
+    </block>
+
+    <view id="summary_plots_interactive" label="summary_plots_interactive" group="Visualization Summary">
+        <blockRef id="main" type="summary_plots_interactive"/>
+    </view>
+    <block id="summary_plots_interactive" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='http://dorresteinappshub.ucsd.edu:8843/msqlplot/?task=[task]'/>
     </block>
 
 

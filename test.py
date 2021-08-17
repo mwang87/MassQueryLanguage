@@ -1,15 +1,20 @@
 import msql_parser
 import msql_engine
+import msql_extract
 import msql_translator
 import msql_visualizer
 import msql_fileloading
 import json
 import pytest
 
+
 def test_noquery():
     query = "QUERY scaninfo(MS2DATA)"
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     print(results_df)
+
+    assert("i" in results_df)
+    assert("i_norm" in results_df)
 
 def test_simple_ms2():
     query = "QUERY MS2DATA WHERE MS2PROD=226.18"
@@ -207,7 +212,6 @@ def test_ms1_iron_parallel():
     assert(1223 in list(results_df["scan"]))
     assert(len(results_df) == 15)
 
-@pytest.mark.skip(reason="not implemented")
 def test_ms1_iron_X_changes_intensity():
     query = "QUERY scaninfo(MS2DATA) WHERE \
         MS1MZ=X-2:INTENSITYMATCH=Y*(0.0608+(.000002*X)):INTENSITYMATCHPERCENT=25 AND \
@@ -215,6 +219,8 @@ def test_ms1_iron_X_changes_intensity():
         MS2PREC=X"
     parse_obj = msql_parser.parse_msql(query)
     print(parse_obj)
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+
 
 def test_ms1_iron_min_intensity():
     #msql_engine.init_ray()
@@ -253,6 +259,31 @@ def test_ms1_iron_min_intensity_m2_prec():
     results_df = msql_engine.process_query(query, "test/JB_182_2_fe.mzML")
     print(results_df)
     assert(1214 in list(results_df["scan"]))
+
+def test_ms1_iron_min_intensity_m2_prec_xrange():
+    query = "QUERY scaninfo(MS2DATA) \
+            WHERE \
+            RTMIN=2.8 \
+            AND RTMAX=3.05 \
+            AND MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=30 \
+            AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=5 \
+            AND MS2PREC=X AND X=range(min=650, max=660)"
+    parse_obj = msql_parser.parse_msql(query)
+    print(parse_obj)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "test/JB_182_2_fe.mzML")
+    print(results_df)
+    assert(1214 in list(results_df["scan"]))
+
+def test_i_norm_iron_xrange():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25 AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=5 \
+            AND MS1MZ=X+1:INTENSITYMATCH=Y*0.5:INTENSITYMATCHPERCENT=60 AND MS1MZ=X-52.91:TOLERANCEMZ=0.1 AND MS2PREC=X AND X=range(min=220, max=230) \
+            FILTER MS1MZ=X"
+
+    parse_obj = msql_parser.parse_msql(query)
+    results_df = msql_engine.process_query(query, "test/isa_9_fe.mzML")
+
+    assert(results_df["i_norm_ms1"][0] < 0.4)
 
 @pytest.mark.skip(reason="parallel not really supported anymore")
 def test_ms1_cu():
@@ -385,6 +416,14 @@ def test_ticintmin():
     results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
     assert(len(results_df) == 0)
 
+def test_nocache():
+    query = "QUERY scaninfo(MS2DATA)"
+    results_df = msql_engine.process_query(query, "test/QC_0.mzML", cache=False, parallel=False)
+    #results_df = msql_engine.process_query(query, "test/QC_0.mzML", cache=True, parallel=True)
+
+    print(results_df)
+
+
 
 @pytest.mark.skip(reason="too slow")
 def test_double_brominated():
@@ -439,17 +478,9 @@ def test_agilent():
     query = "QUERY scaninfo(MS2DATA)"
     results_df = msql_engine.process_query(query, "test/20190310_MSMSpos_marine_water_20180510_CBTheaFoss_1.mzML")
 
-def test_visualize():
-    #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=177 AND MS2PROD=270 AND MS2NL=163"
-    #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X+14"
-    #query = "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X AND MS1MZ=X+14"
-    query = "QUERY scaninfo(MS1DATA) WHERE \
-            MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25 \
-            AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE"
-
-    ms1_fig, ms2_fig = msql_visualizer.visualize_query(query)
-    ms2_fig.write_image("test_ms2_visualize.png", engine="kaleido")
-    ms1_fig.write_image("test_ms1_visualize.png", engine="kaleido")
+def test_formula():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=2.0*(X - formula(Fe))"
+    results_df = msql_engine.process_query(query, "test/bld_plt1_07_120_1.mzML")
 
 def test_translator():
     for line in open("test_queries.txt"):
@@ -463,17 +494,13 @@ def test_translator_portuguese():
         translated_version = msql_translator.translate_query(test_query, language="portuguese")
         print(test_query, translated_version)
 
-def test_parse():        
-    for line in open("test_queries.txt"):
-        test_query = line.rstrip()
-        print(test_query)
-        msql_parser.parse_msql(test_query)
+
 
 def test_query():
     for line in open("test_queries.txt"):
         test_query = line.rstrip()
         print(test_query)
-        msql_engine.process_query(test_query, "test/bld_plt1_07_120_1.mzML")
+        msql_engine.process_query(test_query, "test/GNPS00002_A3_p.mzML")
 
 def test_load():
     ms1_df, ms2_df = msql_fileloading.load_data("test/JB_182_2_fe.mzML", cache=False)
@@ -516,6 +543,8 @@ def main():
     #test_ms1_iron()
     #test_ms1_iron_min_intensity()
     #test_ms1_iron_min_intensity_m2_prec()
+    #test_ms1_iron_min_intensity_m2_prec_xrange()
+    test_i_norm_iron_xrange()
     #test_ms1_filtered_by_ms2()
     #test_ms1_cu()
     #test_neutral_loss_intensity()
@@ -530,41 +559,10 @@ def main():
     #test_gnps_pqs_library()
     #test_mse()
     #test_visualize()
-    test_translator()
+    #test_translator()
+    #test_ms1_iron_X_changes_intensity()
+    #test_nocache()
 
 if __name__ == "__main__":
     main()
 
-# raw = "QUERY MS2DATA WHERE MS2PROD=226.18"
-# #raw = "QUERY scanmz(MS2DATA) WHERE MS2PROD=226.18"
-# #raw = "QUERY MS2DATA WHERE MS2PROD=226.18 AND MS2PREC=226.1797"
-# #raw = "QUERY scannum(MS2DATA) WHERE MS1MZ=XX"
-# #raw = "QUERY scannum(MS2DATA) WHERE MS1MZ=XX"
-# #raw = "QUERY scansum(MS2DATA) WHERE MS2PROD=226.18 AND MS2PREC=226.1797"
-# #raw = "QUERY scansum(MS2DATA) WHERE MS2PROD=271 AND MS2PREC=500 AND MS1MZ=100"
-# #raw = "QUERY scansum(MS2DATA) WHERE MS2PROD=271:MZDELTA=0.01:INTENSITYPERCENT>10 AND MS2PREC=500"
-# #raw = "QUERY scanrangesum(MS1DATA, TOLERANCE=0.1) WHERE MS1MZ=(QUERY scanmz(MS2DATA) WHERE MS2PROD=85.02820:MZDELTA=0.01 AND MS2NL=59.07350:MZDELTA=0.01):MZDELTA=0.01"
-# # statements = sqlparse.split(raw)
-
-# # print(statements)
-
-# # first = statements[0]
-
-# # print(sqlparse.format(first, reindent=True, keyword_case='upper'))
-
-# # parsed = sqlparse.parse(raw)[0]
-# # for token in parsed.tokens:
-# #     print("X", token)
-
-# parsed_output = msql_parser.parse_msql(raw)
-# print(parsed_output)
-
-
-# for line in open("test_queries.txt"):
-#     test_query = line.rstrip()
-#     msql_parser.parse_msql(test_query)
-#     #print(test_query)
-
-# results_df = msql_engine.process_query(raw, "test/GNPS00002_A3_p.mzML")
-# print(results_df.head())
-# #print(set(results_df["scan"]))

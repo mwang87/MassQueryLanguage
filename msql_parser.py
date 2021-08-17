@@ -2,6 +2,12 @@
 from lark import Lark
 from lark import Transformer
 
+from py_expression_eval import Parser
+math_parser = Parser()
+
+from pyteomics import mass
+
+
 
 #TODO: Update language definition to make it such that we can distinguish different functions
 
@@ -66,6 +72,9 @@ class MassQLToJSON(Transformer):
    def negativepolarity(self, items):
       return "negativepolarity"
 
+   def xcondition(self, items):
+      return "xcondition"
+
    def qualifier(self, items):
       if len(items) == 1 and items[0] == "qualifierintensityreference":
          qualifier_type = items[0]
@@ -119,6 +128,13 @@ class MassQLToJSON(Transformer):
          condition_dict = {}
          condition_dict["type"] = items[0]
          condition_dict["value"] = [items[-1]]
+      elif len(items) == 4:
+         # These are for the x range clauses
+         if items[0] == "xcondition":
+            condition_dict = {}
+            condition_dict["type"] = items[0]
+            condition_dict["min"] = float(items[2])
+            condition_dict["max"] = float(items[3])
    
       return condition_dict
 
@@ -232,6 +248,77 @@ class MassQLToJSON(Transformer):
    def variable(self, s):
       return s[0].value
 
+   # Handling Numerical Expressions
+   def plus(self, s):
+      return "+"
+   def multiply(self, s):
+      return "*"
+   def minus(self, s):
+      return "-"
+   def divide(self, s):
+      return "/"
+
+   def factor(self, s):
+      return s[0]
+
+   def term(self, items):
+      if len(items) == 1:
+         return items[0]
+
+      has_variable = _has_variable(items)
+
+      string_items = [str(item) for item in items]
+      full_expression = "".join(string_items)
+
+      if has_variable:
+         return full_expression
+
+      calculated_value = math_parser.parse(full_expression).evaluate({})
+      
+      return calculated_value
+
+   def numericalexpression(self, items):
+      if len(items) == 1:
+         return items[0]
+
+      has_variable = _has_variable(items)
+
+      string_items = [str(item) for item in items]
+      full_expression = "".join(string_items)
+
+      if has_variable:
+         return full_expression
+
+      # Calculating the expression
+      calculated_value = math_parser.parse(full_expression).evaluate({})
+      
+      return calculated_value
+    
+   def moleculeformula(self, items):
+      exact_mass = mass.calculate_mass(formula=items[0])
+
+      return exact_mass
+
+   def aminoacids(self, items):
+      exact_mass = mass.calculate_mass(sequence=items[0])
+      exact_mass = exact_mass - mass.calculate_mass(formula="H2O")
+      return exact_mass
+
+   def peptide(self, items):
+      return items[0]
+
+   def peptidecharge(self, items):
+      return items[0]
+
+   def peptideion(self, items):
+      return items[0]
+
+   def peptidefunction(self, items):
+      exact_mass = mass.calculate_mass(sequence=items[0], ion_type=items[2].lower(), charge=int(items[1]))
+      return exact_mass
+   
+
+
    def string(self, s):
       (s,) = s
       return s[1:-1]
@@ -241,12 +328,34 @@ class MassQLToJSON(Transformer):
       return float(n)
 
 
+def _has_variable(items):
+   acceptable_variables = ["X", "Y"]
+
+   for item in items:
+      for variable in acceptable_variables:
+         if variable in str(item):
+            return True
+
+   return False 
+
 def parse_msql(input_query, path_to_grammar="msql.ebnf"):
-   # Force capitalization on the input_query
-   input_query = input_query.upper()
+   # Force capitalization on the input_query, turning this off due to needing lower case in formulas
+   #input_query = input_query.upper()
+
+   # Lets try to strip off any comments
+   query_splits = input_query.split("\n")
+   query_splits = [split.lstrip() for split in query_splits]
+   query_splits = [split for split in query_splits if len(split) > 0]
+   query_splits = [split.split("#")[0] for split in query_splits]
+   query_splits = [split.lstrip() for split in query_splits]
+   query_splits = [split for split in query_splits if len(split) > 0]
+
+   input_query = "\n".join(query_splits)
 
    msql_parser = Lark(open(path_to_grammar).read(), start='statement')
    tree = msql_parser.parse(input_query)
    parsed_list = MassQLToJSON().transform(tree)
+
+   parsed_list["query"] = input_query
 
    return parsed_list

@@ -8,6 +8,7 @@ services:
     volumes:
       - ./logs:/app/logs:rw
       - ../test:/app/test:rw
+      - ./temp:/app/temp:rw
       - ../msql_parser.py:/app/msql_parser.py:ro
       - ../msql_engine.py:/app/msql_engine.py:ro
       - ../msql_fileloading.py:/app/msql_fileloading.py:ro
@@ -39,6 +40,7 @@ services:
     volumes:
       - ./logs:/app/logs:rw
       - ../test:/app/test:rw
+      - ./temp:/app/temp:rw
       - ../msql_parser.py:/app/msql_parser.py:ro
       - ../msql_engine.py:/app/msql_engine.py:ro
       - ../msql_fileloading.py:/app/msql_fileloading.py:ro

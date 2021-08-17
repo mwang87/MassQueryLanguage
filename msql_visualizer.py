@@ -28,15 +28,16 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
     # Cleaning up variables
     for condition in parsed_query["conditions"]:
         # Setting m/z variables
-        for i, value in enumerate(condition["value"]):
-            try:
-                # Checking if X is in any string
-                if "X" in value:
-                    condition["value"][i] = math_parser.parse(value ).evaluate({
-                                "X" : variable_x
-                            })    
-            except:
-                pass
+        if "value" in condition:
+            for i, value in enumerate(condition["value"]):
+                try:
+                    # Checking if X is in any string
+                    if "X" in value:
+                        condition["value"][i] = math_parser.parse(value).evaluate({
+                                    "X" : variable_x
+                                })    
+                except:
+                    pass
 
         # Setting intensity variables
         if "qualifiers" in condition:
@@ -44,7 +45,7 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
                 value = condition["qualifiers"]["qualifierintensitymatch"]["value"]
                 condition["qualifiers"]["qualifierintensitymatch"]["value"] = math_parser.parse(value).evaluate({
                                 "Y" : variable_y
-                            })                
+                            })
 
     ms1_fig = go.Figure()
     ms2_fig = go.Figure()
@@ -56,9 +57,12 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
         ints = [peak[1]/max_int for peak in ms1_peaks]
         neg_ints = [intensity * -1 for intensity in ints]
 
+        # Hover data
+        hover_labels = ["{:.4f} m/z, {:.2f} int".format(mzs[i], ints[i]) for i in range(len(mzs))]
+
         ms1_fig = go.Figure(
             data=go.Scatter(x=mzs, y=ints, 
-                mode='markers+text',
+                mode='markers',
                 marker=dict(size=0.00001),
                 error_y=dict(
                     symmetric=False,
@@ -66,7 +70,7 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
                     array=neg_ints,
                     width=0
                 ),
-                hoverinfo="x",
+                text=hover_labels,
                 textposition="top right"
             )
         )
@@ -79,9 +83,12 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
         ints = [peak[1]/max_int for peak in ms2_peaks]
         neg_ints = [intensity * -1 for intensity in ints]
 
+        # Hover data
+        hover_labels = ["{:.4f} m/z, {:.3f} int".format(mzs[i], ints[i]) for i in range(len(mzs))]
+
         ms2_fig = go.Figure(
             data=go.Scatter(x=mzs, y=ints, 
-                mode='markers+text',
+                mode='markers',
                 marker=dict(size=0.00001),
                 error_y=dict(
                     symmetric=False,
@@ -89,13 +96,15 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
                     array=neg_ints,
                     width=0
                 ),
-                hoverinfo="x",
+                text=hover_labels,
                 textposition="top right"
             )
         )
 
     for condition in parsed_query["conditions"]:
-        print(condition)
+        if condition["conditiontype"] != "where":
+            continue
+
         if condition["type"] == "ms2productcondition" and condition["conditiontype"] == "where":
             mz = condition["value"][0]
             mz_tol = msql_engine._get_mz_tolerance(condition.get("qualifiers", None), mz)
@@ -109,6 +118,7 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
                 if "qualifierintensitymatch" in condition["qualifiers"]:
                     intensity = condition["qualifiers"]["qualifierintensitymatch"]["value"]
 
+            # Draw the bounds of the for the MS2 Product
             ms2_fig.add_shape(type="rect",
                 x0=mz_min, y0=0, x1=mz_max, y1=intensity,
                 line=dict(
@@ -139,6 +149,26 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
                     width=2,
                 )
             )
+        
+        if condition["type"] == "xcondition":
+            print(condition)
+            ms1_fig.add_shape(type="line",
+                x0=condition["min"], y0=0, x1=condition["min"], y1=1,
+                line=dict(
+                    color="pink",
+                    width=2,
+                    dash="dot",
+                )
+            )
+
+            ms1_fig.add_shape(type="line",
+                x0=condition["max"], y0=0, x1=condition["max"], y1=1,
+                line=dict(
+                    color="pink",
+                    width=2,
+                    dash="dot",
+                )
+            )
 
         if condition["type"] == "ms1mzcondition":
             mz = condition["value"][0]
@@ -159,6 +189,107 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
                     width=2,
                 )
             )
+
+            # Determining if we should draw intensity bounds
+            if "qualifiers" in condition:
+                if "qualifierintensitytolpercent" in condition["qualifiers"]:
+                    percent_tolerance = condition["qualifiers"]["qualifierintensitytolpercent"]["value"]
+                    percent_tolerance = percent_tolerance / 100
+                    min_intensity = intensity - intensity * percent_tolerance
+                    max_intensity = intensity + intensity * percent_tolerance
+                    intensity_gap = max_intensity - min_intensity
+                    mz_gap = mz_max - mz_min
+
+                    # Top and bottom bounds
+
+                    ms1_fig.add_shape(type="line",
+                        x0=mz_min, y0=min_intensity, x1=mz_max, y1=min_intensity,
+                        line=dict(
+                            color="purple",
+                            width=2,
+                            dash="dot",
+                        )
+                    )
+
+                    ms1_fig.add_shape(type="line",
+                        x0=mz_min, y0=max_intensity, x1=mz_max, y1=max_intensity,
+                        line=dict(
+                            color="purple",
+                            width=2,
+                            dash="dot",
+                        )
+                    )
+
+                    # Drawing arrows
+                    
+                    # Down Arrow
+                    ms1_fig.add_annotation(
+                        x=mz_min + mz_gap / 5,  # arrows' head
+                        y=max_intensity - intensity_gap / 4,  # arrows' head
+                        ax=mz_min + mz_gap / 5,  # arrows' tail
+                        ay=max_intensity,  # arrows' tail
+                        xref='x',
+                        yref='y',
+                        axref='x',
+                        ayref='y',
+                        text='',  # if you want only the arrow
+                        showarrow=True,
+                        arrowhead=3,
+                        arrowsize=1,
+                        arrowwidth=1,
+                        arrowcolor='purple'
+                    )
+
+                    # Up Arrow
+                    ms1_fig.add_annotation(
+                        x=mz_min + mz_gap / 5,  # arrows' head
+                        y=min_intensity + intensity_gap / 4,  # arrows' head
+                        ax=mz_min + mz_gap / 5,  # arrows' tail
+                        ay=min_intensity,  # arrows' tail
+                        xref='x',
+                        yref='y',
+                        axref='x',
+                        ayref='y',
+                        text='',  # if you want only the arrow
+                        showarrow=True,
+                        arrowhead=3,
+                        arrowsize=1,
+                        arrowwidth=1,
+                        arrowcolor='purple'
+                    )
+
+                if "qualifierintensitypercent" in condition["qualifiers"]:
+                    value = condition["qualifiers"]["qualifierintensitypercent"]["value"] / 100
+                    min_intensity = value
+                    mz_gap = mz_max - mz_min
+
+                    ms1_fig.add_shape(type="line",
+                        x0=mz_min, y0=value, x1=mz_max, y1=value,
+                        line=dict(
+                            color="red",
+                            width=2,
+                            dash="dot",
+                        )
+                    )
+
+                    # Up Arrow
+                    ms1_fig.add_annotation(
+                        x=mz_min + mz_gap / 5,  # arrows' head
+                        y=min_intensity + 0.2 * min_intensity,  # arrows' head
+                        ax=mz_min + mz_gap / 5,  # arrows' tail
+                        ay=min_intensity,  # arrows' tail
+                        xref='x',
+                        yref='y',
+                        axref='x',
+                        ayref='y',
+                        text='',  # if you want only the arrow
+                        showarrow=True,
+                        arrowhead=3,
+                        arrowsize=1,
+                        arrowwidth=1,
+                        arrowcolor='red'
+                    )
+
 
     # Set axes properties
     ms2_fig.update_xaxes(range=[0, 1000], showgrid=False)

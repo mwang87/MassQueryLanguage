@@ -1,0 +1,16 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "type": "ms2productcondition",
+            "value": [
+                167.0857
+            ]
+        }
+    ],
+    "query": "QUERY scaninfo(MS2DATA) WHERE MS2PROD=157.0857+10",
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}

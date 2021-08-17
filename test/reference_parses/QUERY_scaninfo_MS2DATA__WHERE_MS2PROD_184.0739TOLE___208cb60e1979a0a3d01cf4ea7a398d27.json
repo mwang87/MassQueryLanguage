@@ -1,0 +1,93 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitypercent": {
+                    "name": "qualifierintensitypercent",
+                    "value": 30.0
+                },
+                "qualifierintensityvalue": {
+                    "name": "qualifierintensityvalue",
+                    "value": 500.0
+                },
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.01
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                184.0739
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitypercent": {
+                    "name": "qualifierintensitypercent",
+                    "value": 10.0
+                },
+                "qualifierintensityvalue": {
+                    "name": "qualifierintensityvalue",
+                    "value": 1500.0
+                },
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.01
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                125.0004
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.01
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                104.1075
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitypercent": {
+                    "name": "qualifierintensitypercent",
+                    "value": 10.0
+                },
+                "qualifierintensityvalue": {
+                    "name": "qualifierintensityvalue",
+                    "value": 2000.0
+                },
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.01
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                86.09697
+            ]
+        }
+    ],
+    "query": "QUERY scaninfo(MS2DATA) WHERE MS2PROD=184.0739:TOLERANCEMZ=0.01:INTENSITYPERCENT>30:INTENSITYVALUE>500 AND MS2PROD=125.0004:TOLERANCEMZ=0.01:INTENSITYPERCENT>10:INTENSITYVALUE>1500 AND MS2PROD=104.1075:TOLERANCEMZ=0.01 AND MS2PROD=86.09697:TOLERANCEMZ=0.01:INTENSITYPERCENT>10:INTENSITYVALUE>2000",
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}

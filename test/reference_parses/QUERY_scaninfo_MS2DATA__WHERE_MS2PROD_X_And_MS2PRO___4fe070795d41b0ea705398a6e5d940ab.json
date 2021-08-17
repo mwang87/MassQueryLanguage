@@ -1,0 +1,23 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "type": "ms2productcondition",
+            "value": [
+                "X"
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "type": "ms2productcondition",
+            "value": [
+                "2.0*X-55.9349375"
+            ]
+        }
+    ],
+    "query": "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X And MS2PROD=2.0*(X - formula(Fe))",
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}
