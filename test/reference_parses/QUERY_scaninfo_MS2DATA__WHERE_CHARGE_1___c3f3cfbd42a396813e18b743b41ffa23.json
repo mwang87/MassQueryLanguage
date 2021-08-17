@@ -1,0 +1,16 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "type": "chargecondition",
+            "value": [
+                1.0
+            ]
+        }
+    ],
+    "query": "QUERY scaninfo(MS2DATA) WHERE CHARGE=1",
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}

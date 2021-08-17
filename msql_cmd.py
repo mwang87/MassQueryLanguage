@@ -5,6 +5,7 @@ import msql_extract
 import argparse
 import os
 import json
+import pandas as pd
 
 def main():
     parser = argparse.ArgumentParser(description="MSQL CMD")
@@ -27,16 +28,30 @@ def main():
         msql_engine.init_ray()
 
     grammar_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "msql.ebnf")
+
+    # Massaging the query on input, we have a system to enable multiple queries to be entered, where results are merged
+    # The delimeter is specified as |||
+    all_queries = args.query.split("|||")
+
     # Let's parse first
-    parsed_query = msql_parser.parse_msql(args.query, grammar_path)
-    print(json.dumps(parsed_query, indent=4))
+    for query in all_queries:
+        parsed_query = msql_parser.parse_msql(query, grammar_path)
+        print(json.dumps(parsed_query, indent=4))
 
     # Executing
-    results_df = msql_engine.process_query(args.query, 
-                                            args.filename, 
-                                            path_to_grammar=grammar_path, 
-                                            cache=(args.cache == "YES"), 
-                                            parallel=PARALLEL)
+    all_results_list = []
+    for i, query in enumerate(all_queries):
+        results_df = msql_engine.process_query(query, 
+                                                args.filename, 
+                                                path_to_grammar=grammar_path, 
+                                                cache=(args.cache == "YES"), 
+                                                parallel=PARALLEL)
+
+        results_df["query_index"] = i
+        all_results_list.append(results_df)
+
+    # Merging
+    results_df = pd.concat(all_results_list)
 
     # Setting mzupper and mzlower
     try:
@@ -53,18 +68,48 @@ def main():
             useful_filename = args.original_path
             # TODO: Clean up for ProteoSAFe
             useful_filename = useful_filename.split("demangled_spectra/")[-1]
+
+            # Cleanup for repository search
+            useful_filename = useful_filename.replace("/data/ccms-data/uploads/", "")
+            
+            # Saving output
             results_df["original_path"] = useful_filename
 
+        # Forcing Types
+        try:
+            results_df["scan"] = results_df["scan"].astype(int)
+        except:
+            pass
+
+        try:
+            results_df["ms1scan"] = results_df["ms1scan"].astype(int)
+        except:
+            pass
+
+        try:
+            results_df["charge"] = results_df["charge"].astype(int)
+        except:
+            pass
+            
+        try:
+            results_df["mslevel"] = results_df["mslevel"].astype(int)
+        except:
+            pass
+
+        # Forcing the column order
+        columns = list(results_df.columns)
+        columns.sort()
+
         if ".tsv" in args.output_file:
-            results_df.to_csv(args.output_file, index=False, sep="\t")
+            results_df.to_csv(args.output_file, index=False, sep="\t", columns=columns)
         else:
-            results_df.to_csv(args.output_file, index=False)
+            results_df.to_csv(args.output_file, index=False, columns=columns)
 
         # Extracting
         if args.extract_json is not None:
             msql_extract._extract_spectra(results_df, os.path.dirname(args.filename), output_json_filename=args.extract_json)
 
-    print(results_df)
+    print("ZZZ", results_df)
 
 if __name__ == "__main__":
     main()

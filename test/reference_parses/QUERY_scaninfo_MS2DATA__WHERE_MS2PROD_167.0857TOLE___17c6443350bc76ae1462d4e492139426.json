@@ -1,0 +1,39 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierppmtolerance": {
+                    "name": "qualifierppmtolerance",
+                    "unit": "ppm",
+                    "value": 5.0
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                167.0857
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierppmtolerance": {
+                    "name": "qualifierppmtolerance",
+                    "unit": "ppm",
+                    "value": 5.0
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2neutrallosscondition",
+            "value": [
+                176.0321
+            ]
+        }
+    ],
+    "query": "QUERY scaninfo(MS2DATA) WHERE MS2PROD=167.0857:TOLERANCEPPM=5 AND MS2NL=176.0321:TOLERANCEPPM=5",
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}

@@ -1,0 +1,47 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitypercent": {
+                    "name": "qualifierintensitypercent",
+                    "value": 5.0
+                },
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.1
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                "X"
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitypercent": {
+                    "name": "qualifierintensitypercent",
+                    "value": 5.0
+                },
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.1
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                "X+119.1"
+            ]
+        }
+    ],
+    "query": "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X :TOLERANCEMZ=0.1:INTENSITYPERCENT=5 AND MS2PROD=X+119.1 :TOLERANCEMZ=0.1:INTENSITYPERCENT=5",
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}

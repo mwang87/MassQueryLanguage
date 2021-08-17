@@ -20,28 +20,27 @@ filterfullcondition: filterfullcondition booleanconjunction filterfullcondition
     | condition ":" qualifier
     | condition
 
-condition: conditionfields "=" floating
-    | conditionfields equal variable
+condition: conditionfields "=" numericalexpression
     | conditionfields equal "(" statement ")"
     | polaritycondition equal positivepolarity
     | polaritycondition equal negativepolarity
-    
+    | xcondition equal "range(min=" numericalexpression "," "max=" numericalexpression ")"
 
 qualifier: qualifier ":" qualifier
-    | qualifierfields equal floating
-    | qualifierfields equal STRING
-    | qualifierfields equal variable
-    | qualifierfields greaterthan floating
-    | qualifierfields greaterthan STRING
-    | qualifierfields lessthan floating
-    | qualifierfields lessthan STRING
+    | qualifierfields equal numericalexpression
+    | qualifierfields greaterthan numericalexpression
+    | qualifierfields lessthan numericalexpression
     | qualifierintensityreference
 
 equal: "="
 lessthan: "<"
 greaterthan: ">"
 positivepolarity: "POSITIVE"
+    | "positive"
+    | "Positive"
 negativepolarity: "NEGATIVE"
+    | "negative"
+    | "Negative"
 
 conditionfields: ms2productcondition
     | ms2precursorcondition
@@ -63,6 +62,7 @@ scanmincondition: "SCANMIN"
 scanmaxcondition: "SCANMAX"
 polaritycondition: "POLARITY"
 chargecondition: "CHARGE"
+xcondition: "X"
 
 qualifierfields: qualifiermztolerance
     | qualifierppmtolerance
@@ -88,20 +88,48 @@ function: functionscannum
     | functionscanmz
     | functionscaninfo
 
-functionscannum: "SCANNUM"
-functionscansum: "SCANSUM" 
-functionscanrangesum: "SCANRANGESUM"
-functionscanmz: "SCANMZ"
-functionscaninfo: "SCANINFO"
+functionscannum: "scannum"
+functionscansum: "scansum" 
+functionscanrangesum: "scanrangesum"
+functionscanmz: "scanmz"
+functionscaninfo: "scaninfo"
 
 booleanconjunction: "AND"
+    | "and"
+    | "And"
 
 param: "TOLERANCE"
 floating: /[-+]?([0-9]*\.[0-9]+|[0-9]+)/
-// variable: /[A-Z]+/
-variable: /[XY]+[-+*]?(([0-9]*\.[0-9]+|[0-9]+)|([0-9]*))/
+variable: /[XY]/
+//variable: /[XY]+[-+*]?(([0-9]*\.[0-9]+|[0-9]+)|([0-9]*))/
 // variable: /[A-Z]+[-+]([0-9]*\.[0-9]|[0-9]*)|([0-9]+\.[0-9])|([0-9]+)/
 
+// Numerical Expression
+numericalexpression: term
+    | numericalexpression plus term
+    | numericalexpression minus term
+term: factor
+    | term multiply factor
+    | term divide factor
+factor: floating
+    | variable
+    | "formula(" moleculeformula ")"
+    | "aminoaciddelta(" aminoacids ")"
+    | peptidefunction
+    | "(" numericalexpression ")"
+peptidefunction: "peptide(" peptide "," "charge=" peptidecharge "," "ion=" peptideion ")"
+multiply: "*"
+divide: "/"
+plus: "+"
+minus: "-"
+
+moleculeformula: /[A-Z][A-Za-z1-9]*/
+aminoacids: /[A-Z][A-Z]*/
+peptide: /[A-Z][A-Z]*/
+peptidecharge: /[1-9]/
+peptideion: /[A-Za-z]/
+
+// Boiler Plate
 %import common.ESCAPED_STRING   -> STRING
 %import common.SIGNED_NUMBER    -> NUMBER
 %import common.WS

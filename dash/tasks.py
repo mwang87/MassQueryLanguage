@@ -4,7 +4,7 @@ import sys
 import os
 import requests
 import requests_cache
-requests_cache.install_cache('/app/test/demo_cache')
+requests_cache.install_cache('temp/demo_cache')
 
 import msql_parser
 import msql_engine
@@ -23,7 +23,7 @@ def task_computeheartbeat():
 def task_executequery(query, filename):
     
     parse_results = msql_parser.parse_msql(query)
-    results_df = msql_engine.process_query(query, filename)
+    results_df = msql_engine.process_query(query, filename, parallel=False)
 
     all_results = results_df.to_dict(orient="records")
 

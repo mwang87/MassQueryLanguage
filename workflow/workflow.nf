@@ -9,7 +9,7 @@ params.extract = 'YES'
 _spectra_ch = Channel.fromPath( params.input_spectra )
 _spectra_ch.into{_spectra_ch1;_spectra_ch2}
 
-_spectra_ch3 = _spectra_ch1.map { file -> tuple(file, file.toString().replaceAll("/", "_"), file) }
+_spectra_ch3 = _spectra_ch1.map { file -> tuple(file, file.toString().replaceAll("/", "_").replaceAll(" ", "_"), file) }
 
 TOOL_FOLDER = "$baseDir/bin"
 params.publishdir = "nf_output"
@@ -18,12 +18,12 @@ params.PYTHONRUNTIME = "python" // this is a hack because CCMS cluster does not 
 if(params.parallel_files == "YES"){
     process queryData {
         errorStrategy 'ignore'
-        time '2h'
+        time '4h'
         //maxRetries 3
         //memory { 6.GB * task.attempt }
-        memory { 8.GB }
+        memory { 12.GB }
 
-        publishDir "$params.publishdir/msql", mode: 'copy'
+        publishDir "$params.publishdir/msql_temp", mode: 'copy'
         
         input:
         set val(filepath), val(mangled_output_filename), file(input_spectrum) from _spectra_ch3
@@ -38,7 +38,7 @@ if(params.parallel_files == "YES"){
         $params.PYTHONRUNTIME $TOOL_FOLDER/msql_cmd.py \
             "$input_spectrum" \
             "${params.query}" \
-            --output_file ${mangled_output_filename}_output.tsv \
+            --output_file "${mangled_output_filename}_output.tsv" \
             --parallel_query $params.parallel_query \
             --cache NO \
             --original_path "$filepath" \
@@ -51,7 +51,7 @@ else{
         echo true
         errorStrategy 'ignore'
         maxForks 1
-        time '2h'
+        time '4h'
         
         publishDir "$params.publishdir/msql_temp", mode: 'copy'
         
@@ -68,7 +68,7 @@ else{
         $params.PYTHONRUNTIME $TOOL_FOLDER/msql_cmd.py \
             "$input_spectrum" \
             "${params.query}" \
-            --output_file ${mangled_output_filename}_output.tsv \
+            --output_file "${mangled_output_filename}_output.tsv" \
             --parallel_query $params.parallel_query \
             --cache NO \
             --original_path "$filepath" \
@@ -86,19 +86,68 @@ if(params.extract == "YES"){
     process formatExtractedSpectra {
         publishDir "$params.publishdir/extracted", mode: 'copy'
         cache false
+        errorStrategy 'ignore'
         
         input:
         file "json/*" from _query_extract_results_ch.collect()
 
         output:
-        file "extracted.*" optional true
+        file "extracted.mzML" optional true
+        file "extracted.mgf" optional true
+        file "extracted.tsv" optional true
+        file "extracted.parquet" optional true
+        file "extracted.json" optional true into _extracted_json_ch
 
         """
         $params.PYTHONRUNTIME $TOOL_FOLDER/merged_extracted.py \
         json \
         extracted.mzML \
         extracted.mgf \
-        extracted.tsv
+        extracted.json \
+        extracted.parquet \
+        extracted.tsv 
+        """
+    }
+
+    process summarizeExtracted {
+        publishDir "$params.publishdir/summary", mode: 'copy'
+        cache false
+        echo true
+        errorStrategy 'ignore'
+        
+        input:
+        file(extracted_json) from _extracted_json_ch
+
+        output:
+        file "summary_extracted.html" optional true
+
+        """
+        $params.PYTHONRUNTIME $TOOL_FOLDER/summarize_extracted.py \
+        $extracted_json \
+        summary_extracted.html
         """
     }
 }
+
+
+process summarizeResults {
+    publishDir "$params.publishdir/summary", mode: 'copy'
+    cache false
+    echo true
+    errorStrategy 'ignore'
+
+    input:
+    file(merged_results) from _query_results_merged_ch
+
+    output:
+    file "summary.html" optional true
+
+    """
+    $params.PYTHONRUNTIME $TOOL_FOLDER/summarize_results.py \
+    $merged_results \
+    summary.html
+    """
+}
+
+
+

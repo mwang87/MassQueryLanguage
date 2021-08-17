@@ -8,15 +8,15 @@ import plotly.express as px
 import plotly.graph_objects as go 
 import dash_daq as daq
 from dash.dependencies import Input, Output, State
+
+
+from flask import Flask, request, send_file
+
 import os
-from zipfile import ZipFile
 import urllib.parse
-from flask import Flask, send_from_directory, request
 
 import pandas as pd
 import requests
-import uuid
-import werkzeug
 import glob
 
 import pymzml
@@ -24,8 +24,6 @@ import numpy as np
 from tqdm import tqdm
 import urllib
 import json
-
-from collections import defaultdict
 import uuid
 
 from flask_caching import Cache
@@ -36,7 +34,7 @@ import msql_translator
 
 server = Flask(__name__)
 app = dash.Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
-app.title = 'GNPS - Template'
+app.title = 'GNPS - MassQL Sandbox Dashboard'
 
 cache = Cache(app.server, config={
     'CACHE_TYPE': 'filesystem',
@@ -55,7 +53,7 @@ NAVBAR = dbc.Navbar(
         ),
         dbc.Nav(
             [
-                dbc.NavItem(dbc.NavLink("GNPS - MSQL Dashboard - Version 0.2", href="#")),
+                dbc.NavItem(dbc.NavLink("GNPS - MassQL Sandbox Dashboard - Version 0.3", href="#")),
                 dbc.NavItem(dbc.NavLink("Documentation", href="https://mwang87.github.io/MassQueryLanguage_Documentation/")),
             ],
         navbar=True)
@@ -69,7 +67,7 @@ DATASELECTION_CARD = [
     dbc.CardHeader(html.H5("Data Selection")),
     dbc.CardBody(
         [   
-            html.H5(children='GNPS Data Selection'),
+            html.H5(children='Query Sandbox'),
             dbc.InputGroup(
                 [
                     dbc.InputGroupAddon("Query", addon_type="prepend"),
@@ -119,6 +117,7 @@ DATASELECTION_CARD = [
                 className="mb-3",
             ),
             html.Br(),
+            dbc.Button("Copy Link", block=True, color="info", id="copy_link_button", n_clicks=0),
             html.Hr(),
             html.H5("Parse Viz Options"),
             dbc.InputGroup(
@@ -149,6 +148,7 @@ DATASELECTION_CARD = [
                 ],
                 className="mb-3",
             ),
+            html.Hr(),
             html.H5(children='Query Parse Visualization'),
             dcc.Loading(
                 id="output_parse_drawing",
@@ -239,6 +239,9 @@ EXAMPLES_DASHBOARD = [
             html.A('Get MS1 peaks where a MS2 with product ion is present', 
                     href="/?query=QUERY MS1DATA WHERE MS2PROD=226.18"),
             html.Br(),
+            html.A('Query with Formula and arithmetic',
+                    href="/?query=QUERY+scaninfo%28MS2DATA%29+WHERE+MS2PROD%3D144%2Bformula%28CH2%29&filename=GNPS00002_A3_p.mzML&x_axis=&y_axis=&facet_column=&scan=&x_value=500&y_value=1&ms1_usi=&ms2_usi="),
+            html.Br(),
             html.A('Sub Query', 
                     href="/?query=QUERY scanrangesum(MS1DATA, TOLERANCE=0.1) WHERE MS1MZ=(QUERY scanmz(MS2DATA) WHERE MS2NL=176.0321 AND MS2PROD=85.02915)")
         ]
@@ -248,10 +251,16 @@ EXAMPLES_DASHBOARD = [
 BODY = dbc.Container(
     [
         dcc.Location(id='url', refresh=False),
+        html.Div(
+            [
+                dcc.Link(id="query_link", href="#", target="_blank"),
+            ],
+            style="display:none"
+        ),
         dbc.Row([
             dbc.Col(
                 dbc.Card(LEFT_DASHBOARD),
-                className="w-50"
+                className="col-6"
             ),
             dbc.Col(
                 [
@@ -261,9 +270,10 @@ BODY = dbc.Container(
                     html.Br(),
                     dbc.Card(EXAMPLES_DASHBOARD)
                 ],
-                className="w-50"
+                className="col-6"
             ),
         ], style={"marginTop": 30}),
+        
     ],
     fluid=True,
     className="",
@@ -296,7 +306,7 @@ def determine_params(search):
         query_dict = {}
 
     query = _get_url_param(query_dict, "query", 'QUERY scaninfo(MS2DATA) WHERE MS2PROD=226.18:TOLERANCEPPM=5')
-    filename = _get_url_param(query_dict, "filename", 'QUERY scaninfo(MS2DATA) WHERE MS2PROD=226.18:TOLERANCEPPM=5')
+    filename = _get_url_param(query_dict, "filename", dash.no_update)
     x_axis = _get_url_param(query_dict, "x_axis", dash.no_update)
     y_axis = _get_url_param(query_dict, "y_axis", dash.no_update)
     facet_column = _get_url_param(query_dict, "facet_column", dash.no_update)
@@ -323,13 +333,9 @@ def determine_files(search):
 
     return [file_list]
 
-@app.callback([
-                Output('output_parse', 'children'),
-              ],
-              [
-                  Input('query', 'value')
-            ])
-def draw_parse(query):
+def _render_parse(query):
+    response_list = []
+
     try:
         parse_results = msql_parser.parse_msql(query)
     except:
@@ -356,20 +362,47 @@ def draw_parse(query):
         output_list.insert(0, html.Pre(translation))
         output_list.insert(0, html.H4("{} translation".format(language)))
         
+    output_list.append(html.Pre(query))
+    output_list.append(html.Hr())
+    
     return [output_list]
 
+
 @app.callback([
-                Output('output_parse_drawing', 'children'),
+                Output('output_parse', 'children'),
               ],
               [
-                  Input('query', 'value'),
-                  Input('x_value', 'value'),
-                  Input('y_value', 'value'),
-                  Input('ms1_usi', 'value'),
-                  Input('ms2_usi', 'value'),
+                  Input('query', 'value')
             ])
-def draw_parse_drawing(query, x_value, y_value, ms1_usi, ms2_usi):
-    # Getting the peaks
+def draw_parse(query):
+    all_queries = query.split("|||")
+
+    # Let's parse first
+    merged_list = []
+    for split_query in all_queries:
+        parse_render_list = _render_parse(split_query)
+        merged_list += parse_render_list
+    
+    return [merged_list]
+
+
+def _render_parse_visualizations(query, x_value, y_value, ms1_peaks, ms2_peaks):
+    try:
+        ms1_fig, ms2_fig = msql_visualizer.visualize_query(query, 
+                                                            variable_x=float(x_value), 
+                                                            variable_y=float(y_value),
+                                                            ms1_peaks=ms1_peaks,
+                                                            ms2_peaks=ms2_peaks)
+    except:
+        return ["Viz Error"]
+
+    ms1_graph = dcc.Graph(figure=ms1_fig)
+    ms2_graph = dcc.Graph(figure=ms2_fig)
+
+    return [ms1_graph, ms2_graph]
+
+
+def _get_usi_peaks(ms1_usi, ms2_usi):
     ms1_peaks = None
     ms2_peaks = None
 
@@ -385,20 +418,35 @@ def draw_parse_drawing(query, x_value, y_value, ms1_usi, ms2_usi):
     except:
         pass
 
-    try:
-        ms1_fig, ms2_fig = msql_visualizer.visualize_query(query, 
-                                                            variable_x=float(x_value), 
-                                                            variable_y=float(y_value),
-                                                            ms1_peaks=ms1_peaks,
-                                                            ms2_peaks=ms2_peaks)
-    except:
-        raise
-        return ["Parse Error"]
+    return ms1_peaks, ms2_peaks
 
-    ms1_graph = dcc.Graph(figure=ms1_fig)
-    ms2_graph = dcc.Graph(figure=ms2_fig)
 
-    return [[ms1_graph, ms2_graph]]
+@app.callback([
+                Output('output_parse_drawing', 'children'),
+              ],
+              [
+                  Input('query', 'value'),
+                  Input('x_value', 'value'),
+                  Input('y_value', 'value'),
+                  Input('ms1_usi', 'value'),
+                  Input('ms2_usi', 'value'),
+            ])
+def draw_parse_drawing(query, x_value, y_value, ms1_usi, ms2_usi):
+    # Getting the peaks
+    print("HERE")
+    ms1_peaks, ms2_peaks = _get_usi_peaks(ms1_usi, ms2_usi)
+    print("HERE2")
+    
+    all_queries = query.split("|||")
+
+    print("HERE3")
+    # Let's parse first
+    merged_list = []
+    for split_query in all_queries:
+        parse_render_list = _render_parse_visualizations(split_query, x_value, y_value, ms1_peaks, ms2_peaks)
+        merged_list += parse_render_list
+        
+    return [merged_list]
 
 @app.callback([
                 Output('output', 'children'),
@@ -408,14 +456,17 @@ def draw_parse_drawing(query, x_value, y_value, ms1_usi, ms2_usi):
                   Input('filename', 'value')
             ])
 def draw_output(query, filename):
-    parse_results = msql_parser.parse_msql(query)
+    try:
+        parse_results = msql_parser.parse_msql(query)
 
-    full_filepath = os.path.join("test", filename)
-    results_list = tasks.task_executequery.delay(query, full_filepath)
-    results_list = results_list.get()
+        full_filepath = os.path.join("test", filename)
+        results_list = tasks.task_executequery.delay(query, full_filepath)
+        results_list = results_list.get()
 
-    if len(results_list) == 0:
-        return ["No Matches"]
+        if len(results_list) == 0:
+            return ["No Matches"]
+    except:
+        return ["Query Error"]
 
     # Doing enrichment if possible
 
@@ -443,15 +494,16 @@ def draw_output(query, filename):
                   Input('facet_column', 'value')
             ])
 def draw_plot(query, filename, x_axis, y_axis, facet_column):
-    parse_results = msql_parser.parse_msql(query)
+    try:
+        parse_results = msql_parser.parse_msql(query)
+    except:
+        return ["Parse Error"]
 
     full_filepath = os.path.join("test", filename)
     results_list = tasks.task_executequery.delay(query, full_filepath)
     results_list = results_list.get()
 
     results_df = pd.DataFrame(results_list)
-
-    import plotly.express as px
 
     try:
         fig = px.scatter(results_df, x=x_axis, y=y_axis, facet_row=facet_column)
@@ -522,6 +574,71 @@ def draw_spectrum(filename, scan):
 
     return [dcc.Graph(figure=interactive_fig)]
 
+
+### Rendering URL
+@app.callback([
+                Output('query_link', 'href'),
+              ],
+                [
+                    Input('query', 'value'),
+                    Input('filename', 'value'),
+                    Input('x_axis', 'value'),
+                    Input('y_axis', 'value'),
+                    Input('facet_column', 'value'),
+                    Input('scan', 'value'),
+                    Input('x_value', 'value'),
+                    Input('y_value', 'value'),
+                    Input('ms1_usi', 'value'),
+                    Input('ms2_usi', 'value'),
+                ])
+def draw_url(query, filename, x_axis, y_axis, facet_column, scan, x_value, y_value, ms1_usi, ms2_usi):
+    params = {}
+    params["query"] = query
+    params["filename"] = filename
+    params["x_axis"] = x_axis
+    params["y_axis"] = y_axis
+    params["facet_column"] = facet_column
+    params["scan"] = scan
+    params["x_value"] = x_value
+    params["y_value"] = y_value
+    params["ms1_usi"] = ms1_usi
+    params["ms2_usi"] = ms2_usi
+
+    url_params = urllib.parse.urlencode(params)
+
+    return [request.host_url + "/?" + url_params]
+
+app.clientside_callback(
+    """
+    function(n_clicks, text_to_copy) {
+        original_text = "Copy Link"
+        if (n_clicks > 0) {
+            const el = document.createElement('textarea');
+            el.value = text_to_copy;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            setTimeout(function(){ 
+                    document.getElementById("copy_link_button").textContent = original_text
+                }, 1000);
+            document.getElementById("copy_link_button").textContent = "Copied!"
+            return 'Copied!';
+        } else {
+            document.getElementById("copy_link_button").textContent = original_text
+            return original_text;
+        }
+    }
+    """,
+    Output('copy_link_button', 'children'),
+    [
+        Input('copy_link_button', 'n_clicks')
+    ],
+    [
+        State('query_link', 'href'),
+    ]
+)
+
 # API
 @server.route("/api")
 def api():
@@ -541,6 +658,55 @@ def parse_api():
     return json.dumps(parse_results)
 
 
+@server.route("/visualize/<mslevel>")
+def visualize_ms1_api(mslevel):
+    # Getting all the parameters if possible
+    query = request.args.get("query")
+    ms1_usi = request.args.get("ms1_usi", None)
+    ms2_usi = request.args.get("ms2_usi", None)
+    try:
+        variable_y = float(request.args.get("y_value", 1))
+    except:
+        variable_y = 1
+    try:
+        variable_x = float(request.args.get("x_value", 500))
+    except:
+        variable_x = -1
+    precursor_mz = float(request.args.get("precursor_mz", 800))
+    zoom = request.args.get("zoom", "No") == "Yes" and variable_x > 0
+
+    ms1_peaks, ms2_peaks = _get_usi_peaks(ms1_usi, ms2_usi)
+
+    try:
+        ms1_fig, ms2_fig = msql_visualizer.visualize_query(query, 
+            variable_x=variable_x,
+            variable_y=variable_y,
+            precursor_mz=precursor_mz,
+            ms1_peaks=ms1_peaks,
+            ms2_peaks=ms2_peaks)
+    except:
+        return ["Parse Error"]
+
+    if zoom:
+        # Y axis
+        ms1_fig.update_xaxes(range=[variable_x - 10, variable_x + 10])
+        ms2_fig.update_xaxes(range=[variable_x - 10, variable_x + 10])
+
+        ms1_fig.update_yaxes(range=[0, variable_y])
+        ms2_fig.update_yaxes(range=[0, variable_y])
+
+        
+    temp_image_dir = "temp/visualizer"
+    output_temp_filename = os.path.join(temp_image_dir, str(uuid.uuid4()) + ".png")
+
+    if mslevel == "ms1":
+        ms1_fig.write_image(output_temp_filename, engine="kaleido")
+    else:
+        ms2_fig.write_image(output_temp_filename, engine="kaleido")
+
+    # TODO: Clean up images written
+
+    return send_file(output_temp_filename, mimetype='image/png')
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=5000, host="0.0.0.0")

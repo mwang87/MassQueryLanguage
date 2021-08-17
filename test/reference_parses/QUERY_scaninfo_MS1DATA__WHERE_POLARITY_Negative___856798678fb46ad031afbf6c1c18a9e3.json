@@ -1,0 +1,16 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "type": "polaritycondition",
+            "value": [
+                "negativepolarity"
+            ]
+        }
+    ],
+    "query": "QUERY scaninfo(MS1DATA) WHERE POLARITY=Negative",
+    "querytype": {
+        "datatype": "datams1data",
+        "function": "functionscaninfo"
+    }
+}
