@@ -6,12 +6,14 @@ import json
 import pytest
 
 def test_translate():
+    languages = ["korean", "chinese", "french", "german", "spanish", "portuguese", "english"]
 
-    # Writing out the queries and comparing
-    for line in open("test_queries.txt"):
-        test_query = line.rstrip()
-        msql_translator.translate_query(test_query)
-        
+    for language in languages:
+        # Writing out the queries and comparing
+        for line in open("test_queries.txt"):
+            test_query = line.rstrip()
+            print(test_query, language)
+            msql_translator.translate_query(test_query, language=language)
     
 def main():
     test_translate()

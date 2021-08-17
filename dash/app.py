@@ -354,6 +354,8 @@ def _render_parse(query):
     languages = ["korean", "chinese", "french", "german", "spanish", "portuguese", "english"]
 
     for language in languages:
+        import sys
+        print("AAAAAAAAAAAAAA", language, file=sys.stderr, flush=True)
         try:
             translation = msql_translator.translate_query(query, language=language)
         except:
@@ -365,7 +367,7 @@ def _render_parse(query):
     output_list.append(html.Pre(query))
     output_list.append(html.Hr())
     
-    return [output_list]
+    return output_list
 
 
 @app.callback([
