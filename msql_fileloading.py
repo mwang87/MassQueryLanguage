@@ -71,7 +71,7 @@ def _load_data_mgf(input_filename):
     file = load_from_mgf(input_filename)
 
     ms2mz_list = []
-    for i, spectrum in enumerage(file):
+    for i, spectrum in enumerate(file):
         if len(spectrum.peaks.mz) == 0:
             continue
 
