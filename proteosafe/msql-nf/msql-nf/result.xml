@@ -73,6 +73,16 @@
                     <parameter name="REQUESTPARAMETER=ms2_usi" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]:scan:[_dyn_#scan]"/>
                     <parameter name="LABEL" value="Visualize Query as MS2"/>
                 </column>
+
+                <column label="USI-Spectrum" type="genericurlgenerator" width="3">
+                    <parameter name="URLBASE" value="https://msql.ucsd.edu/"/>
+                    <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
+                    <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
+                    <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm_ms1]"/>
+                    <parameter name="REQUESTPARAMETER=ms1_usi" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]:scan:[_dyn_#ms1scan]"/>
+                    <parameter name="REQUESTPARAMETER=ms2_usi" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]:scan:[_dyn_#scan]"/>
+                    <parameter name="LABEL" value="Visualize Query as MS2 with MS1 norms"/>
+                </column>
                 
                 <!-- <column type="genericimagedisplayer" label="Structure">
                     <parameter name="URLBASE" value="https://metabolomics-usi.ucsd.edu/png/"/>
