@@ -10,7 +10,7 @@ def translate_query(query, language="english"):
         if language == "english":
             sentences.append("The following conditions are applied to find scans in the mass spec data.")
         elif language == "korean":
-            sentences.append("아래 조건들을 통해 마스터 정보를 찾아보자.")
+            sentences.append("매스 스펙트럼으로 부터의 스캔 검색조건은 아래와 같습니다.")
         elif language == "chinese":
             sentences.append("这些条件被用于在数据中找到扫描数据。")
         elif language == "french":
@@ -41,7 +41,7 @@ def _translate_querytype(querytype, language="english"):
         if language == "english":
             return "Returning the scan information on {}.".format(ms_level)
         elif language == "korean":
-            return "스칼라를 {} 데이터로 반환합니다.".format(ms_level)
+            return "{} 데이터상의 스캔 정보를 반환합니다.".format(ms_level)
         elif language == "chinese":
             return "返回{}的扫描信息".format(ms_level)
         elif language == "french":
@@ -49,7 +49,7 @@ def _translate_querytype(querytype, language="english"):
         elif language == "german":
             return "Zurückgeben der Information über den Scan {}.".format(ms_level)
         elif language == "spanish":
-            return "Encontrando información de {}.".format(ms_level)
+            return "Generando información de {}.".format(ms_level)
         elif language == "portuguese":
             return "Encontrando scans com informações de {}.".format(ms_level)
         
@@ -83,15 +83,15 @@ def _translate_condition(condition, language="english"):
         if language == "english":
             return "Finding MS2 peak at m/z {}{}.".format(condition["value"][0], qualifier_string) #TODO: add qualifiers
         elif language == "korean":
-            return "MS2 파워 밀도 {} {}.".format(condition["value"][0], qualifier_string)
+            return "MS2 질량대 전하비 (m/z): {} {}.".format(condition["value"][0], qualifier_string)
         elif language == "chinese":
-            return "在{}的MS2峰中找到m/z{}".format(condition["value"][0], qualifier_string)
+            return "寻找m/z{}的MS2峰{}".format(condition["value"][0], qualifier_string)
         elif language == "french":
             return "Trouver un pic MS2 à m/z {}{}.".format(condition["value"][0], qualifier_string)
         elif language == "german":
             return "Mittels MS2peak auf m/z {} {}.".format(condition["value"][0], qualifier_string)
         elif language == "spanish":
-            return "Encontrando pico de MS2 en m/z {}{}.".format(condition["value"][0], qualifier_string)
+            return "Encontrando pico de MS2 a m/z {}{}.".format(condition["value"][0], qualifier_string)
         elif language == "portuguese":
             return "Buscando ions de MS2 de m/z {} {}.".format(condition["value"][0], qualifier_string)
 
@@ -175,15 +175,15 @@ def _translate_qualifier(qualifier, language="english"):
         if language == "english":
             return "a {} PPM tolerance".format(qualifier["value"])
         elif language == "korean":
-            return "전자 오차 {} 밀도".format(qualifier["value"])
+            return "오차범위 (tolerance): {} ppm 의 조건으로 검색합니다".format(qualifier["value"])
         elif language == "chinese":
-            return "一个{} PPM 容差".format(qualifier["value"])
+            return "允许{} ppm质量偏差".format(qualifier["value"])
         elif language == "french":
             return "une tolérance {} PPM".format(qualifier["value"])
         elif language == "german":
             return "eine {} PPM Abweichung".format(qualifier["value"])
         elif language == "spanish":
-            return "un {} ppm de tolerancia".format(qualifier["value"])
+            return "con tolerancia de {} PPM".format(qualifier["value"])
         elif language == "portuguese":
             return "com {} ppm de tolerância".format(qualifier["value"])
 
