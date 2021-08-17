@@ -59,6 +59,7 @@
                     <parameter name="URLBASE" value="https://msql.ucsd.edu/"/>
                     <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
                     <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
+                    <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm]"/>
                     <parameter name="REQUESTPARAMETER=ms1_usi" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]:scan:[_dyn_#scan]"/>
                     <parameter name="LABEL" value="Visualize Query as MS1"/>
                 </column>
@@ -67,6 +68,7 @@
                     <parameter name="URLBASE" value="https://msql.ucsd.edu/"/>
                     <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
                     <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
+                    <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm]"/>
                     <parameter name="REQUESTPARAMETER=ms2_usi" value="mzspec:GNPS:TASK-{task}-f.[_dyn_#original_path]:scan:[_dyn_#scan]"/>
                     <parameter name="LABEL" value="Visualize Query as MS2"/>
                 </column>
@@ -111,6 +113,7 @@
                     <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
                     <parameter name="REQUESTPARAMETER=zoom" value="Yes"/>
                     <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
+                    <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm]"/>
                     <parameter name="REQUESTPARAMETER=ms1_usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mzML:scan:[_dyn_#new_scan]"/>
                 </column>
 
@@ -119,6 +122,7 @@
                     <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
                     <parameter name="REQUESTPARAMETER=zoom" value="Yes"/>
                     <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
+                    <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm]"/>
                     <parameter name="REQUESTPARAMETER=ms2_usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mzML:scan:[_dyn_#new_scan]"/>
                 </column>
             </row>
@@ -148,6 +152,7 @@
                     <parameter name="URLBASE" value="https://msql.ucsd.edu/"/>
                     <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
                     <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
+                    <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm]"/>
                     <parameter name="REQUESTPARAMETER=ms1_usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
                     <parameter name="LABEL" value="Visualize Query as MS1"/>
                 </column>
@@ -156,6 +161,7 @@
                     <parameter name="URLBASE" value="https://msql.ucsd.edu/"/>
                     <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
                     <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
+                    <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm]"/>
                     <parameter name="REQUESTPARAMETER=ms2_usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
                     <parameter name="LABEL" value="Visualize Query as MS2"/>
                 </column>
