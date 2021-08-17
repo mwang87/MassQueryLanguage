@@ -9,6 +9,8 @@ def translate_query(query, language="english"):
     if len(parsed_query["conditions"]) > 0:
         if language == "english":
             sentences.append("The following conditions are applied to find scans in the mass spec data.")
+        if language == "russian":
+            sentences.append("Применяются следующие условия для поиска экземпляров в массиве данных.")
         elif language == "korean":
             sentences.append("매스 스펙트럼으로 부터의 스캔 검색조건은 아래와 같습니다.")
         elif language == "chinese":
@@ -40,6 +42,8 @@ def _translate_querytype(querytype, language="english"):
     if querytype["function"] == "functionscaninfo":
         if language == "english":
             return "Returning the scan information on {}.".format(ms_level)
+        if language == "russian":
+            return "Возвращает информацию о скане на {}.".format(ms_level)
         elif language == "korean":
             return "{} 데이터상의 스캔 정보를 반환합니다.".format(ms_level)
         elif language == "chinese":
@@ -56,6 +60,8 @@ def _translate_querytype(querytype, language="english"):
     if querytype["function"] == "functionscansum":
         if language == "english":
             return "Returning the summed scan information on {}.".format(ms_level)
+        if language == "russian":
+            return "Возвращает информацию о суммированном скане на {}.".format(ms_level)
         elif language == "korean":
             return "스칼라를 {} 데이터로 더하기.".format(ms_level)
         elif language == "chinese":
@@ -82,6 +88,8 @@ def _translate_condition(condition, language="english"):
     if condition["type"] == "ms2productcondition":
         if language == "english":
             return "Finding MS2 peak at m/z {}{}.".format(condition["value"][0], qualifier_string) #TODO: add qualifiers
+        if language == "russian":
+            return "Поиск MS2 пика по m/z {}{}.".format(condition["value"][0], qualifier_string)
         elif language == "korean":
             return "MS2 질량대 전하비 (m/z): {} {}.".format(condition["value"][0], qualifier_string)
         elif language == "chinese":
@@ -98,6 +106,8 @@ def _translate_condition(condition, language="english"):
     if condition["type"] == "ms2neutrallosscondition":
         if language == "english":
             return "Finding MS2 neutral loss peak at m/z {}{}.".format(condition["value"][0], qualifier_string) #TODO: add qualifiers
+        if language == "russian":
+            return "Поиск MS2 нейтраллизации пика по m/z {}{}.".format(condition["value"][0], qualifier_string)
         elif language == "korean":
             return "MS2 전자 소모량 {} {}.".format(condition["value"][0], qualifier_string)
         elif language == "chinese":
@@ -114,6 +124,8 @@ def _translate_condition(condition, language="english"):
     if condition["type"] == "ms1mzcondition":
         if language == "english":
             return "Finding MS1 peak at m/z {}{}.".format(condition["value"][0], qualifier_string) #TODO: add qualifiers]
+        if language == "russian":
+            return "Поиск MS1 пика по m/z {}{}.".format(condition["value"][0], qualifier_string)
         elif language == "korean":
             return "MS1 파워 밀도 {} {}.".format(condition["value"][0], qualifier_string)
         elif language == "chinese":
@@ -130,6 +142,8 @@ def _translate_condition(condition, language="english"):
     if condition["type"] == "ms2precursorcondition":
         if language == "english":
             return "Finding MS2 spectra with a precursor m/z {}{}.".format(condition["value"][0], qualifier_string) #TODO: add qualifiers
+        if language == "russian":
+            return "Поиск MS2 по предварительному m/z {}{}.".format(condition["value"][0], qualifier_string)
         elif language == "korean":
             return "MS2 파워 밀도 {} {}.".format(condition["value"][0], qualifier_string)
         elif language == "chinese":
@@ -155,6 +169,8 @@ def _translate_qualifiers(qualifiers, language="english"):
     
     if language == "english":
         return "and ".join(qualifier_phrases)
+    if language == "russian":
+        return "и в".join(qualifier_phrases)
     elif language == "korean":
         return "와 ".join(qualifier_phrases)
     elif language == "chinese":
@@ -174,6 +190,8 @@ def _translate_qualifier(qualifier, language="english"):
     if qualifier["name"] == "qualifierppmtolerance":
         if language == "english":
             return "a {} PPM tolerance".format(qualifier["value"])
+        if language == "russian":
+            return "с {} PPM точность".format(qualifier["value"])
         elif language == "korean":
             return "오차범위 (tolerance): {} ppm 의 조건으로 검색합니다".format(qualifier["value"])
         elif language == "chinese":
@@ -190,6 +208,8 @@ def _translate_qualifier(qualifier, language="english"):
     if qualifier["name"] == "qualifiermztolerance":
         if language == "english":
             return "a {} m/z tolerance".format(qualifier["value"])
+        if language == "russian":
+            return "с {} m/z точность".format(qualifier["value"])
         elif language == "korean":
             return "m/z 오차 {} 밀도".format(qualifier["value"])
         elif language == "chinese":
@@ -206,6 +226,8 @@ def _translate_qualifier(qualifier, language="english"):
     if qualifier["name"] == "qualifierintensitypercent":
         if language == "english":
             return "a minimum percent intensity relative to base peak of {}%".format(qualifier["value"])
+        if language == "russian":
+            return "с минимальной процентной интенсивностью {}%".format(qualifier["value"])
         elif language == "korean":
             return "최소 정상 높이 {}%".format(qualifier["value"])
         elif language == "chinese":
@@ -222,6 +244,8 @@ def _translate_qualifier(qualifier, language="english"):
     if qualifier["name"] == "qualifierintensityreference":
         if language == "english":
             return "this peak is used as the intensity reference for other peaks in the spectrum"
+        if language == "russian":
+            return "этот пик используется в качестве интенсивности спектра"
         elif language == "korean":
             return "이 데이터를 이용해 시퀀스에 다른 데이터를 인식한다"
         elif language == "chinese":
@@ -238,6 +262,8 @@ def _translate_qualifier(qualifier, language="english"):
     if qualifier["name"] == "qualifierintensitymatch":
         if language == "english":
             return "an expected relative intensity to reference peak of {}".format(qualifier["value"]) #TODO: we should likely remove the Y or assume it 1.0
+        if language == "russian":
+            return "соответствующая интенсивность {}".format(qualifier["value"])
         elif language == "korean":
             return "예상 비율 이용시 이용할 대상 데이터의 정보 {}".format(qualifier["value"])
         elif language == "chinese":
@@ -254,6 +280,8 @@ def _translate_qualifier(qualifier, language="english"):
     if qualifier["name"] == "qualifierintensitytolpercent":
         if language == "english":
             return "accepting variability of {}% in relative intensity".format(qualifier["value"])
+        if language == "russian":
+            return "принимая на случай {}% в относительной интенсивности".format(qualifier["value"])
         elif language == "korean":
             return "이상한 {}%의 비율의 신체 이용 허용".format(qualifier["value"])
         elif language == "chinese":
