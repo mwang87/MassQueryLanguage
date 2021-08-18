@@ -424,7 +424,7 @@ def test_nocache():
     print(results_df)
 
 def test_topdown():
-    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=760"
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X+760"
 
     results_df = msql_engine.process_query(query, "test/test_data/top_down.mgf")
 
