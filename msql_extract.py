@@ -179,9 +179,9 @@ def _extract_spectra(results_df, input_spectra_folder,
 
         try:
             if "mangled_filename" in results_by_file_df:
-                input_spectra_filename = os.path.join(input_spectra_folder, results_by_file_df["mangled_filename"][0])
+                input_spectra_filename = os.path.join(input_spectra_folder, results_by_file_df["mangled_filename"].iloc[0])
             else:
-                input_spectra_filename = os.path.join(input_spectra_folder, results_by_file_df["filename"][0])
+                input_spectra_filename = os.path.join(input_spectra_folder, results_by_file_df["filename"].iloc[0])
 
             spectrum_obj_list = []
             if ".mzML" in input_spectra_filename:

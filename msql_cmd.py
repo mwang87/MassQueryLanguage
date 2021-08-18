@@ -106,10 +106,13 @@ def main():
             results_df.to_csv(args.output_file, index=False, columns=columns)
 
         # Extracting
-        if args.extract_json is not None:
-            msql_extract._extract_spectra(results_df, os.path.dirname(args.filename), output_json_filename=args.extract_json)
-
-    print("ZZZ", results_df)
+        if args.extract_json is not None and len(results_df) > 0:
+            print("Extracting {} spectra".format(len(results_df)))
+            try:
+                msql_extract._extract_spectra(results_df, os.path.dirname(args.filename), output_json_filename=args.extract_json)
+            except:
+                print("Extraction Failed")
+                
 
 if __name__ == "__main__":
     main()
