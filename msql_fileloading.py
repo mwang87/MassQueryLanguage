@@ -81,6 +81,9 @@ def _load_data_mgf(input_filename):
         i_sum = sum(i_list)
 
         for i in range(len(mz_list)):
+            if i_list[i] == 0:
+                continue
+
             peak_dict = {}
             peak_dict["i"] = i_list[i]
             peak_dict["i_norm"] = i_list[i] / i_max

@@ -423,6 +423,12 @@ def test_nocache():
 
     print(results_df)
 
+def test_topdown():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X+760 AND X=range(min=50000, max=60000)"
+
+    results_df = msql_engine.process_query(query, "test/test_data/top_down.mgf")
+
+    print(results_df)
 
 
 @pytest.mark.skip(reason="too slow")
@@ -544,7 +550,7 @@ def main():
     #test_ms1_iron_min_intensity()
     #test_ms1_iron_min_intensity_m2_prec()
     #test_ms1_iron_min_intensity_m2_prec_xrange()
-    test_i_norm_iron_xrange()
+    #test_i_norm_iron_xrange()
     #test_ms1_filtered_by_ms2()
     #test_ms1_cu()
     #test_neutral_loss_intensity()
@@ -562,6 +568,7 @@ def main():
     #test_translator()
     #test_ms1_iron_X_changes_intensity()
     #test_nocache()
+    test_topdown()
 
 if __name__ == "__main__":
     main()

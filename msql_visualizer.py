@@ -50,12 +50,20 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
     ms1_fig = go.Figure()
     ms2_fig = go.Figure()
 
+    ms1_min_x_axis = 0
+    ms1_max_x_axis = 1000
+
+    ms2_min_x_axis = 0
+    ms2_max_x_axis = 1000
+
     if ms1_peaks is not None:
         max_int = max([peak[1] for peak in ms1_peaks])
         # Drawing the spectrum object
         mzs = [peak[0] for peak in ms1_peaks]
         ints = [peak[1]/max_int for peak in ms1_peaks]
         neg_ints = [intensity * -1 for intensity in ints]
+
+        ms1_max_x_axis = max(ms1_max_x_axis, max(mzs))
 
         # Hover data
         hover_labels = ["{:.4f} m/z, {:.2f} int".format(mzs[i], ints[i]) for i in range(len(mzs))]
@@ -82,6 +90,8 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
         mzs = [peak[0] for peak in ms2_peaks]
         ints = [peak[1]/max_int for peak in ms2_peaks]
         neg_ints = [intensity * -1 for intensity in ints]
+
+        ms2_max_x_axis = max(ms2_max_x_axis, max(mzs))
 
         # Hover data
         hover_labels = ["{:.4f} m/z, {:.3f} int".format(mzs[i], ints[i]) for i in range(len(mzs))]
@@ -292,7 +302,7 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
 
 
     # Set axes properties
-    ms2_fig.update_xaxes(range=[0, 1000], showgrid=False)
+    ms2_fig.update_xaxes(range=[ms2_min_x_axis, ms2_max_x_axis], showgrid=False)
     ms2_fig.update_yaxes(range=[0, 1.5])
 
     ms2_fig.update_layout(
@@ -301,7 +311,8 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
         yaxis_title="intensity",
     )
 
-    ms1_fig.update_xaxes(range=[0, 1000], showgrid=False)
+    # Setting axes properties
+    ms1_fig.update_xaxes(range=[ms1_min_x_axis, ms1_max_x_axis], showgrid=False)
     ms1_fig.update_yaxes(range=[0, 1.5])
 
     ms1_fig.update_layout(
