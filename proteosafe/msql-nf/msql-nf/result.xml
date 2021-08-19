@@ -141,13 +141,13 @@
             <row expander="Advanced Viz Links" expandericontype="text">
                 <column label="USI-Spectrum" type="genericurlgenerator" width="3">
                     <parameter name="URLBASE" value="https://metabolomics-usi.ucsd.edu/spectrum/"/>
-                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
+                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mzML:scan:[_dyn_#new_scan]"/>
                     <parameter name="LABEL" value="Spectrum USI"/>
                 </column>
 
                 <column label="USI-Spectrum" type="genericurlgenerator" width="3">
                     <parameter name="URLBASE" value="https://metabolomics-usi.ucsd.edu/spectrum/"/>
-                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
+                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mzML:scan:[_dyn_#new_scan]"/>
                     <parameter name="REQUESTPARAMETER=mz_min" value="[_dyn_#mz_lower]"/>
                     <parameter name="REQUESTPARAMETER=mz_max" value="[_dyn_#mz_upper]"/>
                     <parameter name="LABEL" value="Spectrum USI - With Range"/>
@@ -155,7 +155,7 @@
 
                 <column label="USI-Spectrum" type="genericurlgenerator" width="3">
                     <parameter name="URLBASE" value="https://fastlibrarysearch.ucsd.edu/fastsearch/"/>
-                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
+                    <parameter name="REQUESTPARAMETER=usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mzML:scan:[_dyn_#new_scan]"/>
                     <parameter name="LABEL" value="Library Search MS/MS"/>
                 </column>
 
@@ -164,7 +164,7 @@
                     <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
                     <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
                     <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm]"/>
-                    <parameter name="REQUESTPARAMETER=ms1_usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
+                    <parameter name="REQUESTPARAMETER=ms1_usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mzML:scan:[_dyn_#new_scan]"/>
                     <parameter name="LABEL" value="Visualize Query as MS1"/>
                 </column>
 
@@ -173,7 +173,7 @@
                     <parameter name="REQUESTPARAMETER=query" value="@QUERY"/>
                     <parameter name="REQUESTPARAMETER=x_value" value="[_dyn_#comment]"/>
                     <parameter name="REQUESTPARAMETER=y_value" value="[_dyn_#i_norm]"/>
-                    <parameter name="REQUESTPARAMETER=ms2_usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mgf:scan:[_dyn_#new_scan]"/>
+                    <parameter name="REQUESTPARAMETER=ms2_usi" value="mzspec:GNPS:TASK-{task}-query_results/extracted/extracted.mzML:scan:[_dyn_#new_scan]"/>
                     <parameter name="LABEL" value="Visualize Query as MS2"/>
                 </column>
             </row>
