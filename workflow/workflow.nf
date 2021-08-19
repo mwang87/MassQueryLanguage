@@ -23,7 +23,7 @@ if(params.parallel_files == "YES"){
         //memory { 6.GB * task.attempt }
         memory { 12.GB }
 
-        publishDir "$params.publishdir/msql_temp", mode: 'copy'
+        //publishDir "$params.publishdir/msql_temp", mode: 'copy'
         
         input:
         set val(filepath), val(mangled_output_filename), file(input_spectrum) from _spectra_ch3
