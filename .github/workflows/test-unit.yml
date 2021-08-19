@@ -37,5 +37,5 @@ jobs:
         pytest --capture=tee-sys -vv test_extraction.py -n 2
         pytest --capture=tee-sys -vv test_visualize.py -n 2
         pytest --capture=tee-sys -vv test_translate.py -n 2
-        pytest --capture=tee-sys -vv test_improper_file.py -n 2
+        pytest --capture=tee-sys -vv test_improper_file.py
         
