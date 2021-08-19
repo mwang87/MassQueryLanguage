@@ -1,6 +1,7 @@
 
 from lark import Lark
 from lark import Transformer
+from lark import tree
 
 from py_expression_eval import Parser
 math_parser = Parser()
@@ -338,6 +339,11 @@ def _has_variable(items):
 
    return False 
 
+def _visualize_parse(input_query, path_to_grammar="msql.ebnf", output_filename="parse.png"):
+   msql_parser = Lark(open(path_to_grammar).read(), start='statement')
+   parsed_tree = msql_parser.parse(input_query)
+   tree.pydot__tree_to_png(parsed_tree, output_filename)
+
 def parse_msql(input_query, path_to_grammar="msql.ebnf"):
    # Force capitalization on the input_query, turning this off due to needing lower case in formulas
    #input_query = input_query.upper()
@@ -353,8 +359,8 @@ def parse_msql(input_query, path_to_grammar="msql.ebnf"):
    input_query = "\n".join(query_splits)
 
    msql_parser = Lark(open(path_to_grammar).read(), start='statement')
-   tree = msql_parser.parse(input_query)
-   parsed_list = MassQLToJSON().transform(tree)
+   parsed_tree = msql_parser.parse(input_query)
+   parsed_list = MassQLToJSON().transform(parsed_tree)
 
    parsed_list["query"] = input_query
 
