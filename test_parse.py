@@ -116,8 +116,21 @@ MS1MZ=X+1:INTENSITYMATCH=Y*0.4:INTENSITYMATCHPERCENT=50:TOLERANCEPPM=10 AND MS1M
     parsed_output = msql_parser.parse_msql(query)
     print(json.dumps(parsed_output, indent=4))
 
+def test_ms2_synonyms():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=100"
+    query2 = "QUERY scaninfo(MS2DATA) WHERE MS2MZ=100"
+
+    parsed_output = msql_parser.parse_msql(query)
+    parsed_output2 = msql_parser.parse_msql(query2)
+
+    parsed_output["query"] = ""
+    parsed_output2["query"] = ""
+
+    assert(json.dumps(parsed_output) == json.dumps(parsed_output2))
+
+
 def main():
-    test_xrange_parse()
+    #test_xrange_parse()
     #test_parse()
     #test_comment_parse()
     #test_number_expression_parse()
@@ -127,6 +140,7 @@ def main():
     #test_formula2_expression_parse()
     #test_variable_formula_parse()
     #test_variable_formula_parse2()
+    test_ms2_synonyms()
 
 if __name__ == "__main__":
     main()
