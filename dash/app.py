@@ -117,7 +117,19 @@ DATASELECTION_CARD = [
                 className="mb-3",
             ),
             html.Br(),
-            dbc.Button("Copy Link", block=True, color="info", id="copy_link_button", n_clicks=0),
+            dbc.Row([
+                dbc.Col(
+                    dbc.Button("Copy Link", block=True, color="info", id="copy_link_button", n_clicks=0),
+                ),
+                dbc.Col(
+                    html.A(
+                        dbc.Button("Query Your Files", block=True, color="info"),
+                        href="https://gnps.ucsd.edu/ProteoSAFe/QueryFiles",
+                        id="query_gnps_link"
+                    )
+                ),
+            ]),
+            
             html.Hr(),
             html.H5("Parse Viz Options"),
             dbc.InputGroup(
@@ -367,6 +379,24 @@ def _render_parse(query):
     
     return output_list
 
+
+
+
+@app.callback([
+                Output('query_gnps_link', 'href'),
+              ],
+              [
+                  Input('query', 'value')
+            ])
+def create_gnps_link(query):
+    param_dict = {}
+    param_dict["QUERY"] = query
+    param_dict["workflow"] = "MSQL-NF"
+
+    param_string = urllib.parse.quote(json.dumps(param_dict))
+    url = "https://proteomics2.ucsd.edu/ProteoSAFe/index.jsp?&params={}".format(param_string)
+
+    return [url]
 
 @app.callback([
                 Output('output_parse', 'children'),
