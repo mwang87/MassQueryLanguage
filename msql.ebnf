@@ -52,7 +52,7 @@ conditionfields: ms2productcondition
     | scanmaxcondition
     | chargecondition
 
-ms2productcondition: "MS2PROD"
+ms2productcondition: "MS2PROD" | "MS2MZ"
 ms2precursorcondition: "MS2PREC"
 ms2neutrallosscondition: "MS2NL"
 ms1mzcondition: "MS1MZ"
