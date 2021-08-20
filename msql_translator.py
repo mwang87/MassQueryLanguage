@@ -95,7 +95,7 @@ def _translate_condition(condition, language="english"):
         if language == "english":
             return "Finding MS2 peak at m/z {}{}.".format(condition["value"][0], qualifier_string) #TODO: add qualifiers
         if language == "arabic":
-            return "تقييم MS2 باقية {} مكان {}{}.".format(condition["value"][0], condition["value"][1], qualifier_string)
+            return "تقييم MS2 باقية مكان {}{}.".format(condition["value"][0], qualifier_string)
         if language == "russian":
             return "Поиск MS2 пика по m/z {}{}.".format(condition["value"][0], qualifier_string)
         elif language == "korean":
@@ -115,7 +115,7 @@ def _translate_condition(condition, language="english"):
         if language == "english":
             return "Finding MS2 neutral loss peak at m/z {}{}.".format(condition["value"][0], qualifier_string) #TODO: add qualifiers
         if language == "arabic":
-            return "تقييم MS2 باقية {} مكان {}{}.".format(condition["value"][0], condition["value"][1], qualifier_string)
+            return "تقييم MS2 باقية مكان {}{}.".format(condition["value"][0], qualifier_string)
         if language == "russian":
             return "Поиск MS2 нейтраллизации пика по m/z {}{}.".format(condition["value"][0], qualifier_string)
         elif language == "korean":
@@ -135,7 +135,7 @@ def _translate_condition(condition, language="english"):
         if language == "english":
             return "Finding MS1 peak at m/z {}{}.".format(condition["value"][0], qualifier_string) #TODO: add qualifiers]
         if language == "arabic":
-            return "تقييم MS1 باقية {} مكان {}{}.".format(condition["value"][0], condition["value"][1], qualifier_string)
+            return "تقييم MS1 باقية مكان {}{}.".format(condition["value"][0], qualifier_string)
         if language == "russian":
             return "Поиск MS1 пика по m/z {}{}.".format(condition["value"][0], qualifier_string)
         elif language == "korean":
@@ -155,7 +155,7 @@ def _translate_condition(condition, language="english"):
         if language == "english":
             return "Finding MS2 spectra with a precursor m/z {}{}.".format(condition["value"][0], qualifier_string) #TODO: add qualifiers
         if language == "arabic":
-            return "تقييم MS2 باقية {} مكان {}{}.".format(condition["value"][0], condition["value"][1], qualifier_string)
+            return "تقييم MS2 باقية مكان {}{}.".format(condition["value"][0], qualifier_string)
         if language == "russian":
             return "Поиск MS2 по предварительному m/z {}{}.".format(condition["value"][0], qualifier_string)
         elif language == "korean":
