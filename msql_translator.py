@@ -10,7 +10,7 @@ def translate_query(query, language="english"):
         if language == "english":
             sentences.append("The following conditions are applied to find scans in the mass spec data.")
         if language == "arabic":
-            sentences.append("الترتيب المتعلق بالحضور على المعلومات المصادرة.")
+            sentences.append("تم تطبيق المعايير التالية لايجاد مسحات في معلومات طيف الكتلة")
         if language == "russian":
             sentences.append("Применяются следующие условия для поиска экземпляров в массиве данных.")
         elif language == "korean":
