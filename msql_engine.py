@@ -298,13 +298,16 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
                     (ms1_df["i_tic_norm"] > min_tic_percent_intensity)]
 
         # Here we will start with the smallest mass and then go up
-        masses_considered_df = pd.DataFrame()
+        masses_considered_df_list = []
         if variable_properties["query_ms1"]:
-            masses_considered_df["mz"] = pd.concat([variable_x_ms1_df["mz"]])
+            masses_considered_df_list.append(variable_x_ms1_df["mz"])
         if variable_properties["query_ms2"]:
-            masses_considered_df["mz"] = pd.concat([ms2_df["mz"]])
+            masses_considered_df_list.append(ms2_df["mz"])
         if variable_properties["query_ms2prec"]:
-            masses_considered_df["mz"] = pd.concat([ms2_df["precmz"]])
+            masses_considered_df_list.append(ms2_df["precmz"])
+
+        masses_considered_df = pd.DataFrame()
+        masses_considered_df["mz"] = pd.concat(masses_considered_df_list)
         masses_considered_df["mz_max"] = masses_considered_df["mz"].apply(lambda x: _determine_mz_max(x, variable_properties["ppm_tolerance"], variable_properties["da_tolerance"]))
         
         masses_considered_df = masses_considered_df.sort_values("mz")
