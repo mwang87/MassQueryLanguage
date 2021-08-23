@@ -127,7 +127,6 @@ class MassQLToJSON(Transformer):
       return items[0]
 
    def condition(self, items):
-      print("YYYYYYYYYYY", items)
 
       if len(items) == 2:
          # These are most queries
