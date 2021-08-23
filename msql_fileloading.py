@@ -36,18 +36,23 @@ def load_data(input_filename, cache=False):
             return ms1_df, ms2_df
 
     # Actually loading
-    if input_filename[-5:] == ".mzML":
+    if input_filename[-5:].lower() == ".mzml":
         #ms1_df, ms2_df = _load_data_mzML(input_filename)
         ms1_df, ms2_df = _load_data_mzML2(input_filename)
 
-    if input_filename[-6:] == ".mzXML":
+    elif input_filename[-6:].lower() == ".mzxml":
         ms1_df, ms2_df = _load_data_mzXML(input_filename)
     
-    if input_filename[-5:] == ".json":
+    elif input_filename[-5:] == ".json":
         ms1_df, ms2_df = _load_data_gnps_json(input_filename)
     
-    if input_filename[-4:] == ".mgf":
+    elif input_filename[-4:].lower() == ".mgf":
         ms1_df, ms2_df = _load_data_mgf(input_filename)
+    
+    else:
+        print("Cannot Load File Extension")
+        raise Exception("File Format Not Supported")
+
 
     # Saving Cache
     if cache:
