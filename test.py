@@ -500,6 +500,11 @@ def test_translator_portuguese():
         translated_version = msql_translator.translate_query(test_query, language="portuguese")
         print(test_query, translated_version)
 
+def test_defect():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PREC=X AND X=defect(min=0.1, max=0.2)"
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+
+    assert(len(results_df) == 21)
 
 
 def test_query():
@@ -568,7 +573,8 @@ def main():
     #test_translator()
     #test_ms1_iron_X_changes_intensity()
     #test_nocache()
-    test_topdown()
+    #test_topdown()
+    test_defect()
 
 if __name__ == "__main__":
     main()

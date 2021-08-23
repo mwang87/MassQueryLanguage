@@ -206,15 +206,23 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
     variable_properties["da_tolerance"] = 100000
     variable_properties["query_ms1"] = False
     variable_properties["query_ms2"] = False
+    variable_properties["query_ms2prec"] = False
     variable_properties["min"] = 0
     variable_properties["max"] = 1000000
+    variable_properties["mindefect"] = 0
+    variable_properties["maxdefect"] = 1
+    
 
     # Checking for ranges in query
     new_conditions = []
     for condition in parsed_dict["conditions"]:
         if condition["type"] == "xcondition":
-            variable_properties["min"] = condition["min"]
-            variable_properties["max"] = condition["max"]
+            if "min" in condition:
+                variable_properties["min"] = condition["min"]
+                variable_properties["max"] = condition["max"]
+            if "mindefect" in condition:
+                variable_properties["mindefect"] = condition["mindefect"]
+                variable_properties["maxdefect"] = condition["maxdefect"]
         else:
             new_conditions.append(condition)
     parsed_dict["conditions"] = new_conditions
@@ -233,6 +241,8 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
                             variable_properties["query_ms2"] = True
                         if condition["type"] == "ms2neutrallosscondition":
                             variable_properties["query_ms2"] = True
+                        if condition["type"] == "ms2precursorcondition":
+                            variable_properties["query_ms2prec"] = True
 
                     variable_properties["has_variable"] = True
                     #mz_tolerance = _get_mz_tolerance(condition.get("qualifiers", None), 1000000)
@@ -293,6 +303,8 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
             masses_considered_df["mz"] = pd.concat([variable_x_ms1_df["mz"]])
         if variable_properties["query_ms2"]:
             masses_considered_df["mz"] = pd.concat([ms2_df["mz"]])
+        if variable_properties["query_ms2prec"]:
+            masses_considered_df["mz"] = pd.concat([ms2_df["precmz"]])
         masses_considered_df["mz_max"] = masses_considered_df["mz"].apply(lambda x: _determine_mz_max(x, variable_properties["ppm_tolerance"], variable_properties["da_tolerance"]))
         
         masses_considered_df = masses_considered_df.sort_values("mz")
@@ -336,8 +348,13 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
             # Let's consider this mz
             running_max_mz = masses_obj["mz_max"]
 
+            # Checking the x conditions
             substituted_parse["comment"] = str(mz_val)
             if mz_val < variable_properties["min"] or mz_val > variable_properties["max"]:
+                continue
+            mz_val_defect = mz_val - int(mz_val)
+            print(mz_val_defect)
+            if mz_val_defect < variable_properties["mindefect"] or mz_val_defect > variable_properties["maxdefect"]:
                 continue
 
             all_concrete_queries.append(substituted_parse)

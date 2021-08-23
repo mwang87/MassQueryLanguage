@@ -24,7 +24,8 @@ condition: conditionfields "=" numericalexpression
     | conditionfields equal "(" statement ")"
     | polaritycondition equal positivepolarity
     | polaritycondition equal negativepolarity
-    | xcondition equal "range(min=" numericalexpression "," "max=" numericalexpression ")"
+    | xcondition equal xfunction "(min=" numericalexpression "," "max=" numericalexpression ")"
+    | xcondition equal xfunction "(min=" numericalexpression "," "max=" numericalexpression ")"
 
 qualifier: qualifier ":" qualifier
     | qualifierfields equal numericalexpression
@@ -63,6 +64,9 @@ scanmaxcondition: "SCANMAX"
 polaritycondition: "POLARITY"
 chargecondition: "CHARGE"
 xcondition: "X"
+xfunction: xrange | xdefect
+xrange: "range"
+xdefect: "defect"
 
 qualifierfields: qualifiermztolerance
     | qualifierppmtolerance
@@ -101,8 +105,6 @@ booleanconjunction: "AND"
 param: "TOLERANCE"
 floating: /[-+]?([0-9]*\.[0-9]+|[0-9]+)/
 variable: /[XY]/
-//variable: /[XY]+[-+*]?(([0-9]*\.[0-9]+|[0-9]+)|([0-9]*))/
-// variable: /[A-Z]+[-+]([0-9]*\.[0-9]|[0-9]*)|([0-9]+\.[0-9])|([0-9]+)/
 
 // Numerical Expression
 numericalexpression: term
