@@ -75,6 +75,15 @@ class MassQLToJSON(Transformer):
    def xcondition(self, items):
       return "xcondition"
 
+   def xfunction(self, items):
+      return items[0]
+   
+   def xrange(self, items):
+      return "xrange"
+   
+   def xdefect(self, items):
+      return "xdefect"
+
    def qualifier(self, items):
       if len(items) == 1 and items[0] == "qualifierintensityreference":
          qualifier_type = items[0]
@@ -118,6 +127,7 @@ class MassQLToJSON(Transformer):
       return items[0]
 
    def condition(self, items):
+
       if len(items) == 2:
          # These are most queries
          condition_dict = {}
@@ -128,13 +138,20 @@ class MassQLToJSON(Transformer):
          condition_dict = {}
          condition_dict["type"] = items[0]
          condition_dict["value"] = [items[-1]]
-      elif len(items) == 4:
+      elif len(items) == 5:
          # These are for the x range clauses
          if items[0] == "xcondition":
+            function = items[2]
+
             condition_dict = {}
             condition_dict["type"] = items[0]
-            condition_dict["min"] = float(items[2])
-            condition_dict["max"] = float(items[3])
+
+            if function == "xdefect":
+               condition_dict["mindefect"] = float(items[-2])
+               condition_dict["maxdefect"] = float(items[-1])
+            elif function == "xrange":
+               condition_dict["min"] = float(items[-2])
+               condition_dict["max"] = float(items[-1])
    
       return condition_dict
 
