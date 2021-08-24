@@ -1,4 +1,4 @@
-from msql_engine import _executeconditions_query, _executecollate_query
+from massql.msql_engine import _executeconditions_query, _executecollate_query
 import ray
 
 @ray.remote

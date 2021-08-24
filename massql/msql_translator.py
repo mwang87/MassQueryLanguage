@@ -1,4 +1,4 @@
-import msql_parser
+from massql import msql_parser
 
 def translate_query(query, language="english"):
     parsed_query = msql_parser.parse_msql(query)

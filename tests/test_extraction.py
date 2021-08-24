@@ -1,10 +1,12 @@
-import msql_extract
-import msql_parser
-import msql_engine
-import msql_extract
-import msql_translator
-import msql_visualizer
-import msql_fileloading
+import sys
+import os
+
+# Making sure the root is in the path, kind of a hack
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
+from massql import msql_extract
+from massql import msql_engine
+
 import json
 import pytest
 
