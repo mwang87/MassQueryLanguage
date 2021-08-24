@@ -6,8 +6,8 @@ import requests
 import requests_cache
 requests_cache.install_cache('temp/demo_cache')
 
-import msql_parser
-import msql_engine
+from massql import msql_parser
+from massql import msql_engine
 
 from celery.signals import worker_ready
 

@@ -7,14 +7,9 @@ services:
     container_name: msql-dash
     volumes:
       - ./logs:/app/logs:rw
-      - ../test:/app/test:rw
+      - ../tests/data/:/app/test:rw # This is input test query data
       - ./temp:/app/temp:rw
-      - ../msql_parser.py:/app/msql_parser.py:ro
-      - ../msql_engine.py:/app/msql_engine.py:ro
-      - ../msql_fileloading.py:/app/msql_fileloading.py:ro
-      - ../msql_visualizer.py:/app/msql_visualizer.py:ro
-      - ../msql_translator.py:/app/msql_translator.py:ro
-      - ../msql.ebnf:/app/msql.ebnf:ro
+      - ../massql:/app/massql:ro
     ports:
     - "5343:5000"
     networks:
@@ -39,12 +34,9 @@ services:
     container_name: msql-worker
     volumes:
       - ./logs:/app/logs:rw
-      - ../test:/app/test:rw
+      - ../tests/data/:/app/test:rw # This is input test query data
       - ./temp:/app/temp:rw
-      - ../msql_parser.py:/app/msql_parser.py:ro
-      - ../msql_engine.py:/app/msql_engine.py:ro
-      - ../msql_fileloading.py:/app/msql_fileloading.py:ro
-      - ../msql.ebnf:/app/msql.ebnf:ro
+      - ../massql:/app/massql:ro
     command: /app/run_worker.sh
     restart: unless-stopped
     depends_on: 
