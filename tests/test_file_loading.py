@@ -17,3 +17,12 @@ def test_gnps_library_loading():
     ms1_df, ms2_df = msql_fileloading.load_data("tests/data/gnps-library.json")
     print(ms2_df[ms2_df["scan"] == "CCMSLIB00000072227"])
     assert(len(ms2_df[ms2_df["scan"] == "CCMSLIB00000072227"]) > 300)
+
+def test_mzml_load():
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache=False)
+
+def test_mzxml_load():
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/T04251505.mzXML", cache=False)
+
+def test_mgf_load():
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/specs_ms.mgf", cache=False)

@@ -34,5 +34,5 @@ jobs:
         cd ..
     - name: Major Testing
       run: |
-        pytest --cov=massql --capture=tee-sys -vv ./tests/
+        pytest --cov=massql --capture=tee-sys -vv ./tests/ -n 3
         
