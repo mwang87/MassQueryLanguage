@@ -741,6 +741,9 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
             result_df = pd.DataFrame()
 
             if parsed_dict["querytype"]["datatype"] == "datams1data":
+                if len(ms1_df) == 0:
+                    return pd.DataFrame()
+
                 groupby_columns = ["scan"]
                 kept_columns = ["scan", "rt"]
 
@@ -757,6 +760,9 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
                 result_df["i"] = ms1sum_df["i"]
                 result_df["i_norm"] = ms1norm_df["i_norm"]
             if parsed_dict["querytype"]["datatype"] == "datams2data":
+                if len(ms2_df) == 0:
+                    return pd.DataFrame()
+
                 kept_columns = ["scan", "precmz", "ms1scan", "rt", "charge"]
                 groupby_columns = ["scan"]
 
