@@ -65,8 +65,6 @@ def test_visualize_usi():
     ms1_fig.write_image("test_ms1_visualize.png", engine="kaleido")
     open("test_ms1_visualize.html", 'w').write(ms1_fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
-
-    
 def main():
     #test_visualize_y_set()
     test_visualize_xrange()
