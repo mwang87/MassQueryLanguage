@@ -1,4 +1,5 @@
-
+test_parse:
+	pytest -vv ./tests/test_parse.py
 
 test_full:
 	pytest -vv test.py
