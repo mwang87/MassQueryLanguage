@@ -355,7 +355,6 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
             if mz_val < variable_properties["min"] or mz_val > variable_properties["max"]:
                 continue
             mz_val_defect = mz_val - int(mz_val)
-            print(mz_val_defect)
             if mz_val_defect < variable_properties["mindefect"] or mz_val_defect > variable_properties["maxdefect"]:
                 continue
 
