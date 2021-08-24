@@ -424,8 +424,9 @@ def test_nocache():
     print(results_df)
 
 def test_topdown():
-    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X+760 AND X=range(min=50000, max=60000)"
-
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE AND \
+MS2PROD=X+202:TOLERANCEMZ=10:INTENSITYMATCH=Y*0.5:INTENSITYMATCHPERCENT=50 AND \
+MS2PROD=X-202:TOLERANCEMZ=10:INTENSITYMATCH=Y*0.5:INTENSITYMATCHPERCENT=50"
     results_df = msql_engine.process_query(query, "test/test_data/top_down.mgf")
 
     print(results_df)
