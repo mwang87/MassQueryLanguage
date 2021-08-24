@@ -14,6 +14,12 @@ from pyteomics import mass
 #TODO: Update language definition to make it such that we can distinguish different functions
 
 class MassQLToJSON(Transformer):
+   def wherekeyword(self, items):
+      return "WHERE"
+
+   def querykeyword(self, items):
+      return "QUERY"
+
    def qualifiermztolerance(self, items):
       return "qualifiermztolerance"
    
@@ -243,6 +249,8 @@ class MassQLToJSON(Transformer):
       return items[0]
    
    def statement(self, items):
+      items = [item for item in items if item != "WHERE"]
+      items = [item for item in items if item != "QUERY"]
 
       if len(items) == 1:
          query_dict = {}
