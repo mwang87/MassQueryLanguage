@@ -12,7 +12,7 @@ import pytest
 
 def test_extract_mzML():
     query = "QUERY scaninfo(MS2DATA)"
-    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
 
     assert(len(results_df) > 1)
     results_df["filename"] = "GNPS00002_A3_p.mzML"
@@ -25,7 +25,7 @@ def test_extract_mzML():
 
 def test_extract_mzXML():
     query = "QUERY scaninfo(MS1DATA)"
-    results_df = msql_engine.process_query(query, "test/T04251505.mzXML")
+    results_df = msql_engine.process_query(query, "tests/data/T04251505.mzXML")
     print(results_df)
 
     assert(len(results_df) > 1)
@@ -39,7 +39,7 @@ def test_extract_mzXML():
     
 def test_extract_MGF():
     query = "QUERY scaninfo(MS2DATA)"
-    results_df = msql_engine.process_query(query, "test/specs_ms.mgf")
+    results_df = msql_engine.process_query(query, "tests/data/specs_ms.mgf")
     print(results_df)
 
     assert(len(results_df) > 1)
