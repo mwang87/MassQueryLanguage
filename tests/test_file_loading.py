@@ -14,6 +14,6 @@ def test_improper_file():
         msql_fileloading.load_file('file.cdf')
 
 def test_gnps_library_loading():
-    ms1_df, ms2_df = msql_fileloading.load_data("test/gnps-library.json")
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/gnps-library.json")
     print(ms2_df[ms2_df["scan"] == "CCMSLIB00000072227"])
     assert(len(ms2_df[ms2_df["scan"] == "CCMSLIB00000072227"]) > 300)
