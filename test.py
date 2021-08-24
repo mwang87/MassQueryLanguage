@@ -424,8 +424,9 @@ def test_nocache():
     print(results_df)
 
 def test_topdown():
-    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X+760 AND X=range(min=50000, max=60000)"
-
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE AND \
+MS2PROD=X+202:TOLERANCEMZ=10:INTENSITYMATCH=Y*0.5:INTENSITYMATCHPERCENT=50 AND \
+MS2PROD=X-202:TOLERANCEMZ=10:INTENSITYMATCH=Y*0.5:INTENSITYMATCHPERCENT=50"
     results_df = msql_engine.process_query(query, "test/test_data/top_down.mgf")
 
     print(results_df)
@@ -500,6 +501,11 @@ def test_translator_portuguese():
         translated_version = msql_translator.translate_query(test_query, language="portuguese")
         print(test_query, translated_version)
 
+def test_defect():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PREC=X AND X=defect(min=0.1, max=0.2)"
+    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+
+    assert(len(results_df) == 21)
 
 
 def test_query():
@@ -568,7 +574,8 @@ def main():
     #test_translator()
     #test_ms1_iron_X_changes_intensity()
     #test_nocache()
-    test_topdown()
+    #test_topdown()
+    test_defect()
 
 if __name__ == "__main__":
     main()

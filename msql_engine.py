@@ -206,15 +206,23 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
     variable_properties["da_tolerance"] = 100000
     variable_properties["query_ms1"] = False
     variable_properties["query_ms2"] = False
+    variable_properties["query_ms2prec"] = False
     variable_properties["min"] = 0
     variable_properties["max"] = 1000000
+    variable_properties["mindefect"] = 0
+    variable_properties["maxdefect"] = 1
+    
 
     # Checking for ranges in query
     new_conditions = []
     for condition in parsed_dict["conditions"]:
         if condition["type"] == "xcondition":
-            variable_properties["min"] = condition["min"]
-            variable_properties["max"] = condition["max"]
+            if "min" in condition:
+                variable_properties["min"] = condition["min"]
+                variable_properties["max"] = condition["max"]
+            if "mindefect" in condition:
+                variable_properties["mindefect"] = condition["mindefect"]
+                variable_properties["maxdefect"] = condition["maxdefect"]
         else:
             new_conditions.append(condition)
     parsed_dict["conditions"] = new_conditions
@@ -233,6 +241,8 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
                             variable_properties["query_ms2"] = True
                         if condition["type"] == "ms2neutrallosscondition":
                             variable_properties["query_ms2"] = True
+                        if condition["type"] == "ms2precursorcondition":
+                            variable_properties["query_ms2prec"] = True
 
                     variable_properties["has_variable"] = True
                     #mz_tolerance = _get_mz_tolerance(condition.get("qualifiers", None), 1000000)
@@ -288,11 +298,16 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
                     (ms1_df["i_tic_norm"] > min_tic_percent_intensity)]
 
         # Here we will start with the smallest mass and then go up
-        masses_considered_df = pd.DataFrame()
+        masses_considered_df_list = []
         if variable_properties["query_ms1"]:
-            masses_considered_df["mz"] = pd.concat([variable_x_ms1_df["mz"]])
+            masses_considered_df_list.append(variable_x_ms1_df["mz"])
         if variable_properties["query_ms2"]:
-            masses_considered_df["mz"] = pd.concat([ms2_df["mz"]])
+            masses_considered_df_list.append(ms2_df["mz"])
+        if variable_properties["query_ms2prec"]:
+            masses_considered_df_list.append(ms2_df["precmz"])
+
+        masses_considered_df = pd.DataFrame()
+        masses_considered_df["mz"] = pd.concat(masses_considered_df_list)
         masses_considered_df["mz_max"] = masses_considered_df["mz"].apply(lambda x: _determine_mz_max(x, variable_properties["ppm_tolerance"], variable_properties["da_tolerance"]))
         
         masses_considered_df = masses_considered_df.sort_values("mz")
@@ -336,8 +351,13 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
             # Let's consider this mz
             running_max_mz = masses_obj["mz_max"]
 
+            # Checking the x conditions
             substituted_parse["comment"] = str(mz_val)
             if mz_val < variable_properties["min"] or mz_val > variable_properties["max"]:
+                continue
+            mz_val_defect = mz_val - int(mz_val)
+            print(mz_val_defect)
+            if mz_val_defect < variable_properties["mindefect"] or mz_val_defect > variable_properties["maxdefect"]:
                 continue
 
             all_concrete_queries.append(substituted_parse)
@@ -505,6 +525,13 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             # Applying the intensity match
             ms2_filtered_df = _filter_intensitymatch(ms2_filtered_df, reference_conditions_register, condition)
 
+            if len(ms2_filtered_df) == 0:
+                # This means we've filtered everything out
+                ms2_df = pd.DataFrame()
+                ms1_df = pd.DataFrame()
+
+                return ms1_df, ms2_df
+            
             # Filtering the actual data structures
             filtered_scans = set(ms2_filtered_df["scan"])
             ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]

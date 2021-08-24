@@ -116,6 +116,12 @@ MS1MZ=X+1:INTENSITYMATCH=Y*0.4:INTENSITYMATCHPERCENT=50:TOLERANCEPPM=10 AND MS1M
     parsed_output = msql_parser.parse_msql(query)
     print(json.dumps(parsed_output, indent=4))
 
+def test_xdefect_parse():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=2.0*(X - formula(Fe)) AND X=defect(min=0.1, max=0.2) AND X=range(min=5, max=100)"
+
+    parsed_output = msql_parser.parse_msql(query)
+    print(json.dumps(parsed_output, indent=4))
+
 def test_ms2_synonyms():
     query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=100"
     query2 = "QUERY scaninfo(MS2DATA) WHERE MS2MZ=100"
@@ -147,6 +153,8 @@ def main():
     #test_variable_formula_parse2()
     #test_ms2_synonyms()
     test_visualize_parse()
+    test_xdefect_parse()
+
 
 if __name__ == "__main__":
     main()
