@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from massql import msql_parser
 from massql import msql_engine
 from massql import msql_extract

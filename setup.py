@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="massql",
-    version="0.0.1",
+    version="0.0.4",
     author="Mingxun Wang",
     author_email="mwang87@gmail.com",
     description="Mass spectrometry query language python implementation",
@@ -17,12 +17,13 @@ setuptools.setup(
         "Bug Tracker": "https://github.com/mwang87/MassQueryLanguage/issues",
         "Documentation": "https://mwang87.github.io/MassQueryLanguage_Documentation/"
     },
+    scripts=['msql_cmd.py'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "massql"},
+    packages=["massql"],
     install_requires=[
         "pymzml",
         "lark-parser",
@@ -39,4 +40,5 @@ setuptools.setup(
         "pydot"
     ],
     python_requires=">=3.6",
+    include_package_data=True
 )

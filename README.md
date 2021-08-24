@@ -19,7 +19,24 @@ Mingxun Wang is the main creator and developer of MSQL. Contact me for contribut
 
 [Here](https://mwang87.github.io/MassQueryLanguage_Documentation/)
 
+
 ## Python API
+
+To install massql
+
+```
+pip install massql
+```
+
+Here is the most basic operation you can do
+
+```
+from massql import msql_engine
+
+results_df = msql_engine.process_query(input_query, input_filename)
+```
+
+## Web API
 
 ```/api```
 ```/parse```
