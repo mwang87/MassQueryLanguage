@@ -14,6 +14,16 @@ import json
 import pytest
 
 
+def test_query():
+    # Going through all queries and trying them out on simple file
+    current_dir = os.path.dirname(__file__)
+    test_queries_filename = os.path.join(current_dir, "test_queries.txt")
+
+    for line in open(test_queries_filename):
+        test_query = line.rstrip()
+        print(test_query)
+        msql_engine.process_query(test_query, "tests/data/GNPS00002_A3_p.mzML")
+
 def test_noquery():
     query = "QUERY scaninfo(MS2DATA)"
     results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
@@ -501,18 +511,18 @@ def test_defect():
 
     assert(len(results_df) == 21)
 
+def test_maldi_ms1():
+    query = "QUERY scaninfo(MS1DATA)"
+    results_df = msql_engine.process_query(query, "tests/data/119A-24.mzML")
+    
+    assert(len(results_df) == 6)
 
-def test_query():
-    current_dir = os.path.dirname(__file__)
-    test_queries_filename = os.path.join(current_dir, "test_queries.txt")
 
-    for line in open(test_queries_filename):
-        test_query = line.rstrip()
-        print(test_query)
-        msql_engine.process_query(test_query, "tests/data/GNPS00002_A3_p.mzML")
-
-def test_load():
-    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache=False)
+def test_maldi_ms2():
+    query = "QUERY scaninfo(MS2DATA)"
+    results_df = msql_engine.process_query(query, "tests/data/119A-24.mzML")
+    
+    assert(len(results_df) == 0)
 
 def main():
     #msql_engine.init_ray()
@@ -566,13 +576,14 @@ def main():
     #test_agilent()
     #test_ms1_iron_X_changes_intensity()
     #test_gnps_pqs_library()
-    test_mse()
+    #test_mse()
     #test_visualize()
     #test_translator()
     #test_ms1_iron_X_changes_intensity()
     #test_nocache()
     #test_topdown()
     #test_defect()
+    test_maldi_ms1()
 
 if __name__ == "__main__":
     main()
