@@ -19,7 +19,7 @@ test_query:
 	pytest -vv --cov=massql ./tests/test_query.py  -n 4
 
 test_full:
-	pytest -vv --cov=massql ./tests/
+	pytest -vv --cov=massql ./tests/ -n 8
 
 # test_full_parallel:
 # 	pytest -vv test.py test_parse.py test_extraction.py -n 6
