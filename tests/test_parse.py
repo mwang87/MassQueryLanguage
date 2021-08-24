@@ -16,7 +16,13 @@ def test_parse():
     import hashlib
 
     # Writing out the queries and comparing
-    test_queries_filename = os.path.join(os.path.dirname(__file__), "test_queries.txt")
+    current_dir = os.path.dirname(__file__)
+    test_parses_dir = os.path.join(current_dir, "test_parses")
+    reference_parses_dir = os.path.join(current_dir, "reference_parses")    
+
+    os.makedirs(test_parses_dir, exist_ok=True)
+
+    test_queries_filename = os.path.join(current_dir, "test_queries.txt")
     for line in open(test_queries_filename):
         test_query = line.rstrip()
         print(test_query)
@@ -27,13 +33,13 @@ def test_parse():
 
         json_filename = sanitize_filename(test_query).replace(" ", "_").replace("=", "_").replace("(", "_").replace(")", "_")[:50] + "___" +  hash_output + ".json"
 
-        output_filename = os.path.join("test/test_parses", json_filename)
+        output_filename = os.path.join(test_parses_dir, json_filename)
         output_json_str = json.dumps(output_parse, sort_keys=True, indent=4)
 
         with open(output_filename, "w") as o:
             o.write(output_json_str)
 
-        reference_filename = os.path.join("test/reference_parses", json_filename)
+        reference_filename = os.path.join(reference_parses_dir, json_filename)
         reference_string = open(reference_filename).read()
 
         try:
