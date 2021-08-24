@@ -10,6 +10,15 @@ import json
 import pytest
 
 def test_visualize():
+    # Writing out the queries and comparing
+    current_dir = os.path.dirname(__file__)
+    test_queries_filename = os.path.join(current_dir, "test_queries.txt")
+    for line in open(test_queries_filename):
+        test_query = line.rstrip()
+        print(test_query)
+        ms1_fig, ms2_fig = msql_visualizer.visualize_query(test_query)
+
+def test_visualize_basic():
     #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=177 AND MS2PROD=270 AND MS2NL=163"
     #query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=X+14"
     #query = "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X AND MS1MZ=X+14"
@@ -55,6 +64,8 @@ def test_visualize_usi():
     ms1_fig, ms2_fig = msql_visualizer.visualize_query(query, variable_x=662.27, variable_y=0.0436, ms1_peaks=ms1_peaks)
     ms1_fig.write_image("test_ms1_visualize.png", engine="kaleido")
     open("test_ms1_visualize.html", 'w').write(ms1_fig.to_html(full_html=False, include_plotlyjs='cdn'))
+
+
     
 def main():
     #test_visualize_y_set()
