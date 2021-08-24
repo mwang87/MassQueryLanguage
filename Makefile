@@ -4,6 +4,15 @@ test_parse:
 test_translate:
 	pytest -vv --cov=massql ./tests/test_translate.py
 
+test_extraction:
+	pytest -vv --cov=massql ./tests/test_extraction.py
+
+test_visualization:
+	pytest -vv --cov=massql ./tests/test_visualization.py
+
+test_fileloading:
+	pytest -vv --cov=massql ./tests/test_file_loading.py
+
 test_full:
 	pytest -vv --cov=massql ./tests/
 
