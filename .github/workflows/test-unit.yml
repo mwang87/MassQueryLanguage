@@ -30,14 +30,15 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements_test.txt; fi
     - name: Parsing Testing
       run: |
-        pytest -vv test_parse.py -n 2
-    - name: Query Testing
+        pytest -vv --cov=massql ./tests/test_parse.py
+    - name: Download Test Data
       run: |
-        cd test && sh ./get_data.sh
+        cd tests && sh ./get_data.sh
         cd ..
-        pytest --capture=tee-sys -vv test.py -n 2
-        pytest --capture=tee-sys -vv test_extraction.py -n 2
-        pytest --capture=tee-sys -vv test_visualize.py -n 2
-        pytest --capture=tee-sys -vv test_translate.py -n 2
-        pytest --capture=tee-sys -vv test_file_loading.py
+    - name: Major Testing
+        pytest --cov=massql --capture=tee-sys -vv ./tests/test_query.py -n 2
+        pytest --cov=massql --capture=tee-sys -vv ./tests/test_extraction.py -n 2
+        pytest --cov=massql --capture=tee-sys -vv ./tests/test_visualize.py -n 2
+        pytest --cov=massql --capture=tee-sys -vv ./tests/test_translate.py -n 2
+        pytest --cov=massql --capture=tee-sys -vv ./tests/test_file_loading.py
         
