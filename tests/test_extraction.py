@@ -17,7 +17,7 @@ def test_extract_mzML():
     assert(len(results_df) > 1)
     results_df["filename"] = "GNPS00002_A3_p.mzML"
 
-    merged_summary_df = msql_extract._extract_spectra(results_df, "test", 
+    merged_summary_df = msql_extract._extract_spectra(results_df, "tests/data/", 
                                                         output_json_filename="test.json", 
                                                         output_summary="summary.tsv",
                                                         output_mzML_filename="test.mzML")
@@ -34,7 +34,7 @@ def test_extract_mzXML():
     results_df["filename"] = "T04251505.mzXML"
 
     print("Extracting", len(results_df))
-    merged_summary_df = msql_extract._extract_spectra(results_df, "test", output_json_filename="test.json")
+    merged_summary_df = msql_extract._extract_spectra(results_df, "tests/data/", output_json_filename="test.json")
     assert(len(merged_summary_df) == 5)
     
 def test_extract_MGF():
@@ -48,7 +48,7 @@ def test_extract_MGF():
     results_df["filename"] = "specs_ms.mgf"
 
     print("Extracting", len(results_df))
-    merged_summary_df = msql_extract._extract_spectra(results_df, "test", output_json_filename="test.json")
+    merged_summary_df = msql_extract._extract_spectra(results_df, "tests/data/", output_json_filename="test.json")
     assert(len(merged_summary_df) == 5)
 
 
