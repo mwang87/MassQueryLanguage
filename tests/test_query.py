@@ -493,18 +493,7 @@ def test_agilent():
 def test_formula():
     query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=2.0*(X - formula(Fe))"
     results_df = msql_engine.process_query(query, "tests/data/bld_plt1_07_120_1.mzML")
-
-def test_translator():
-    for line in open("test_queries.txt"):
-        test_query = line.rstrip()
-        translated_version = msql_translator.translate_query(test_query)
-        print(test_query, translated_version)
         
-def test_translator_portuguese():
-    for line in open("test_queries.txt"):
-        test_query = line.rstrip()
-        translated_version = msql_translator.translate_query(test_query, language="portuguese")
-        print(test_query, translated_version)
 
 def test_defect():
     query = "QUERY scaninfo(MS2DATA) WHERE MS2PREC=X AND X=defect(min=0.1, max=0.2)"
@@ -514,7 +503,10 @@ def test_defect():
 
 
 def test_query():
-    for line in open("test_queries.txt"):
+    current_dir = os.path.dirname(__file__)
+    test_queries_filename = os.path.join(current_dir, "test_queries.txt")
+
+    for line in open(test_queries_filename):
         test_query = line.rstrip()
         print(test_query)
         msql_engine.process_query(test_query, "tests/data/GNPS00002_A3_p.mzML")

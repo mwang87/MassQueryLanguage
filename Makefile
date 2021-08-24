@@ -16,7 +16,7 @@ test_fileloading:
 	pytest -vv --cov=massql ./tests/test_file_loading.py
 
 test_query:
-	pytest -vv --cov=massql ./tests/test_query.py
+	pytest -vv --cov=massql ./tests/test_query.py  -n 4
 
 test_full:
 	pytest -vv --cov=massql ./tests/
