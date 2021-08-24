@@ -44,7 +44,8 @@ def visualize_query(query, variable_x=500, variable_y=1, precursor_mz=800, ms1_p
             if "qualifierintensitymatch" in condition["qualifiers"]:
                 value = condition["qualifiers"]["qualifierintensitymatch"]["value"]
                 condition["qualifiers"]["qualifierintensitymatch"]["value"] = math_parser.parse(value).evaluate({
-                                "Y" : variable_y
+                                "Y" : variable_y,
+                                "X" : variable_x
                             })
 
     ms1_fig = go.Figure()
