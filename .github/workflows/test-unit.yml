@@ -33,5 +33,6 @@ jobs:
         cd tests && sh ./get_data.sh
         cd ..
     - name: Major Testing
+      run: |
         pytest --cov=massql --capture=tee-sys -vv ./tests/
         
