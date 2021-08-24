@@ -1,7 +1,7 @@
-statement: "QUERY" querytype "WHERE" wherefullcondition+ "FILTER" filterfullcondition+
-     | "QUERY" querytype "FILTER" filterfullcondition+
-     | "QUERY" querytype "WHERE" wherefullcondition+ 
-     | "QUERY" querytype
+statement: querykeyword querytype wherekeyword wherefullcondition+ "FILTER" filterfullcondition+
+     | querykeyword querytype "FILTER" filterfullcondition+
+     | querykeyword querytype wherekeyword wherefullcondition+ 
+     | querykeyword querytype
 
 querytype: datams1data
      | datams2data
@@ -9,8 +9,10 @@ querytype: datams1data
      | function "(" datams2data ")"
      | function"(" datams1data "," param "=" floating ")"
 
-datams1data: "MS1DATA"
-datams2data: "MS2DATA"
+datams1data: "MS1DATA" | "ms1data" | "Ms1Data"
+datams2data: "MS2DATA" | "ms2data" | "Ms2Data"
+wherekeyword: "WHERE" | "where" | "Where"
+querykeyword: "QUERY" | "query" | "Query"
 
 wherefullcondition: wherefullcondition booleanconjunction wherefullcondition
     | condition ":" qualifier
