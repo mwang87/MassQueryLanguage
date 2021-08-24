@@ -1,6 +1,6 @@
-import msql_parser
-import msql_engine
-import msql_extract
+from massql import msql_parser
+from massql import msql_engine
+from massql import msql_extract
 
 import argparse
 import os
@@ -27,15 +27,13 @@ def main():
     if PARALLEL:
         msql_engine.init_ray()
 
-    grammar_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "msql.ebnf")
-
     # Massaging the query on input, we have a system to enable multiple queries to be entered, where results are merged
     # The delimeter is specified as |||
     all_queries = args.query.split("|||")
 
     # Let's parse first
     for query in all_queries:
-        parsed_query = msql_parser.parse_msql(query, grammar_path)
+        parsed_query = msql_parser.parse_msql(query)
         print(json.dumps(parsed_query, indent=4))
 
     # Executing
@@ -43,7 +41,6 @@ def main():
     for i, query in enumerate(all_queries):
         results_df = msql_engine.process_query(query, 
                                                 args.filename, 
-                                                path_to_grammar=grammar_path, 
                                                 cache=(args.cache == "YES"), 
                                                 parallel=PARALLEL)
 
