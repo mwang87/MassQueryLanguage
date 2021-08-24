@@ -1,3 +1,4 @@
+import os
 
 from lark import Lark
 from lark import Transformer
@@ -356,14 +357,20 @@ def _has_variable(items):
 
    return False 
 
-def _visualize_parse(input_query, path_to_grammar="msql.ebnf", output_filename="parse.png"):
+def _visualize_parse(input_query, path_to_grammar=None, output_filename="parse.png"):
+   if path_to_grammar is None:
+      path_to_grammar = os.path.join(os.path.dirname(__file__), "msql.ebnf")
+
    msql_parser = Lark(open(path_to_grammar).read(), start='statement')
    parsed_tree = msql_parser.parse(input_query)
    tree.pydot__tree_to_png(parsed_tree, output_filename)
 
-def parse_msql(input_query, path_to_grammar="msql.ebnf"):
-   # Force capitalization on the input_query, turning this off due to needing lower case in formulas
-   #input_query = input_query.upper()
+def parse_msql(input_query, path_to_grammar=None):
+   if path_to_grammar is None:
+      path_to_grammar = os.path.join(os.path.dirname(__file__), "msql.ebnf")
+
+   # NOTE: Force capitalization on the input_query, turning this off due to needing lower case in formulas
+   # input_query = input_query.upper()
 
    # Lets try to strip off any comments
    query_splits = input_query.split("\n")

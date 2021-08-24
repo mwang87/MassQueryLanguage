@@ -1,21 +1,23 @@
-import msql_extract
-import msql_parser
-import msql_engine
-import msql_extract
-import msql_translator
-import msql_visualizer
-import msql_fileloading
+import sys
+import os
+
+# Making sure the root is in the path, kind of a hack
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
+from massql import msql_extract
+from massql import msql_engine
+
 import json
 import pytest
 
 def test_extract_mzML():
     query = "QUERY scaninfo(MS2DATA)"
-    results_df = msql_engine.process_query(query, "test/GNPS00002_A3_p.mzML")
+    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
 
     assert(len(results_df) > 1)
     results_df["filename"] = "GNPS00002_A3_p.mzML"
 
-    merged_summary_df = msql_extract._extract_spectra(results_df, "test", 
+    merged_summary_df = msql_extract._extract_spectra(results_df, "tests/data/", 
                                                         output_json_filename="test.json", 
                                                         output_summary="summary.tsv",
                                                         output_mzML_filename="test.mzML")
@@ -23,7 +25,7 @@ def test_extract_mzML():
 
 def test_extract_mzXML():
     query = "QUERY scaninfo(MS1DATA)"
-    results_df = msql_engine.process_query(query, "test/T04251505.mzXML")
+    results_df = msql_engine.process_query(query, "tests/data/T04251505.mzXML")
     print(results_df)
 
     assert(len(results_df) > 1)
@@ -32,12 +34,12 @@ def test_extract_mzXML():
     results_df["filename"] = "T04251505.mzXML"
 
     print("Extracting", len(results_df))
-    merged_summary_df = msql_extract._extract_spectra(results_df, "test", output_json_filename="test.json")
+    merged_summary_df = msql_extract._extract_spectra(results_df, "tests/data/", output_json_filename="test.json")
     assert(len(merged_summary_df) == 5)
     
 def test_extract_MGF():
     query = "QUERY scaninfo(MS2DATA)"
-    results_df = msql_engine.process_query(query, "test/specs_ms.mgf")
+    results_df = msql_engine.process_query(query, "tests/data/specs_ms.mgf")
     print(results_df)
 
     assert(len(results_df) > 1)
@@ -46,7 +48,7 @@ def test_extract_MGF():
     results_df["filename"] = "specs_ms.mgf"
 
     print("Extracting", len(results_df))
-    merged_summary_df = msql_extract._extract_spectra(results_df, "test", output_json_filename="test.json")
+    merged_summary_df = msql_extract._extract_spectra(results_df, "tests/data/", output_json_filename="test.json")
     assert(len(merged_summary_df) == 5)
 
 

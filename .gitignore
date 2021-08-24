@@ -1,1 +1,4 @@
 workflow/work
+*__pycache__*
+tests/data
+tests/test_parses

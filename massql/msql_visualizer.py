@@ -1,5 +1,5 @@
-import msql_parser
-import msql_engine
+from massql import msql_parser
+from massql import msql_engine
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 

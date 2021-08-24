@@ -1,6 +1,6 @@
 #!/usr/bin/env nextflow
 
-params.input_spectra = 'test/GNPS00002_A3_p.mzML'
+params.input_spectra = 'data/GNPS00002_A3_p.mzML'
 params.query = "QUERY scaninfo(MS2DATA)"
 params.parallel_files = 'NO'
 params.parallel_query = 'NO'

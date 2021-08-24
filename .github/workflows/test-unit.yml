@@ -28,16 +28,11 @@ jobs:
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f requirements.txt ]; then pip install -r requirements_test.txt; fi
-    - name: Parsing Testing
+    - name: Download Test Data
       run: |
-        pytest -vv test_parse.py -n 2
-    - name: Query Testing
-      run: |
-        cd test && sh ./get_data.sh
+        cd tests && sh ./get_data.sh
         cd ..
-        pytest --capture=tee-sys -vv test.py -n 2
-        pytest --capture=tee-sys -vv test_extraction.py -n 2
-        pytest --capture=tee-sys -vv test_visualize.py -n 2
-        pytest --capture=tee-sys -vv test_translate.py -n 2
-        pytest --capture=tee-sys -vv test_file_loading.py
+    - name: Major Testing
+      run: |
+        pytest --cov=massql --capture=tee-sys -vv ./tests/
         

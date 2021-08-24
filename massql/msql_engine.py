@@ -1,5 +1,3 @@
-import msql_parser
-
 import os
 import pandas as pd
 import numpy as np
@@ -9,7 +7,8 @@ from tqdm import tqdm
 
 from py_expression_eval import Parser
 
-import msql_fileloading
+from massql import msql_parser
+from massql import msql_fileloading
 
 math_parser = Parser()
 console = logging.StreamHandler()
@@ -170,7 +169,7 @@ def _set_intensity_register(ms_filtered_df, register_dict, condition):
                 register_dict[key] = grouped_scan["i"]
     return
 
-def process_query(input_query, input_filename, path_to_grammar="msql.ebnf", cache=True, parallel=False):
+def process_query(input_query, input_filename, path_to_grammar=None, cache=True, parallel=False):
     parsed_dict = msql_parser.parse_msql(input_query, path_to_grammar=path_to_grammar)
 
     return _evalute_variable_query(parsed_dict, input_filename, cache=cache, parallel=parallel)
@@ -356,7 +355,6 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
             if mz_val < variable_properties["min"] or mz_val > variable_properties["max"]:
                 continue
             mz_val_defect = mz_val - int(mz_val)
-            print(mz_val_defect)
             if mz_val_defect < variable_properties["mindefect"] or mz_val_defect > variable_properties["maxdefect"]:
                 continue
 

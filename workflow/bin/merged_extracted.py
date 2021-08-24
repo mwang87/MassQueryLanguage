@@ -3,8 +3,9 @@ import os
 import glob
 import json
 import uuid
-import msql_extract
 import pandas as pd
+
+from massql import msql_extract
 
 def main():
     parser = argparse.ArgumentParser(description="MSQL CMD")

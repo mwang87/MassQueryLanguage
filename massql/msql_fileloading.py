@@ -7,7 +7,6 @@ from tqdm import tqdm
 from matchms.importing import load_from_mgf
 from pyteomics import mzxml
 
-
 def load_data(input_filename, cache=False):
     """
     Loading data generically
