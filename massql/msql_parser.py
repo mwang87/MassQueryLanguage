@@ -369,8 +369,8 @@ def parse_msql(input_query, path_to_grammar=None):
    if path_to_grammar is None:
       path_to_grammar = os.path.join(os.path.dirname(__file__), "msql.ebnf")
 
-   # Force capitalization on the input_query, turning this off due to needing lower case in formulas
-   #input_query = input_query.upper()
+   # NOTE: Force capitalization on the input_query, turning this off due to needing lower case in formulas
+   # input_query = input_query.upper()
 
    # Lets try to strip off any comments
    query_splits = input_query.split("\n")

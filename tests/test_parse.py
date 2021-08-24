@@ -1,3 +1,9 @@
+import sys
+import os
+
+# Making sure the root is in the path, kind of a hack
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 from massql import msql_parser
 import json
 import pytest
@@ -10,7 +16,8 @@ def test_parse():
     import hashlib
 
     # Writing out the queries and comparing
-    for line in open("test_queries.txt"):
+    test_queries_filename = os.path.join(os.path.dirname(__file__), "test_queries.txt")
+    for line in open(test_queries_filename):
         test_query = line.rstrip()
         print(test_query)
         output_parse = msql_parser.parse_msql(test_query)
