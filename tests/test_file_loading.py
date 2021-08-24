@@ -12,3 +12,8 @@ import pytest
 def test_improper_file():
     with pytest.raises(Exception):
         msql_fileloading.load_file('file.cdf')
+
+def test_gnps_library_loading():
+    ms1_df, ms2_df = msql_fileloading.load_data("test/gnps-library.json")
+    print(ms2_df[ms2_df["scan"] == "CCMSLIB00000072227"])
+    assert(len(ms2_df[ms2_df["scan"] == "CCMSLIB00000072227"]) > 300)
