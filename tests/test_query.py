@@ -504,7 +504,8 @@ def test_agilent():
 def test_formula():
     query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=2.0*(X - formula(Fe))"
     results_df = msql_engine.process_query(query, "tests/data/bld_plt1_07_120_1.mzML")
-        
+
+    assert(len(results_df) > 0)
 
 def test_defect():
     query = "QUERY scaninfo(MS2DATA) WHERE MS2PREC=X AND X=defect(min=0.1, max=0.2)"
@@ -528,17 +529,11 @@ def test_maldi_ms2():
 def test_or_against_iron():
     query = "QUERY scaninfo(MS2DATA) WHERE \
             MS1MZ=X-1.993:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25:TOLERANCEPPM=10 AND \
-            MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=10 AND \
+            MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=1 AND \
             MS1MZ=X+1:INTENSITYMATCH=Y*0.3:INTENSITYMATCHPERCENT=60 AND MS1MZ=X-52.91:TOLERANCEPPM=10 AND \
             X=range(min=530, max=540) \
-            AND MS2PREC=(X OR X-52.91)"
-
-    query = "QUERY scaninfo(MS2DATA) WHERE \
-            MS1MZ=X-1.993:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25:TOLERANCEPPM=10 AND \
-            MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=10 AND \
-            MS1MZ=X+1:INTENSITYMATCH=Y*0.3:INTENSITYMATCHPERCENT=60 AND MS1MZ=X-52.91:TOLERANCEPPM=10 AND \
-            X=range(min=530, max=540) \
-            AND MS2PREC=X"
+            AND MS2PREC=(X OR X-52.91) \
+            AND RTMIN=4 AND RTMAX=5"
 
     results_df = msql_engine.process_query(query, "tests/data/Hui_N2_fe.mzML")
 
@@ -548,7 +543,6 @@ def test_or_against_iron():
 
     print(results_df)
 
-    assert(1931 in list(results_df["scan"]))
     assert(1972 in list(results_df["scan"]))
     assert(1971 in list(results_df["scan"]))
 
