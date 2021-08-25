@@ -110,6 +110,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
         for value in condition["value"]:
             try:
                 # Checking if X is in any string
+                # TODO: Check multiple conditions, to see if any of them have an X, e.g. (101 OR X-10)
                 if "X" in value[0]:
                     if value == "X":
                         # This is the main varaible, not expression containing it
@@ -186,6 +187,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
 
         masses_considered_df = pd.DataFrame()
         masses_considered_df["mz"] = pd.concat(masses_considered_df_list)
+        # NOTE: This might cause bugs, we might consider every mass within every single scan, or at least we could make the tolernace as even smaller than half the max
         masses_considered_df["mz_max"] = masses_considered_df["mz"].apply(lambda x: _determine_mz_max(x, variable_properties["ppm_tolerance"], variable_properties["da_tolerance"]))
         
         masses_considered_df = masses_considered_df.sort_values("mz")
