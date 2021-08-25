@@ -145,6 +145,7 @@ def test_variable_ms1():
     results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
     print(results_df)
 
+@pytest.mark.skip(reason="Not sure we want to support subqueries now")
 def test_subquery():
     #query = "QUERY scanrangesum(MS1DATA, TOLERANCE=0.1) WHERE MS1MZ=(QUERY scanmz(MS2DATA) WHERE MS2NL=176.0321 AND MS2PROD=85.02915)"
     query = "QUERY MS1DATA WHERE MS1MZ=(QUERY scanmz(MS2DATA) WHERE MS2NL=176.0321 AND MS2PROD=85.02915)"
