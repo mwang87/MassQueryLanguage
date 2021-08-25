@@ -14,3 +14,4 @@ wget --no-verbose --output-document=T04251505.mzXML "https://massive.ucsd.edu/Pr
 wget --no-verbose --output-document=isa_9_fe.mzML "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000084030/ccms_peak/isa_9_fe.mzML&forceDownload=true"
 wget --no-verbose --output-document=01308_H02_P013387_B00_N16_R1.mzML "ftp://massive.ucsd.edu/MSV000083508/ccms_peak/colon/Trypsin_HCD_QExactiveplus/01308_H02_P013387_B00_N16_R1.mzML"
 wget --no-verbose --output-document=119A-24.mzML "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000083461/ccms_peak/mzXML/119A-24.mzML"
+wget --no-verbose --output-document=Hui_N2_fe.mzML "ftp://massive.ucsd.edu/MSV000084628/ccms_peak/Hui_N2_fe.mzML"

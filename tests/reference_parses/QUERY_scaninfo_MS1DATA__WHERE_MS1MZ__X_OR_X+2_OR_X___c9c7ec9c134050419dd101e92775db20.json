@@ -1,0 +1,19 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "type": "ms1mzcondition",
+            "value": [
+                "X",
+                "X+2.0",
+                "X+4.0",
+                "X+6.0"
+            ]
+        }
+    ],
+    "query": "QUERY scaninfo(MS1DATA) WHERE MS1MZ=(X OR X+2 OR X+4 OR X+6)",
+    "querytype": {
+        "datatype": "datams1data",
+        "function": "functionscaninfo"
+    }
+}

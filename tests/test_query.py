@@ -524,6 +524,14 @@ def test_maldi_ms2():
     
     assert(len(results_df) == 0)
 
+def test_or_against_iron():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X-1.993:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25:TOLERANCEPPM=10 AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=1 \
+            AND MS1MZ=X+1:INTENSITYMATCH=Y*0.5:INTENSITYMATCHPERCENT=60 AND MS1MZ=X-52.91:TOLERANCEPPM=10 AND \
+            X=range(min=300, max=1100) AND MS2PREC=(X-52.91 OR X)"
+
+    results_df = msql_engine.process_query(query, "tests/data/Hui_N2_fe.mzML")
+
+    print(results_df)
 
 def main():
     #msql_engine.init_ray()

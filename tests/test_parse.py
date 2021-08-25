@@ -149,6 +149,33 @@ AND \
 MS1MZ=X+1:INTENSITYMATCH=Y*0.4:INTENSITYMATCHPERCENT=50:TOLERANCEPPM=10 AND MS1MZ=X+1.998:INTENSITYMATCH=Y*0.446:INTENSITYMATCHPERCENT=50:TOLERANCEPPM=10 AND X=range(min=300,max=900)"
     msql_parser._visualize_parse(query)
 
+def test_ms2_or():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=(100 OR 104)"
+
+    parsed_output = msql_parser.parse_msql(query)
+    print(parsed_output)
+
+def test_ms1_or():
+    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=(100 OR 104)"
+
+    parsed_output = msql_parser.parse_msql(query)
+    print(parsed_output)
+    assert(len(parsed_output["conditions"][0]["value"]) == 2)
+
+def test_ms1_multiple_or():
+    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=(100 OR 104 OR 106 OR 108)"
+
+    parsed_output = msql_parser.parse_msql(query)
+    print(parsed_output)
+    assert(len(parsed_output["conditions"][0]["value"]) == 4)
+
+def test_ms1_multiple_or_with_variable():
+    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=(X OR X+2 OR X+4 OR X+6)"
+
+    parsed_output = msql_parser.parse_msql(query)
+    print(parsed_output)
+    assert(len(parsed_output["conditions"][0]["value"]) == 4)
+
 def main():
     #test_xrange_parse()
     #test_parse()
@@ -161,8 +188,11 @@ def main():
     #test_variable_formula_parse()
     #test_variable_formula_parse2()
     #test_ms2_synonyms()
-    test_visualize_parse()
-    test_xdefect_parse()
+    #test_visualize_parse()
+    #test_xdefect_parse()
+    #test_ms2_or()
+    #test_ms1_multiple_or()
+    test_ms1_multiple_or_with_variable()
 
 
 if __name__ == "__main__":
