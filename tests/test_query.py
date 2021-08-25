@@ -527,11 +527,17 @@ def test_maldi_ms2():
 def test_or_against_iron():
     query = "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X-1.993:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25:TOLERANCEPPM=10 AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=1 \
             AND MS1MZ=X+1:INTENSITYMATCH=Y*0.5:INTENSITYMATCHPERCENT=60 AND MS1MZ=X-52.91:TOLERANCEPPM=10 AND \
-            X=range(min=300, max=1100) AND MS2PREC=(X-52.91 OR X)"
+            X=range(min=530, max=540) AND MS2PREC=(X OR X-52.91)"
 
     results_df = msql_engine.process_query(query, "tests/data/Hui_N2_fe.mzML")
 
+    # We should find in scan 1954 and m/z in MS1 of 535.03
+    # We should find the MS2 spectra at 482 and 535 m/z
+
     print(results_df)
+
+    assert(1972 in list(results_df["scan"]))
+    assert(1971 in list(results_df["scan"]))
 
 def main():
     #msql_engine.init_ray()
@@ -592,7 +598,7 @@ def main():
     #test_nocache()
     #test_topdown()
     #test_defect()
-    test_maldi_ms1()
+    test_or_against_iron()
 
 if __name__ == "__main__":
     main()
