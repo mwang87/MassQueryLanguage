@@ -40,6 +40,18 @@ from massql import msql_engine
 results_df = msql_engine.process_query(input_query, input_filename)
 ```
 
+If you want to push in a data frame you already have, you can specify it
+```
+from massql import msql_engine
+from massql import msql_fileloading
+
+# Loading Data
+ms1_df, ms2_df = msql_fileloading.load_data(input_filename)
+
+# Executing Query
+results_df = msql_engine.process_query(input_query, input_filename, ms1_df=ms1_df, ms2_df=ms2_df)
+```
+
 ## Web API
 
 ```/api```

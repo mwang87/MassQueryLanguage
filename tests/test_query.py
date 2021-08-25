@@ -444,8 +444,14 @@ def test_topdown():
 MS2PROD=X+202:TOLERANCEMZ=10:INTENSITYMATCH=Y*0.5:INTENSITYMATCHPERCENT=50 AND \
 MS2PROD=X-202:TOLERANCEMZ=10:INTENSITYMATCH=Y*0.5:INTENSITYMATCHPERCENT=50"
     results_df = msql_engine.process_query(query, "tests/test_data/top_down.mgf")
+    assert(len(results_df) == 14)
 
-    print(results_df)
+    query = query.replace("MS2DATA", "MS1DATA")
+    query = query.replace("MS2PROD", "MS1MZ")
+
+    results_df = msql_engine.process_query(query, "tests/test_data/top_down.txt")
+    assert(len(results_df) == 14)
+
 
 
 def test_quad_brominated():
@@ -593,10 +599,10 @@ def main():
     #test_translator()
     #test_ms1_iron_X_changes_intensity()
     #test_nocache()
-    #test_topdown()
+    test_topdown()
     #test_defect()
     #test_or_against_iron()
-    test_quad_brominated()
+    #test_quad_brominated()
 
 if __name__ == "__main__":
     main()

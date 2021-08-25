@@ -48,10 +48,26 @@ def _get_da_tolerance(qualifiers):
     return None
 
 
-def process_query(input_query, input_filename, path_to_grammar=None, cache=True, parallel=False):
+def process_query(input_query, input_filename, path_to_grammar=None, cache=True, parallel=False, ms1_df=None, ms2_df=None):
+    """
+    Process an actual query
+
+    Args:
+        input_query ([type]): [description]
+        input_filename ([type]): [description]
+        path_to_grammar ([type], optional): [description]. Defaults to None.
+        cache (bool, optional): [description]. Defaults to True.
+        parallel (bool, optional): [description]. Defaults to False.
+        ms1_df ([type], optional): [description]. Defaults to None. Pass in if you have these data in memory
+        ms2_df ([type], optional): [description]. Defaults to None. Pass in if you have these data in memory
+
+    Returns:
+        query results data frame: [description]
+    """
+
     parsed_dict = msql_parser.parse_msql(input_query, path_to_grammar=path_to_grammar)
 
-    return _evalute_variable_query(parsed_dict, input_filename, cache=cache, parallel=parallel)
+    return _evalute_variable_query(parsed_dict, input_filename, cache=cache, parallel=parallel, ms1_df=ms1_df, ms2_df=ms2_df)
 
 def _determine_mz_max(mz, ppm_tol, da_tol):
     da_tol = da_tol if da_tol < 10000 else 0
@@ -63,7 +79,7 @@ def _determine_mz_max(mz, ppm_tol, da_tol):
 
     return mz + half_delta
 
-def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=False):
+def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=False, ms1_df=None, ms2_df=None):
     # Lets check if there is a variable in here, the only one allowed is X
     for condition in parsed_dict["conditions"]:
         try:
@@ -138,7 +154,9 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
                 # This is when the target is actually a float
                 pass
 
-    ms1_df, ms2_df = msql_fileloading.load_data(input_filename, cache=cache)
+    # Loading data if not passed in 
+    if ms1_df is None:
+        ms1_df, ms2_df = msql_fileloading.load_data(input_filename, cache=cache)
 
     # Here we are going to translate the variable query into a concrete query based upon the data
     all_concrete_queries = []
