@@ -142,33 +142,35 @@ def ms2prod_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     if len(ms2_df) == 0:
         return ms1_df, ms2_df
 
-    # TODO: query multiple masses
-    
-    mz = condition["value"][0]
-    mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
-    mz_min = mz - mz_tol
-    mz_max = mz + mz_tol
+    ms2_list = []
+    for mz in condition["value"]:
+        mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
+        mz_min = mz - mz_tol
+        mz_max = mz + mz_tol
 
-    min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
+        min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
 
-    ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & 
-                            (ms2_df["mz"] < mz_max) & 
-                            (ms2_df["i"] > min_int) & 
-                            (ms2_df["i_norm"] > min_intpercent) & 
-                            (ms2_df["i_tic_norm"] > min_tic_percent_intensity)]
+        ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & 
+                                (ms2_df["mz"] < mz_max) & 
+                                (ms2_df["i"] > min_int) & 
+                                (ms2_df["i_norm"] > min_intpercent) & 
+                                (ms2_df["i_tic_norm"] > min_tic_percent_intensity)]
 
-    # Setting the intensity match register
-    _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
+        # Setting the intensity match register
+        _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
 
-    # Applying the intensity match
-    ms2_filtered_df = _filter_intensitymatch(ms2_filtered_df, reference_conditions_register, condition)
+        # Applying the intensity match
+        ms2_filtered_df = _filter_intensitymatch(ms2_filtered_df, reference_conditions_register, condition)
+
+        ms2_list.append(ms2_filtered_df)
+
+    if len(ms2_list) == 1:
+        ms2_filtered_df = ms2_list[0]
+    else:
+        ms2_filtered_df = pd.concat(ms2_list)
 
     if len(ms2_filtered_df) == 0:
-        # This means we've filtered everything out
-        ms2_df = pd.DataFrame()
-        ms1_df = pd.DataFrame()
-
-        return ms1_df, ms2_df
+       return pd.DataFrame(), pd.DataFrame()
     
     # Filtering the actual data structures
     filtered_scans = set(ms2_filtered_df["scan"])
@@ -198,28 +200,37 @@ def ms2nl_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     if len(ms2_df) == 0:
         return ms1_df, ms2_df
 
-    # TODO: query multiple neutral losses
+    ms2_list = []
+    for mz in condition["value"]:
+        mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz) #TODO: This is incorrect logic if it comes to PPM accuracy
+        nl_min = mz - mz_tol
+        nl_max = mz + mz_tol
 
-    mz = condition["value"][0]
-    mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz) #TODO: This is incorrect logic if it comes to PPM accuracy
-    nl_min = mz - mz_tol
-    nl_max = mz + mz_tol
+        min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
 
-    min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
+        ms2_filtered_df = ms2_df[
+            ((ms2_df["precmz"] - ms2_df["mz"]) > nl_min) & 
+            ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max) &
+            (ms2_df["i"] > min_int) & 
+            (ms2_df["i_norm"] > min_intpercent) & 
+            (ms2_df["i_tic_norm"] > min_tic_percent_intensity)
+        ]
 
-    ms2_filtered_df = ms2_df[
-        ((ms2_df["precmz"] - ms2_df["mz"]) > nl_min) & 
-        ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max) &
-        (ms2_df["i"] > min_int) & 
-        (ms2_df["i_norm"] > min_intpercent) & 
-        (ms2_df["i_tic_norm"] > min_tic_percent_intensity)
-    ]
+        # Setting the intensity match register
+        _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
 
-    # Setting the intensity match register
-    _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
+        # Applying the intensity match
+        ms2_filtered_df = _filter_intensitymatch(ms2_filtered_df, reference_conditions_register, condition)
 
-    # Applying the intensity match
-    ms2_filtered_df = _filter_intensitymatch(ms2_filtered_df, reference_conditions_register, condition)
+        ms2_list.append(ms2_filtered_df)
+
+    if len(ms2_list) == 1:
+        ms2_filtered_df = ms2_list[0]
+    else:
+        ms2_filtered_df = pd.concat(ms2_list)
+
+    if len(ms2_filtered_df) == 0:
+       return pd.DataFrame(), pd.DataFrame()
 
     # Filtering the actual data structures
     filtered_scans = set(ms2_filtered_df["scan"])
