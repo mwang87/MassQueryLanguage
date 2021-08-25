@@ -392,35 +392,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
 
         # Filtering MS2 Neutral Loss
         if condition["type"] == "ms2neutrallosscondition":
-            mz = condition["value"][0]
-            mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz) #TODO: This is incorrect logic if it comes to PPM accuracy
-            nl_min = mz - mz_tol
-            nl_max = mz + mz_tol
-
-            min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
-
-            ms2_filtered_df = ms2_df[
-                ((ms2_df["precmz"] - ms2_df["mz"]) > nl_min) & 
-                ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max) &
-                (ms2_df["i"] > min_int) & 
-                (ms2_df["i_norm"] > min_intpercent) & 
-                (ms2_df["i_tic_norm"] > min_tic_percent_intensity)
-            ]
-
-            # Setting the intensity match register
-            _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
-
-            # Applying the intensity match
-            ms2_filtered_df = _filter_intensitymatch(ms2_filtered_df, reference_conditions_register, condition)
-
-            # Filtering the actual data structures
-            filtered_scans = set(ms2_filtered_df["scan"])
-            ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]
-
-            # Filtering the MS1 data now
-            ms1_scans = set(ms2_df["ms1scan"])
-            ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
-
+            ms1_df, ms2_df = msql_engine_filters.ms2nl_condition(condition, ms1_df, ms2_df, reference_conditions_register)
             continue
 
         # finding MS1 peaks
@@ -437,16 +409,12 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
                 (ms1_df["i"] > min_int) & 
                 (ms1_df["i_norm"] > min_intpercent) & 
                 (ms1_df["i_tic_norm"] > min_tic_percent_intensity)]
-            
-            #print("YYY", mz_min, mz_max, min_int, min_intpercent, len(ms1_filtered_df))
 
             # Setting the intensity match register
             _set_intensity_register(ms1_filtered_df, reference_conditions_register, condition)
 
             # Applying the intensity match
             ms1_filtered_df = _filter_intensitymatch(ms1_filtered_df, reference_conditions_register, condition)
-
-            #print(ms1_filtered_df)
 
             if len(ms1_filtered_df) == 0:
                 return pd.DataFrame(), pd.DataFrame()

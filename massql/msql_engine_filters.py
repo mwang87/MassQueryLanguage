@@ -139,6 +139,9 @@ def ms2prod_condition(condition, ms1_df, ms2_df, reference_conditions_register):
         ms2_df ([type]): [description]
     """
 
+    if len(ms2_df) == 0:
+        return ms1_df, ms2_df
+
     
     mz = condition["value"][0]
     mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
@@ -166,6 +169,55 @@ def ms2prod_condition(condition, ms1_df, ms2_df, reference_conditions_register):
 
         return ms1_df, ms2_df
     
+    # Filtering the actual data structures
+    filtered_scans = set(ms2_filtered_df["scan"])
+    ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]
+
+    # Filtering the MS1 data now
+    ms1_scans = set(ms2_df["ms1scan"])
+    ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
+
+    return ms1_df, ms2_df
+
+def ms2nl_condition(condition, ms1_df, ms2_df, reference_conditions_register):
+    """
+    Filters the MS1 and MS2 data based upon MS2 neutral loss conditions
+
+    Args:
+        condition ([type]): [description]
+        ms1_df ([type]): [description]
+        ms2_df ([type]): [description]
+        reference_conditions_register ([type]): Edits this in place
+
+    Returns:
+        ms1_df ([type]): [description]
+        ms2_df ([type]): [description]
+    """
+
+    if len(ms2_df) == 0:
+        return ms1_df, ms2_df
+
+    mz = condition["value"][0]
+    mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz) #TODO: This is incorrect logic if it comes to PPM accuracy
+    nl_min = mz - mz_tol
+    nl_max = mz + mz_tol
+
+    min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
+
+    ms2_filtered_df = ms2_df[
+        ((ms2_df["precmz"] - ms2_df["mz"]) > nl_min) & 
+        ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max) &
+        (ms2_df["i"] > min_int) & 
+        (ms2_df["i_norm"] > min_intpercent) & 
+        (ms2_df["i_tic_norm"] > min_tic_percent_intensity)
+    ]
+
+    # Setting the intensity match register
+    _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
+
+    # Applying the intensity match
+    ms2_filtered_df = _filter_intensitymatch(ms2_filtered_df, reference_conditions_register, condition)
+
     # Filtering the actual data structures
     filtered_scans = set(ms2_filtered_df["scan"])
     ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]
