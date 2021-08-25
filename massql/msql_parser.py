@@ -20,6 +20,12 @@ class MassQLToJSON(Transformer):
    def querykeyword(self, items):
       return "QUERY"
 
+   def booleanandconjunction(self, s):
+      return "AND"
+
+   def booleanorconjunction(self, s):
+      return "OR"
+
    def qualifiermztolerance(self, items):
       return "qualifiermztolerance"
    
@@ -135,24 +141,31 @@ class MassQLToJSON(Transformer):
       return items[0]
 
    def condition(self, items):
+      condition_type = items[0]
 
       if len(items) == 2:
-         # These are most queries
+         # These are most queries, with a numericalexpression
          condition_dict = {}
-         condition_dict["type"] = items[0]
+         condition_dict["type"] = condition_type
          condition_dict["value"] = [items[-1]]
       elif len(items) == 3:
-         # These are for polarity
-         condition_dict = {}
-         condition_dict["type"] = items[0]
-         condition_dict["value"] = [items[-1]]
+         # These are for polarity or numerical expression
+         if condition_type == "polaritycondition":
+            condition_dict = {}
+            condition_dict["type"] = items[0]
+            condition_dict["value"] = [items[-1]]
+         else:
+            # These are numerical expressions for mz,rt type conditions
+            condition_dict = {}
+            condition_dict["type"] = items[0]
+            condition_dict["value"] = items[-1]
       elif len(items) == 5:
          # These are for the x range clauses
          if items[0] == "xcondition":
             function = items[2]
 
             condition_dict = {}
-            condition_dict["type"] = items[0]
+            condition_dict["type"] = condition_type
 
             if function == "xdefect":
                condition_dict["mindefect"] = float(items[-2])
@@ -320,6 +333,25 @@ class MassQLToJSON(Transformer):
       calculated_value = math_parser.parse(full_expression).evaluate({})
       
       return calculated_value
+
+   def numericalexpressionwithor(self, items):
+      if len(items) == 1:
+         return items[0]
+            
+      # Lets merge these values, based upon type
+      merged_list = []
+
+      if isinstance(items[0], list):
+         merged_list += items[0]
+      else:
+         merged_list.append(items[0])
+      
+      if isinstance(items[-1], list):
+         merged_list += items[-1]
+      else:
+         merged_list.append(items[-1])
+         
+      return merged_list
     
    def moleculeformula(self, items):
       exact_mass = mass.calculate_mass(formula=items[0])
