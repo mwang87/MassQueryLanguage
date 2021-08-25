@@ -246,19 +246,32 @@ def ms2prec_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     if len(ms2_df) == 0:
         return ms1_df, ms2_df
 
-    mz = condition["value"][0]
-    mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
-    mz_min = mz - mz_tol
-    mz_max = mz + mz_tol
+    ms1_list = []
+    ms2_list = []
+    for mz in condition["value"]:
+        print("QUERY", mz)
 
-    ms2_df = ms2_df[(
-        ms2_df["precmz"] > mz_min) & 
-        (ms2_df["precmz"] < mz_max)
-    ]
+        mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
+        mz_min = mz - mz_tol
+        mz_max = mz + mz_tol
 
-    # Filtering the MS1 data now
-    ms1_scans = set(ms2_df["ms1scan"])
-    ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
+        ms2_filtered_df = ms2_df[(
+            ms2_df["precmz"] > mz_min) & 
+            (ms2_df["precmz"] < mz_max)
+        ]
+
+        # Filtering the MS1 data now
+        ms1_scans = set(ms2_df["ms1scan"])
+        ms1_filtered_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
+
+        ms1_list.append(ms1_filtered_df)
+        ms2_list.append(ms2_filtered_df)
+    
+    if len(ms1_list) == 1:
+        return ms1_list[0], ms2_list[0]
+
+    ms1_df = pd.concat(ms1_list)
+    ms2_df = pd.concat(ms2_list)
 
     return ms1_df, ms2_df
 
