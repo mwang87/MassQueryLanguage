@@ -261,3 +261,51 @@ def ms2prec_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
 
     return ms1_df, ms2_df
+
+def ms1_condition(condition, ms1_df, ms2_df, reference_conditions_register):
+    """
+    Filters the MS1 and MS2 data based upon MS1 peak conditions
+
+    Args:
+        condition ([type]): [description]
+        ms1_df ([type]): [description]
+        ms2_df ([type]): [description]
+        reference_conditions_register ([type]): Edits this in place
+
+    Returns:
+        ms1_df ([type]): [description]
+        ms2_df ([type]): [description]
+    """
+    if len(ms1_df) == 0:
+        return ms1_df, ms2_df
+
+    mz = condition["value"][0]
+    mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
+    mz_min = mz - mz_tol
+    mz_max = mz + mz_tol
+
+    min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
+    ms1_filtered_df = ms1_df[
+        (ms1_df["mz"] > mz_min) & 
+        (ms1_df["mz"] < mz_max) & 
+        (ms1_df["i"] > min_int) & 
+        (ms1_df["i_norm"] > min_intpercent) & 
+        (ms1_df["i_tic_norm"] > min_tic_percent_intensity)]
+
+    # Setting the intensity match register
+    _set_intensity_register(ms1_filtered_df, reference_conditions_register, condition)
+
+    # Applying the intensity match
+    ms1_filtered_df = _filter_intensitymatch(ms1_filtered_df, reference_conditions_register, condition)
+
+    if len(ms1_filtered_df) == 0:
+        return pd.DataFrame(), pd.DataFrame()
+
+    # Filtering the actual data structures
+    filtered_scans = set(ms1_filtered_df["scan"])
+    ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
+
+    if "ms1scan" in ms2_df:
+        ms2_df = ms2_df[ms2_df["ms1scan"].isin(filtered_scans)]
+
+    return ms1_df, ms2_df

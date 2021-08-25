@@ -11,7 +11,6 @@ from massql import msql_parser
 from massql import msql_fileloading
 from massql import msql_engine_filters
 from massql.msql_engine_filters import _get_mz_tolerance, _get_minintensity
-from massql.msql_engine_filters import _set_intensity_register, _filter_intensitymatch
 
 math_parser = Parser()
 console = logging.StreamHandler()
@@ -397,35 +396,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
 
         # finding MS1 peaks
         if condition["type"] == "ms1mzcondition":
-            mz = condition["value"][0]
-            mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
-            mz_min = mz - mz_tol
-            mz_max = mz + mz_tol
-
-            min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
-            ms1_filtered_df = ms1_df[
-                (ms1_df["mz"] > mz_min) & 
-                (ms1_df["mz"] < mz_max) & 
-                (ms1_df["i"] > min_int) & 
-                (ms1_df["i_norm"] > min_intpercent) & 
-                (ms1_df["i_tic_norm"] > min_tic_percent_intensity)]
-
-            # Setting the intensity match register
-            _set_intensity_register(ms1_filtered_df, reference_conditions_register, condition)
-
-            # Applying the intensity match
-            ms1_filtered_df = _filter_intensitymatch(ms1_filtered_df, reference_conditions_register, condition)
-
-            if len(ms1_filtered_df) == 0:
-                return pd.DataFrame(), pd.DataFrame()
-
-            # Filtering the actual data structures
-            filtered_scans = set(ms1_filtered_df["scan"])
-            ms1_df = ms1_df[ms1_df["scan"].isin(filtered_scans)]
-
-            if "ms1scan" in ms2_df:
-                ms2_df = ms2_df[ms2_df["ms1scan"].isin(filtered_scans)]
-
+            ms1_df, ms2_df = msql_engine_filters.ms1_condition(condition, ms1_df, ms2_df, reference_conditions_register)
             continue
 
         skip_conditions = [ "rtmincondition", 
@@ -449,17 +420,21 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
 
         # filtering MS1 peaks
         if condition["type"] == "ms1mzcondition":
+            if len(ms1_df) == 0:
+                continue
+
             mz = condition["value"][0]
             mz_tol = 0.1
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
             ms1_df = ms1_df[(ms1_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
 
-            print("FILTER", mz_min, mz_max, len(ms1_df))
-
             continue
         
         if condition["type"] == "ms2productcondition":
+            if len(ms2_df) == 0:
+                continue
+
             mz = condition["value"][0]
             mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
             mz_min = mz - mz_tol
