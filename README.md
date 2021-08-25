@@ -1,7 +1,11 @@
-# MASS Query Languge
+# Mass Spec Query Languge
 
 [![Unit Testing](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-unit.yml/badge.svg)](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-unit.yml)
 [![NF Workflow Testing](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-workflow.yml/badge.svg)](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-workflow.yml)
+
+The Mass Spec Query language is meant to be concise querying of mass spec patterns that can scale from one single scan to a whole repository. Here we include the formal grammar and reference implementation in Python. 
+
+## Repository Structure
 
 This is the repository to define the language and reference implementation. This contains several parts
 
