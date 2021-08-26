@@ -52,6 +52,10 @@ def main():
     # Merging
     results_df = pd.concat(all_results_list)
 
+    print("#############################")
+    print("MassQL Found {} results".format(len(results_df)))
+    print("#############################")
+
     # Setting mzupper and mzlower
     try:
         if "comment" in results_df:
