@@ -452,7 +452,9 @@ MS2PROD=X-202:TOLERANCEMZ=10:INTENSITYMATCH=Y*0.5:INTENSITYMATCHPERCENT=50"
     results_df = msql_engine.process_query(query, "tests/test_data/top_down.txt")
     assert(len(results_df) == 14)
 
-
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/test_data/top_down.txt")
+    results_df = msql_engine.process_query(query, "tests/test_data/top_down.txt", ms1_df=ms1_df, ms2_df=ms2_df)
+    assert(len(results_df) == 14)
 
 def test_quad_brominated():
 
