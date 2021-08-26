@@ -47,6 +47,9 @@ def load_data(input_filename, cache=False):
     
     elif input_filename[-4:].lower() == ".mgf":
         ms1_df, ms2_df = _load_data_mgf(input_filename)
+
+    elif input_filename[-4:].lower() == ".txt":
+        ms1_df, ms2_df = _load_data_txt(input_filename)
     
     else:
         print("Cannot Load File Extension")
@@ -475,3 +478,28 @@ def _load_data_mzML(input_filename):
 
     return ms1_df, ms2_df
 
+def _load_data_txt(input_filename):
+    # We are assuming whitespace separated columns, first is mz, second is intensity, and will be marked as MS1
+    mz_list = []
+    i_list = []
+    for line in open(input_filename):
+        cleaned_line = line.rstrip()
+        if len(cleaned_line) == 0:
+            continue
+        mz, i = cleaned_line.split()
+
+        mz_list.append(float(mz))
+        i_list.append(float(i))
+        
+    ms1_df = pd.DataFrame()
+    ms1_df['mz'] = mz_list
+    ms1_df['i'] = i_list
+    ms1_df['i_norm'] = ms1_df['i'] / max(ms1_df['i'])
+    ms1_df['i_tic_norm'] = ms1_df['i'] / sum(ms1_df['i'])
+    ms1_df['scan'] = 1
+    ms1_df['rt'] = 0
+    ms1_df['polarity'] = "Positive"
+
+    print(ms1_df)
+
+    return ms1_df, pd.DataFrame()
