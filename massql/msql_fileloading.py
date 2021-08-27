@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 from matchms.importing import load_from_mgf
-from pyteomics import mzxml
+from pyteomics import mzxml, mzml
 
 def load_data(input_filename, cache=False):
     """
@@ -37,7 +37,8 @@ def load_data(input_filename, cache=False):
     # Actually loading
     if input_filename[-5:].lower() == ".mzml":
         #ms1_df, ms2_df = _load_data_mzML(input_filename)
-        ms1_df, ms2_df = _load_data_mzML2(input_filename)
+        #ms1_df, ms2_df = _load_data_mzML2(input_filename) # Faster version using pymzML
+        ms1_df, ms2_df = _load_data_mzML_pyteomics(input_filename) # Faster version using pymzML
 
     elif input_filename[-6:].lower() == ".mzxml":
         ms1_df, ms2_df = _load_data_mzXML(input_filename)
@@ -236,7 +237,7 @@ def _load_data_mzXML(input_filename):
 
 def _determine_scan_polarity_mzML(spec):
     """
-    Gets an enum for positive and negative polarity
+    Gets an enum for positive and negative polarity, for pymzml
 
     Args:
         spec ([type]): [description]
@@ -254,6 +255,25 @@ def _determine_scan_polarity_mzML(spec):
 
     return polarity
 
+def _determine_scan_polarity_pyteomics_mzML(spec):
+    """
+    Gets an enum for positive and negative polarity, for pyteomics
+
+    Args:
+        spec ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    polarity = 0
+
+    if "negative scan" in spec:
+        polarity = 2
+    if "positive scan" in spec:
+        polarity = 1
+
+    return polarity
+
 def _determine_scan_polarity_mzXML(spec):
     polarity = 0
     if spec["polarity"] == "+":
@@ -261,6 +281,116 @@ def _determine_scan_polarity_mzXML(spec):
     if spec["polarity"] == "-":
         polarity = 2
     return polarity
+
+def _load_data_mzML_pyteomics(input_filename):
+    """
+    This is a loading operation using pyteomics to help with loading mzML files with ion mobility
+
+    Args:
+        input_filename ([type]): [description]
+    """
+
+    previous_ms1_scan = 0
+
+    # MS1
+    all_mz = []
+    all_rt = []
+    all_polarity = []
+    all_i = []
+    all_i_norm = []
+    all_i_tic_norm = []
+    all_scan = []
+
+    # MS2
+    all_msn_mz = []
+    all_msn_rt = []
+    all_msn_polarity = []
+    all_msn_i = []
+    all_msn_i_norm = []
+    all_msn_i_tic_norm = []
+    all_msn_scan = []
+    all_msn_precmz = []
+    all_msn_ms1scan = []
+    all_msn_charge = []
+    all_msn_mobility = []
+
+    with mzml.read(input_filename) as reader:
+        for spectrum in tqdm(reader):
+            if len(spectrum["intensity array"]) == 0:
+                continue
+            
+            if "retentionTime" in spectrum:
+                rt = spectrum["retentionTime"]
+            else:
+                rt = 0
+            scan = int(spectrum["id"].split("scan=")[-1])
+                
+            mz = spectrum["m/z array"]
+            intensity = spectrum["intensity array"]
+            i_max = max(intensity)
+            i_sum = sum(intensity)
+
+            mslevel = spectrum["ms level"]
+            if mslevel == 1:
+                all_mz += list(mz)
+                all_i += list(intensity)
+                all_i_norm += list(intensity / i_max)
+                all_i_tic_norm += list(intensity / i_sum)
+                all_rt += len(mz) * [rt]
+                all_scan += len(mz) * [scan]
+                all_polarity += len(mz) * [_determine_scan_polarity_pyteomics_mzML(spectrum)]
+
+                previous_ms1_scan = scan
+
+            if mslevel == 2:
+                msn_mz = spectrum["precursorList"]["precursor"][0]["selectedIonList"]["selectedIon"][0]["selected ion m/z"]
+                msn_charge = 0
+
+                if "charge state" in spectrum["precursorList"]["precursor"][0]["selectedIonList"]["selectedIon"][0]:
+                    msn_charge = int(spectrum["precursorList"]["precursor"][0]["selectedIonList"]["selectedIon"][0]["charge state"])
+
+                all_msn_mz += list(mz)
+                all_msn_i += list(intensity)
+                all_msn_i_norm += list(intensity / i_max)
+                all_msn_i_tic_norm += list(intensity / i_sum)
+                all_msn_rt += len(mz) * [rt]
+                all_msn_scan += len(mz) * [scan]
+                all_msn_polarity += len(mz) * [_determine_scan_polarity_pyteomics_mzML(spectrum)]
+                all_msn_precmz += len(mz) * [msn_mz]
+                all_msn_ms1scan += len(mz) * [previous_ms1_scan] 
+                all_msn_charge += len(mz) * [msn_charge]
+
+                if "product ion mobility" in spectrum["precursorList"]["precursor"][0]["selectedIonList"]["selectedIon"][0]:
+                    mobility = spectrum["precursorList"]["precursor"][0]["selectedIonList"]["selectedIon"][0]["product ion mobility"]
+                    all_msn_mobility += len(mz) * [mobility]
+
+    ms1_df = pd.DataFrame()
+    if len(all_mz) > 0:
+        ms1_df['i'] = all_i
+        ms1_df['i_norm'] = all_i_norm
+        ms1_df['i_tic_norm'] = all_i_tic_norm
+        ms1_df['mz'] = all_mz
+        ms1_df['scan'] = all_scan
+        ms1_df['rt'] = all_rt
+        ms1_df['polarity'] = all_polarity
+
+    ms2_df = pd.DataFrame()
+    if len(all_msn_mz) > 0:
+        ms2_df['i'] = all_msn_i
+        ms2_df['i_norm'] = all_msn_i_norm
+        ms2_df['i_tic_norm'] = all_msn_i_tic_norm
+        ms2_df['mz'] = all_msn_mz
+        ms2_df['scan'] = all_msn_scan
+        ms2_df['rt'] = all_msn_rt
+        ms2_df["polarity"] = all_msn_polarity
+        ms2_df["precmz"] = all_msn_precmz
+        ms2_df["ms1scan"] = all_msn_ms1scan
+        ms2_df["charge"] = all_msn_charge
+
+        if len(all_msn_mobility) == len(all_msn_i):
+            ms2_df["mobility"] = all_msn_mobility
+    
+    return ms1_df, ms2_df
 
 def _load_data_mzML2(input_filename):
     """This is a faster loading version, but a bit more memory intensive

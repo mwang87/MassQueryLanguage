@@ -19,10 +19,30 @@ def test_gnps_library_loading():
     assert(len(ms2_df[ms2_df["scan"] == "CCMSLIB00000072227"]) > 300)
 
 def test_mzml_load():
-    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache=False)
+    #ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache=False)
+
+    print("Loading pymzML")
+    ms1_df, ms2_df = msql_fileloading._load_data_mzML2("tests/data/JB_182_2_fe.mzML")
+    print(ms2_df)
+
+    print("Loading Pyteomics")
+    ms1_df, ms2_df = msql_fileloading._load_data_mzML_pyteomics("tests/data/JB_182_2_fe.mzML")
+    print(ms2_df)
+
 
 def test_mzxml_load():
     ms1_df, ms2_df = msql_fileloading.load_data("tests/data/T04251505.mzXML", cache=False)
 
 def test_mgf_load():
     ms1_df, ms2_df = msql_fileloading.load_data("tests/data/specs_ms.mgf", cache=False)
+
+def test_mzml_mobility_load():
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/meoh_water_ms2_1_31_1_395.mzML", cache=False)
+    assert("mobility" in ms2_df)
+
+def main():
+    #test_mzml_load()
+    test_mzml_mobility_load()
+
+if __name__ == "__main__":
+    main()
