@@ -28,7 +28,7 @@ condition: conditionfields "=" numericalexpression
     | polaritycondition equal positivepolarity
     | polaritycondition equal negativepolarity
     | xcondition equal xfunction "(min=" numericalexpression "," "max=" numericalexpression ")"
-    | xcondition equal xfunction "(min=" numericalexpression "," "max=" numericalexpression ")"
+    | mobilitycondition equal mobilityfunction "(min=" numericalexpression "," "max=" numericalexpression ")"
 
 qualifier: qualifier ":" qualifier
     | qualifierfields equal numericalexpression
@@ -66,6 +66,11 @@ scanmincondition: "SCANMIN"
 scanmaxcondition: "SCANMAX"
 polaritycondition: "POLARITY"
 chargecondition: "CHARGE"
+
+mobilitycondition: "MOBILITY"
+mobilityfunction: mobilityrange
+mobilityrange: "range"
+
 xcondition: "X"
 xfunction: xrange | xdefect
 xrange: "range"

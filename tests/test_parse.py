@@ -176,6 +176,11 @@ def test_ms1_multiple_or_with_variable():
     print(parsed_output)
     assert(len(parsed_output["conditions"][0]["value"]) == 4)
 
+def test_mobility():
+    query = "QUERY scaninfo(MS2DATA) WHERE MOBILITY=range(min=100, max=500)"
+    parsed_output = msql_parser.parse_msql(query)
+    print(parsed_output)
+
 def main():
     #test_xrange_parse()
     #test_parse()
@@ -192,7 +197,8 @@ def main():
     #test_xdefect_parse()
     #test_ms2_or()
     #test_ms1_multiple_or()
-    test_ms1_multiple_or_with_variable()
+    #test_ms1_multiple_or_with_variable()
+    test_mobility()
 
 
 if __name__ == "__main__":
