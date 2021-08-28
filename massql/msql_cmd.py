@@ -1,13 +1,17 @@
 #!/usr/bin/env python
 
+import argparse
+import os
+import sys
+import json
+import pandas as pd
+
+# Making sure the root is in the path, kind of a hack
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 from massql import msql_parser
 from massql import msql_engine
 from massql import msql_extract
-
-import argparse
-import os
-import json
-import pandas as pd
 
 def main():
     parser = argparse.ArgumentParser(description="MSQL CMD")

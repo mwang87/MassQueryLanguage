@@ -191,8 +191,8 @@ class MassQLToJSON(Transformer):
             condition_dict["type"] = condition_type
 
             if function == "mobilityrange":
-               condition_dict["min"] = float(items[-2])
-               condition_dict["max"] = float(items[-1])
+               condition_dict["min"] = items[-2]
+               condition_dict["max"] = items[-1]
    
       return condition_dict
 

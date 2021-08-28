@@ -168,27 +168,48 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
         presearch_parse = copy.deepcopy(parsed_dict)
         non_variable_conditions = []
         for condition in presearch_parse["conditions"]:
-            for value in condition["value"]:
+            if "value" in condition:
+                for value in condition["value"]:
+                    try:
+                        # Checking if X is in any string
+                        if "X" in value:
+                            continue
+                    except TypeError:
+                        # This is when the target is actually a float
+                        pass
+                    non_variable_conditions.append(condition)
+            elif "min" in condition:
+                min_val = condition["min"]
+                max_val = condition["max"]
                 try:
-                    # Checking if X is in any string
-                    if "X" in value:
+                    if "X" in min_val:
                         continue
                 except TypeError:
                     # This is when the target is actually a float
                     pass
+
+                try:
+                    if "X" in max_val:
+                        continue
+                except TypeError:
+                    # This is when the target is actually a float
+                    pass
+
                 non_variable_conditions.append(condition)
+
         presearch_parse["conditions"] = non_variable_conditions
 
         ms1_df, ms2_df = _executeconditions_query(presearch_parse, input_filename, cache=cache)
         variable_x_ms1_df = ms1_df
 
-        # TODO: Checking if we can prefilter the X variable, if there are conditions
+        # Here we are trying to pre-filter conditions based upon the qualifiers to make the variable search space smaller
         for condition in parsed_dict["conditions"]:
             if not condition["conditiontype"] == "where":
                 continue
 
-            if not "X" in condition["value"]:
-                continue
+            if "value" in condition:
+                if not "X" in condition["value"]:
+                    continue
         
             # Filtering MS1 peaks only to consider contention for X
             if condition["type"] == "ms1mzcondition":
@@ -197,6 +218,8 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
                     (ms1_df["i"] > min_int) & 
                     (ms1_df["i_norm"] > min_intpercent) & 
                     (ms1_df["i_tic_norm"] > min_tic_percent_intensity)]
+
+            # TODO: Do this for other types of variables
 
         # Here we will start with the smallest mass and then go up
         masses_considered_df_list = []
@@ -217,37 +240,74 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
 
         running_max_mz = 0
         for masses_obj in tqdm(masses_list):
-            if running_max_mz > masses_obj["mz"]:
+            mz_val = masses_obj["mz"]
+
+            if running_max_mz > mz_val:
+                continue
+
+            # Cheking the validity of the mz_val
+            if mz_val < variable_properties["min"] or mz_val > variable_properties["max"]:
+                continue
+            mz_val_defect = mz_val - int(mz_val)
+            if mz_val_defect < variable_properties["mindefect"] or mz_val_defect > variable_properties["maxdefect"]:
                 continue
 
             #######################
             # Writing new query
             #######################
             substituted_parse = copy.deepcopy(parsed_dict)
-            mz_val = masses_obj["mz"]
-
+            
             for condition in substituted_parse["conditions"]:
-                for i, value in enumerate(condition["value"]):
-                    # Rewriting the condition value
+                # This is for standard conditions
+                if "value" in condition:
+                    for i, value in enumerate(condition["value"]):
+                        # Rewriting the condition value
+                        try:
+                            if "X" in value:
+                                new_value = math_parser.parse(value).evaluate({
+                                    "X" : mz_val
+                                })
+                                condition["value"][i] = new_value
+                        except TypeError:
+                            # This is when the target is actually a float
+                            pass
+
+                        # Rewriting the qualifier values
+                        try:
+                            if "qualifiers" in condition:
+                                for qualifier in condition["qualifiers"]:
+                                    if "qualifier" in qualifier:
+                                        if "value" in condition["qualifiers"][qualifier]:
+                                            old_value = condition["qualifiers"][qualifier]["value"]
+                                            condition["qualifiers"][qualifier]["value"] = old_value.replace("X", str(mz_val))
+                        except AttributeError:
+                            pass
+                
+                # TODO: For other types of conditions that might include variables
+                if "min" in condition:
+                    # Rewriting the condition min
+                    value = condition["min"]
                     try:
                         if "X" in value:
                             new_value = math_parser.parse(value).evaluate({
                                 "X" : mz_val
                             })
-                            condition["value"][i] = new_value
+                            condition["min"] = new_value
                     except TypeError:
                         # This is when the target is actually a float
                         pass
 
-                    # Rewriting the qualifier values
+                if "max" in condition:
+                    # Rewriting the condition min
+                    value = condition["max"]
                     try:
-                        if "qualifiers" in condition:
-                            for qualifier in condition["qualifiers"]:
-                                if "qualifier" in qualifier:
-                                    if "value" in condition["qualifiers"][qualifier]:
-                                        old_value = condition["qualifiers"][qualifier]["value"]
-                                        condition["qualifiers"][qualifier]["value"] = old_value.replace("X", str(mz_val))
-                    except AttributeError:
+                        if "X" in value:
+                            new_value = math_parser.parse(value).evaluate({
+                                "X" : mz_val
+                            })
+                            condition["max"] = new_value
+                    except TypeError:
+                        # This is when the target is actually a float
                         pass
             
             # Let's consider this mz
@@ -255,11 +315,6 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
 
             # Checking the x conditions
             substituted_parse["comment"] = str(mz_val)
-            if mz_val < variable_properties["min"] or mz_val > variable_properties["max"]:
-                continue
-            mz_val_defect = mz_val - int(mz_val)
-            if mz_val_defect < variable_properties["mindefect"] or mz_val_defect > variable_properties["maxdefect"]:
-                continue
 
             all_concrete_queries.append(substituted_parse)
     else:
