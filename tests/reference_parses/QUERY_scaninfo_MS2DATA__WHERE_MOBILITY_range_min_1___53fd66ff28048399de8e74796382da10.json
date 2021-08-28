@@ -1,0 +1,15 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "max": 500.0,
+            "min": 100.0,
+            "type": "mobilitycondition"
+        }
+    ],
+    "query": "QUERY scaninfo(MS2DATA) WHERE MOBILITY=range(min=100, max=500)",
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}

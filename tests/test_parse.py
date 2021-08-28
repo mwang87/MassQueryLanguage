@@ -181,6 +181,8 @@ def test_mobility():
     parsed_output = msql_parser.parse_msql(query)
     print(parsed_output)
 
+    assert(parsed_output["conditions"][0]["min"] == 100)
+
 def main():
     #test_xrange_parse()
     #test_parse()

@@ -35,3 +35,4 @@ QUERY scaninfo(MS2DATA) WHERE X=range(min=100, max=500) AND MS1MZ=X-2:INTENSITYM
 query scaninfo(MS1DATA) where POLARITY=Negative
 Query scaninfo(MS1DATA) Where POLARITY=Negative
 QUERY scaninfo(MS1DATA) WHERE MS1MZ=(X OR X+2 OR X+4 OR X+6)
+QUERY scaninfo(MS2DATA) WHERE MOBILITY=range(min=100, max=500)
