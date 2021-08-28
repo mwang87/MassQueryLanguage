@@ -18,6 +18,9 @@ setuptools.setup(
         "Documentation": "https://mwang87.github.io/MassQueryLanguage_Documentation/"
     },
     scripts=['msql_cmd.py'],
+    entry_points = {
+        'console_scripts': ['massql=massql.msql_cmd:main'],
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
