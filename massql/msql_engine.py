@@ -179,6 +179,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
                     pass
                 non_variable_conditions.append(condition)
         presearch_parse["conditions"] = non_variable_conditions
+
         ms1_df, ms2_df = _executeconditions_query(presearch_parse, input_filename, cache=cache)
         variable_x_ms1_df = ms1_df
 

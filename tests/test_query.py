@@ -188,11 +188,6 @@ def test_where_and_filter():
     print(json.dumps(parse_obj, indent=4))
 
 def test_ms1_iron():
-    #msql_engine.init_ray()
-
-    # query = "QUERY scaninfo(MS1DATA) WHERE \
-    #         RTMIN=3.06 \
-    #         AND RTMAX=3.07"
     query = "QUERY scaninfo(MS1DATA) \
             WHERE \
             RTMIN=3.03 \
@@ -574,7 +569,7 @@ def main():
     #test_where_and_filter()
     #test_min_intensity()
     #test_min_intensitypercent()
-    #test_ms1_iron()
+    test_ms1_iron()
     #test_ms1_iron_parallel()
     #test_polarity()
     #test_scan_range()
@@ -613,7 +608,7 @@ def main():
     #test_defect()
     #test_or_against_iron()
     #test_quad_brominated()
-    test_ms2_mobility()
+    #test_ms2_mobility()
 
 if __name__ == "__main__":
     main()

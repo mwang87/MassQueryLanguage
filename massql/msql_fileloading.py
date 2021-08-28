@@ -319,10 +319,11 @@ def _load_data_mzML_pyteomics(input_filename):
             if len(spectrum["intensity array"]) == 0:
                 continue
             
-            if "retentionTime" in spectrum:
-                rt = spectrum["retentionTime"]
-            else:
+            try:
+                rt = spectrum["scanList"]["scan"][0]["scan start time"]
+            except:
                 rt = 0
+
             scan = int(spectrum["id"].split("scan=")[-1])
                 
             mz = spectrum["m/z array"]
