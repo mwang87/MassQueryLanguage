@@ -16,7 +16,6 @@ math_parser = Parser()
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)
 
-
 def DEBUG_MSG(msg):
     import sys
 
@@ -123,6 +122,10 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
 
     # Here we will check if there is a variable in the expression
     for condition in parsed_dict["conditions"]:
+        if not "value" in condition:
+            # If there is no value in the condition, e.g. retention time and mobility
+            continue
+        
         for value in condition["value"]:
             try:
                 # Checking if X is in any string
@@ -175,6 +178,7 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
                     pass
                 non_variable_conditions.append(condition)
         presearch_parse["conditions"] = non_variable_conditions
+
         ms1_df, ms2_df = _executeconditions_query(presearch_parse, input_filename, cache=cache)
         variable_x_ms1_df = ms1_df
 
@@ -394,6 +398,17 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             ms1_scans = set(ms2_df["ms1scan"])
             ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
 
+        # Mobility Filters
+        if condition["type"] == "mobilitycondition":
+            min_mobility = condition["min"]
+            max_mobility = condition["max"]
+
+            if "mobility" in ms2_df:
+                ms2_df = ms2_df[(ms2_df["mobility"] >= min_mobility) & (ms2_df["mobility"] <= max_mobility)]
+
+            if "mobility" in ms1_df.columns:
+                ms1_df = ms1_df[(ms1_df["mobility"] >= min_mobility) & (ms1_df["mobility"] <= max_mobility)]
+
     # These are for the WHERE clause for peaks
     for condition in all_conditions:
         if not condition["conditiontype"] == "where":
@@ -424,7 +439,8 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
                             "polaritycondition", 
                             "scanmincondition", 
                             "scanmaxcondition",
-                            "chargecondition"]
+                            "chargecondition",
+                            "mobilitycondition"]
         
         if condition["type"] in skip_conditions:
             continue
@@ -544,6 +560,9 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
                     groupby_columns.append("comment")
                     kept_columns.append("comment")
 
+                if "mobility" in ms1_df:
+                    kept_columns.append("mobility")
+
                 result_df = ms1_df.groupby(groupby_columns).first().reset_index()
                 result_df = result_df[kept_columns]
                 result_df["mslevel"] = 1
@@ -562,6 +581,9 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
                 if "comment" in ms2_df:
                     groupby_columns.append("comment")
                     kept_columns.append("comment")
+
+                if "mobility" in ms2_df:
+                    kept_columns.append("mobility")
 
                 result_df = ms2_df.groupby(groupby_columns).first().reset_index()
                 result_df = result_df[kept_columns]

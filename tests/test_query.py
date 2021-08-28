@@ -188,11 +188,6 @@ def test_where_and_filter():
     print(json.dumps(parse_obj, indent=4))
 
 def test_ms1_iron():
-    #msql_engine.init_ray()
-
-    # query = "QUERY scaninfo(MS1DATA) WHERE \
-    #         RTMIN=3.06 \
-    #         AND RTMAX=3.07"
     query = "QUERY scaninfo(MS1DATA) \
             WHERE \
             RTMIN=3.03 \
@@ -544,6 +539,14 @@ def test_or_against_iron():
     assert(1972 in list(results_df["scan"]))
     assert(1971 in list(results_df["scan"]))
 
+def test_ms2_mobility():
+    query = "QUERY scaninfo(MS2DATA) WHERE MOBILITY=range(min=1, max=2)"
+    results_df = msql_engine.process_query(query, "tests/data/meoh_water_ms2_1_31_1_395.mzML")
+
+    print(results_df)
+
+    assert(len(results_df) == 8682)
+
 def main():
     #msql_engine.init_ray()
     
@@ -601,10 +604,11 @@ def main():
     #test_translator()
     #test_ms1_iron_X_changes_intensity()
     #test_nocache()
-    test_topdown()
+    #test_topdown()
     #test_defect()
     #test_or_against_iron()
-    #test_quad_brominated()
+    test_quad_brominated()
+    #test_ms2_mobility()
 
 if __name__ == "__main__":
     main()

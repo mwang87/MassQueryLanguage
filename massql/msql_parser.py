@@ -98,6 +98,16 @@ class MassQLToJSON(Transformer):
    def xdefect(self, items):
       return "xdefect"
 
+   # Handling mobility literals
+   def mobilitycondition(self, items):
+      return "mobilitycondition"
+
+   def mobilityfunction(self, items):
+      return items[0]
+   
+   def mobilityrange(self, items):
+      return "mobilityrange"
+
    def qualifier(self, items):
       if len(items) == 1 and items[0] == "qualifierintensityreference":
          qualifier_type = items[0]
@@ -171,6 +181,16 @@ class MassQLToJSON(Transformer):
                condition_dict["mindefect"] = float(items[-2])
                condition_dict["maxdefect"] = float(items[-1])
             elif function == "xrange":
+               condition_dict["min"] = float(items[-2])
+               condition_dict["max"] = float(items[-1])
+
+         elif items[0] == "mobilitycondition":
+            function = items[2]
+
+            condition_dict = {}
+            condition_dict["type"] = condition_type
+
+            if function == "mobilityrange":
                condition_dict["min"] = float(items[-2])
                condition_dict["max"] = float(items[-1])
    
