@@ -1,1 +1,1 @@
-../../msql_cmd.py
+../../massql/msql_cmd.py

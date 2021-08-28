@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="massql",
-    version="0.0.6",
+    version="0.0.7",
     author="Mingxun Wang",
     author_email="mwang87@gmail.com",
     description="Mass spectrometry query language python implementation",
@@ -18,6 +18,9 @@ setuptools.setup(
         "Documentation": "https://mwang87.github.io/MassQueryLanguage_Documentation/"
     },
     scripts=['msql_cmd.py'],
+    entry_points = {
+        'console_scripts': ['massql=massql.msql_cmd:main'],
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
