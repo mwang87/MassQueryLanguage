@@ -240,15 +240,23 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
 
         running_max_mz = 0
         for masses_obj in tqdm(masses_list):
-            if running_max_mz > masses_obj["mz"]:
+            mz_val = masses_obj["mz"]
+
+            if running_max_mz > mz_val:
+                continue
+
+            # Cheking the validity of the mz_val
+            if mz_val < variable_properties["min"] or mz_val > variable_properties["max"]:
+                continue
+            mz_val_defect = mz_val - int(mz_val)
+            if mz_val_defect < variable_properties["mindefect"] or mz_val_defect > variable_properties["maxdefect"]:
                 continue
 
             #######################
             # Writing new query
             #######################
             substituted_parse = copy.deepcopy(parsed_dict)
-            mz_val = masses_obj["mz"]
-
+            
             for condition in substituted_parse["conditions"]:
                 # This is for standard conditions
                 if "value" in condition:
@@ -307,11 +315,6 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
 
             # Checking the x conditions
             substituted_parse["comment"] = str(mz_val)
-            if mz_val < variable_properties["min"] or mz_val > variable_properties["max"]:
-                continue
-            mz_val_defect = mz_val - int(mz_val)
-            if mz_val_defect < variable_properties["mindefect"] or mz_val_defect > variable_properties["maxdefect"]:
-                continue
 
             all_concrete_queries.append(substituted_parse)
     else:
