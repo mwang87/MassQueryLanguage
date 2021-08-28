@@ -396,6 +396,13 @@ def _load_data_mzML_pyteomics(input_filename):
             ms2_df["mobility"] = all_msn_mobility
 
     # HACK: This is a hack to get around the fact that pyteomics does not return the units for retention for scans
+    try:
+        max_rt = max(max(ms2_df["rt"]), max(ms1_df["rt"]))
+        if max_rt > 180:
+            ms1_df["rt"] = ms1_df["rt"] / 60
+            ms2_df["rt"] = ms2_df["rt"] / 60
+    except:
+        pass
     
     
     return ms1_df, ms2_df
