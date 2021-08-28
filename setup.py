@@ -17,7 +17,7 @@ setuptools.setup(
         "Bug Tracker": "https://github.com/mwang87/MassQueryLanguage/issues",
         "Documentation": "https://mwang87.github.io/MassQueryLanguage_Documentation/"
     },
-    scripts=['msql_cmd.py'],
+    scripts=['massql/msql_cmd.py'],
     entry_points = {
         'console_scripts': ['massql=massql.msql_cmd:main'],
     },
