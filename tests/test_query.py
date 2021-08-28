@@ -548,7 +548,7 @@ def test_ms2_mobility():
     assert(len(results_df) == 8682)
 
 def test_ms2_mobility_variable():
-    query = "QUERY scaninfo(MS2DATA) WHERE MS2PREC=X AND MOBILITY=range(min=X/1000, max=1.5*X/1000)"
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PREC=X AND MOBILITY=range(min=X*0.0011+0.5-0.1, max=X*0.0011+0.5+0.1)"
     results_df = msql_engine.process_query(query, "tests/data/meoh_water_ms2_1_31_1_395.mzML")
 
     print(results_df)
