@@ -16,7 +16,6 @@ math_parser = Parser()
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)
 
-
 def DEBUG_MSG(msg):
     import sys
 

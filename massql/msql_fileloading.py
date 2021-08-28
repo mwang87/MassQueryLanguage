@@ -7,6 +7,10 @@ from tqdm import tqdm
 from matchms.importing import load_from_mgf
 from pyteomics import mzxml, mzml
 
+import logging
+logger = logging.getLogger('msql_fileloading')
+
+
 def load_data(input_filename, cache=False):
     """
     Loading data generically
@@ -397,15 +401,48 @@ def _load_data_mzML_pyteomics(input_filename):
 
     # HACK: This is a hack to get around the fact that pyteomics does not return the units for retention for scans
     try:
-        max_rt = max(max(ms2_df["rt"]), max(ms1_df["rt"]))
-        if max_rt > 180:
+        MS_precisions = {
+            1: 5e-6,
+            2: 20e-6,
+            3: 20e-6,
+            4: 20e-6,
+            5: 20e-6,
+            6: 20e-6,
+            7: 20e-6,
+        }
+        run = pymzml.run.Reader(input_filename, MS_precisions=MS_precisions)
+
+        correct_to_min = False
+        for spec in run:
+            rt = spec.scan_time_in_minutes()
+            spectrum_scan = int(spec.ID)
+            
+            ms1_filtered_df = ms1_df[ms1_df["scan"] == spectrum_scan]
+            ms2_filtered_df = ms2_df[ms2_df["scan"] == spectrum_scan]
+
+            if len(ms1_filtered_df) > 0:
+                # compare the RT
+                rt_delta = abs(rt - ms1_filtered_df["rt"].iloc[0])
+                if rt_delta > 0.1:
+                    # This we assume means that its in seconds instead of minutes
+                    correct_to_min = True
+                break
+            elif len(ms2_filtered_df) > 0:
+                rt_delta = abs(rt - ms2_filtered_df["rt"].iloc[0])
+                if rt_delta > 0.1:
+                    # This we assume means that its in seconds instead of minutes
+                    correct_to_min = True
+                break
+            else:
+                continue
+            
+        # Here lets correct it
+        if correct_to_min:
+            logger.info("Correcting retention time seconds to minutes")
             ms1_df["rt"] = ms1_df["rt"] / 60
             ms2_df["rt"] = ms2_df["rt"] / 60
-        # Runs longer than 3 hours in minutes will break
-        # Runs shorter than 3 min in seconds will break
     except:
         pass
-    
     
     return ms1_df, ms2_df
 

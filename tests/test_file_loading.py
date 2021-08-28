@@ -45,6 +45,8 @@ def test_mzml_mobility_load():
 
 def test_mzml_rt_seconds():
     ms1_df, ms2_df = msql_fileloading.load_data("tests/data/1810E-II.mzML", cache=False)
+    print(ms2_df)
+    assert(max(ms2_df["rt"]) < 60)
 
 def main():
     #test_mzml_load()
