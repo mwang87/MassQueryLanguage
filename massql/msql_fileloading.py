@@ -401,6 +401,8 @@ def _load_data_mzML_pyteomics(input_filename):
         if max_rt > 180:
             ms1_df["rt"] = ms1_df["rt"] / 60
             ms2_df["rt"] = ms2_df["rt"] / 60
+        # Runs longer than 3 hours in minutes will break
+        # Runs shorter than 3 min in seconds will break
     except:
         pass
     
