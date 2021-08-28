@@ -569,7 +569,7 @@ def main():
     #test_where_and_filter()
     #test_min_intensity()
     #test_min_intensitypercent()
-    test_ms1_iron()
+    #test_ms1_iron()
     #test_ms1_iron_parallel()
     #test_polarity()
     #test_scan_range()
@@ -607,7 +607,7 @@ def main():
     #test_topdown()
     #test_defect()
     #test_or_against_iron()
-    #test_quad_brominated()
+    test_quad_brominated()
     #test_ms2_mobility()
 
 if __name__ == "__main__":

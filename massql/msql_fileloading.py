@@ -318,7 +318,11 @@ def _load_data_mzML_pyteomics(input_filename):
         for spectrum in tqdm(reader):
             if len(spectrum["intensity array"]) == 0:
                 continue
-            
+
+            # BUG: This retention time is ambiguous in terms of retention time units
+            # Filed bug with pyteomics: https://github.com/levitsky/pyteomics/issues/56
+            # Work around will to check if there is a retention greater than a certain value
+            # And then if so, we can assume seconds and then divide by 60 to get minutes
             try:
                 rt = spectrum["scanList"]["scan"][0]["scan start time"]
             except:
@@ -390,6 +394,9 @@ def _load_data_mzML_pyteomics(input_filename):
 
         if len(all_msn_mobility) == len(all_msn_i):
             ms2_df["mobility"] = all_msn_mobility
+
+    # HACK: This is a hack to get around the fact that pyteomics does not return the units for retention for scans
+    
     
     return ms1_df, ms2_df
 
