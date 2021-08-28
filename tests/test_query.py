@@ -547,6 +547,24 @@ def test_ms2_mobility():
 
     assert(len(results_df) == 8682)
 
+def test_ms2_mobility_variable():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PREC=X AND MOBILITY=range(min=X/1000, max=1.5*X/1000)"
+    results_df = msql_engine.process_query(query, "tests/data/meoh_water_ms2_1_31_1_395.mzML")
+
+    print(results_df)
+
+    assert(len(results_df) == 8682)
+
+def test_ms2_mobility_variable2():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PREC=X AND MOBILITY=range(min=1, max=2)"
+    results_df = msql_engine.process_query(query, "tests/data/meoh_water_ms2_1_31_1_395.mzML")
+
+    print(results_df)
+
+    assert(len(results_df) == 8682)
+
+
+
 def main():
     #msql_engine.init_ray()
     
@@ -607,8 +625,9 @@ def main():
     #test_topdown()
     #test_defect()
     #test_or_against_iron()
-    test_quad_brominated()
+    #test_quad_brominated()
     #test_ms2_mobility()
+    test_ms2_mobility_variable()
 
 if __name__ == "__main__":
     main()

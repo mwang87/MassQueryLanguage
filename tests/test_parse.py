@@ -183,6 +183,11 @@ def test_mobility():
 
     assert(parsed_output["conditions"][0]["min"] == 100)
 
+def test_mobility_variables():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PREC=X AND MOBILITY=range(min=X/100, max=2*X/100)"
+    parsed_output = msql_parser.parse_msql(query)
+    print(parsed_output)
+
 def main():
     #test_xrange_parse()
     #test_parse()
@@ -200,7 +205,8 @@ def main():
     #test_ms2_or()
     #test_ms1_multiple_or()
     #test_ms1_multiple_or_with_variable()
-    test_mobility()
+    #test_mobility()
+    test_mobility_variables()
 
 
 if __name__ == "__main__":
