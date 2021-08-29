@@ -3,7 +3,14 @@
 [![Unit Testing](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-unit.yml/badge.svg)](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-unit.yml)
 [![NF Workflow Testing](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-workflow.yml/badge.svg)](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-workflow.yml)
 
-The Mass Spec Query language is meant to be concise querying of mass spec patterns that can scale from one single scan to a whole repository. Here we include the formal grammar and reference implementation in Python. 
+The Mass Spec Query Langauge (MassQL) is a domain specific language meant to be a succinct way to 
+express a query in a mass spectrometry centric fashion. It is inspired by SQL, 
+but it attempts to bake in assumptions of mass spectrometry to make querying much more
+natural for mass spectrometry users. Broadly we attempt to design it according to several principles:
+
+1. Expressiveness - Capture complex mass spectrometry patterns that the community would like to look for
+1. Precision - Exactly prescribe how to find data without ambiguity
+1. Relatively Natural - MassQL should be relatively easy to read and write and even use as a way to communicate ideas about mass spectrometry, you know like a language. 
 
 ## Repository Structure
 
@@ -19,9 +26,11 @@ This is the repository to define the language and reference implementation. This
 ## Developers/Contact
 
 Mingxun Wang is the main creator and developer of MassQL. Contact me for contributing or using it!
-## Docs
+## Language Specification/Documentation
 
-[Here](https://mwang87.github.io/MassQueryLanguage_Documentation/)
+Checkout specifics for the langauge, examples, and design patterns at the documentation. 
+
+[Documentation Link](https://mwang87.github.io/MassQueryLanguage_Documentation/)
 
 
 ## Python API
