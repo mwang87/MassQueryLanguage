@@ -189,7 +189,20 @@
                 <parser type="stream" contentType="text/xml"/>
             </parsers>
         </data>
-        <parameter name="URLBASE" value='https://gnps.ucsd.edu/ProteoSAFe/index.jsp?params={"workflow":"METABOLOMICS-SNETS-V2","desc":"Reanalysis of MSQL [task] with Networking","spec_on_server":"t.[task]/query_results/extracted/extracted.mgf","CLUSTER_MIN_SIZE":"1"}'/>
+        <parameter name="URLBASE" value='https://gnps.ucsd.edu/ProteoSAFe/index.jsp?params={"workflow":"METABOLOMICS-SNETS-V2","desc":"Reanalysis of MassQL [task] with Networking","spec_on_server":"t.[task]/query_results/extracted/extracted.mgf","CLUSTER_MIN_SIZE":"1"}'/>
+    </block>
+
+
+    <view id="reanalyze_falcon" label="Analyze with Falcon Cluster" group="Advanced Views - Analysis Views">
+        <blockRef id="main" type="reanalyze_falcon"/>
+    </view>
+    <block id="reanalyze_falcon" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='https://gnps.ucsd.edu/ProteoSAFe/index.jsp?params={"workflow":"FALCON-CLUSTER","desc":"Reanalysis of MassQL [task] with Falcon","spec_on_server":"t.[task]/query_results/extracted/extracted.mgf"}'/>
     </block>
 
     <view id="reanalyze_librarysearch" label="Analyze with Library Search" group="Advanced Views - Analysis Views">
