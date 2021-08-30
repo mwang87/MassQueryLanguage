@@ -500,7 +500,7 @@ def draw_output(query, filename):
     try:
         parse_results = msql_parser.parse_msql(query)
 
-        full_filepath = os.path.join("test", filename)
+        full_filepath = os.path.join("/app/test", filename)
         results_list = tasks.task_executequery.delay(query, full_filepath)
         results_list = results_list.get()
 
