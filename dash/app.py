@@ -134,6 +134,13 @@ DATASELECTION_CARD = [
             html.H5("Parse Viz Options"),
             dbc.InputGroup(
                 [
+                    dbc.InputGroupAddon("precursor_mz", addon_type="prepend"),
+                    dbc.Input(id='precursor_mz', placeholder="Enter Precursor m/z value", value="800"),
+                ],
+                className="mb-3",
+            ),
+            dbc.InputGroup(
+                [
                     dbc.InputGroupAddon("x_value", addon_type="prepend"),
                     dbc.Input(id='x_value', placeholder="Enter X m/z Value", value="500"),
                 ],
@@ -303,6 +310,7 @@ def _get_url_param(param_dict, key, default):
                 Output('y_axis', 'value'),
                 Output('facet_column', 'value'),
                 Output('scan', 'value'),
+                Output('precursor_mz', 'value'),
                 Output('x_value', 'value'),
                 Output('y_value', 'value'),
                 Output('ms1_usi', 'value'),
@@ -323,12 +331,14 @@ def determine_params(search):
     y_axis = _get_url_param(query_dict, "y_axis", dash.no_update)
     facet_column = _get_url_param(query_dict, "facet_column", dash.no_update)
     scan = _get_url_param(query_dict, "scan", dash.no_update)
+    
+    precursor_mz = _get_url_param(query_dict, "precursor_mz", dash.no_update)
     x_value = _get_url_param(query_dict, "x_value", dash.no_update)
     y_value = _get_url_param(query_dict, "y_value", dash.no_update)
     ms1_usi = _get_url_param(query_dict, "ms1_usi", dash.no_update)
     ms2_usi = _get_url_param(query_dict, "ms2_usi", dash.no_update)
 
-    return [query, filename, x_axis, y_axis, facet_column, scan, x_value, y_value, ms1_usi, ms2_usi]
+    return [query, filename, x_axis, y_axis, facet_column, scan, precursor_mz, x_value, y_value, ms1_usi, ms2_usi]
 
 @app.callback([
                 Output('filename', 'options'),
@@ -416,11 +426,12 @@ def draw_parse(query):
     return [merged_list]
 
 
-def _render_parse_visualizations(query, x_value, y_value, ms1_peaks, ms2_peaks):
+def _render_parse_visualizations(query, precursor_mz, x_value, y_value, ms1_peaks, ms2_peaks):
     try:
         ms1_fig, ms2_fig = msql_visualizer.visualize_query(query, 
                                                             variable_x=float(x_value), 
                                                             variable_y=float(y_value),
+                                                            precursor_mz=float(precursor_mz),
                                                             ms1_peaks=ms1_peaks,
                                                             ms2_peaks=ms2_peaks)
     except:
@@ -437,14 +448,16 @@ def _get_usi_peaks(ms1_usi, ms2_usi):
     ms2_peaks = None
 
     try:
-        r = requests.get("https://metabolomics-usi.ucsd.edu/json/?usi1={}".format(ms1_usi))
-        ms1_peaks = r.json()["peaks"]
+        if len(ms1_usi) > 5:
+            r = requests.get("https://metabolomics-usi.ucsd.edu/json/?usi1={}".format(ms1_usi))
+            ms1_peaks = r.json()["peaks"]
     except:
         pass
 
     try:
-        r = requests.get("https://metabolomics-usi.ucsd.edu/json/?usi1={}".format(ms2_usi))
-        ms2_peaks = r.json()["peaks"]
+        if len(ms2_usi) > 5:
+            r = requests.get("https://metabolomics-usi.ucsd.edu/json/?usi1={}".format(ms2_usi))
+            ms2_peaks = r.json()["peaks"]
     except:
         pass
 
@@ -456,24 +469,22 @@ def _get_usi_peaks(ms1_usi, ms2_usi):
               ],
               [
                   Input('query', 'value'),
+                  Input('precursor_mz', 'value'),
                   Input('x_value', 'value'),
                   Input('y_value', 'value'),
                   Input('ms1_usi', 'value'),
                   Input('ms2_usi', 'value'),
             ])
-def draw_parse_drawing(query, x_value, y_value, ms1_usi, ms2_usi):
+def draw_parse_drawing(query, precursor_value, x_value, y_value, ms1_usi, ms2_usi):
     # Getting the peaks
-    print("HERE")
     ms1_peaks, ms2_peaks = _get_usi_peaks(ms1_usi, ms2_usi)
-    print("HERE2")
-    
+        
     all_queries = query.split("|||")
 
-    print("HERE3")
     # Let's parse first
     merged_list = []
     for split_query in all_queries:
-        parse_render_list = _render_parse_visualizations(split_query, x_value, y_value, ms1_peaks, ms2_peaks)
+        parse_render_list = _render_parse_visualizations(split_query, precursor_value, x_value, y_value, ms1_peaks, ms2_peaks)
         merged_list += parse_render_list
         
     return [merged_list]
@@ -616,12 +627,13 @@ def draw_spectrum(filename, scan):
                     Input('y_axis', 'value'),
                     Input('facet_column', 'value'),
                     Input('scan', 'value'),
+                    Input('precursor_mz', 'value'),
                     Input('x_value', 'value'),
                     Input('y_value', 'value'),
                     Input('ms1_usi', 'value'),
                     Input('ms2_usi', 'value'),
                 ])
-def draw_url(query, filename, x_axis, y_axis, facet_column, scan, x_value, y_value, ms1_usi, ms2_usi):
+def draw_url(query, filename, precursor_mz, x_axis, y_axis, facet_column, scan, x_value, y_value, ms1_usi, ms2_usi):
     params = {}
     params["query"] = query
     params["filename"] = filename
@@ -629,6 +641,7 @@ def draw_url(query, filename, x_axis, y_axis, facet_column, scan, x_value, y_val
     params["y_axis"] = y_axis
     params["facet_column"] = facet_column
     params["scan"] = scan
+    params["precursor_mz"] = precursor_mz
     params["x_value"] = x_value
     params["y_value"] = y_value
     params["ms1_usi"] = ms1_usi
