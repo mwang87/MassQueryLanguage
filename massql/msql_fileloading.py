@@ -322,15 +322,19 @@ def _load_data_mzML_pyteomics(input_filename):
         for spectrum in tqdm(reader):
             if len(spectrum["intensity array"]) == 0:
                 continue
-
-            # BUG: This retention time is ambiguous in terms of retention time units
-            # Filed bug with pyteomics: https://github.com/levitsky/pyteomics/issues/56
-            # Work around will to check if there is a retention greater than a certain value
-            # And then if so, we can assume seconds and then divide by 60 to get minutes
+            
+            # Getting the RT
             try:
                 rt = spectrum["scanList"]["scan"][0]["scan start time"]
             except:
                 rt = 0
+            
+            # Correcting the unit
+            try:
+                if spectrum["scanList"]["scan"][0]["scan start time"].unit_info == "second":
+                    rt = rt / 60
+            except:
+                pass
 
             scan = int(spectrum["id"].split("scan=")[-1])
                 
@@ -398,51 +402,6 @@ def _load_data_mzML_pyteomics(input_filename):
 
         if len(all_msn_mobility) == len(all_msn_i):
             ms2_df["mobility"] = all_msn_mobility
-
-    # HACK: This is a hack to get around the fact that pyteomics does not return the units for retention for scans
-    try:
-        MS_precisions = {
-            1: 5e-6,
-            2: 20e-6,
-            3: 20e-6,
-            4: 20e-6,
-            5: 20e-6,
-            6: 20e-6,
-            7: 20e-6,
-        }
-        run = pymzml.run.Reader(input_filename, MS_precisions=MS_precisions)
-
-        correct_to_min = False
-        for spec in run:
-            rt = spec.scan_time_in_minutes()
-            spectrum_scan = int(spec.ID)
-            
-            ms1_filtered_df = ms1_df[ms1_df["scan"] == spectrum_scan]
-            ms2_filtered_df = ms2_df[ms2_df["scan"] == spectrum_scan]
-
-            if len(ms1_filtered_df) > 0:
-                # compare the RT
-                rt_delta = abs(rt - ms1_filtered_df["rt"].iloc[0])
-                if rt_delta > 0.1:
-                    # This we assume means that its in seconds instead of minutes
-                    correct_to_min = True
-                break
-            elif len(ms2_filtered_df) > 0:
-                rt_delta = abs(rt - ms2_filtered_df["rt"].iloc[0])
-                if rt_delta > 0.1:
-                    # This we assume means that its in seconds instead of minutes
-                    correct_to_min = True
-                break
-            else:
-                continue
-            
-        # Here lets correct it
-        if correct_to_min:
-            logger.info("Correcting retention time seconds to minutes")
-            ms1_df["rt"] = ms1_df["rt"] / 60
-            ms2_df["rt"] = ms2_df["rt"] / 60
-    except:
-        pass
     
     return ms1_df, ms2_df
 
