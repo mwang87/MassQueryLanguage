@@ -21,10 +21,14 @@ def DEBUG_MSG(msg):
 
     print(msg, file=sys.stderr, flush=True)
 
-def init_ray():
+def init_ray(temp_dir=None):
     import ray
     if not ray.is_initialized():
-        ray.init(ignore_reinit_error=True, object_store_memory=8000000000, num_cpus=8)
+        if temp_dir is None:
+            ray.init(ignore_reinit_error=True, object_store_memory=500000000, num_cpus=8)
+        else:
+            ray.init(ignore_reinit_error=True, object_store_memory=500000000, num_cpus=8, _temp_dir=temp_dir)
+        
 
 
 def _get_ppm_tolerance(qualifiers):
@@ -329,11 +333,11 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
     execute_serial = True
     if parallel:
         import ray
-        import msql_engine_ray
+        from massql import msql_engine_ray
 
         if ray.is_initialized():
             # TODO: Divide up the parallel thing
-            chunk_size = 100
+            chunk_size = 1000
             concrete_query_lists = [all_concrete_queries[i:i + chunk_size] for i in range(0, len(all_concrete_queries), chunk_size)]
             futures = [msql_engine_ray._executeconditions_query_ray.remote(concrete_query_list, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, cache=cache) for concrete_query_list in concrete_query_lists]
             all_ray_results = ray.get(futures)

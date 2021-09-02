@@ -204,25 +204,35 @@ def test_ms1_iron():
     assert(1223 in list(results_df["scan"]))
     assert(len(results_df) == 15)
 
-@pytest.mark.skip(reason="parallel not really supported anymore")
+@pytest.mark.skip(reason="Parallel testing not automated")
 def test_ms1_iron_parallel():
-    msql_engine.init_ray()
+    msql_engine.init_ray(temp_dir=os.path.abspath("/media/temp_ray"))
+
+    # query = "QUERY scaninfo(MS1DATA) \
+    #         WHERE \
+    #         RTMIN=3.03 \
+    #         AND RTMAX=3.05 \
+    #         AND MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25 \
+    #         AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE \
+    #         FILTER \
+    #         MS1MZ=X"
 
     query = "QUERY scaninfo(MS1DATA) \
             WHERE \
-            RTMIN=3.03 \
-            AND RTMAX=3.05 \
+            RTMIN=3 \
+            AND RTMAX=5 \
             AND MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25 \
             AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE \
             FILTER \
             MS1MZ=X"
+
     parse_obj = msql_parser.parse_msql(query)
     print(parse_obj)
     print(json.dumps(parse_obj, indent=4))
-    results_df = msql_engine.process_query(query, "tests/data/JB_182_2_fe.mzML")
+    results_df = msql_engine.process_query(query, "tests/data/JB_182_2_fe.mzML", parallel=False)
     print(results_df)
     assert(1223 in list(results_df["scan"]))
-    assert(len(results_df) == 15)
+    assert(len(results_df) == 2569)
 
 def test_ms1_iron_X_changes_intensity():
     query = "QUERY scaninfo(MS2DATA) WHERE \
@@ -565,9 +575,7 @@ def test_ms2_mobility_variable2():
 
 
 
-def main():
-    #msql_engine.init_ray()
-    
+def main():    
     #test_noquery()
     #test_simple_ms2_twoqualifier()
     #test_simple_ms2_twoconditions()
@@ -588,7 +596,7 @@ def main():
     #test_min_intensity()
     #test_min_intensitypercent()
     #test_ms1_iron()
-    #test_ms1_iron_parallel()
+    test_ms1_iron_parallel()
     #test_polarity()
     #test_scan_range()
     #test_charge_filter()
@@ -628,7 +636,7 @@ def main():
     #test_quad_brominated()
     #test_ms2_mobility()
     #test_ms2_mobility_variable()
-    test_ms2_mobility_variable2()
+    #test_ms2_mobility_variable2()
 
 if __name__ == "__main__":
     main()
