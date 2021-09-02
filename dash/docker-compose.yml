@@ -53,14 +53,24 @@ services:
   msql-rabbitmq:
     container_name: msql-rabbitmq
     image: rabbitmq
+    restart: unless-stopped
     networks:
       - default
+    deploy:
+      resources:
+        limits:
+          memory: 8000M
 
   msql-redis:
     container_name: msql-redis
     image: redis
+    restart: unless-stopped
     networks:
       - default
+    deploy:
+      resources:
+        limits:
+          memory: 8000M
 
 networks:
   nginx-net:

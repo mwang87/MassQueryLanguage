@@ -24,6 +24,9 @@ def task_computeheartbeat():
 
 @celery_instance.task(time_limit=120)
 def task_executequery(query, filename):
+    # Doing the query via API
+    return _query_api(query, filename)
+
     if "X" in query:
         return _query_cmd(query, filename)
     else:
