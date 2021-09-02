@@ -2,6 +2,9 @@ from celery import Celery
 import glob
 import sys
 import os
+from tempfile import NamedTemporaryFile
+import subprocess
+import pandas as pd
 import requests
 import requests_cache
 requests_cache.install_cache('temp/demo_cache')
@@ -21,7 +24,16 @@ def task_computeheartbeat():
 
 @celery_instance.task(time_limit=120)
 def task_executequery(query, filename):
-    
+    # Doing the query via API
+    return _query_api(query, filename)
+
+    if "X" in query:
+        return _query_cmd(query, filename)
+    else:
+        # Doing the query via API
+        return _query_api(query, filename)
+
+def _query_api(query, filename):
     parse_results = msql_parser.parse_msql(query)
     results_df = msql_engine.process_query(query, filename, parallel=False)
 
@@ -33,6 +45,29 @@ def task_executequery(query, filename):
         pass
 
     return all_results
+
+def _query_cmd(query, filename):
+    # we want to query via commandline so that we can use the parallel features
+
+    f = NamedTemporaryFile(delete=False, suffix='.tsv')
+    temp_filename = f.name
+
+    cmd_list = ["python", "./massql/msql_cmd.py", filename, query, "--output_file", temp_filename, "--parallel_query", "YES"]
+    subprocess.run(cmd_list)
+
+    results_df = pd.read_csv(temp_filename, sep="\t")
+
+    os.unlink(f.name)
+
+    all_results = results_df.to_dict(orient="records")
+
+    try:
+        all_results = _enrich_results(all_results)
+    except:
+        pass
+
+    return all_results
+
 
 
 def _get_gnps_spectruminfo(spectrumid):

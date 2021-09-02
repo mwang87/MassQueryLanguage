@@ -2,7 +2,7 @@ pymzml
 lark-parser
 pandas
 pyarrow
-ray
+ray==1.6.0
 tqdm
 py_expression_eval
 matchms
