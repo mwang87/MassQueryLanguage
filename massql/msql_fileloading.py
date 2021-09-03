@@ -336,7 +336,7 @@ def _load_data_mzML_pyteomics(input_filename):
             except:
                 pass
 
-            scan = int(spectrum["id"].split("scan=")[-1])
+            scan = int(spectrum["id"].replace("scanId=", "").split("scan=")[-1])
                 
             mz = spectrum["m/z array"]
             intensity = spectrum["intensity array"]
