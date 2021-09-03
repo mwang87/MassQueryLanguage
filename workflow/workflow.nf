@@ -92,41 +92,42 @@ if(params.extract == "YES"){
         file "json/*" from _query_extract_results_ch.collect()
 
         output:
-        file "extracted.mzML" optional true
-        file "extracted.mgf" optional true
+        file "extracted_mzML" optional true
+        file "extracted_mgf" optional true
         file "extracted.tsv" optional true
-        file "extracted.parquet" optional true
-        file "extracted.json" optional true into _extracted_json_ch
+        file "extracted_json" optional true into _extracted_json_ch
 
         """
+        mkdir extracted_mzML
+        mkdir extracted_mgf
+        mkdir extracted_json
         $params.PYTHONRUNTIME $TOOL_FOLDER/merged_extracted.py \
         json \
-        extracted.mzML \
-        extracted.mgf \
-        extracted.json \
-        extracted.parquet \
+        extracted_mzML \
+        extracted_mgf \
+        extracted_json \
         extracted.tsv 
         """
     }
 
-    process summarizeExtracted {
-        publishDir "$params.publishdir/summary", mode: 'copy'
-        cache false
-        echo true
-        errorStrategy 'ignore'
+    // process summarizeExtracted {
+    //     publishDir "$params.publishdir/summary", mode: 'copy'
+    //     cache false
+    //     echo true
+    //     errorStrategy 'ignore'
         
-        input:
-        file(extracted_json) from _extracted_json_ch
+    //     input:
+    //     file(extracted_json) from _extracted_json_ch
 
-        output:
-        file "summary_extracted.html" optional true
+    //     output:
+    //     file "summary_extracted.html" optional true
 
-        """
-        $params.PYTHONRUNTIME $TOOL_FOLDER/summarize_extracted.py \
-        $extracted_json \
-        summary_extracted.html
-        """
-    }
+    //     """
+    //     $params.PYTHONRUNTIME $TOOL_FOLDER/summarize_extracted.py \
+    //     $extracted_json \
+    //     summary_extracted.html
+    //     """
+    // }
 }
 
 

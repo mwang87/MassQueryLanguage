@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 def main():
-    parser = argparse.ArgumentParser(description="MSQL CMD")
+    parser = argparse.ArgumentParser(description="Create Figures for results")
     parser.add_argument('input_results', help='input_results')
     parser.add_argument('output_summary_html', help='output_summary_html')
 
