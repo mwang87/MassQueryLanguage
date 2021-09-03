@@ -8,6 +8,7 @@ import pandas as pd
 
 # Making sure the root is in the path, kind of a hack
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 
 from massql import msql_parser
 from massql import msql_engine

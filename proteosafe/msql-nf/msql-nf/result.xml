@@ -296,11 +296,12 @@
     <view id="workflow_trace" label="Workflow Trace" group="Compute Stats">
         <blockRef id="main" type="workflow_trace"/>
     </view>
-    <block id="workflow_trace" type="table">
+    <block id="workflow_trace" type="table_ss">
         <data>
             <source type="file" name="query_results/trace.txt"/>
             <parsers>
                 <parser type="genericTabular"/>
+                <parser type="SQLite"/>
             </parsers>
         </data>
         <row/>
