@@ -49,7 +49,11 @@ def load_data(input_filename, cache=False):
 
     elif input_filename[-4:].lower() == ".txt":
         ms1_df, ms2_df = _load_data_txt(input_filename)
-    
+    elif input_filename.lower().endswith("parquet"):
+        merged_df = pd.read_parquet(input_filename)
+        ms1_df = merged_df[merged_df["mslevel"] == 1]
+        ms2_df = merged_df[merged_df["mslevel"] == 2]
+        cache = False
     else:
         print("Cannot Load File Extension")
         raise Exception("File Format Not Supported")
