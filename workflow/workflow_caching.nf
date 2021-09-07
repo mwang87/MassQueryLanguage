@@ -11,14 +11,14 @@ TOOL_FOLDER = "$baseDir/bin"
 params.publishdir = "nf_output"
 params.PYTHONRUNTIME = "python" // this is a hack because CCMS cluster does not have python installed
 
-process queryData {
+process cacheData {
     errorStrategy 'ignore'
     time '4h'
     //maxRetries 3
     //memory { 6.GB * task.attempt }
     memory { 12.GB }
 
-    //publishDir "$params.publishdir/msql_temp", mode: 'copy'
+    publishDir "$params.publishdir/msql_cache", mode: 'copy'
     
     input:
     set val(filepath), val(mangled_output_filename), file(input_spectrum) from _spectra_ch3
@@ -28,7 +28,7 @@ process queryData {
 
     """
     $params.PYTHONRUNTIME $TOOL_FOLDER/msql_cmd.py \
-        "$input_spectrum" \
-        --original_path "$filepath"
+        "$input_spectrum"
+    mv ${input_spectrum}.msql.parquet ${mangled_output_filename}.msql.parquet
     """
 }
