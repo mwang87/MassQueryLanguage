@@ -22,8 +22,8 @@ def main():
     parser.add_argument('--parallel_query', default="NO", help='YES to make it parallel with ray locally, NO is default')
     parser.add_argument('--cache', default="YES", help='YES to cache with feather, YES is the default')
     parser.add_argument('--original_path', default=None, help='Original absolute path for the filename, useful in proteosafe')
-    parser.add_argument('--extract_mzML', default=None, help='Extracting spectra found as mzML file')
     parser.add_argument('--extract_json', default=None, help='Extracting spectra found as json file')
+    parser.add_argument('--extract_mzML', default=None, help='Extracting spectra found as mzML file, not implemented yet')
     
     args = parser.parse_args()
 
@@ -114,13 +114,13 @@ def main():
         else:
             results_df.to_csv(args.output_file, index=False, columns=columns)
 
-        # Extracting
-        if args.extract_json is not None and len(results_df) > 0:
-            print("Extracting {} spectra".format(len(results_df)))
-            try:
-                msql_extract._extract_spectra(results_df, os.path.dirname(args.filename), output_json_filename=args.extract_json)
-            except:
-                print("Extraction Failed")
+    # Extracting
+    if args.extract_json is not None and len(results_df) > 0:
+        print("Extracting {} spectra".format(len(results_df)))
+        try:
+            msql_extract._extract_spectra(results_df, os.path.dirname(args.filename[0]), output_json_filename=args.extract_json)
+        except:
+            print("Extraction Failed")
                 
 
 if __name__ == "__main__":

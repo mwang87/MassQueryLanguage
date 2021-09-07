@@ -160,6 +160,34 @@ def _extract_mgf_scan(input_filename, spectrum_identifier_list):
 
     return output_list
 
+def _extract_parquet_scan(input_filename, spectrum_identifier_list):
+    merged_df = pd.read_parquet(input_filename)
+
+    all_spectrum_identifier_set = set(spectrum_identifier_list)
+
+    filtered_df = merged_df[merged_df["scan"].isin(all_spectrum_identifier_set)]
+    grouped_df = filtered_df.groupby("scan")
+
+    output_list = []
+    for group, scan_df in grouped_df:
+        mz = scan_df["mz"].values
+        intensity = scan_df["i"].values
+
+        peaks_list = list(zip(mz, intensity))
+        peaks_list = [[float(peak[0]), float(peak[1])] for peak in peaks_list]
+
+        spectrum_obj = {}
+        spectrum_obj["peaks"] = peaks_list
+        spectrum_obj["mslevel"] = int(scan_df["mslevel"].iloc[0])
+        spectrum_obj["scan"] = str(scan_df["scan"].iloc[0])
+
+        if spectrum_obj["mslevel"] > 1:
+            spectrum_obj["precursor_mz"] = float(scan_df["precmz"].iloc[0])
+
+        output_list.append(spectrum_obj)
+
+    return output_list
+
 
 def _extract_spectra(results_df, input_spectra_folder, 
                     output_mgf_filename=None, 
@@ -184,12 +212,14 @@ def _extract_spectra(results_df, input_spectra_folder,
                 input_spectra_filename = os.path.join(input_spectra_folder, results_by_file_df["filename"].iloc[0])
 
             spectrum_obj_list = []
-            if ".mzML" in input_spectra_filename:
+            if input_spectra_filename.endswith(".mzML"):
                 spectrum_obj_list = _extract_mzML_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
-            if ".mzXML" in input_spectra_filename:
+            if input_spectra_filename.endswith(".mzXML"):
                 spectrum_obj_list = _extract_mzXML_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
-            if ".mgf" in input_spectra_filename:
+            if input_spectra_filename.endswith(".mgf"):
                 spectrum_obj_list = _extract_mgf_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
+            if input_spectra_filename.endswith(".parquet"):
+                spectrum_obj_list = _extract_parquet_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
 
 
             for spectrum_obj in spectrum_obj_list:                
