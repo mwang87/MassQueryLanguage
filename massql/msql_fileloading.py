@@ -632,6 +632,4 @@ def _load_data_txt(input_filename):
     ms1_df['rt'] = 0
     ms1_df['polarity'] = "Positive"
 
-    print(ms1_df)
-
     return ms1_df, pd.DataFrame()
