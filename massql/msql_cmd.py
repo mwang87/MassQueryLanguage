@@ -16,8 +16,8 @@ from massql import msql_extract
 
 def main():
     parser = argparse.ArgumentParser(description="MSQL CMD")
-    parser.add_argument('filename', help='Input filename')
-    parser.add_argument('query', help='Input Query')
+    parser.add_argument('filename', nargs='+', help='Input filename')
+    parser.add_argument('--query', default="QUERY scaninfo(MS2DATA)", help='Input Query')
     parser.add_argument('--output_file', default=None, help='output results filename')
     parser.add_argument('--parallel_query', default="NO", help='YES to make it parallel with ray locally, NO is default')
     parser.add_argument('--cache', default="YES", help='YES to cache with feather, YES is the default')
@@ -45,14 +45,16 @@ def main():
 
     # Executing
     all_results_list = []
-    for i, query in enumerate(all_queries):
-        results_df = msql_engine.process_query(query, 
-                                                args.filename, 
-                                                cache=(args.cache == "YES"), 
-                                                parallel=PARALLEL)
+    for filename in args.filename:
+        for i, query in enumerate(all_queries):
+            results_df = msql_engine.process_query(query, 
+                                                    filename, 
+                                                    cache=(args.cache == "YES"), 
+                                                    parallel=PARALLEL)
+            results_df["filename"] = os.path.basename(filename)
 
-        results_df["query_index"] = i
-        all_results_list.append(results_df)
+            results_df["query_index"] = i
+            all_results_list.append(results_df)
 
     # Merging
     results_df = pd.concat(all_results_list)
@@ -70,7 +72,6 @@ def main():
         pass
     
     if args.output_file and len(results_df) > 0:
-        results_df["filename"] = os.path.basename(args.filename)
 
         if args.original_path is not None:
             useful_filename = args.original_path
