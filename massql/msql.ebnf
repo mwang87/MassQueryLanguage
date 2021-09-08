@@ -74,7 +74,7 @@ mobilityrange: "range"
 xcondition: "X"
 xfunction: xrange | xdefect
 xrange: "range"
-xdefect: "defect"
+xdefect: "massdefect"
 
 qualifierfields: qualifiermztolerance
     | qualifierppmtolerance
