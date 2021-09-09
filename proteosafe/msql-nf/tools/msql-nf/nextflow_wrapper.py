@@ -63,6 +63,7 @@ def main():
                 -work-dir {} \
                 --PYTHONRUNTIME={} \
                 -with-trace {} \
+                -resume \
                 -with-dag dag.html \
                 -with-report report.html \
                 -with-timeline timeline.html > {} 2>&1".format(args.conda_activate, args.nextflow_conda_environment,
@@ -91,6 +92,11 @@ def main():
 
         cmd += ' --{} "{}"'.format(new_param, params_obj[old_param][0].replace("\n", ""))
 
+    # Saving the script
+    output_script = os.path.abspath(os.path.join(args.metricoutput, "run_nf.sh"))
+    with open(output_script, "w") as f:
+        f.write(cmd)
+
     print(cmd)
     return_val = os.system(cmd)
     if return_val != 0:
@@ -118,9 +124,9 @@ def main():
             pass
 
         try:
-            os.rename("report.html", os.path.join(args.metricoutput, "report.html"))
-            os.rename("timeline.html", os.path.join(args.metricoutput, "timeline.html"))
-            os.rename("dag.html", os.path.join(args.metricoutput, "dag.html"))
+            shutil.copyfile("report.html", os.path.join(args.metricoutput, "report.html"))
+            shutil.copyfile("timeline.html", os.path.join(args.metricoutput, "timeline.html"))
+            shutil.copyfile("dag.html", os.path.join(args.metricoutput, "dag.html"))
         except:
             pass
 
