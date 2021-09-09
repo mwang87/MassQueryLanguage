@@ -167,20 +167,6 @@ DATASELECTION_CARD = [
                 ],
                 className="mb-3",
             ),
-            html.Hr(),
-            html.H5(children='Query Parse Visualization'),
-            dcc.Loading(
-                id="output_parse_drawing",
-                children=[html.Div([html.Div(id="loading-output-21")])],
-                type="default",
-            ),
-            html.Br(),
-            html.Hr(),
-            dcc.Loading(
-                id="output_parse",
-                children=[html.Div([html.Div(id="loading-output-872")])],
-                type="default",
-            ),
         ]
     )
 ]
@@ -193,7 +179,48 @@ LEFT_DASHBOARD = [
     )
 ]
 
-MIDDLE_DASHBOARD = [
+VISUALIZATION_DASHBOARD = [
+    dbc.CardHeader([
+        dbc.Row([
+            dbc.Col(
+                html.H5("Query Visualization"),
+            ),
+            dbc.Col(
+                dbc.Button("Show/Hide", 
+                    id="visualization_show_hide_button", 
+                    color="primary", size="sm", 
+                    className="mr-1", 
+                    style={
+                        "float" : "right"
+                    }
+                ),
+            )
+        ])
+    ]),
+    dbc.Collapse(
+        dbc.CardBody(
+            [
+                html.H5(children='Query Parse Visualization'),
+                dcc.Loading(
+                    id="output_parse_drawing",
+                    children=[html.Div([html.Div(id="loading-output-21")])],
+                    type="default",
+                ),
+                html.Br(),
+                html.Hr(),
+                dcc.Loading(
+                    id="output_parse",
+                    children=[html.Div([html.Div(id="loading-output-872")])],
+                    type="default",
+                ),
+            ]
+        ),
+        id="visualization_collapse",
+        is_open=True
+    )
+]
+
+QUERYRESULTS_DASHBOARD = [
     dbc.CardHeader(html.H5("Data Exploration")),
     dbc.CardBody(
         [
@@ -283,7 +310,9 @@ BODY = dbc.Container(
             ),
             dbc.Col(
                 [
-                    dbc.Card(MIDDLE_DASHBOARD),
+                    dbc.Card(VISUALIZATION_DASHBOARD),
+                    html.Br(),
+                    dbc.Card(QUERYRESULTS_DASHBOARD),
                     html.Br(),
                     dbc.Card(CONTRIBUTORS_DASHBOARD),
                     html.Br(),
@@ -750,6 +779,19 @@ def visualize_ms1_api(mslevel):
     # TODO: Clean up images written
 
     return send_file(output_temp_filename, mimetype='image/png')
+
+# Helping to toggle the panels
+def toggle_panel(n1, is_open):
+    if n1:
+        return not is_open
+    return is_open
+
+
+app.callback(
+    Output("visualization_collapse", "is_open"),
+    [Input("visualization_show_hide_button", "n_clicks")],
+    [State("visualization_collapse", "is_open")],
+)(toggle_panel)
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=5000, host="0.0.0.0")
