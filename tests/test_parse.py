@@ -188,6 +188,11 @@ def test_mobility_variables():
     parsed_output = msql_parser.parse_msql(query)
     print(parsed_output)
 
+def test_wildcard():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=ANY"
+    parsed_output = msql_parser.parse_msql(query)
+    print(parsed_output)
+
 def main():
     #test_xrange_parse()
     #test_parse()
@@ -206,7 +211,8 @@ def main():
     #test_ms1_multiple_or()
     #test_ms1_multiple_or_with_variable()
     #test_mobility()
-    test_mobility_variables()
+    #test_mobility_variables()
+    test_wildcard()
 
 
 if __name__ == "__main__":

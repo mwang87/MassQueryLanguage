@@ -25,6 +25,7 @@ filterfullcondition: filterfullcondition booleanandconjunction filterfullconditi
 condition: conditionfields "=" numericalexpression
     | conditionfields equal "(" statement ")"
     | conditionfields equal "(" numericalexpressionwithor ")"
+    | conditionfields equal wildcard
     | polaritycondition equal positivepolarity
     | polaritycondition equal negativepolarity
     | xcondition equal xfunction "(min=" numericalexpression "," "max=" numericalexpression ")"
@@ -115,6 +116,7 @@ booleanorconjunction: "OR"
 param: "TOLERANCE"
 floating: /[-+]?([0-9]*\.[0-9]+|[0-9]+)/
 variable: /[XY]/
+wildcard: "ANY"
 
 // OR Numerical Expression
 numericalexpressionwithor: numericalexpression
