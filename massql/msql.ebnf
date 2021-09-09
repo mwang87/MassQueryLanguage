@@ -36,6 +36,7 @@ qualifier: qualifier ":" qualifier
     | qualifierfields greaterthan numericalexpression
     | qualifierfields lessthan numericalexpression
     | qualifierintensityreference
+    | qualifiermassdefect equal xdefect  "(min=" numericalexpression "," "max=" numericalexpression ")"
 
 equal: "="
 lessthan: "<"
@@ -93,7 +94,7 @@ qualifierintensityvalue: "INTENSITYVALUE"
 qualifierintensitymatch: "INTENSITYMATCH"
 qualifierintensitytolpercent: "INTENSITYMATCHPERCENT"
 qualifierintensityreference: "INTENSITYMATCHREFERENCE"
-
+qualifiermassdefect: "MASSDEFECT"
 
 function: functionscannum
     | functionscansum

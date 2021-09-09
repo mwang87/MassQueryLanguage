@@ -189,7 +189,7 @@ def test_mobility_variables():
     print(parsed_output)
 
 def test_wildcard():
-    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=ANY"
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=ANY:MASSDEFECT=massdefect(min=0.8, max=0.9)"
     parsed_output = msql_parser.parse_msql(query)
     print(parsed_output)
 
