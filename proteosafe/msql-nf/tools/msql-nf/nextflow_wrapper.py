@@ -63,9 +63,9 @@ def main():
                export NXF_OPTS='-Xms20G -Xmx20G' && \
                cd {} && nextflow run {} -c {} \
                 -work-dir {} \
+                -resume \
                 --PYTHONRUNTIME={} \
                 -with-trace {} \
-                -resume \
                 -with-dag dag.html \
                 -with-report report.html \
                 -with-timeline timeline.html > {} 2>&1".format(args.conda_activate, args.nextflow_conda_environment,
