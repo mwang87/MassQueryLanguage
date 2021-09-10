@@ -22,7 +22,7 @@ filterfullcondition: filterfullcondition booleanandconjunction filterfullconditi
     | condition ":" qualifier
     | condition
 
-condition: conditionfields "=" numericalexpression
+condition: conditionfields equal numericalexpression
     | conditionfields equal "(" statement ")"
     | conditionfields equal "(" numericalexpressionwithor ")"
     | conditionfields equal wildcard

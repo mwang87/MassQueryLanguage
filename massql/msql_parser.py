@@ -168,13 +168,8 @@ class MassQLToJSON(Transformer):
    def condition(self, items):
       condition_type = items[0]
 
-      if len(items) == 2:
-         # These are most queries, with a numericalexpression
-         condition_dict = {}
-         condition_dict["type"] = condition_type
-         condition_dict["value"] = [items[-1]]
-      elif len(items) == 3:
-         # These are for polarity or numerical expression
+      if len(items) == 3:
+         # These are for or numerical expression polarity or numerical expression
          if condition_type == "polaritycondition":
             condition_dict = {}
             condition_dict["type"] = items[0]
@@ -183,7 +178,7 @@ class MassQLToJSON(Transformer):
             # These are numerical expressions for mz,rt type conditions
             condition_dict = {}
             condition_dict["type"] = items[0]
-            condition_dict["value"] = items[-1]
+            condition_dict["value"] = [items[-1]]
       elif len(items) == 5:
          # These are for the x range clauses
          if items[0] == "xcondition":

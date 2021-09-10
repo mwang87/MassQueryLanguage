@@ -16,6 +16,16 @@ def _get_mz_tolerance(qualifiers, mz):
 
     return 0.1
 
+def _get_massdefect_min(qualifiers):
+    if qualifiers is None:
+        return 0, 1
+
+    if "qualifiermassdefect" in qualifiers:
+        return qualifiers["qualifiermassdefect"]["min"], qualifiers["qualifiermassdefect"]["max"]
+    
+    return 0, 1
+
+
 def _get_minintensity(qualifier):
     """
     Returns absolute min and relative min
@@ -202,6 +212,8 @@ def ms2nl_condition(condition, ms1_df, ms2_df, reference_conditions_register):
 
     ms2_list = []
     for mz in condition["value"]:
+        # TODO: Implement ANY option
+
         mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz) #TODO: This is incorrect logic if it comes to PPM accuracy
         nl_min = mz - mz_tol
         nl_max = mz + mz_tol
@@ -263,14 +275,25 @@ def ms2prec_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     ms1_list = []
     ms2_list = []
     for mz in condition["value"]:
-        mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
-        mz_min = mz - mz_tol
-        mz_max = mz + mz_tol
+        if mz == "ANY":
+            # Checking defect options
+            massdefect_min, massdefect_max = _get_massdefect_min(condition.get("qualifiers", None))
+            ms2_filtered_df = ms2_df
+            ms2_filtered_df["precmz_defect"] = ms2_filtered_df["precmz"] - ms2_filtered_df["precmz"].astype(int)
 
-        ms2_filtered_df = ms2_df[(
-            ms2_df["precmz"] > mz_min) & 
-            (ms2_df["precmz"] < mz_max)
-        ]
+            ms2_filtered_df = ms2_filtered_df[(
+                ms2_df["precmz_defect"] > massdefect_min) & 
+                (ms2_df["precmz_defect"] < massdefect_max)
+            ]
+        else:
+            mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
+            mz_min = mz - mz_tol
+            mz_max = mz + mz_tol
+
+            ms2_filtered_df = ms2_df[(
+                ms2_df["precmz"] > mz_min) & 
+                (ms2_df["precmz"] < mz_max)
+            ]
 
         # Filtering the MS1 data now
         if len(ms1_df) > 0:
@@ -309,6 +332,8 @@ def ms1_condition(condition, ms1_df, ms2_df, reference_conditions_register):
 
     ms1_list = []
     for mz in condition["value"]:
+        # TODO: Implement ANY option
+
         mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
         mz_min = mz - mz_tol
         mz_max = mz + mz_tol
