@@ -98,6 +98,9 @@ class MassQLToJSON(Transformer):
    def xdefect(self, items):
       return "xdefect"
 
+   def qualifiermassdefect(self, items):
+      return "qualifiermassdefect"
+
    # Handling mobility literals
    def mobilitycondition(self, items):
       return "mobilitycondition"
@@ -144,6 +147,18 @@ class MassQLToJSON(Transformer):
          for qualifier in items:
             for key in qualifier:
                qualifier_dict[key] = qualifier[key]
+
+      if len(items) == 5:
+         # This is mass defect
+         qualifier_type = items[0]
+
+         if qualifier_type == "qualifiermassdefect":
+            qualifier_dict = {}
+            qualifier_dict["type"] = "qualifier"
+            qualifier_dict[qualifier_type] = {}
+            qualifier_dict[qualifier_type]["name"] = qualifier_type
+            qualifier_dict[qualifier_type]["min"] = items[-2]
+            qualifier_dict[qualifier_type]["max"] = items[-1]
 
       return qualifier_dict
 
@@ -307,6 +322,9 @@ class MassQLToJSON(Transformer):
 
    def variable(self, s):
       return s[0].value
+
+   def wildcard(self, s):
+      return "ANY"
 
    # Handling Numerical Expressions
    def plus(self, s):
