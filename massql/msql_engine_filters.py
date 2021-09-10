@@ -154,17 +154,33 @@ def ms2prod_condition(condition, ms1_df, ms2_df, reference_conditions_register):
 
     ms2_list = []
     for mz in condition["value"]:
-        mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
-        mz_min = mz - mz_tol
-        mz_max = mz + mz_tol
+        if mz == "ANY":
+            # Checking defect options
+            massdefect_min, massdefect_max = _get_massdefect_min(condition.get("qualifiers", None))
+            ms2_filtered_df = ms2_df
+            ms2_filtered_df["mz_defect"] = ms2_filtered_df["mz"] - ms2_filtered_df["mz"].astype(int)
 
-        min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
+            min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
 
-        ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & 
-                                (ms2_df["mz"] < mz_max) & 
-                                (ms2_df["i"] > min_int) & 
-                                (ms2_df["i_norm"] > min_intpercent) & 
-                                (ms2_df["i_tic_norm"] > min_tic_percent_intensity)]
+            ms2_filtered_df = ms2_filtered_df[
+                (ms2_filtered_df["mz_defect"] > massdefect_min) & 
+                (ms2_filtered_df["mz_defect"] < massdefect_max) &
+                (ms2_filtered_df["i"] > min_int) & 
+                (ms2_filtered_df["i_norm"] > min_intpercent) & 
+                (ms2_filtered_df["i_tic_norm"] > min_tic_percent_intensity)
+            ]
+        else:
+            mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
+            mz_min = mz - mz_tol
+            mz_max = mz + mz_tol
+
+            min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
+
+            ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) & 
+                                    (ms2_df["mz"] < mz_max) & 
+                                    (ms2_df["i"] > min_int) & 
+                                    (ms2_df["i_norm"] > min_intpercent) & 
+                                    (ms2_df["i_tic_norm"] > min_tic_percent_intensity)]
 
         # Setting the intensity match register
         _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
@@ -212,21 +228,35 @@ def ms2nl_condition(condition, ms1_df, ms2_df, reference_conditions_register):
 
     ms2_list = []
     for mz in condition["value"]:
-        # TODO: Implement ANY option
+        if mz == "ANY":
+            # Checking defect options
+            massdefect_min, massdefect_max = _get_massdefect_min(condition.get("qualifiers", None))
+            ms2_filtered_df = ms2_df
+            ms2_filtered_df["mz_defect"] = ms2_filtered_df["mz"] - ms2_filtered_df["mz"].astype(int)
 
-        mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz) #TODO: This is incorrect logic if it comes to PPM accuracy
-        nl_min = mz - mz_tol
-        nl_max = mz + mz_tol
+            min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
 
-        min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
+            ms2_filtered_df = ms2_filtered_df[
+                (ms2_filtered_df["mz_defect"] > massdefect_min) & 
+                (ms2_filtered_df["mz_defect"] < massdefect_max) &
+                (ms2_filtered_df["i"] > min_int) & 
+                (ms2_filtered_df["i_norm"] > min_intpercent) & 
+                (ms2_filtered_df["i_tic_norm"] > min_tic_percent_intensity)
+            ]
+        else:
+            mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz) #TODO: This is incorrect logic if it comes to PPM accuracy
+            nl_min = mz - mz_tol
+            nl_max = mz + mz_tol
 
-        ms2_filtered_df = ms2_df[
-            ((ms2_df["precmz"] - ms2_df["mz"]) > nl_min) & 
-            ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max) &
-            (ms2_df["i"] > min_int) & 
-            (ms2_df["i_norm"] > min_intpercent) & 
-            (ms2_df["i_tic_norm"] > min_tic_percent_intensity)
-        ]
+            min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
+
+            ms2_filtered_df = ms2_df[
+                ((ms2_df["precmz"] - ms2_df["mz"]) > nl_min) & 
+                ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max) &
+                (ms2_df["i"] > min_int) & 
+                (ms2_df["i_norm"] > min_intpercent) & 
+                (ms2_df["i_tic_norm"] > min_tic_percent_intensity)
+            ]
 
         # Setting the intensity match register
         _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
@@ -282,8 +312,8 @@ def ms2prec_condition(condition, ms1_df, ms2_df, reference_conditions_register):
             ms2_filtered_df["precmz_defect"] = ms2_filtered_df["precmz"] - ms2_filtered_df["precmz"].astype(int)
 
             ms2_filtered_df = ms2_filtered_df[(
-                ms2_df["precmz_defect"] > massdefect_min) & 
-                (ms2_df["precmz_defect"] < massdefect_max)
+                ms2_filtered_df["precmz_defect"] > massdefect_min) & 
+                (ms2_filtered_df["precmz_defect"] < massdefect_max)
             ]
         else:
             mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
@@ -332,19 +362,33 @@ def ms1_condition(condition, ms1_df, ms2_df, reference_conditions_register):
 
     ms1_list = []
     for mz in condition["value"]:
-        # TODO: Implement ANY option
+        if mz == "ANY":
+            # Checking defect options
+            massdefect_min, massdefect_max = _get_massdefect_min(condition.get("qualifiers", None))
+            ms1_filtered_df = ms1_df
+            ms1_filtered_df["mz_defect"] = ms1_filtered_df["mz"] - ms1_filtered_df["mz"].astype(int)
 
-        mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
-        mz_min = mz - mz_tol
-        mz_max = mz + mz_tol
+            min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
 
-        min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
-        ms1_filtered_df = ms1_df[
-            (ms1_df["mz"] > mz_min) & 
-            (ms1_df["mz"] < mz_max) & 
-            (ms1_df["i"] > min_int) & 
-            (ms1_df["i_norm"] > min_intpercent) & 
-            (ms1_df["i_tic_norm"] > min_tic_percent_intensity)]
+            ms1_filtered_df = ms1_filtered_df[
+                (ms1_filtered_df["mz_defect"] > massdefect_min) & 
+                (ms1_filtered_df["mz_defect"] < massdefect_max) &
+                (ms1_filtered_df["i"] > min_int) & 
+                (ms1_filtered_df["i_norm"] > min_intpercent) & 
+                (ms1_filtered_df["i_tic_norm"] > min_tic_percent_intensity)
+            ]
+        else:
+            mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
+            mz_min = mz - mz_tol
+            mz_max = mz + mz_tol
+
+            min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
+            ms1_filtered_df = ms1_df[
+                (ms1_df["mz"] > mz_min) & 
+                (ms1_df["mz"] < mz_max) & 
+                (ms1_df["i"] > min_int) & 
+                (ms1_df["i_norm"] > min_intpercent) & 
+                (ms1_df["i_tic_norm"] > min_tic_percent_intensity)]
 
         # Setting the intensity match register
         _set_intensity_register(ms1_filtered_df, reference_conditions_register, condition)
