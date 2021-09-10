@@ -166,8 +166,6 @@ class MassQLToJSON(Transformer):
       return items[0]
 
    def condition(self, items):
-      print("XXX", items)
-
       condition_type = items[0]
 
       if len(items) == 3:
