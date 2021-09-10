@@ -59,7 +59,9 @@ def main():
 
         pbs_cluster_work_dir = os.path.join(args.clusterworkprefix, args.task, "work")
 
-        cmd = "source {} {} && cd {} && nextflow run {} -c {} \
+        cmd = "source {} {} && \
+               export NXF_OPTS='-Xms20G -Xmx20G' && \
+               cd {} && nextflow run {} -c {} \
                 -work-dir {} \
                 --PYTHONRUNTIME={} \
                 -with-trace {} \
