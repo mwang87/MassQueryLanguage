@@ -166,6 +166,8 @@ class MassQLToJSON(Transformer):
       return items[0]
 
    def condition(self, items):
+      print("XXX", items)
+
       condition_type = items[0]
 
       if len(items) == 3:
@@ -176,9 +178,15 @@ class MassQLToJSON(Transformer):
             condition_dict["value"] = [items[-1]]
          else:
             # These are numerical expressions for mz,rt type conditions
-            condition_dict = {}
-            condition_dict["type"] = items[0]
-            condition_dict["value"] = [items[-1]]
+            # This might be an item or could be a list
+            if isinstance(items[-1], list):
+               condition_dict = {}
+               condition_dict["type"] = items[0]
+               condition_dict["value"] = items[-1]
+            else:
+               condition_dict = {}
+               condition_dict["type"] = items[0]
+               condition_dict["value"] = [items[-1]]
       elif len(items) == 5:
          # These are for the x range clauses
          if items[0] == "xcondition":

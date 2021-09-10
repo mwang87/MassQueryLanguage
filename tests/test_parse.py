@@ -214,7 +214,8 @@ def main():
     #test_ms1_multiple_or_with_variable()
     #test_mobility()
     #test_mobility_variables()
-    test_wildcard()
+    #test_wildcard()
+    test_ms1_multiple_or()
 
 
 if __name__ == "__main__":
