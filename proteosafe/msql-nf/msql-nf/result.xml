@@ -25,6 +25,13 @@
                     <parameter name="REQUESTPARAMETER=xic_rt_window" value="[_dyn_#rt]"/>
                     <parameter name="LABEL" value="View LCMS"/>
                 </column>
+                <column label="AnnotatetoGNPS" type="genericurlgenerator" width="3">
+                    <parameter name="URLBASE" value="https://gnps.ucsd.edu/ProteoSAFe/index.jsp"/>
+                    <parameter name="REQUESTPARAMETER=workflow" value="ADD-SINGLE-ANNOTATED-BRONZE"/>
+                    <parameter name="HASHPARAMTER=ADDSPECTRA_EXTRACTSCAN" value="[_dyn_#scan]"/>
+                    <parameter name="HASHPARAMTER=spec_on_server" value="f.[_dyn_#original_path]"/>
+                    <parameter name="LABEL" value="AnnotatetoGNPS"/>
+                </column>
             </row>
 
             <row expander="image">
