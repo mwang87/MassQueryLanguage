@@ -101,6 +101,9 @@ class MassQLToJSON(Transformer):
    def xdefect(self, items):
       return "xdefect"
 
+   def qualifiermassdefect(self, items):
+      return "qualifiermassdefect"
+
    # Handling mobility literals
    def mobilitycondition(self, items):
       return "mobilitycondition"
@@ -156,6 +159,18 @@ class MassQLToJSON(Transformer):
             for key in qualifier:
                qualifier_dict[key] = qualifier[key]
 
+      if len(items) == 5:
+         # This is mass defect
+         qualifier_type = items[0]
+
+         if qualifier_type == "qualifiermassdefect":
+            qualifier_dict = {}
+            qualifier_dict["type"] = "qualifier"
+            qualifier_dict[qualifier_type] = {}
+            qualifier_dict[qualifier_type]["name"] = qualifier_type
+            qualifier_dict[qualifier_type]["min"] = items[-2]
+            qualifier_dict[qualifier_type]["max"] = items[-1]
+
       return qualifier_dict
 
    def conditionfields(self, items):
@@ -164,22 +179,23 @@ class MassQLToJSON(Transformer):
    def condition(self, items):
       condition_type = items[0]
 
-      if len(items) == 2:
-         # These are most queries, with a numericalexpression
-         condition_dict = {}
-         condition_dict["type"] = condition_type
-         condition_dict["value"] = [items[-1]]
-      elif len(items) == 3:
-         # These are for polarity or numerical expression
+      if len(items) == 3:
+         # These are for or numerical expression polarity or numerical expression
          if condition_type == "polaritycondition":
             condition_dict = {}
             condition_dict["type"] = items[0]
             condition_dict["value"] = [items[-1]]
          else:
             # These are numerical expressions for mz,rt type conditions
-            condition_dict = {}
-            condition_dict["type"] = items[0]
-            condition_dict["value"] = items[-1]
+            # This might be an item or could be a list
+            if isinstance(items[-1], list):
+               condition_dict = {}
+               condition_dict["type"] = items[0]
+               condition_dict["value"] = items[-1]
+            else:
+               condition_dict = {}
+               condition_dict["type"] = items[0]
+               condition_dict["value"] = [items[-1]]
       elif len(items) == 5:
          # These are for the x range clauses
          if items[0] == "xcondition":
@@ -318,6 +334,9 @@ class MassQLToJSON(Transformer):
 
    def variable(self, s):
       return s[0].value
+
+   def wildcard(self, s):
+      return "ANY"
 
    # Handling Numerical Expressions
    def plus(self, s):

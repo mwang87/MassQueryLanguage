@@ -22,9 +22,10 @@ filterfullcondition: filterfullcondition booleanandconjunction filterfullconditi
     | condition ":" qualifier
     | condition
 
-condition: conditionfields "=" numericalexpression
+condition: conditionfields equal numericalexpression
     | conditionfields equal "(" statement ")"
     | conditionfields equal "(" numericalexpressionwithor ")"
+    | conditionfields equal wildcard
     | polaritycondition equal positivepolarity
     | polaritycondition equal negativepolarity
     | xcondition equal xfunction "(min=" numericalexpression "," "max=" numericalexpression ")"
@@ -35,6 +36,7 @@ qualifier: qualifier ":" qualifier
     | qualifierfields greaterthan numericalexpression
     | qualifierfields lessthan numericalexpression
     | qualifierintensityreference
+    | qualifiermassdefect equal xdefect  "(min=" numericalexpression "," "max=" numericalexpression ")"
     | qualifierexclude
 
 equal: "="
@@ -75,7 +77,7 @@ mobilityrange: "range"
 xcondition: "X"
 xfunction: xrange | xdefect
 xrange: "range"
-xdefect: "defect"
+xdefect: "massdefect"
 
 qualifierfields: qualifiermztolerance
     | qualifierppmtolerance
@@ -93,6 +95,7 @@ qualifierintensityvalue: "INTENSITYVALUE"
 qualifierintensitymatch: "INTENSITYMATCH"
 qualifierintensitytolpercent: "INTENSITYMATCHPERCENT"
 qualifierintensityreference: "INTENSITYMATCHREFERENCE"
+qualifiermassdefect: "MASSDEFECT"
 qualifierexclude: "EXCLUDED"
 
 function: functionscannum
@@ -116,6 +119,7 @@ booleanorconjunction: "OR"
 param: "TOLERANCE"
 floating: /[-+]?([0-9]*\.[0-9]+|[0-9]+)/
 variable: /[XY]/
+wildcard: "ANY"
 
 // OR Numerical Expression
 numericalexpressionwithor: numericalexpression

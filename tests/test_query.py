@@ -500,12 +500,6 @@ def test_formula():
 
     assert(len(results_df) > 0)
 
-def test_defect():
-    query = "QUERY scaninfo(MS2DATA) WHERE MS2PREC=X AND X=defect(min=0.1, max=0.2)"
-    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
-
-    assert(len(results_df) == 21)
-
 def test_maldi_ms1():
     query = "QUERY scaninfo(MS1DATA)"
     results_df = msql_engine.process_query(query, "tests/data/119A-24.mzML")
@@ -578,6 +572,31 @@ def test_excluded():
     results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
 
     assert(len(results_df) == 30)
+  
+def test_defect():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PREC=X AND X=massdefect(min=0.1, max=0.2)"
+    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
+
+    assert(len(results_df) == 21)
+
+def test_massdefect_ANY_query():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PREC=ANY:MASSDEFECT=massdefect(min=0.1, max=0.2)"
+    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
+
+    assert(len(results_df) == 21)
+
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=ANY:MASSDEFECT=massdefect(min=0.1, max=0.2)"
+    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
+    assert(len(results_df) == 77)
+
+    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=ANY:MASSDEFECT=massdefect(min=0.1, max=0.2)"
+    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
+    assert(len(results_df) == 30)
+    
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2NL=ANY:MASSDEFECT=massdefect(min=0.1, max=0.2)"
+    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
+    assert(len(results_df) == 77)
+
 
 def main():
     #msql_engine.init_ray()
@@ -644,6 +663,9 @@ def main():
     test_ms2_mobility_variable()
     test_ms2_mobility_variable2()
     #test_excluded()
+    #test_ms2_mobility_variable()
+    #test_ms2_mobility_variable2()
+    test_massdefect_ANY_query()
 
 if __name__ == "__main__":
     main()
