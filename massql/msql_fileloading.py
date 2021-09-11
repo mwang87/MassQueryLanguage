@@ -22,19 +22,13 @@ def load_data(input_filename, cache=False):
     Returns:
         [type]: [description]
     """
+    cache_filename = input_filename + ".msql.parquet"
     if cache:
-        ms1_filename = input_filename + "_ms1.msql.feather"
-        ms2_filename = input_filename + "_ms2.msql.feather"
+        if os.path.exists(cache_filename):
+            cache_df = pd.read_parquet(cache_filename)
 
-        if os.path.exists(ms1_filename) or os.path.exists(ms2_filename):
-            try:
-                ms1_df = pd.read_feather(ms1_filename)
-            except:
-                ms1_df = pd.DataFrame()
-            try:
-                ms2_df = pd.read_feather(ms2_filename)
-            except:
-                ms2_df = pd.DataFrame()
+            ms1_df = cache_df[cache_df["mslevel"] == 1]
+            ms2_df = cache_df[cache_df["mslevel"] == 2]
 
             return ms1_df, ms2_df
 
@@ -55,27 +49,22 @@ def load_data(input_filename, cache=False):
 
     elif input_filename[-4:].lower() == ".txt":
         ms1_df, ms2_df = _load_data_txt(input_filename)
-    
+    elif input_filename.lower().endswith("parquet"):
+        merged_df = pd.read_parquet(input_filename)
+        ms1_df = merged_df[merged_df["mslevel"] == 1]
+        ms2_df = merged_df[merged_df["mslevel"] == 2]
+        cache = False
     else:
         print("Cannot Load File Extension")
         raise Exception("File Format Not Supported")
 
-
     # Saving Cache
     if cache:
-        ms1_filename = input_filename + "_ms1.msql.feather"
-        ms2_filename = input_filename + "_ms2.msql.feather"
-
-        if not (os.path.exists(ms1_filename) or os.path.exists(ms2_filename)):
-            try:
-                ms1_df.to_feather(ms1_filename)
-            except:
-                pass
-
-            try:
-                ms2_df.to_feather(ms2_filename)
-            except:
-                pass
+        ms1_df["mslevel"] = 1
+        ms2_df["mslevel"] = 2
+        
+        cache_df = pd.concat([ms1_df, ms2_df], axis=0)
+        cache_df.to_parquet(cache_filename)
 
     return ms1_df, ms2_df
 
@@ -642,7 +631,5 @@ def _load_data_txt(input_filename):
     ms1_df['scan'] = 1
     ms1_df['rt'] = 0
     ms1_df['polarity'] = "Positive"
-
-    print(ms1_df)
 
     return ms1_df, pd.DataFrame()

@@ -16,14 +16,14 @@ from massql import msql_extract
 
 def main():
     parser = argparse.ArgumentParser(description="MSQL CMD")
-    parser.add_argument('filename', help='Input filename')
-    parser.add_argument('query', help='Input Query')
+    parser.add_argument('filename', nargs='+', help='Input filename')
+    parser.add_argument('--query', default="QUERY scaninfo(MS2DATA)", help='Input Query')
     parser.add_argument('--output_file', default=None, help='output results filename')
     parser.add_argument('--parallel_query', default="NO", help='YES to make it parallel with ray locally, NO is default')
     parser.add_argument('--cache', default="YES", help='YES to cache with feather, YES is the default')
     parser.add_argument('--original_path', default=None, help='Original absolute path for the filename, useful in proteosafe')
-    parser.add_argument('--extract_mzML', default=None, help='Extracting spectra found as mzML file')
     parser.add_argument('--extract_json', default=None, help='Extracting spectra found as json file')
+    parser.add_argument('--extract_mzML', default=None, help='Extracting spectra found as mzML file, not implemented yet')
     
     args = parser.parse_args()
 
@@ -45,14 +45,16 @@ def main():
 
     # Executing
     all_results_list = []
-    for i, query in enumerate(all_queries):
-        results_df = msql_engine.process_query(query, 
-                                                args.filename, 
-                                                cache=(args.cache == "YES"), 
-                                                parallel=PARALLEL)
+    for filename in args.filename:
+        for i, query in enumerate(all_queries):
+            results_df = msql_engine.process_query(query, 
+                                                    filename, 
+                                                    cache=(args.cache == "YES"), 
+                                                    parallel=PARALLEL)
+            results_df["filename"] = os.path.basename(filename)
 
-        results_df["query_index"] = i
-        all_results_list.append(results_df)
+            results_df["query_index"] = i
+            all_results_list.append(results_df)
 
     # Merging
     results_df = pd.concat(all_results_list)
@@ -70,7 +72,6 @@ def main():
         pass
     
     if args.output_file and len(results_df) > 0:
-        results_df["filename"] = os.path.basename(args.filename)
 
         if args.original_path is not None:
             useful_filename = args.original_path
@@ -113,13 +114,13 @@ def main():
         else:
             results_df.to_csv(args.output_file, index=False, columns=columns)
 
-        # Extracting
-        if args.extract_json is not None and len(results_df) > 0:
-            print("Extracting {} spectra".format(len(results_df)))
-            try:
-                msql_extract._extract_spectra(results_df, os.path.dirname(args.filename), output_json_filename=args.extract_json)
-            except:
-                print("Extraction Failed")
+    # Extracting
+    if args.extract_json is not None and len(results_df) > 0:
+        print("Extracting {} spectra".format(len(results_df)))
+        try:
+            msql_extract._extract_spectra(results_df, os.path.dirname(args.filename[0]), output_json_filename=args.extract_json)
+        except:
+            print("Extraction Failed")
                 
 
 if __name__ == "__main__":
