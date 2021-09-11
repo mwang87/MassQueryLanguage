@@ -189,11 +189,20 @@ def test_mobility_variables():
     parsed_output = msql_parser.parse_msql(query)
     print(parsed_output)
 
+
+def test_negation():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PREC=227:EXCLUDED"
+    parsed_output = msql_parser.parse_msql(query)
+    print(parsed_output)
+
+    assert(parsed_output["conditions"][0]["qualifiers"]["qualifierexcluded"]["name"] == "qualifierexcluded")
+
 def test_wildcard():
     query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=ANY:MASSDEFECT=massdefect(min=0.8, max=0.9)"
     parsed_output = msql_parser.parse_msql(query)
     print(parsed_output)
     assert(parsed_output["conditions"][0]["qualifiers"]["qualifiermassdefect"]["min"] == 0.8)
+
 
 def main():
     #test_xrange_parse()
@@ -214,8 +223,10 @@ def main():
     #test_ms1_multiple_or_with_variable()
     #test_mobility()
     #test_mobility_variables()
+    test_negation()
     #test_wildcard()
     test_ms1_multiple_or()
+
 
 
 if __name__ == "__main__":
