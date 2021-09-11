@@ -35,6 +35,7 @@ qualifier: qualifier ":" qualifier
     | qualifierfields greaterthan numericalexpression
     | qualifierfields lessthan numericalexpression
     | qualifierintensityreference
+    | qualifierexclude
 
 equal: "="
 lessthan: "<"
@@ -92,7 +93,7 @@ qualifierintensityvalue: "INTENSITYVALUE"
 qualifierintensitymatch: "INTENSITYMATCH"
 qualifierintensitytolpercent: "INTENSITYMATCHPERCENT"
 qualifierintensityreference: "INTENSITYMATCHREFERENCE"
-
+qualifierexclude: "EXCLUDED"
 
 function: functionscannum
     | functionscansum

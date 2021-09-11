@@ -49,6 +49,9 @@ class MassQLToJSON(Transformer):
 
    def qualifierintensityreference(self, items):
       return "qualifierintensityreference"
+   
+   def qualifierexclude(self, items):
+      return "qualifierexcluded"
 
    def ms2productcondition(self, items):
       return "ms2productcondition"
@@ -110,6 +113,14 @@ class MassQLToJSON(Transformer):
 
    def qualifier(self, items):
       if len(items) == 1 and items[0] == "qualifierintensityreference":
+         qualifier_type = items[0]
+         
+         qualifier_dict = {}
+         qualifier_dict["type"] = "qualifier"
+         qualifier_dict[qualifier_type] = {}
+         qualifier_dict[qualifier_type]["name"] = qualifier_type
+      
+      if len(items) == 1 and items[0] == "qualifierexcluded":
          qualifier_type = items[0]
          
          qualifier_dict = {}

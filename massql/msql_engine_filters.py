@@ -52,6 +52,15 @@ def _get_minintensity(qualifier):
 
     return min_intensity, min_percent_intensity, min_tic_percent_intensity
 
+def _get_exclusion_flag(qualifiers):
+    if qualifiers is None:
+        return False
+
+    if "qualifierexcluded" in qualifiers:
+        return True
+
+    return False
+
 def _set_intensity_register(ms_filtered_df, register_dict, condition):
     if "qualifiers" in condition:
         if "qualifierintensityreference" in condition["qualifiers"]:
@@ -138,6 +147,7 @@ def ms2prod_condition(condition, ms1_df, ms2_df, reference_conditions_register):
         ms1_df ([type]): [description]
         ms2_df ([type]): [description]
     """
+    exclusion_flag = _get_exclusion_flag(condition.get("qualifiers", None))
 
     if len(ms2_df) == 0:
         return ms1_df, ms2_df
@@ -169,6 +179,14 @@ def ms2prod_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     else:
         ms2_filtered_df = pd.concat(ms2_list)
 
+    # Apply the negation operator
+    if exclusion_flag:
+        filtered_scans = set(ms2_filtered_df["scan"])
+        original_scans = set(ms2_df["scan"])
+        negation_scans = original_scans - filtered_scans
+
+        ms2_filtered_df = ms2_df[ms2_df["scan"].isin(negation_scans)]
+
     if len(ms2_filtered_df) == 0:
        return pd.DataFrame(), pd.DataFrame()
     
@@ -196,6 +214,7 @@ def ms2nl_condition(condition, ms1_df, ms2_df, reference_conditions_register):
         ms1_df ([type]): [description]
         ms2_df ([type]): [description]
     """
+    exclusion_flag = _get_exclusion_flag(condition.get("qualifiers", None))
 
     if len(ms2_df) == 0:
         return ms1_df, ms2_df
@@ -229,6 +248,14 @@ def ms2nl_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     else:
         ms2_filtered_df = pd.concat(ms2_list)
 
+    # Apply the negation operator
+    if exclusion_flag:
+        filtered_scans = set(ms2_filtered_df["scan"])
+        original_scans = set(ms2_df["scan"])
+        negation_scans = original_scans - filtered_scans
+
+        ms2_filtered_df = ms2_df[ms2_df["scan"].isin(negation_scans)]
+
     if len(ms2_filtered_df) == 0:
        return pd.DataFrame(), pd.DataFrame()
 
@@ -256,11 +283,11 @@ def ms2prec_condition(condition, ms1_df, ms2_df, reference_conditions_register):
         ms1_df ([type]): [description]
         ms2_df ([type]): [description]
     """
+    exclusion_flag = _get_exclusion_flag(condition.get("qualifiers", None))
 
     if len(ms2_df) == 0:
         return ms1_df, ms2_df
 
-    ms1_list = []
     ms2_list = []
     for mz in condition["value"]:
         mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
@@ -272,21 +299,31 @@ def ms2prec_condition(condition, ms1_df, ms2_df, reference_conditions_register):
             (ms2_df["precmz"] < mz_max)
         ]
 
-        # Filtering the MS1 data now
-        if len(ms1_df) > 0:
-            ms1_scans = set(ms2_df["ms1scan"])
-            ms1_filtered_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
-        else:
-            ms1_filtered_df = ms1_df 
-
-        ms1_list.append(ms1_filtered_df)
         ms2_list.append(ms2_filtered_df)
-    
-    if len(ms1_list) == 1:
-        return ms1_list[0], ms2_list[0]
 
-    ms1_df = pd.concat(ms1_list)
-    ms2_df = pd.concat(ms2_list)
+    if len(ms2_list) == 1:
+        ms2_filtered_df = ms2_list[0]
+    else:
+        ms2_filtered_df = pd.concat(ms2_list)
+    
+    # Apply the negation operator
+    if exclusion_flag:
+        filtered_scans = set(ms2_filtered_df["scan"])
+        original_scans = set(ms2_df["scan"])
+        negation_scans = original_scans - filtered_scans
+
+        ms2_filtered_df = ms2_df[ms2_df["scan"].isin(negation_scans)]
+
+    if len(ms2_filtered_df) == 0:
+       return pd.DataFrame(), pd.DataFrame()
+    
+    # Filtering the actual data structures
+    filtered_scans = set(ms2_filtered_df["scan"])
+    ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]
+
+    # Filtering the MS1 data now
+    ms1_scans = set(ms2_df["ms1scan"])
+    ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
 
     return ms1_df, ms2_df
 
@@ -304,6 +341,8 @@ def ms1_condition(condition, ms1_df, ms2_df, reference_conditions_register):
         ms1_df ([type]): [description]
         ms2_df ([type]): [description]
     """
+    exclusion_flag = _get_exclusion_flag(condition.get("qualifiers", None))
+
     if len(ms1_df) == 0:
         return ms1_df, ms2_df
 
@@ -333,6 +372,14 @@ def ms1_condition(condition, ms1_df, ms2_df, reference_conditions_register):
         ms1_filtered_df = ms1_list[0]
     else:
         ms1_filtered_df = pd.concat(ms1_list)
+
+    # Apply the negation operator
+    if exclusion_flag:
+        filtered_scans = set(ms1_filtered_df["scan"])
+        original_scans = set(ms1_df["scan"])
+        negation_scans = original_scans - filtered_scans
+
+        ms1_filtered_df = ms1_df[ms1_df["scan"].isin(negation_scans)]
 
     if len(ms1_filtered_df) == 0:
        return pd.DataFrame(), pd.DataFrame()

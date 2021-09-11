@@ -563,7 +563,21 @@ def test_ms2_mobility_variable2():
 
     assert(len(results_df) == 1654)
 
+def test_excluded():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=226.18:EXCLUDED"
+    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
 
+    assert(len(results_df) == 78)
+
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PREC=226.18:EXCLUDED"
+    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
+
+    assert(len(results_df) == 78)
+
+    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=226.18:EXCLUDED:INTENSITYPERCENT=30"
+    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
+
+    assert(len(results_df) == 30)
 
 def main():
     #msql_engine.init_ray()
@@ -628,7 +642,8 @@ def main():
     #test_quad_brominated()
     #test_ms2_mobility()
     #test_ms2_mobility_variable()
-    test_ms2_mobility_variable2()
+    #test_ms2_mobility_variable2()
+    test_excluded()
 
 if __name__ == "__main__":
     main()
