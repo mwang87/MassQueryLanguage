@@ -322,8 +322,9 @@ def ms2prec_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     ms2_df = ms2_df[ms2_df["scan"].isin(filtered_scans)]
 
     # Filtering the MS1 data now
-    ms1_scans = set(ms2_df["ms1scan"])
-    ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
+    if len(ms1_df) > 0:
+        ms1_scans = set(ms2_df["ms1scan"])
+        ms1_df = ms1_df[ms1_df["scan"].isin(ms1_scans)]
 
     return ms1_df, ms2_df
 

@@ -641,9 +641,9 @@ def main():
     #test_or_against_iron()
     #test_quad_brominated()
     #test_ms2_mobility()
-    #test_ms2_mobility_variable()
-    #test_ms2_mobility_variable2()
-    test_excluded()
+    test_ms2_mobility_variable()
+    test_ms2_mobility_variable2()
+    #test_excluded()
 
 if __name__ == "__main__":
     main()
