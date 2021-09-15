@@ -60,7 +60,7 @@ def main():
         pbs_cluster_work_dir = os.path.join(args.clusterworkprefix, args.task, "work")
 
         cmd = "source {} {} && \
-               export NXF_OPTS='-Xms20G -Xmx20G' && \
+               export NXF_OPTS='-Xms35G -Xmx35G' && \
                cd {} && nextflow run {} -c {} \
                 -work-dir {} \
                 -resume \
