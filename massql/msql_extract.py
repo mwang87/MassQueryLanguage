@@ -221,7 +221,9 @@ def _extract_spectra(results_df, input_spectra_folder,
 
     if output_json_filename is not None:
         with open(output_json_filename, "w") as o:
-            o.write(json.dumps(spectrum_list))
+            for spectrum in spectrum_list:
+                o.write(json.dumps(spectrum))
+                o.write("\n")
 
     # Writing the spectrum now
     if output_mgf_filename is not None:

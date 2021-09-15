@@ -1,6 +1,6 @@
 #!/usr/bin/env nextflow
 
-params.input_spectra = 'data/GNPS00002_A3_p.mzML'
+params.input_spectra = 'data/GNPS00002*.mzML'
 params.query = "QUERY scaninfo(MS2DATA)"
 params.parallel_files = 'NO'
 params.parallel_query = 'NO'
@@ -82,6 +82,9 @@ _query_results_merged_ch = Channel.create()
 _query_results_ch.collectFile(name: "merged_query_results.tsv", storeDir: "$params.publishdir/msql", keepHeader: true).into(_query_results_merged_ch)
 
 if(params.extract == "YES"){
+    _query_extract_results_merged_ch = Channel.create()
+    _query_extract_results_ch.collectFile(name: "extracted_json_nf_merged.json", storeDir: "$params.publishdir/extracted_merged_temp").into(_query_extract_results_merged_ch)
+
     // Extracting the spectra
     process formatExtractedSpectra {
         publishDir "$params.publishdir/extracted", mode: 'copy'
@@ -89,7 +92,7 @@ if(params.extract == "YES"){
         errorStrategy 'ignore'
         
         input:
-        file "json/*" from _query_extract_results_ch.collect()
+        file "input_merged.json" from _query_extract_results_merged_ch
 
         output:
         file "extracted_mzML" optional true
@@ -102,7 +105,7 @@ if(params.extract == "YES"){
         mkdir extracted_mgf
         mkdir extracted_json
         $params.PYTHONRUNTIME $TOOL_FOLDER/merged_extracted.py \
-        json \
+        input_merged.json \
         extracted_mzML \
         extracted_mgf \
         extracted_json \
