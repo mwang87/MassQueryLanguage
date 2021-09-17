@@ -23,7 +23,7 @@ def main():
     parser.add_argument('--cache', default="YES", help='YES to cache with feather, YES is the default')
     parser.add_argument('--original_path', default=None, help='Original absolute path for the filename, useful in proteosafe')
     parser.add_argument('--extract_mzML', default=None, help='Extracting spectra found as mzML file')
-    parser.add_argument('--extract_json', default=None, help='Extracting spectra found as json file')
+    parser.add_argument('--extract_json', default=None, help='Extracting spectra found as json file, each spectrum is a line')
     
     args = parser.parse_args()
 
