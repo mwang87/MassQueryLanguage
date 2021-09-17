@@ -219,7 +219,7 @@
                 <parser type="stream" contentType="text/xml"/>
             </parsers>
         </data>
-        <parameter name="URLBASE" value='https://gnps.ucsd.edu/ProteoSAFe/index.jsp?params={"workflow":"FALCON-CLUSTER","desc":"Reanalysis of MassQL [task] with Falcon","spec_on_server":"t.[task]/query_results/extracted/extracted_mzML"}'/>
+        <parameter name="URLBASE" value='/ProteoSAFe/index.jsp?params={"workflow":"FALCON-CLUSTER","desc":"Reanalysis of MassQL [task] with Falcon","spec_on_server":"t.[task]/query_results/extracted/extracted_mzML"}'/>
     </block>
 
     <view id="reanalyze_librarysearch" label="Analyze with Library Search" group="Advanced Views - Analysis Views">
