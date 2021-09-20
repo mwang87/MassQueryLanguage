@@ -48,7 +48,7 @@ if(params.parallel_files == "YES"){
 }
 else{
     process queryData2 {
-        echo true
+        echo false
         errorStrategy 'ignore'
         maxForks 1
         time '4h'
@@ -82,38 +82,66 @@ _query_results_merged_ch = Channel.create()
 _query_results_ch.collectFile(name: "merged_query_results.tsv", storeDir: "$params.publishdir/msql", keepHeader: true).into(_query_results_merged_ch)
 
 if(params.extract == "YES"){
-    //_query_extract_results_merged_ch = Channel.create()
-    // _query_extract_results_ch.collectFile(name: "extracted_json_nf_merged.json", storeDir: "$params.publishdir/extracted_merged_temp").into(_query_extract_results_merged_ch)
 
     // Merging the JSON in rounds
-
-    // Extracting the spectra
-    process formatExtractedSpectra {
+    process formatExtractedSpectraRounds {
         publishDir "$params.publishdir/extracted", mode: 'copy'
         cache false
+        echo true
         errorStrategy 'ignore'
         
         input:
-        file "input_merged.json" from _query_extract_results_merged_ch
+        file "json/*"  from _query_extract_results_ch.collate( 1000 )
 
         output:
-        file "extracted_mzML" optional true
-        file "extracted_mgf" optional true
-        file "extracted.tsv" optional true
-        file "extracted_json" optional true into _extracted_json_ch
+        file "extracted_mzML/*" optional true
+        file "extracted_mgf/*" optional true
+        file "extracted_json/*" optional true
+        file "extracted_tsv/*" optional true into _extracted_summary_ch
 
         """
         mkdir extracted_mzML
         mkdir extracted_mgf
         mkdir extracted_json
+        mkdir extracted_tsv
         $params.PYTHONRUNTIME $TOOL_FOLDER/merged_extracted.py \
-        input_merged.json \
+        json \
         extracted_mzML \
         extracted_mgf \
         extracted_json \
-        extracted.tsv 
+        --output_tsv_prefix extracted_tsv/extracted_tsv
         """
     }
+
+    _extracted_summary_ch.collectFile(name: "extracted.tsv", storeDir: "$params.publishdir/extracted", keepHeader: true)
+
+    // Extracting the spectra
+    // process formatExtractedSpectra {
+    //     publishDir "$params.publishdir/extracted", mode: 'copy'
+    //     cache false
+    //     errorStrategy 'ignore'
+        
+    //     input:
+    //     file "input_merged.json" from _query_extract_results_merged_ch
+
+    //     output:
+    //     file "extracted_mzML" optional true
+    //     file "extracted_mgf" optional true
+    //     file "extracted.tsv" optional true
+    //     file "extracted_json" optional true into _extracted_json_ch
+
+    //     """
+    //     mkdir extracted_mzML
+    //     mkdir extracted_mgf
+    //     mkdir extracted_json
+    //     $params.PYTHONRUNTIME $TOOL_FOLDER/merged_extracted.py \
+    //     input_merged.json \
+    //     extracted_mzML \
+    //     extracted_mgf \
+    //     extracted_json \
+    //     extracted.tsv 
+    //     """
+    // }
 
     // process summarizeExtracted {
     //     publishDir "$params.publishdir/summary", mode: 'copy'

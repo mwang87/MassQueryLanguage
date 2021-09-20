@@ -43,11 +43,12 @@ def main():
     parser.add_argument('output_mgf_folder', help='Output mgf Folder')
     parser.add_argument('output_json_folder', help='Output merged JSON Folder')
     #parser.add_argument('output_parquet', help='Output Parquet File')
-    parser.add_argument('output_tsv', help='Output Summary Extraction File')
+    parser.add_argument('--output_tsv', default=None, help='Output Summary Extraction File')
+    parser.add_argument('--output_tsv_prefix', default=None, help='Output Summary Extraction output_tsv_prefix')
 
     args = parser.parse_args()
 
-    file_number = 1
+    file_hash = str(uuid.uuid4())
     MAX_SPECTRA_PER_EXTRACTION = 5000
 
     all_results_list = []
@@ -66,26 +67,29 @@ def main():
                 pass
 
             if len(all_spectra) > MAX_SPECTRA_PER_EXTRACTION:
-                output_mzML_filename = os.path.join(args.output_mzML_folder, "extracted_{}.mzML".format(file_number))
-                output_mgf_filename = os.path.join(args.output_mgf_folder, "extracted_{}.mgf".format(file_number))
-                output_json_filename = os.path.join(args.output_json_folder, "extracted_{}.json".format(file_number))
+                output_mzML_filename = os.path.join(args.output_mzML_folder, "extracted_{}.mzML".format(file_hash))
+                output_mgf_filename = os.path.join(args.output_mgf_folder, "extracted_{}.mgf".format(file_hash))
+                output_json_filename = os.path.join(args.output_json_folder, "extracted_{}.json".format(file_hash))
 
                 results_df = _export_extraction(all_spectra, output_mzML_filename, output_mgf_filename, output_json_filename)
                 all_results_list.append(results_df)
-                file_number += 1
+                file_hash = str(uuid.uuid4())
                 all_spectra = []
 
     if len(all_spectra) > 0:
-        output_mzML_filename = os.path.join(args.output_mzML_folder, "extracted_{}.mzML".format(file_number))
-        output_mgf_filename = os.path.join(args.output_mgf_folder, "extracted_{}.mgf".format(file_number))
-        output_json_filename = os.path.join(args.output_json_folder, "extracted_{}.json".format(file_number))
+        output_mzML_filename = os.path.join(args.output_mzML_folder, "extracted_{}.mzML".format(file_hash))
+        output_mgf_filename = os.path.join(args.output_mgf_folder, "extracted_{}.mgf".format(file_hash))
+        output_json_filename = os.path.join(args.output_json_folder, "extracted_{}.json".format(file_hash))
 
         results_df = _export_extraction(all_spectra, output_mzML_filename, output_mgf_filename, output_json_filename)
         all_results_list.append(results_df)
 
     # Merging all the results
     merged_result_df = pd.concat(all_results_list)
-    merged_result_df.to_csv(args.output_tsv, sep="\t", index=False)
+    if args.output_tsv is not None:
+        merged_result_df.to_csv(args.output_tsv, sep="\t", index=False)
+    elif args.output_tsv_prefix is not None:
+        merged_result_df.to_csv(args.output_tsv_prefix + "_" +  str(uuid.uuid4()) + ".tsv", sep="\t", index=False)
 
 
 
