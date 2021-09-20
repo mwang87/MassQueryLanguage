@@ -82,8 +82,10 @@ _query_results_merged_ch = Channel.create()
 _query_results_ch.collectFile(name: "merged_query_results.tsv", storeDir: "$params.publishdir/msql", keepHeader: true).into(_query_results_merged_ch)
 
 if(params.extract == "YES"){
-    _query_extract_results_merged_ch = Channel.create()
-    _query_extract_results_ch.collectFile(name: "extracted_json_nf_merged.json", storeDir: "$params.publishdir/extracted_merged_temp").into(_query_extract_results_merged_ch)
+    //_query_extract_results_merged_ch = Channel.create()
+    // _query_extract_results_ch.collectFile(name: "extracted_json_nf_merged.json", storeDir: "$params.publishdir/extracted_merged_temp").into(_query_extract_results_merged_ch)
+
+    // Merging the JSON in rounds
 
     // Extracting the spectra
     process formatExtractedSpectra {

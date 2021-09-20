@@ -38,7 +38,7 @@ def _export_extraction(all_spectra, output_mzML_filename, output_mgf_filename, o
 
 def main():
     parser = argparse.ArgumentParser(description="MSQL CMD")
-    parser.add_argument('input_json_file', help='input_json_file') # THis is each row is a json for the spectra
+    parser.add_argument('json_folder', help='json_folder') # THis is each row is a json for the spectra
     parser.add_argument('output_mzML_folder', help='Output mzML Folder')
     parser.add_argument('output_mgf_folder', help='Output mgf Folder')
     parser.add_argument('output_json_folder', help='Output merged JSON Folder')
@@ -53,24 +53,27 @@ def main():
     all_results_list = []
     all_spectra = []
 
-    for json_line in open(args.input_json_file):
-        if len(json_line) < 2:
-            continue
+    all_json_files = glob.glob(os.path.join(args.json_folder, "*.json"))
 
-        try:
-            all_spectra.append(json.loads(json_line.rstrip()))
-        except:
-            pass
+    for json_filename in all_json_files:
+        for json_line in open(json_filename):
+            if len(json_line) < 2:
+                continue
 
-        if len(all_spectra) > MAX_SPECTRA_PER_EXTRACTION:
-            output_mzML_filename = os.path.join(args.output_mzML_folder, "extracted_{}.mzML".format(file_number))
-            output_mgf_filename = os.path.join(args.output_mgf_folder, "extracted_{}.mgf".format(file_number))
-            output_json_filename = os.path.join(args.output_json_folder, "extracted_{}.json".format(file_number))
+            try:
+                all_spectra.append(json.loads(json_line.rstrip()))
+            except:
+                pass
 
-            results_df = _export_extraction(all_spectra, output_mzML_filename, output_mgf_filename, output_json_filename)
-            all_results_list.append(results_df)
-            file_number += 1
-            all_spectra = []
+            if len(all_spectra) > MAX_SPECTRA_PER_EXTRACTION:
+                output_mzML_filename = os.path.join(args.output_mzML_folder, "extracted_{}.mzML".format(file_number))
+                output_mgf_filename = os.path.join(args.output_mgf_folder, "extracted_{}.mgf".format(file_number))
+                output_json_filename = os.path.join(args.output_json_folder, "extracted_{}.json".format(file_number))
+
+                results_df = _export_extraction(all_spectra, output_mzML_filename, output_mgf_filename, output_json_filename)
+                all_results_list.append(results_df)
+                file_number += 1
+                all_spectra = []
 
     if len(all_spectra) > 0:
         output_mzML_filename = os.path.join(args.output_mzML_folder, "extracted_{}.mzML".format(file_number))
