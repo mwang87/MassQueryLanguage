@@ -168,21 +168,21 @@ def _translate_qualifiers(qualifiers, language="english"):
             qualifier_phrases.append(_translate_qualifier(qualifiers[qualifier], language=language))
     
     if language == "english":
-        return "and ".join(qualifier_phrases)
+        return " and ".join(qualifier_phrases)
     if language == "russian":
-        return "и в".join(qualifier_phrases)
+        return " и в".join(qualifier_phrases)
     elif language == "korean":
-        return "와 ".join(qualifier_phrases)
+        return " 와 ".join(qualifier_phrases)
     elif language == "chinese":
-        return "和 ".join(qualifier_phrases)
+        return " 和 ".join(qualifier_phrases)
     elif language == "french":
-        return "et ".join(qualifier_phrases)
+        return " et ".join(qualifier_phrases)
     elif language == "german":
-        return "und ".join(qualifier_phrases)
+        return " und ".join(qualifier_phrases)
     elif language == "spanish":
-        return "y ".join(qualifier_phrases)
+        return " y ".join(qualifier_phrases)
     elif language == "portuguese":
-        return "e ".join(qualifier_phrases)
+        return " e ".join(qualifier_phrases)
 
     return " and ".join(qualifier_phrases)
 
@@ -241,6 +241,24 @@ def _translate_qualifier(qualifier, language="english"):
         elif language == "portuguese":
             return "uma intensidade mínima relativa ao pico base de {}%".format(qualifier["value"])
 
+    if qualifier["name"] == "qualifierintensityvalue":
+        if language == "english":
+            return "a minimum intensity value {}".format(qualifier["value"])
+        if language == "russian":
+            return "с минимальной интенсивностью {}".format(qualifier["value"])
+        elif language == "korean":
+            return "최소 정상 높이 {}".format(qualifier["value"])
+        elif language == "chinese":
+            return "一个最低比值{}的精确度".format(qualifier["value"])
+        elif language == "french":
+            return "une intensité minimale de {}".format(qualifier["value"])
+        elif language == "german":
+            return "eine minimale Intensität von {}".format(qualifier["value"])
+        elif language == "spanish":
+            return "un mínimo de {} de intensidad".format(qualifier["value"])
+        elif language == "portuguese":
+            return "uma intensidade mínima de {}".format(qualifier["value"])
+
     if qualifier["name"] == "qualifierintensityreference":
         if language == "english":
             return "this peak is used as the intensity reference for other peaks in the spectrum"
@@ -294,5 +312,7 @@ def _translate_qualifier(qualifier, language="english"):
             return "aceptando variabilidad de {}% de intensidad relativa".format(qualifier["value"])
         elif language == "portuguese":
             return "e aceitando uma variabilidade de {}% da intensidade relativa".format(qualifier["value"])
+
+    
 
     return "Translator {} not implemented, contact Ming".format(qualifier["name"])
