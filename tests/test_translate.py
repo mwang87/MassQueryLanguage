@@ -20,9 +20,19 @@ def test_translate():
             test_query = line.rstrip()
             print(test_query, language)
             msql_translator.translate_query(test_query, language=language)
+
+def test_translate2():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=184.0739:TOLERANCEMZ=0.01:INTENSITYPERCENT=30:INTENSITYVALUE=500 AND \
+MS2PROD=125.0004:TOLERANCEMZ=0.01:INTENSITYPERCENT=10:INTENSITYVALUE=1500 AND \
+MS2PROD=104.1075:TOLERANCEMZ=0.01 AND \
+MS2PROD=86.09697:TOLERANCEMZ=0.01:INTENSITYPERCENT=10:INTENSITYVALUE=2000 \
+"
+    translated = msql_translator.translate_query(query, language="english")
+    print(translated)
     
 def main():
-    test_translate()
+    #test_translate()
+    test_translate2()
     
 if __name__ == "__main__":
     main()
