@@ -5,7 +5,7 @@ params.query = "QUERY scaninfo(MS2DATA)"
 params.parallel_files = 'NO'
 params.parallel_query = 'NO'
 params.extract = 'YES'
-params.maxfilesize = "400" // Default 400 MB
+params.maxfilesize = "3000" // Default 3000 MB
 
 _spectra_ch = Channel.fromPath( params.input_spectra )
 _spectra_ch.into{_spectra_ch1;_spectra_ch2}
