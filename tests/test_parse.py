@@ -203,6 +203,10 @@ def test_wildcard():
     print(parsed_output)
     assert(parsed_output["conditions"][0]["qualifiers"]["qualifiermassdefect"]["min"] == 0.8)
 
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PREC=X:MASSDEFECT=massdefect(min=0.9, max=0.99) AND MOBILITY=range(min=X*0.0006775+0.40557, max=X*0.00078231+0.48817) AND X=massdefect(min=0.9, max=0.99)"
+    parsed_output = msql_parser.parse_msql(query)
+    print(parsed_output)
+
 
 def main():
     #test_xrange_parse()
@@ -223,9 +227,9 @@ def main():
     #test_ms1_multiple_or_with_variable()
     #test_mobility()
     #test_mobility_variables()
-    test_negation()
-    #test_wildcard()
-    test_ms1_multiple_or()
+    #test_negation()
+    test_wildcard()
+    #test_ms1_multiple_or()
 
 
 
