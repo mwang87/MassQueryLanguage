@@ -24,6 +24,7 @@ def main():
     parser.add_argument('--original_path', default=None, help='Original absolute path for the filename, useful in proteosafe')
     parser.add_argument('--extract_mzML', default=None, help='Extracting spectra found as mzML file')
     parser.add_argument('--extract_json', default=None, help='Extracting spectra found as json file, each spectrum is a line')
+    parser.add_argument('--maxfilesize', default=None, help='Maximum file size in MB')
     
     args = parser.parse_args()
 
@@ -42,6 +43,13 @@ def main():
     for query in all_queries:
         parsed_query = msql_parser.parse_msql(query)
         print(json.dumps(parsed_query, indent=4))
+
+    # Checking the input file for size
+    if args.maxfilesize is not None:
+        if os.path.isfile(args.filename):
+            if os.path.getsize(args.filename) / 1024 / 1024 > int(args.maxfilesize):
+                print("File is too big, exiting")
+                exit(0)
 
     # Executing
     all_results_list = []

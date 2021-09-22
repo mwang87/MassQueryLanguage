@@ -5,6 +5,7 @@ params.query = "QUERY scaninfo(MS2DATA)"
 params.parallel_files = 'NO'
 params.parallel_query = 'NO'
 params.extract = 'YES'
+params.maxfilesize = "400" // Default 400 MB
 
 _spectra_ch = Channel.fromPath( params.input_spectra )
 _spectra_ch.into{_spectra_ch1;_spectra_ch2}
@@ -42,7 +43,8 @@ if(params.parallel_files == "YES"){
             --parallel_query $params.parallel_query \
             --cache NO \
             --original_path "$filepath" \
-            $extractflag
+            $extractflag \
+            --maxfilesize $params.maxfilesize
         """
     }
 }
@@ -72,7 +74,8 @@ else{
             --parallel_query $params.parallel_query \
             --cache NO \
             --original_path "$filepath" \
-            $extractflag
+            $extractflag \
+            --maxfilesize $params.maxfilesize
         """
     }
 }
