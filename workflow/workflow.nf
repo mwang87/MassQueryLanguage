@@ -80,9 +80,28 @@ else{
     }
 }
 
-// Merging the results
+// Merging the results, 1000 results at a time, and then doing a full merge
+process formatResultsMergeRounds {
+    publishDir "$params.publishdir/msql", mode: 'copy'
+    cache false
+    echo true
+    
+    input:
+    file "results/*"  from _query_results_ch.collate( 1000 )
+
+    output:
+    file "merged_tsv/*" optional true into _merged_temp_summary_ch
+
+    """
+    mkdir merged_tsv
+    $params.PYTHONRUNTIME $TOOL_FOLDER/merged_results.py \
+    results \
+    --output_tsv_prefix merged_tsv/merged_tsv
+    """
+}
+
 _query_results_merged_ch = Channel.create()
-_query_results_ch.collectFile(name: "merged_query_results.tsv", storeDir: "$params.publishdir/msql", keepHeader: true).into(_query_results_merged_ch)
+_merged_temp_summary_ch.collectFile(name: "merged_query_results.tsv", storeDir: "$params.publishdir/msql", keepHeader: true).into(_query_results_merged_ch)
 
 if(params.extract == "YES"){
 
