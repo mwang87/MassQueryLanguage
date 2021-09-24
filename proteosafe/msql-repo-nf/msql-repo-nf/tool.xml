@@ -1,6 +1,6 @@
 <toolset>
     <!-- Demangling -->
-    <pathSet base="miniconda3_gamma/envs/msql2/bin">
+    <pathSet base="miniconda3_gamma/envs/massql/bin">
         <toolPath tool="stage_spectra" path="python3"/>
     </pathSet>
     <pathSet base="$base">
@@ -18,8 +18,9 @@
         </execution>
     </tool>
 
-    <pathSet base="miniconda3_gamma/envs/msql2/bin">
+    <pathSet base="miniconda3_gamma/envs/massql/bin">
         <toolPath tool="msql_nf_process" path="python3"/>
+        <pathVar name="massql_python_runtime" path="python3"/>
     </pathSet>
 
     <pathSet base="miniconda3_gamma/bin">
@@ -29,6 +30,7 @@
     <pathSet base="$base">
         <pathVar name="nextflow_wrapper.script" path="nextflow_wrapper.py"/>
         <pathVar name="nextflow.script" path="workflow.nf"/>
+        <pathVar name="cluster.config" path="cluster.config"/>
     </pathSet>
 
     <tool name="msql_nf_process">
@@ -41,13 +43,25 @@
             <arg valueRef="workflowParameters"/>
             <arg pathRef="nextflow.script"/>
             <arg pathRef="conda_activate_path"/>
-            <arg value="msql2"/>
-            <arg option="-newparameters" value="input_spectra:demangled_spectra/**/*"/>
+            <arg value="massql"/>
+
+            <arg option="-metricoutput" valueRef="query_results"/>
+
             <arg option="-newparameters" value="publishdir:query_results"/>
+            <arg option="-newparameters" value="input_spectra:demangled_spectra/**/*"/>
             <arg option="-parametermapping" value="QUERY:query"/>
             <arg option="-parametermapping" value="PARALLELFILES:parallel_files"/>
             <arg option="-parametermapping" value="PARALLELPERFILE:parallel_query"/>
             <arg option="-parametermapping" value="EXTRACT:extract"/>
+
+            <arg option="-updateproteosafefronteendstatus" value="YES"/>
+
+            <arg option="-runcluster" valueRef="@CLUSTERPARALLEL"/>
+            <arg option="-clusterconfig" pathRef="cluster.config"/>
+            <arg option="-user" valueRef="@user"/>
+            <arg option="-clusterpythonruntime" pathRef="massql_python_runtime"/>
+            <arg option="-clusterworkprefix" value="/gscratch/nextflow_work"/>
+            <arg option="-task" valueRef="@task"/>
         </execution>
     </tool>
 
