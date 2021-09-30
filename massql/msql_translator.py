@@ -86,76 +86,92 @@ def _translate_condition(condition, language="english"):
         qualifier_string = ""
 
     if condition["type"] == "ms2productcondition":
+        # Handling multiple values
+        value_list_str = [str(value) for value in condition["value"]]
+        all_values_string = " or ".join(value_list_str)
+
         if language == "english":
-            return "Finding MS2 peak at m/z {}{}.".format(condition["value"][0], qualifier_string) #TODO: add qualifiers
+            return "Finding MS2 peak at m/z {}{}.".format(all_values_string, qualifier_string) #TODO: add qualifiers
         if language == "russian":
-            return "Поиск MS2 пика по m/z {}{}.".format(condition["value"][0], qualifier_string)
+            return "Поиск MS2 пика по m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "korean":
-            return "MS2 질량대 전하비 (m/z): {} {}.".format(condition["value"][0], qualifier_string)
+            return "MS2 질량대 전하비 (m/z): {} {}.".format(all_values_string, qualifier_string)
         elif language == "chinese":
-            return "寻找m/z{}的MS2峰{}".format(condition["value"][0], qualifier_string)
+            return "寻找m/z{}的MS2峰{}".format(all_values_string, qualifier_string)
         elif language == "french":
-            return "Trouver un pic MS2 à m/z {}{}.".format(condition["value"][0], qualifier_string)
+            return "Trouver un pic MS2 à m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "german":
-            return "Hat MS2 Signal bei m/z {} {}.".format(condition["value"][0], qualifier_string)
+            return "Hat MS2 Signal bei m/z {} {}.".format(all_values_string, qualifier_string)
         elif language == "spanish":
-            return "Encontrando pico de MS2 a m/z {}{}.".format(condition["value"][0], qualifier_string)
+            return "Encontrando pico de MS2 a m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "portuguese":
-            return "Buscando ions de MS2 de m/z {} {}.".format(condition["value"][0], qualifier_string)
+            return "Buscando ions de MS2 de m/z {} {}.".format(all_values_string, qualifier_string)
 
     if condition["type"] == "ms2neutrallosscondition":
+        # Handling multiple values
+        value_list_str = [str(value) for value in condition["value"]]
+        all_values_string = " or ".join(value_list_str)
+
         if language == "english":
-            return "Finding MS2 neutral loss peak at m/z {}{}.".format(condition["value"][0], qualifier_string) #TODO: add qualifiers
+            return "Finding MS2 neutral loss peak at m/z {}{}.".format(all_values_string, qualifier_string) #TODO: add qualifiers
         if language == "russian":
-            return "Поиск MS2 нейтраллизации пика по m/z {}{}.".format(condition["value"][0], qualifier_string)
+            return "Поиск MS2 нейтраллизации пика по m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "korean":
-            return "MS2 전자 소모량 {} {}.".format(condition["value"][0], qualifier_string)
+            return "MS2 전자 소모량 {} {}.".format(all_values_string, qualifier_string)
         elif language == "chinese":
-            return "在{}的MS2中探测到m/z{}".format(condition["value"][0], qualifier_string)
+            return "在{}的MS2中探测到m/z{}".format(all_values_string, qualifier_string)
         elif language == "french":
-            return "Trouver un pic MS2 neutral loss à m/z {}{}.".format(condition["value"][0], qualifier_string)
+            return "Trouver un pic MS2 neutral loss à m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "german":
-            return "Hat MS2 Neutralverlust von m/z {} {}.".format(condition["value"][0], qualifier_string)
+            return "Hat MS2 Neutralverlust von m/z {} {}.".format(all_values_string, qualifier_string)
         elif language == "spanish":
-            return "Encontrando pico de MS2 de neutral loss en m/z {}{}.".format(condition["value"][0], qualifier_string)
+            return "Encontrando pico de MS2 de neutral loss en m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "portuguese":
-            return "Encontrando peak de neutralização MS2 na m/z {}{}.".format(condition["value"][0], qualifier_string)
+            return "Encontrando peak de neutralização MS2 na m/z {}{}.".format(all_values_string, qualifier_string)
     
     if condition["type"] == "ms1mzcondition":
+        # Handling multiple values
+        value_list_str = [str(value) for value in condition["value"]]
+        all_values_string = " or ".join(value_list_str)
+
         if language == "english":
-            return "Finding MS1 peak at m/z {}{}.".format(condition["value"][0], qualifier_string) #TODO: add qualifiers]
+            return "Finding MS1 peak at m/z {}{}.".format(all_values_string, qualifier_string) #TODO: add qualifiers]
         if language == "russian":
-            return "Поиск MS1 пика по m/z {}{}.".format(condition["value"][0], qualifier_string)
+            return "Поиск MS1 пика по m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "korean":
-            return "MS1 파워 밀도 {} {}.".format(condition["value"][0], qualifier_string)
+            return "MS1 파워 밀도 {} {}.".format(all_values_string, qualifier_string)
         elif language == "chinese":
-            return "在{}的MS1中找到m/z{}".format(condition["value"][0], qualifier_string)
+            return "在{}的MS1中找到m/z{}".format(all_values_string, qualifier_string)
         elif language == "french":
-            return "Trouver un pic MS1 à m/z {}{}.".format(condition["value"][0], qualifier_string)
+            return "Trouver un pic MS1 à m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "german":
-            return "Hat MS1 Signal bei m/z {} {}.".format(condition["value"][0], qualifier_string)
+            return "Hat MS1 Signal bei m/z {} {}.".format(all_values_string, qualifier_string)
         elif language == "spanish":
-            return "Encontrando pico de MS1 en m/z {}{}.".format(condition["value"][0], qualifier_string)
+            return "Encontrando pico de MS1 en m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "portuguese":
-            return "Buscando ions de MS1 de m/z {}{}.".format(condition["value"][0], qualifier_string)
+            return "Buscando ions de MS1 de m/z {}{}.".format(all_values_string, qualifier_string)
     
     if condition["type"] == "ms2precursorcondition":
+        # Handling multiple values
+        value_list_str = [str(value) for value in condition["value"]]
+        all_values_string = " or ".join(value_list_str)
+
         if language == "english":
-            return "Finding MS2 spectra with a precursor m/z {}{}.".format(condition["value"][0], qualifier_string) #TODO: add qualifiers
+            return "Finding MS2 spectra with a precursor m/z {}{}.".format(all_values_string, qualifier_string) #TODO: add qualifiers
         if language == "russian":
-            return "Поиск MS2 по предварительному m/z {}{}.".format(condition["value"][0], qualifier_string)
+            return "Поиск MS2 по предварительному m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "korean":
-            return "MS2 파워 밀도 {} {}.".format(condition["value"][0], qualifier_string)
+            return "MS2 파워 밀도 {} {}.".format(all_values_string, qualifier_string)
         elif language == "chinese":
-            return "在{}的MS2中找到m/z{}".format(condition["value"][0], qualifier_string)
+            return "在{}的MS2中找到m/z{}".format(all_values_string, qualifier_string)
         elif language == "french":
-            return "Trouver des spectres MS2 avec une m/z de précursor {}{}.".format(condition["value"][0], qualifier_string)
+            return "Trouver des spectres MS2 avec une m/z de précursor {}{}.".format(all_values_string, qualifier_string)
         elif language == "german":
-            return "Hat MS2 Vorläuferion bei m/z {} {}.".format(condition["value"][0], qualifier_string)
+            return "Hat MS2 Vorläuferion bei m/z {} {}.".format(all_values_string, qualifier_string)
         elif language == "spanish":
-            return "Encontrando espectros de MS2 con un precursor m/z {}{}.".format(condition["value"][0], qualifier_string)
+            return "Encontrando espectros de MS2 con un precursor m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "portuguese":
-            return "Buscando espectros MS2 com m/z de referencia {}{}.".format(condition["value"][0], qualifier_string)
+            return "Buscando espectros MS2 com m/z de referencia {}{}.".format(all_values_string, qualifier_string)
 
     return "Translator {} not implemented, contact Ming".format(condition["type"])
 
