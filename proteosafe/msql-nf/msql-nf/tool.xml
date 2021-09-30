@@ -1,6 +1,6 @@
 <toolset>
     <!-- Demangling -->
-    <pathSet base="miniconda3_gamma/envs/msql2/bin">
+    <pathSet base="miniconda3_gamma/envs/massql/bin">
         <toolPath tool="demangle_spectra" path="python3"/>
     </pathSet>
     <pathSet base="$base">
@@ -21,7 +21,7 @@
         </execution>
     </tool>
 
-    <pathSet base="miniconda3_gamma/envs/msql2/bin">
+    <pathSet base="miniconda3_gamma/envs/massql/bin">
         <toolPath tool="msql_nf_process" path="python3"/>
         <pathVar name="massql_python_runtime" path="python3"/>
     </pathSet>
@@ -46,7 +46,7 @@
             <arg valueRef="workflowParameters"/>
             <arg pathRef="nextflow.script"/>
             <arg pathRef="conda_activate_path"/>
-            <arg value="msql2"/>
+            <arg value="massql"/>
 
             <arg option="-metricoutput" valueRef="query_results"/>
 

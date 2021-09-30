@@ -29,6 +29,7 @@
             <arg option="-metricoutput" valueRef="query_results"/>
 
             <arg option="-newparameters" value="publishdir:query_results"/>
+            <arg option="-newparameters" value="maxfilesize:400"/>
             <arg option="-parametermapping" value="DATASET:input_spectra"/>
             <arg option="-parametermapping" value="QUERY:query"/>
             <arg option="-parametermapping" value="PARALLELFILES:parallel_files"/>

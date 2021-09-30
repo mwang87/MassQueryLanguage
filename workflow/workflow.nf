@@ -5,6 +5,7 @@ params.query = "QUERY scaninfo(MS2DATA)"
 params.parallel_files = 'NO'
 params.parallel_query = 'NO'
 params.extract = 'YES'
+params.maxfilesize = "3000" // Default 3000 MB
 
 _spectra_ch = Channel.fromPath( params.input_spectra )
 _spectra_ch.into{_spectra_ch1;_spectra_ch2}
@@ -42,13 +43,14 @@ if(params.parallel_files == "YES"){
             --parallel_query $params.parallel_query \
             --cache NO \
             --original_path "$filepath" \
-            $extractflag
+            $extractflag \
+            --maxfilesize $params.maxfilesize
         """
     }
 }
 else{
     process queryData2 {
-        echo true
+        echo false
         errorStrategy 'ignore'
         maxForks 1
         time '4h'
@@ -72,46 +74,96 @@ else{
             --parallel_query $params.parallel_query \
             --cache NO \
             --original_path "$filepath" \
-            $extractflag
+            $extractflag \
+            --maxfilesize $params.maxfilesize
         """
     }
 }
 
-// Merging the results
+// Merging the results, 1000 results at a time, and then doing a full merge
+process formatResultsMergeRounds {
+    publishDir "$params.publishdir/msql", mode: 'copy'
+    cache false
+    echo true
+    
+    input:
+    file "results/*"  from _query_results_ch.collate( 1000 )
+
+    output:
+    file "merged_tsv/*" optional true into _merged_temp_summary_ch
+
+    """
+    mkdir merged_tsv
+    $params.PYTHONRUNTIME $TOOL_FOLDER/merged_results.py \
+    results \
+    --output_tsv_prefix merged_tsv/merged_tsv
+    """
+}
+
 _query_results_merged_ch = Channel.create()
-_query_results_ch.collectFile(name: "merged_query_results.tsv", storeDir: "$params.publishdir/msql", keepHeader: true).into(_query_results_merged_ch)
+_merged_temp_summary_ch.collectFile(name: "merged_query_results.tsv", storeDir: "$params.publishdir/msql", keepHeader: true).into(_query_results_merged_ch)
 
 if(params.extract == "YES"){
-    _query_extract_results_merged_ch = Channel.create()
-    _query_extract_results_ch.collectFile(name: "extracted_json_nf_merged.json", storeDir: "$params.publishdir/extracted_merged_temp").into(_query_extract_results_merged_ch)
 
-    // Extracting the spectra
-    process formatExtractedSpectra {
+    // Merging the JSON in rounds
+    process formatExtractedSpectraRounds {
         publishDir "$params.publishdir/extracted", mode: 'copy'
         cache false
+        echo true
         errorStrategy 'ignore'
         
         input:
-        file "input_merged.json" from _query_extract_results_merged_ch
+        file "json/*"  from _query_extract_results_ch.collate( 1000 )
 
         output:
-        file "extracted_mzML" optional true
-        file "extracted_mgf" optional true
-        file "extracted.tsv" optional true
-        file "extracted_json" optional true into _extracted_json_ch
+        file "extracted_mzML/*" optional true
+        file "extracted_mgf/*" optional true
+        file "extracted_json/*" optional true
+        file "extracted_tsv/*" optional true into _extracted_summary_ch
 
         """
         mkdir extracted_mzML
         mkdir extracted_mgf
         mkdir extracted_json
+        mkdir extracted_tsv
         $params.PYTHONRUNTIME $TOOL_FOLDER/merged_extracted.py \
-        input_merged.json \
+        json \
         extracted_mzML \
         extracted_mgf \
         extracted_json \
-        extracted.tsv 
+        --output_tsv_prefix extracted_tsv/extracted_tsv
         """
     }
+
+    _extracted_summary_ch.collectFile(name: "extracted.tsv", storeDir: "$params.publishdir/extracted", keepHeader: true)
+
+    // Extracting the spectra
+    // process formatExtractedSpectra {
+    //     publishDir "$params.publishdir/extracted", mode: 'copy'
+    //     cache false
+    //     errorStrategy 'ignore'
+        
+    //     input:
+    //     file "input_merged.json" from _query_extract_results_merged_ch
+
+    //     output:
+    //     file "extracted_mzML" optional true
+    //     file "extracted_mgf" optional true
+    //     file "extracted.tsv" optional true
+    //     file "extracted_json" optional true into _extracted_json_ch
+
+    //     """
+    //     mkdir extracted_mzML
+    //     mkdir extracted_mgf
+    //     mkdir extracted_json
+    //     $params.PYTHONRUNTIME $TOOL_FOLDER/merged_extracted.py \
+    //     input_merged.json \
+    //     extracted_mzML \
+    //     extracted_mgf \
+    //     extracted_json \
+    //     extracted.tsv 
+    //     """
+    // }
 
     // process summarizeExtracted {
     //     publishDir "$params.publishdir/summary", mode: 'copy'
