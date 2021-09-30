@@ -29,10 +29,16 @@ MS2PROD=86.09697:TOLERANCEMZ=0.01:INTENSITYPERCENT=10:INTENSITYVALUE=2000 \
 "
     translated = msql_translator.translate_query(query, language="english")
     print(translated)
+
+def test_or_translate():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=(184.0739 OR 190)"
+    translated = msql_translator.translate_query(query, language="english")
+    print(translated)
     
 def main():
     #test_translate()
-    test_translate2()
+    #test_translate2()
+    test_or_translate()
     
 if __name__ == "__main__":
     main()
