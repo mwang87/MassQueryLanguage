@@ -57,7 +57,10 @@ def test_gnps_library_extract():
 
     results_df["filename"] = "gnps-library.json"
 
-    merged_summary_df = msql_extract._extract_spectra(results_df, "tests/data/", output_mzML_filename="extracted.mzML")
+    merged_summary_df = msql_extract._extract_spectra(results_df, 
+                                                    "tests/data/", 
+                                                    output_mzML_filename="extracted.mzML",
+                                                    output_summary="extracted.tsv")
 
 def main():
     #test_extract_mzML()

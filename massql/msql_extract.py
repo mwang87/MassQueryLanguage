@@ -178,6 +178,7 @@ def _extract_json_scan(input_filename, spectrum_identifier_list):
             spectrum_obj["mslevel"] = 2
             spectrum_obj["scan"] = scan_number
             spectrum_obj["precursor_mz"] = float(spectrum["Precursor_MZ"])
+            spectrum_obj["spectrum_annotation"] = spectrum["Compound_Name"]
 
             output_list.append(spectrum_obj)
 
@@ -224,6 +225,9 @@ def _extract_spectra(results_df, input_spectra_folder,
 
                 filtered_by_scan_df = results_by_file_df[results_by_file_df["scan"].astype(str) == str(spectrum_obj["scan"])]
                 filtered_by_scan_df["new_scan"] = current_scan
+                if "spectrum_annotation" in spectrum_obj:
+                    filtered_by_scan_df["spectrum_annotation"] = spectrum_obj["spectrum_annotation"]
+
                 result_df_list.append(filtered_by_scan_df)
 
                 spectrum_obj["query_results"] = filtered_by_scan_df.to_dict(orient="records")
@@ -234,7 +238,6 @@ def _extract_spectra(results_df, input_spectra_folder,
             raise
         except:
             print("Error", filename)
-            raise
             pass
 
     merged_summary_df = pd.concat(result_df_list)
