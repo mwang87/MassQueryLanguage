@@ -384,7 +384,7 @@ def test_gnps_pqs_library():
     results_df = msql_engine.process_query(query, "tests/data/gnps-library.json")
     print(results_df)
     assert("CCMSLIB00000072227" in list(results_df["scan"]))
-
+    
 @pytest.mark.skip(reason="too slow")
 def test_gnps_full_library():
     query = "QUERY scaninfo(MS2DATA) WHERE \
@@ -660,8 +660,8 @@ def main():
     #test_or_against_iron()
     #test_quad_brominated()
     #test_ms2_mobility()
-    test_ms2_mobility_variable()
-    test_ms2_mobility_variable2()
+    #test_ms2_mobility_variable()
+    #test_ms2_mobility_variable2()
     #test_excluded()
     #test_ms2_mobility_variable()
     #test_ms2_mobility_variable2()
