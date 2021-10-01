@@ -114,6 +114,7 @@
             </parsers>
 
             <row>
+                <column type="text" field="_dyn_#spectrum_annotation" label="Compound Name" width="12"/>
             </row>
 
             <row expander="image">
