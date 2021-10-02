@@ -245,7 +245,7 @@ def _extract_spectra(results_df, input_spectra_folder,
     if output_summary is not None:
         merged_summary_df.to_csv(output_summary, sep='\t', index=False)
 
-    if len(spectrum_list) > 5000:
+    if len(spectrum_list) > 10000:
         print("Not Extracting, too many spectra")
         return None
 
