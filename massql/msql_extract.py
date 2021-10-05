@@ -161,6 +161,32 @@ def _extract_mgf_scan(input_filename, spectrum_identifier_list):
     return output_list
 
 
+def _extract_json_scan(input_filename, spectrum_identifier_list):
+    output_list = []
+    spectrum_identifier_set = set([str(spectrum_scan) for spectrum_scan in spectrum_identifier_list])
+
+    input_spectra = json.load(open(input_filename))
+
+    for spectrum in input_spectra:
+        scan_number = spectrum["spectrum_id"]
+        if str(scan_number) in spectrum_identifier_set:
+            peaks_list = json.loads(spectrum["peaks_json"])
+
+            # Loading Data
+            spectrum_obj = {}
+            spectrum_obj["peaks"] = peaks_list
+            spectrum_obj["mslevel"] = 2
+            spectrum_obj["scan"] = scan_number
+            spectrum_obj["precursor_mz"] = float(spectrum["Precursor_MZ"])
+            spectrum_obj["spectrum_annotation"] = spectrum["Compound_Name"]
+
+            output_list.append(spectrum_obj)
+
+    return output_list
+
+
+
+
 def _extract_spectra(results_df, input_spectra_folder, 
                     output_mgf_filename=None, 
                     output_mzML_filename=None, 
@@ -190,7 +216,8 @@ def _extract_spectra(results_df, input_spectra_folder,
                 spectrum_obj_list = _extract_mzXML_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
             if ".mgf" in input_spectra_filename:
                 spectrum_obj_list = _extract_mgf_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
-
+            if ".json" in input_spectra_filename:
+                spectrum_obj_list = _extract_json_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
 
             for spectrum_obj in spectrum_obj_list:                
                 # These are a new scan number in the file, not sure if we need this
@@ -198,6 +225,9 @@ def _extract_spectra(results_df, input_spectra_folder,
 
                 filtered_by_scan_df = results_by_file_df[results_by_file_df["scan"].astype(str) == str(spectrum_obj["scan"])]
                 filtered_by_scan_df["new_scan"] = current_scan
+                if "spectrum_annotation" in spectrum_obj:
+                    filtered_by_scan_df["spectrum_annotation"] = spectrum_obj["spectrum_annotation"]
+
                 result_df_list.append(filtered_by_scan_df)
 
                 spectrum_obj["query_results"] = filtered_by_scan_df.to_dict(orient="records")
@@ -215,7 +245,7 @@ def _extract_spectra(results_df, input_spectra_folder,
     if output_summary is not None:
         merged_summary_df.to_csv(output_summary, sep='\t', index=False)
 
-    if len(spectrum_list) > 5000:
+    if len(spectrum_list) > 10000:
         print("Not Extracting, too many spectra")
         return None
 

@@ -114,6 +114,7 @@
             </parsers>
 
             <row>
+                <column type="text" field="_dyn_#spectrum_annotation" label="Compound Name" width="12"/>
             </row>
 
             <row expander="image">
@@ -195,6 +196,18 @@
                 </column>
             </row>
         </data>
+    </block>
+
+    <view id="file_list" label="File List" group="Advanced Views - Analysis Views">
+        <blockRef id="main" type="file_list"/>
+    </view>
+    <block id="file_list" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='https://gnps-explorer.ucsd.edu/?dataset_accession=[task]'/>
     </block>
 
     <view id="reanalyze_networking" label="Analyze with Networking" group="Advanced Views - Analysis Views">

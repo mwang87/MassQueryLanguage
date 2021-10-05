@@ -51,11 +51,24 @@ def test_extract_MGF():
     merged_summary_df = msql_extract._extract_spectra(results_df, "tests/data/", output_json_filename="test.json")
     assert(len(merged_summary_df) == 5)
 
+def test_gnps_library_extract():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=175:INTENSITYPERCENT=20"
+    results_df = msql_engine.process_query(query, "tests/data/gnps-library.json")
+
+    results_df["filename"] = "gnps-library.json"
+
+    merged_summary_df = msql_extract._extract_spectra(results_df, 
+                                                    "tests/data/", 
+                                                    output_mzML_filename="extracted.mzML",
+                                                    output_summary="extracted.tsv")
 
 def main():
-    test_extract_mzML()
+    #test_extract_mzML()
     #test_extract_mzXML()
     #test_extract_MGF()
+
+    test_gnps_library_extract()
+
 
 if __name__ == "__main__":
     main()
