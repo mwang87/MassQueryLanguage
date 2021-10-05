@@ -21,3 +21,22 @@ GNPS
 ```
 make test-manual-gnps-msql-nf
 ```
+
+## ProteoSAFe Environment Setup
+
+On the GNPS side, to get everything set up for this template workflow, need a few steps:
+
+Installing Conda Enviornment
+
+```
+conda create -n massql python=3.8
+```
+
+Installing dependencies
+
+```
+conda install -n massql -c bioconda nextflow
+conda activate massql 
+pip install -r requirements.txt
+pip install xmltodict requests
+```
