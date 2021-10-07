@@ -464,3 +464,59 @@ def ms1_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     return ms1_df, ms2_df
 
     
+def ms1_filter(condition, ms1_df):
+    """
+    Filters the MS1 and MS2 data based upon MS1 peak filters
+
+    Args:
+        condition ([type]): [description]
+        ms1_df ([type]): [description]
+
+    Returns:
+        ms1_df ([type]): [description]
+    """
+
+    if len(ms1_df) == 0:
+        return ms1_df
+
+    ms1_list = []
+    for mz in condition["value"]:
+        if mz == "ANY":
+            # Checking defect options
+            massdefect_min, massdefect_max = _get_massdefect_min(condition.get("qualifiers", None))
+            ms1_filtered_df = ms1_df
+            ms1_filtered_df["mz_defect"] = ms1_filtered_df["mz"] - ms1_filtered_df["mz"].astype(int)
+
+            min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
+
+            ms1_filtered_df = ms1_filtered_df[
+                (ms1_filtered_df["mz_defect"] > massdefect_min) & 
+                (ms1_filtered_df["mz_defect"] < massdefect_max) &
+                (ms1_filtered_df["i"] > min_int) & 
+                (ms1_filtered_df["i_norm"] > min_intpercent) & 
+                (ms1_filtered_df["i_tic_norm"] > min_tic_percent_intensity)
+            ]
+        else:
+            mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
+            mz_min = mz - mz_tol
+            mz_max = mz + mz_tol
+
+            min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
+            ms1_filtered_df = ms1_df[
+                (ms1_df["mz"] > mz_min) & 
+                (ms1_df["mz"] < mz_max) & 
+                (ms1_df["i"] > min_int) & 
+                (ms1_df["i_norm"] > min_intpercent) & 
+                (ms1_df["i_tic_norm"] > min_tic_percent_intensity)]
+
+        ms1_list.append(ms1_filtered_df)
+    
+    if len(ms1_list) == 1:
+        ms1_filtered_df = ms1_list[0]
+    else:
+        ms1_filtered_df = pd.concat(ms1_list)
+
+    if len(ms1_filtered_df) == 0:
+       return pd.DataFrame()
+
+    return ms1_filtered_df
