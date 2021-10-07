@@ -144,11 +144,11 @@ def test_ms2_synonyms():
 
     assert(json.dumps(parsed_output) == json.dumps(parsed_output2))
 
-def test_visualize_parse():
-    query = "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYVALUE=10000 \
-AND \
-MS1MZ=X+1:INTENSITYMATCH=Y*0.4:INTENSITYMATCHPERCENT=50:TOLERANCEPPM=10 AND MS1MZ=X+1.998:INTENSITYMATCH=Y*0.446:INTENSITYMATCHPERCENT=50:TOLERANCEPPM=10 AND X=range(min=300,max=900)"
-    msql_parser._visualize_parse(query)
+def test_variable_parse():
+    # This finds the sum of the MS1 of the MS2 spectrum with 
+    query = "QUERY scaninfo(MS2DATA) WHERE MS1MZ=X AND MS2PREC=X AND MS2PROD=119.09"
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
 
 def test_ms2_or():
     query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=(100 OR 104)"
