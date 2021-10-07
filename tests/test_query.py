@@ -469,6 +469,27 @@ def test_quad_brominated():
     print(results_df)
     assert(474 in list(results_df["scan"]))
 
+def test_quad_brominated2():
+
+    query = """
+        QUERY scaninfo(MS1DATA) WHERE 
+        RTMIN=24 AND RTMAX=25
+        MS1MZ=X:TOLERANCEMZ=0.1:INTENSITYPERCENT=25:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE AND 
+        MS1MZ=X+2:TOLERANCEMZ=0.2:INTENSITYMATCH=Y*0.66:INTENSITYMATCHPERCENT=30 AND 
+        MS1MZ=X-2:TOLERANCEMZ=0.2:INTENSITYMATCH=Y*0.66:INTENSITYMATCHPERCENT=30 AND 
+        MS1MZ=X+4:TOLERANCEMZ=0.2:INTENSITYMATCH=Y*0.17:INTENSITYMATCHPERCENT=40 AND 
+        MS1MZ=X-4:TOLERANCEMZ=0.2:INTENSITYMATCH=Y*0.17:INTENSITYMATCHPERCENT=40 AND 
+        X=range(min=971.45,max=971.6)
+    """
+
+    # Should appear here: http://msql.ucsd.edu//?query=QUERY+scaninfo%28MS1DATA%29+WHERE+MS1MZ%3DX%3ATOLERANCEMZ%3D0.1%3AINTENSITYPERCENT%3D25%3AINTENSITYMATCH%3DY%3AINTENSITYMATCHREFERENCE+AND+%0AMS1MZ%3DX%2B2%3ATOLERANCEMZ%3D0.2%3AINTENSITYMATCH%3DY%2A0.66%3AINTENSITYMATCHPERCENT%3D30+AND+%0AMS1MZ%3DX-2%3ATOLERANCEMZ%3D0.2%3AINTENSITYMATCH%3DY%2A0.66%3AINTENSITYMATCHPERCENT%3D30+AND+MS1MZ%3DX%2B4%3ATOLERANCEMZ%3D0.2%3AINTENSITYMATCH%3DY%2A0.17%3AINTENSITYMATCHPERCENT%3D40+AND+%0AMS1MZ%3DX-4%3ATOLERANCEMZ%3D0.2%3AINTENSITYMATCH%3DY%2A0.17%3AINTENSITYMATCHPERCENT%3D40+AND+%0AMS2PREC%3DX+AND%0AX%3Drange%28min%3D500%2Cmax%3D1000%29+AND%0ARTMIN%3D10&filename=GNPS00002_A3_p.mzML&x_axis=&y_axis=&facet_column=&scan=800&precursor_mz=&x_value=971.52&y_value=0.32&ms1_usi=mzspec%3AGNPS%3ATASK-3290b45278624b9b877bdee60dfbc7b3-f.MSV000084691%2Fccms_peak%2F1810E-II.mzML%3Ascan%3A974&ms2_usi=
+
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+    results_df = msql_engine.process_query(query, "tests/data/1810E-II.mzML")
+    print(results_df)
+    assert(974 in list(results_df["scan"]))
+
 
 # @pytest.mark.skip(reason="too slow")
 # def test_albicidin_tag():
@@ -659,13 +680,14 @@ def main():
     #test_defect()
     #test_or_against_iron()
     #test_quad_brominated()
+    test_quad_brominated2()
     #test_ms2_mobility()
     #test_ms2_mobility_variable()
     #test_ms2_mobility_variable2()
     #test_excluded()
     #test_ms2_mobility_variable()
     #test_ms2_mobility_variable2()
-    test_massdefect_ANY_query()
+    #test_massdefect_ANY_query()
 
 if __name__ == "__main__":
     main()

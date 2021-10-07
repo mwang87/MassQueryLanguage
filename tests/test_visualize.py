@@ -30,6 +30,7 @@ def test_visualize_basic():
     ms2_fig.write_image("test_ms2_visualize.png", engine="kaleido")
     ms1_fig.write_image("test_ms1_visualize.png", engine="kaleido")
 
+
 def test_visualize_xrange():
     query = "QUERY scaninfo(MS1DATA) WHERE \
             MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25 \
