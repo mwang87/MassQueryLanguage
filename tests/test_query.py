@@ -618,6 +618,18 @@ def test_massdefect_ANY_query():
     results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
     assert(len(results_df) == 77)
 
+def test_advanced_filters():
+    query = """
+        QUERY scansum(MS1DATA) FILTER MS1MZ=ANY:TOLERANCEMZ=35:MASSDEFECT=massdefect(min=0.1332, max=0.2112)
+    """
+
+    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
+    print(results_df)
+
+    assert(len(results_df) == 30)
+    assert(max(results_df["mz_defect"]) < 0.22)
+
+
 
 def main():
     #msql_engine.init_ray()
@@ -680,7 +692,7 @@ def main():
     #test_defect()
     #test_or_against_iron()
     #test_quad_brominated()
-    test_quad_brominated2()
+    #test_quad_brominated2()
     #test_ms2_mobility()
     #test_ms2_mobility_variable()
     #test_ms2_mobility_variable2()
@@ -688,6 +700,8 @@ def main():
     #test_ms2_mobility_variable()
     #test_ms2_mobility_variable2()
     #test_massdefect_ANY_query()
+    test_advanced_filters()
+
 
 if __name__ == "__main__":
     main()

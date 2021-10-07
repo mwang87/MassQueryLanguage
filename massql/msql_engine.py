@@ -512,19 +512,17 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             if len(ms1_df) == 0:
                 continue
 
-            mz = condition["value"][0]
-            mz_tol = 0.1
-            mz_min = mz - mz_tol
-            mz_max = mz + mz_tol
-            ms1_df = ms1_df[(ms1_df["mz"] > mz_min) & (ms1_df["mz"] < mz_max)]
-
+            # Applying the filters
+            ms1_df = msql_engine_filters.ms1_filter(condition, ms1_df)
             continue
         
         if condition["type"] == "ms2productcondition":
             if len(ms2_df) == 0:
                 continue
 
-            mz = condition["value"][0]
+            # TODO: Refactor into a function
+
+            mz = float(condition["value"][0])
             mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
