@@ -10,7 +10,8 @@ natural for mass spectrometry users. Broadly we attempt to design it according t
 
 1. Expressiveness - Capture complex mass spectrometry patterns that the community would like to look for
 1. Precision - Exactly prescribe how to find data without ambiguity
-1. Relatively Natural - MassQL should be relatively easy to read and write and even use as a way to communicate ideas about mass spectrometry, you know like a language. 
+2. Scalable - Easily facilitating the querying of one spectrum all the way up to entire repositories of data
+3. Relatively Natural - MassQL should be relatively easy to read and write and even use as a way to communicate ideas about mass spectrometry, you know like a language. 
 
 ## Repository Structure
 
