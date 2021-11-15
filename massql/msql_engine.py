@@ -688,4 +688,28 @@ def _executecollate_query(parsed_dict, ms1_df, ms2_df):
 
                 return ms2_df
 
+        if parsed_dict["querytype"]["function"] == "functionscanmaxint":
+            # This is the biggest peak in the spectrum
+
+            if parsed_dict["querytype"]["datatype"] == "datams1data":
+                if len(ms1_df) == 0:
+                    return ms1_df
+
+                ms1sum_df = ms1_df.groupby("scan").max().reset_index()
+
+                ms1_df = ms1_df.groupby("scan").first().reset_index()
+                ms1_df["i"] = ms1sum_df["i"]
+
+                return ms1_df
+            if parsed_dict["querytype"]["datatype"] == "datams2data":
+                if len(ms2_df) == 0:
+                    return ms2_df
+
+                ms2sum_df = ms2_df.groupby("scan").max().reset_index()
+                
+                ms2_df = ms2_df.groupby("scan").first().reset_index()
+                ms2_df["i"] = ms2sum_df["i"]
+
+                return ms2_df
+
         print("APPLYING FUNCTION")    
