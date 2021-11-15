@@ -639,6 +639,15 @@ def test_advanced_filters2():
     
     assert(max(results_df["mz_defect"]) < 0.22)
 
+def test_waters_query():
+    query = """
+        QUERY scaninfo(MS2DATA) WHERE MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=5 AND 
+        MS1MZ=X+2:INTENSITYMATCH=Y*0.3:INTENSITYMATCHPERCENT=20 AND
+        MS2PREC=X AND X=range(min=500, max=510)
+    """
+
+    results_df = msql_engine.process_query(query, "tests/data/MMSRG_027.mzML")
+
 def main():
     #msql_engine.init_ray()
     

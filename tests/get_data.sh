@@ -17,3 +17,4 @@ wget --no-verbose --output-document=01308_H02_P013387_B00_N16_R1.mzML "ftp://mas
 wget --no-verbose --output-document=119A-24.mzML "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000083461/ccms_peak/mzXML/119A-24.mzML"
 wget --no-verbose --output-document=Hui_N2_fe.mzML "ftp://massive.ucsd.edu/MSV000084628/ccms_peak/Hui_N2_fe.mzML"
 wget --no-verbose --output-document=meoh_water_ms2_1_31_1_395.mzML "https://proteomics2.ucsd.edu/ProteoSAFe/DownloadResultFile?task=2eb041215fdd4f89a2ef91be70752e16&file=workflow_results/spectra/meoh_water_ms2_1_31_1_395.mzML&block=main&process_html=false"
+wget --no-verbose --output-document=MMSRG_027.mzML ftp://massive.ucsd.edu/MSV000088268/peak/Anelize%20and%20Hector/MMSRG_027.mzML
