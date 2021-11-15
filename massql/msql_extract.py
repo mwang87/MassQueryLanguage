@@ -51,7 +51,6 @@ def _extract_mzML_scan(input_filename, spectrum_identifier_list):
     spectrum_identifier_set = set([str(spectrum_scan) for spectrum_scan in spectrum_identifier_list])
 
     run = pymzml.run.Reader(input_filename, MS_precisions=MS_precisions)
-
     
     for spec in run:
         if str(spec.ID) in spectrum_identifier_set:
@@ -68,7 +67,7 @@ def _extract_mzML_scan(input_filename, spectrum_identifier_list):
                 #peaks = peaks[-1000:]
 
                 if len(peaks) == 0:
-                    return None
+                    continue
 
                 mz, intensity = zip(*peaks)
 
@@ -84,7 +83,11 @@ def _extract_mzML_scan(input_filename, spectrum_identifier_list):
 
                 spectrum_obj = {}
                 spectrum_obj["peaks"] = peaks_list
-                spectrum_obj["mslevel"] = spec.ms_level
+                try:
+                    spectrum_obj["mslevel"] = int(spec.ms_level)
+                except:
+                    # This is likely a UV spectrum
+                    continue
                 spectrum_obj["scan"] = str(spec.ID)
 
                 if spec.ms_level > 1:

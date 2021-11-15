@@ -343,6 +343,10 @@ def _load_data_mzML_pyteomics(input_filename):
             i_max = max(intensity)
             i_sum = sum(intensity)
 
+            # If there is no ms level, its likely an UV/VIS spectrum and we can skip
+            if not "ms level" in spectrum:
+                continue
+            
             mslevel = spectrum["ms level"]
             if mslevel == 1:
                 all_mz += list(mz)
