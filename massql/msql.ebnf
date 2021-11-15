@@ -103,12 +103,14 @@ function: functionscannum
     | functionscanrangesum
     | functionscanmz
     | functionscaninfo
+    | functionscanmaxint
 
 functionscannum: "scannum"
 functionscansum: "scansum" 
 functionscanrangesum: "scanrangesum"
 functionscanmz: "scanmz"
 functionscaninfo: "scaninfo"
+functionscanmaxint: "scanmaxint"
 
 booleanandconjunction: "AND"
     | "and"
