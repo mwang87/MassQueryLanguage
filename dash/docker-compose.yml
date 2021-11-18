@@ -15,7 +15,7 @@ services:
     networks:
       - default
       - nginx-net
-    restart: unless-stopped
+    restart: on-failure
     command: /app/run_server.sh
     environment:
       VIRTUAL_HOST: msql.ucsd.edu
@@ -38,7 +38,7 @@ services:
       - ./temp:/app/temp:rw
       - ../massql:/app/massql:ro
     command: /app/run_worker.sh
-    restart: unless-stopped
+    restart: on-failure
     depends_on: 
       - msql-redis
       - msql-rabbitmq
@@ -59,6 +59,7 @@ services:
   msql-redis:
     container_name: msql-redis
     image: redis
+    restart: on-failure
     networks:
       - default
 
