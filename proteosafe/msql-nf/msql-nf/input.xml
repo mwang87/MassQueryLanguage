@@ -48,6 +48,15 @@
 			<default value="NO"/>
 		</parameter>
 
+        <parameter name="EXTRACTNAMING" label="Extract Naming">
+			<options>
+				<option value="condensed" label="condensed"/>
+				<option value="original" label="original"/>
+			</options>
+			<validator type="set"/>
+			<default value="condensed"/>
+		</parameter>
+
         <parameter name="CLUSTERPARALLEL" label="Parallelize Run Across the Cluster (this is an admin thing)">
 			<options>
 				<option value="NO" label="NO"/>

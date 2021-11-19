@@ -56,7 +56,8 @@
             <arg option="-parametermapping" value="PARALLELFILES:parallel_files"/>
             <arg option="-parametermapping" value="PARALLELPERFILE:parallel_query"/>
             <arg option="-parametermapping" value="EXTRACT:extract"/>
-
+            <arg option="-parametermapping" value="EXTRACTNAMING:extractnaming"/>
+            
             <arg option="-updateproteosafefronteendstatus" value="YES"/>
 
             <arg option="-runcluster" valueRef="@CLUSTERPARALLEL"/>

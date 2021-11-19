@@ -5,6 +5,7 @@ params.query = "QUERY scaninfo(MS2DATA)"
 params.parallel_files = 'NO'
 params.parallel_query = 'NO'
 params.extract = 'YES'
+params.extractnaming = 'condensed'
 params.maxfilesize = "3000" // Default 3000 MB
 
 _spectra_ch = Channel.fromPath( params.input_spectra )
@@ -131,7 +132,8 @@ if(params.extract == "YES"){
         extracted_mzML \
         extracted_mgf \
         extracted_json \
-        --output_tsv_prefix extracted_tsv/extracted_tsv
+        --output_tsv_prefix extracted_tsv/extracted_tsv \
+        --naming $params.extractnaming
         """
     }
 

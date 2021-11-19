@@ -1,6 +1,9 @@
 run_test:
 	nextflow run workflow.nf -c test.config
 
+run_test_extract_original:
+	nextflow run workflow.nf -c test.config --extractnaming="original"
+
 run_test_no_extract:
 	nextflow run workflow.nf --extract="No" -c test.config
 

@@ -45,6 +45,7 @@ def main():
     #parser.add_argument('output_parquet', help='Output Parquet File')
     parser.add_argument('--output_tsv', default=None, help='Output Summary Extraction File')
     parser.add_argument('--output_tsv_prefix', default=None, help='Output Summary Extraction output_tsv_prefix')
+    parser.add_argument('--naming', default="condensed", help='Can be condensed or original')
 
     args = parser.parse_args()
 
@@ -66,23 +67,42 @@ def main():
             except:
                 pass
 
-            if len(all_spectra) > MAX_SPECTRA_PER_EXTRACTION:
-                output_mzML_filename = os.path.join(args.output_mzML_folder, "extracted_{}.mzML".format(file_hash))
-                output_mgf_filename = os.path.join(args.output_mgf_folder, "extracted_{}.mgf".format(file_hash))
-                output_json_filename = os.path.join(args.output_json_folder, "extracted_{}.json".format(file_hash))
+            if args.naming == "condensed":
+                if len(all_spectra) > MAX_SPECTRA_PER_EXTRACTION:
+                    output_mzML_filename = os.path.join(args.output_mzML_folder, "extracted_{}.mzML".format(file_hash))
+                    output_mgf_filename = os.path.join(args.output_mgf_folder, "extracted_{}.mgf".format(file_hash))
+                    output_json_filename = os.path.join(args.output_json_folder, "extracted_{}.json".format(file_hash))
 
-                results_df = _export_extraction(all_spectra, output_mzML_filename, output_mgf_filename, output_json_filename)
-                all_results_list.append(results_df)
-                file_hash = str(uuid.uuid4())
-                all_spectra = []
+                    results_df = _export_extraction(all_spectra, output_mzML_filename, output_mgf_filename, output_json_filename)
+                    all_results_list.append(results_df)
+                    file_hash = str(uuid.uuid4())
+                    all_spectra = []
+        
+        # This means we want to collect all the spectra
+        if args.naming == "original":
+            # Assuming each json is from a single file
+            all_filenames = [os.path.basename(x["query_results"][0]["filename"]) for x in all_spectra]
+            original_filename = list(set(all_filenames))[0]
 
-    if len(all_spectra) > 0:
-        output_mzML_filename = os.path.join(args.output_mzML_folder, "extracted_{}.mzML".format(file_hash))
-        output_mgf_filename = os.path.join(args.output_mgf_folder, "extracted_{}.mgf".format(file_hash))
-        output_json_filename = os.path.join(args.output_json_folder, "extracted_{}.json".format(file_hash))
+            output_mzML_filename = os.path.join(args.output_mzML_folder, original_filename)
+            output_mgf_filename = os.path.join(args.output_mgf_folder, original_filename)
+            output_json_filename = os.path.join(args.output_json_folder, original_filename)
 
-        results_df = _export_extraction(all_spectra, output_mzML_filename, output_mgf_filename, output_json_filename)
-        all_results_list.append(results_df)
+            results_df = _export_extraction(all_spectra, output_mzML_filename, output_mgf_filename, output_json_filename)
+            all_results_list.append(results_df)
+
+            all_spectra = []
+
+    if args.naming == "condensed":
+        if len(all_spectra) > 0:
+            output_mzML_filename = os.path.join(args.output_mzML_folder, "extracted_{}.mzML".format(file_hash))
+            output_mgf_filename = os.path.join(args.output_mgf_folder, "extracted_{}.mgf".format(file_hash))
+            output_json_filename = os.path.join(args.output_json_folder, "extracted_{}.json".format(file_hash))
+
+            results_df = _export_extraction(all_spectra, output_mzML_filename, output_mgf_filename, output_json_filename)
+            all_results_list.append(results_df)
+        elif args.naming == "original":
+                print("XXX")
 
     # Merging all the results
     merged_result_df = pd.concat(all_results_list)
