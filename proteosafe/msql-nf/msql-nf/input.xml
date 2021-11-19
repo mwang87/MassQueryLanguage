@@ -132,6 +132,18 @@
         <row>
             <cell>
                 <label>
+                    <content parameter="EXTRACTNAMING"/>
+                </label>
+            </cell>
+
+            <cell>
+                <input type="select" parameter="EXTRACTNAMING">
+                </input>
+            </cell>
+        </row>
+        <row>
+            <cell>
+                <label>
                     <content parameter="CLUSTERPARALLEL"/>
                 </label>
             </cell>
