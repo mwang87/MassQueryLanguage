@@ -101,8 +101,6 @@ def main():
 
             results_df = _export_extraction(all_spectra, output_mzML_filename, output_mgf_filename, output_json_filename)
             all_results_list.append(results_df)
-        elif args.naming == "original":
-                print("XXX")
 
     # Merging all the results
     merged_result_df = pd.concat(all_results_list)
