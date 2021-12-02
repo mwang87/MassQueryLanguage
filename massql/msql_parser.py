@@ -53,6 +53,9 @@ class MassQLToJSON(Transformer):
    def qualifierexclude(self, items):
       return "qualifierexcluded"
 
+   def qualifiercardinality(self, items):
+      return "qualifiercardinality"
+
    def ms2productcondition(self, items):
       return "ms2productcondition"
 
@@ -163,7 +166,7 @@ class MassQLToJSON(Transformer):
          # This is mass defect
          qualifier_type = items[0]
 
-         if qualifier_type == "qualifiermassdefect":
+         if qualifier_type == "qualifiermassdefect" or qualifier_type == "qualifiercardinality":
             qualifier_dict = {}
             qualifier_dict["type"] = "qualifier"
             qualifier_dict[qualifier_type] = {}
