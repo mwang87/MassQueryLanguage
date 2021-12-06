@@ -143,6 +143,17 @@ def _get_intensitymatch_range(qualifiers, match_intensity):
 
     return min_intensity, max_intensity
 
+def _filter_cardinality(ms_peak_df, min_cardinality, max_cardinality):
+    enumeration_df = ms_peak_df.groupby(["scan", "mzenumeration"]).first().reset_index()
+    enumeration_df = enumeration_df.groupby(["scan"]).count()
+    enumeration_df = enumeration_df[enumeration_df["mzenumeration"] >= min_cardinality]
+    enumeration_df = enumeration_df[enumeration_df["mzenumeration"] <= max_cardinality]
+
+    scans = list(enumeration_df.index.unique())
+    filtered_ms_peak_df = ms_peak_df[ms_peak_df["scan"].isin(scans)]
+
+    return filtered_ms_peak_df
+
 def ms2prod_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     """
     Filters the MS1 and MS2 data based upon MS2 peak conditions
@@ -211,13 +222,7 @@ def ms2prod_condition(condition, ms1_df, ms2_df, reference_conditions_register):
             # Figuring out the scans
             ms2_filtered_df = pd.concat(ms2_list)
 
-            enumeration_df = ms2_filtered_df.groupby(["scan", "mzenumeration"]).first().reset_index()
-            enumeration_df = enumeration_df.groupby(["scan"]).count()
-            enumeration_df = enumeration_df[enumeration_df["mzenumeration"] >= min_cardinality]
-            enumeration_df = enumeration_df[enumeration_df["mzenumeration"] <= max_cardinality]
-
-            scans = list(enumeration_df.index.unique())
-            ms2_filtered_df = ms2_filtered_df[ms2_filtered_df["scan"].isin(scans)]
+            ms2_filtered_df = _filter_cardinality(ms2_filtered_df, min_cardinality, max_cardinality)
         else:
             ms2_filtered_df = pd.concat(ms2_list)
 
@@ -304,7 +309,16 @@ def ms2nl_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     if len(ms2_list) == 1:
         ms2_filtered_df = ms2_list[0]
     else:
-        ms2_filtered_df = pd.concat(ms2_list)
+        if "qualifiercardinality" in condition["qualifiers"]:
+            min_cardinality = condition["qualifiers"]["qualifiercardinality"]["min"]
+            max_cardinality = condition["qualifiers"]["qualifiercardinality"]["max"]
+
+            # Figuring out the scans
+            ms2_filtered_df = pd.concat(ms2_list)
+
+            ms2_filtered_df = _filter_cardinality(ms2_filtered_df, min_cardinality, max_cardinality)
+        else:
+            ms2_filtered_df = pd.concat(ms2_list)
 
     # Apply the negation operator
     if exclusion_flag:
@@ -373,7 +387,16 @@ def ms2prec_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     if len(ms2_list) == 1:
         ms2_filtered_df = ms2_list[0]
     else:
-        ms2_filtered_df = pd.concat(ms2_list)
+        if "qualifiercardinality" in condition["qualifiers"]:
+            min_cardinality = condition["qualifiers"]["qualifiercardinality"]["min"]
+            max_cardinality = condition["qualifiers"]["qualifiercardinality"]["max"]
+
+            # Figuring out the scans
+            ms2_filtered_df = pd.concat(ms2_list)
+
+            ms2_filtered_df = _filter_cardinality(ms2_filtered_df, min_cardinality, max_cardinality)
+        else:
+            ms2_filtered_df = pd.concat(ms2_list)
     
     # Apply the negation operator
     if exclusion_flag:
@@ -468,7 +491,16 @@ def ms1_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     if len(ms1_list) == 1:
         ms1_filtered_df = ms1_list[0]
     else:
-        ms1_filtered_df = pd.concat(ms1_list)
+        if "qualifiercardinality" in condition["qualifiers"]:
+            min_cardinality = condition["qualifiers"]["qualifiercardinality"]["min"]
+            max_cardinality = condition["qualifiers"]["qualifiercardinality"]["max"]
+
+            # Figuring out the scans
+            ms1_filtered_df = pd.concat(ms1_list)
+
+            ms1_filtered_df = _filter_cardinality(ms1_filtered_df, min_cardinality, max_cardinality)
+        else:
+            ms1_filtered_df = pd.concat(ms1_list)
 
     # Apply the negation operator
     if exclusion_flag:
