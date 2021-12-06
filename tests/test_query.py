@@ -663,8 +663,9 @@ def test_cardinality_query():
     """
 
     results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
-
     print(results_df)
+
+    assert(39 in list(results_df["scan"]))
 
 def main():
     #msql_engine.init_ray()
