@@ -2,6 +2,7 @@ from celery import Celery
 import glob
 import sys
 import os
+from tqdm import tqdm
 import requests
 import requests_cache
 requests_cache.install_cache('temp/demo_cache')
@@ -12,7 +13,6 @@ from massql import msql_engine
 from celery.signals import worker_ready
 
 celery_instance = Celery('tasks', backend='redis://msql-redis', broker='pyamqp://guest@msql-rabbitmq//', worker_redirect_stdouts=False)
-
 
 @celery_instance.task(time_limit=60)
 def task_computeheartbeat():
@@ -43,7 +43,7 @@ def _get_gnps_spectruminfo(spectrumid):
 
 def _enrich_results(results_list):
     if len(results_list) > 0:
-        for result_obj in results_list[:500]:
+        for result_obj in tqdm(results_list[:500]):
             spectrumid = result_obj["scan"]
 
             if "CCMSLIB" in spectrumid:

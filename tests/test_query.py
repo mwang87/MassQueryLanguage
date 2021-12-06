@@ -657,6 +657,15 @@ def test_scanmaxint_query():
 
     print(results_df)
 
+def test_cardinality_query():
+    query = """
+        QUERY scaninfo(MS2DATA) WHERE MS2PROD=(102 OR 193.1):CARDINALITY=range(min=2, max=2)
+    """
+
+    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
+
+    print(results_df)
+
 def main():
     #msql_engine.init_ray()
     
@@ -728,7 +737,8 @@ def main():
     #test_massdefect_ANY_query()
     #test_advanced_filters()
     #test_advanced_filters2()
-    test_scanmaxint_query()
+    #test_scanmaxint_query()
+    test_cardinality_query()
 
 
 if __name__ == "__main__":
