@@ -98,7 +98,7 @@ qualifierintensitytolpercent: "INTENSITYMATCHPERCENT"
 qualifierintensityreference: "INTENSITYMATCHREFERENCE"
 qualifiermassdefect: "MASSDEFECT"
 qualifierexclude: "EXCLUDED"
-qualifiercardinality: "CARDINALITY"
+qualifiercardinality: "CARDINALITY" | "MATCHCOUNT"
 
 function: functionscannum
     | functionscansum
