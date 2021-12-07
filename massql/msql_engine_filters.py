@@ -143,6 +143,29 @@ def _get_intensitymatch_range(qualifiers, match_intensity):
 
     return min_intensity, max_intensity
 
+def _merge_filter_cardinality(condition, ms_df_list):
+    if "qualifiers" in condition:
+        if "qualifiercardinality" in condition["qualifiers"]:
+            min_cardinality = condition["qualifiers"]["qualifiercardinality"]["min"]
+            max_cardinality = condition["qualifiers"]["qualifiercardinality"]["max"]
+
+            # Figuring out the scans
+            ms_peak_df = pd.concat(ms_df_list)
+
+            enumeration_df = ms_peak_df.groupby(["scan", "mzenumeration"]).first().reset_index()
+            enumeration_df = enumeration_df.groupby(["scan"]).count()
+            enumeration_df = enumeration_df[enumeration_df["mzenumeration"] >= min_cardinality]
+            enumeration_df = enumeration_df[enumeration_df["mzenumeration"] <= max_cardinality]
+
+            scans = list(enumeration_df.index.unique())
+            filtered_ms_peak_df = ms_peak_df[ms_peak_df["scan"].isin(scans)]
+        else:
+            filtered_ms_peak_df = pd.concat(ms_df_list)
+    else:
+        filtered_ms_peak_df = pd.concat(ms_df_list)
+
+    return filtered_ms_peak_df
+
 def ms2prod_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     """
     Filters the MS1 and MS2 data based upon MS2 peak conditions
@@ -163,7 +186,7 @@ def ms2prod_condition(condition, ms1_df, ms2_df, reference_conditions_register):
         return ms1_df, ms2_df
 
     ms2_list = []
-    for mz in condition["value"]:
+    for i, mz in enumerate(condition["value"]):
         if mz == "ANY":
             # Checking defect options
             massdefect_min, massdefect_max = _get_massdefect_min(condition.get("qualifiers", None))
@@ -197,13 +220,14 @@ def ms2prod_condition(condition, ms1_df, ms2_df, reference_conditions_register):
 
         # Applying the intensity match
         ms2_filtered_df = _filter_intensitymatch(ms2_filtered_df, reference_conditions_register, condition)
+        ms2_filtered_df["mzenumeration"] = i
 
         ms2_list.append(ms2_filtered_df)
 
     if len(ms2_list) == 1:
         ms2_filtered_df = ms2_list[0]
     else:
-        ms2_filtered_df = pd.concat(ms2_list)
+        ms2_filtered_df = _merge_filter_cardinality(condition, ms2_list)
 
     # Apply the negation operator
     if exclusion_flag:
@@ -288,7 +312,7 @@ def ms2nl_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     if len(ms2_list) == 1:
         ms2_filtered_df = ms2_list[0]
     else:
-        ms2_filtered_df = pd.concat(ms2_list)
+        ms2_filtered_df = _merge_filter_cardinality(condition, ms2_list)
 
     # Apply the negation operator
     if exclusion_flag:
@@ -357,7 +381,7 @@ def ms2prec_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     if len(ms2_list) == 1:
         ms2_filtered_df = ms2_list[0]
     else:
-        ms2_filtered_df = pd.concat(ms2_list)
+        ms2_filtered_df = _merge_filter_cardinality(condition, ms2_list)
     
     # Apply the negation operator
     if exclusion_flag:
@@ -452,7 +476,7 @@ def ms1_condition(condition, ms1_df, ms2_df, reference_conditions_register):
     if len(ms1_list) == 1:
         ms1_filtered_df = ms1_list[0]
     else:
-        ms1_filtered_df = pd.concat(ms1_list)
+        ms1_filtered_df = _merge_filter_cardinality(condition, ms1_list)
 
     # Apply the negation operator
     if exclusion_flag:

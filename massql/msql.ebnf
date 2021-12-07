@@ -36,8 +36,9 @@ qualifier: qualifier ":" qualifier
     | qualifierfields greaterthan numericalexpression
     | qualifierfields lessthan numericalexpression
     | qualifierintensityreference
-    | qualifiermassdefect equal xdefect  "(min=" numericalexpression "," "max=" numericalexpression ")"
+    | qualifiermassdefect equal xdefect "(min=" numericalexpression "," "max=" numericalexpression ")"
     | qualifierexclude
+    | qualifiercardinality equal xrange "(min=" numericalexpression "," "max=" numericalexpression ")"
 
 equal: "="
 lessthan: "<"
@@ -97,6 +98,7 @@ qualifierintensitytolpercent: "INTENSITYMATCHPERCENT"
 qualifierintensityreference: "INTENSITYMATCHREFERENCE"
 qualifiermassdefect: "MASSDEFECT"
 qualifierexclude: "EXCLUDED"
+qualifiercardinality: "CARDINALITY" | "MATCHCOUNT"
 
 function: functionscannum
     | functionscansum

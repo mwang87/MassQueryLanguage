@@ -208,6 +208,20 @@ def test_wildcard():
     print(parsed_output)
 
 
+def test_cardinality():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=(100 OR 104):CARDINALITY=range(min=1, max=50)"
+    parsed_output = msql_parser.parse_msql(query)
+    print(parsed_output)
+    assert(parsed_output["conditions"][0]["qualifiers"]["qualifiercardinality"]["min"] == 1.0)
+
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=(100 OR 104):MATCHCOUNT=range(min=1, max=50)"
+    parsed_output = msql_parser.parse_msql(query)
+    print(parsed_output)
+    assert(parsed_output["conditions"][0]["qualifiers"]["qualifiercardinality"]["min"] == 1.0)
+
+
+
+
 def main():
     #test_xrange_parse()
     #test_parse()
@@ -228,8 +242,9 @@ def main():
     #test_mobility()
     #test_mobility_variables()
     #test_negation()
-    test_wildcard()
+    #test_wildcard()
     #test_ms1_multiple_or()
+    test_cardinality()
 
 
 
