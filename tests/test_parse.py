@@ -219,6 +219,17 @@ def test_cardinality():
     print(parsed_output)
     assert(parsed_output["conditions"][0]["qualifiers"]["qualifiercardinality"]["min"] == 1.0)
 
+def test_or_cardinality():
+    query = """
+        QUERY scaninfo(MS2DATA) WHERE 
+        MS2PROD=(120.08078 OR 86.09643 OR 70.06513 OR 72.08078 OR 159.09167 OR 136.07569):CARDINALITY=range(min=2, max=2)
+    """
+
+    parsed_output = msql_parser.parse_msql(query)
+    print(parsed_output)
+
+
+
 
 
 
@@ -244,7 +255,8 @@ def main():
     #test_negation()
     #test_wildcard()
     #test_ms1_multiple_or()
-    test_cardinality()
+    #test_cardinality()
+    test_or_cardinality()
 
 
 

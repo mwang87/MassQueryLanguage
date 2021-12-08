@@ -667,6 +667,14 @@ def test_cardinality_query():
 
     assert(39 in list(results_df["scan"]))
 
+def test_big_or_cardinality():
+    query = """
+        QUERY scaninfo(MS2DATA) WHERE 
+        MS2PROD=(120.08078 OR 86.09643 OR 70.06513 OR 72.08078 OR 159.09167 OR 136.07569):CARDINALITY=range(min=2, max=2)
+    """
+
+    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
+
 def main():
     #msql_engine.init_ray()
     
@@ -739,7 +747,8 @@ def main():
     #test_advanced_filters()
     #test_advanced_filters2()
     #test_scanmaxint_query()
-    test_cardinality_query()
+    #test_cardinality_query()
+    test_big_or_cardinality()
 
 
 if __name__ == "__main__":
