@@ -213,13 +213,13 @@ def _extract_spectra(results_df, input_spectra_folder,
                 input_spectra_filename = os.path.join(input_spectra_folder, results_by_file_df["filename"].iloc[0])
 
             spectrum_obj_list = []
-            if ".mzML" in input_spectra_filename:
+            if input_spectra_filename[-5:].lower() == ".mzml":
                 spectrum_obj_list = _extract_mzML_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
-            if ".mzXML" in input_spectra_filename:
+            elif input_spectra_filename[-6:].lower() == ".mzxml":
                 spectrum_obj_list = _extract_mzXML_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
-            if ".mgf" in input_spectra_filename:
+            elif input_spectra_filename[-4:].lower() == ".mgf":
                 spectrum_obj_list = _extract_mgf_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
-            if ".json" in input_spectra_filename:
+            elif input_spectra_filename[-5:] == ".json":
                 spectrum_obj_list = _extract_json_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
 
             for spectrum_obj in spectrum_obj_list:                
