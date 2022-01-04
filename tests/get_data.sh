@@ -1,6 +1,7 @@
 mkdir -p data
 cd data
 wget --no-verbose --output-document=GNPS00002_A3_p.mzML ftp://massive.ucsd.edu/MSV000084494/ccms_peak/raw/GNPS00002_A3_p.mzML
+wget --no-verbose --output-document=GNPS00002_A3_p.mzml ftp://massive.ucsd.edu/MSV000084494/ccms_peak/raw/GNPS00002_A3_p.mzML
 wget --no-verbose --output-document=GNPS00002_A10_n.mzML ftp://massive.ucsd.edu/MSV000084494/ccms_peak/raw/GNPS00002_A10_n.mzML
 wget --no-verbose --output-document=QC_0.mzML ftp://massive.ucsd.edu/MSV000085852/ccms_peak/QC_raw/QC_0.mzML
 wget --no-verbose --output-document=bld_plt1_07_120_1.mzML ftp://massive.ucsd.edu/MSV000085944/ccms_peak/raw_data/bld_plt1_07_120_1.mzML

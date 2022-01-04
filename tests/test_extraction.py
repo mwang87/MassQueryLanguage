@@ -23,6 +23,19 @@ def test_extract_mzML():
                                                         output_mzML_filename="test.mzML")
     assert(len(merged_summary_df) == 79)
 
+def test_extract_mzmz():
+    query = "QUERY scaninfo(MS2DATA)"
+    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzml")
+
+    assert(len(results_df) > 1)
+    results_df["filename"] = "GNPS00002_A3_p.mzml"
+
+    merged_summary_df = msql_extract._extract_spectra(results_df, "tests/data/", 
+                                                        output_json_filename="test.json", 
+                                                        output_summary="summary.tsv",
+                                                        output_mzML_filename="test.mzML")
+    assert(len(merged_summary_df) == 79)
+
 def test_extract_mzXML():
     query = "QUERY scaninfo(MS1DATA)"
     results_df = msql_engine.process_query(query, "tests/data/T04251505.mzXML")
