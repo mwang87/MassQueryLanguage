@@ -4,6 +4,7 @@ import argparse
 import os
 import sys
 import json
+import uuid
 import pandas as pd
 
 # Making sure the root is in the path, kind of a hack
@@ -79,10 +80,12 @@ def main():
 
     # Handling output filename
     output_results_filename = args.output_file
+    output_file_toolong_unique_prefix = str(uuid.uuid4()).replace("-", "") + "_" 
 
     if output_results_filename is not None:
         if len(os.path.basename(output_results_filename)) > 80:
-            output_results_filename = os.path.join(os.path.split(output_results_filename)[0] + os.path.basename(output_results_filename)[-80:])
+            output_results_filename = os.path.join(os.path.split(output_results_filename)[0], 
+                                                  output_file_toolong_unique_prefix + os.path.basename(output_results_filename)[-80:])
     
     if output_results_filename and len(results_df) > 0:
         results_df["filename"] = os.path.basename(args.filename)
@@ -132,7 +135,13 @@ def main():
         if args.extract_json is not None and len(results_df) > 0:
             print("Extracting {} spectra".format(len(results_df)))
             try:
-                msql_extract._extract_spectra(results_df, os.path.dirname(args.filename), output_json_filename=args.extract_json)
+                output_json_filename = args.extract_json
+                if output_json_filename is not None:
+                    if len(os.path.basename(output_json_filename)) > 80:
+                        output_json_filename = os.path.join(os.path.split(output_json_filename)[0], 
+                                                            output_file_toolong_unique_prefix + os.path.basename(output_json_filename)[-80:])
+
+                msql_extract._extract_spectra(results_df, os.path.dirname(args.filename), output_json_filename=output_json_filename)
             except:
                 print("Extraction Failed")
                 
