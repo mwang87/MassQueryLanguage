@@ -4,6 +4,7 @@ import argparse
 import os
 import sys
 import json
+import uuid
 import pandas as pd
 
 # Making sure the root is in the path, kind of a hack
@@ -18,12 +19,12 @@ def main():
     parser = argparse.ArgumentParser(description="MSQL CMD")
     parser.add_argument('filename', help='Input filename')
     parser.add_argument('query', help='Input Query')
-    parser.add_argument('--output_file', default=None, help='output results filename')
+    parser.add_argument('--output_file', default=None, help='output results filename, if filename is too long will truncate filename')
     parser.add_argument('--parallel_query', default="NO", help='YES to make it parallel with ray locally, NO is default')
     parser.add_argument('--cache', default="YES", help='YES to cache with feather, YES is the default')
     parser.add_argument('--original_path', default=None, help='Original absolute path for the filename, useful in proteosafe')
-    parser.add_argument('--extract_mzML', default=None, help='Extracting spectra found as mzML file')
-    parser.add_argument('--extract_json', default=None, help='Extracting spectra found as json file, each spectrum is a line')
+    parser.add_argument('--extract_mzML', default=None, help='Extracting spectra found as mzML file, if filename is too long will truncate filename')
+    parser.add_argument('--extract_json', default=None, help='Extracting spectra found as json file, each spectrum is a line, if filename is too long, wiil truncate',)
     parser.add_argument('--maxfilesize', default=None, help='Maximum file size in MB')
     
     args = parser.parse_args()
@@ -76,8 +77,17 @@ def main():
             results_df["mz_upper"] = results_df["comment"].astype(float) + 10
     except:
         pass
+
+    # Handling output filename
+    output_results_filename = args.output_file
+    output_file_toolong_unique_prefix = str(uuid.uuid4()).replace("-", "") + "_" 
+
+    if output_results_filename is not None:
+        if len(os.path.basename(output_results_filename)) > 80:
+            output_results_filename = os.path.join(os.path.split(output_results_filename)[0], 
+                                                  output_file_toolong_unique_prefix + os.path.basename(output_results_filename)[-80:])
     
-    if args.output_file and len(results_df) > 0:
+    if output_results_filename and len(results_df) > 0:
         results_df["filename"] = os.path.basename(args.filename)
 
         if args.original_path is not None:
@@ -116,16 +126,22 @@ def main():
         columns = list(results_df.columns)
         columns.sort()
 
-        if ".tsv" in args.output_file:
-            results_df.to_csv(args.output_file, index=False, sep="\t", columns=columns)
+        if ".tsv" in output_results_filename:
+            results_df.to_csv(output_results_filename, index=False, sep="\t", columns=columns)
         else:
-            results_df.to_csv(args.output_file, index=False, columns=columns)
+            results_df.to_csv(output_results_filename, index=False, columns=columns)
 
         # Extracting
         if args.extract_json is not None and len(results_df) > 0:
             print("Extracting {} spectra".format(len(results_df)))
             try:
-                msql_extract._extract_spectra(results_df, os.path.dirname(args.filename), output_json_filename=args.extract_json)
+                output_json_filename = args.extract_json
+                if output_json_filename is not None:
+                    if len(os.path.basename(output_json_filename)) > 80:
+                        output_json_filename = os.path.join(os.path.split(output_json_filename)[0], 
+                                                            output_file_toolong_unique_prefix + os.path.basename(output_json_filename)[-80:])
+
+                msql_extract._extract_spectra(results_df, os.path.dirname(args.filename), output_json_filename=output_json_filename)
             except:
                 print("Extraction Failed")
                 
