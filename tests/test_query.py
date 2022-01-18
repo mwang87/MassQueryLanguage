@@ -675,6 +675,27 @@ def test_big_or_cardinality():
 
     results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
 
+def test_mgf_intensity():
+    query = """
+        QUERY scaninfo(MS2DATA)
+            WHERE 
+            MS2PROD=184.0739:TOLERANCEMZ=0.01:INTENSITYVALUE>1000000
+            AND
+            MS2PROD=125.0004:TOLERANCEMZ=0.01:INTENSITYVALUE>530000
+            AND
+            MS2PROD=104.1075:TOLERANCEMZ=0.01:INTENSITYVALUE>130000
+            AND
+            MS2PROD=86.09697:TOLERANCEMZ=0.01:INTENSITYVALUE>370000
+            AND 
+            SCANMIN=1005
+            AND
+            SCANMAX=1007
+    """
+
+    results_df = msql_engine.process_query(query, "tests/data/featurelist_pos.mgf")
+
+    print(results_df)
+
 def main():
     #msql_engine.init_ray()
     
@@ -748,7 +769,8 @@ def main():
     #test_advanced_filters2()
     #test_scanmaxint_query()
     #test_cardinality_query()
-    test_big_or_cardinality()
+    #test_big_or_cardinality()
+    test_mgf_intensity()
 
 
 if __name__ == "__main__":
