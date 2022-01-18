@@ -161,6 +161,13 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
     if ms1_df is None:
         ms1_df, ms2_df = msql_fileloading.load_data(input_filename, cache=cache)
 
+    # Setting types for DF
+    try:
+        ms1_df["scan"] = ms1_df["scan"].astype(int)
+        ms2_df["scan"] = ms2_df["scan"].astype(int)
+    except:
+        pass
+
     # Here we are going to translate the variable query into a concrete query based upon the data
     all_concrete_queries = []
     if variable_properties["has_variable"]:
