@@ -677,7 +677,7 @@ def test_big_or_cardinality():
 
 def test_mgf_intensity():
     query = """
-        QUERY scaninfo(MS2DATA)
+        QUERY MS2DATA
             WHERE 
             MS2PROD=184.0739:TOLERANCEMZ=0.01:INTENSITYVALUE>1000000
             AND
@@ -691,10 +691,11 @@ def test_mgf_intensity():
             AND
             SCANMAX=1007
     """
+    # Peak 104 correct
 
     results_df = msql_engine.process_query(query, "tests/data/featurelist_pos.mgf")
 
-    print(results_df)
+    assert(1006 in list(results_df["scan"]))
 
 def main():
     #msql_engine.init_ray()
