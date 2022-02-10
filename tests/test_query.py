@@ -401,7 +401,7 @@ def test_networking_mgf_library():
     print(json.dumps(parse_obj, indent=4))
     results_df = msql_engine.process_query(query, "tests/data/specs_ms.mgf")
     print(results_df)
-    assert("2" in list(results_df["scan"]))
+    assert(2 in list(results_df["scan"]))
     
 def test_mse():
     query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=X:TOLERANCEMZ=0.1:INTENSITYPERCENT=25:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE \
