@@ -1,4 +1,6 @@
+.venv
 workflow/work
 *__pycache__*
 tests/data
+tests/test_data/*.feather
 tests/test_parses
