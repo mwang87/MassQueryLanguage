@@ -96,6 +96,13 @@ Visualization image of MS2 spectra
 
 ```/visualize/ms2```
 
+## Testing
+To run tests, you'll need to first fetch some fixtures that are not bundled with the git repo:
+```cd tests && sh ./get_data.sh```
+
+You will also want to install the extra requirements for the test suite:
+```pip install -r requirements_test.txt```
+
 ## License
 
 MIT License
