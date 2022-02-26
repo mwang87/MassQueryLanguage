@@ -20,3 +20,4 @@ wget --no-verbose --output-document=Hui_N2_fe.mzML "ftp://massive.ucsd.edu/MSV00
 wget --no-verbose --output-document=meoh_water_ms2_1_31_1_395.mzML "https://proteomics2.ucsd.edu/ProteoSAFe/DownloadResultFile?task=2eb041215fdd4f89a2ef91be70752e16&file=workflow_results/spectra/meoh_water_ms2_1_31_1_395.mzML&block=main&process_html=false"
 wget --no-verbose --output-document=MMSRG_027.mzML ftp://massive.ucsd.edu/MSV000088268/peak/Anelize%20and%20Hector/MMSRG_027.mzML
 wget --no-verbose --output-document=featurelist_pos.mgf https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000086995/updates/2022-01-18_mwang87_e619431a/peak/bahbobeh/featurelist_pos.mgf&forceDownload=true
+wget --no-verbose --output-document=GT15A.mzML https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000087048/ccms_peak/Green_Tea_manuscript_data/GT15A.mzML

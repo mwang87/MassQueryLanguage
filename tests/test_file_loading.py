@@ -48,10 +48,16 @@ def test_mzml_rt_seconds():
     print(ms2_df)
     assert(max(ms2_df["rt"]) < 60)
 
+def test_waters_load():
+    # This has UV spectra in it, we need to handle that gracefully
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/GT15A.mzML", cache=False)
+    
+
 def main():
     #test_mzml_load()
     #test_mzml_mobility_load()
-    test_mzml_rt_seconds()
+    #test_mzml_rt_seconds()
+    test_waters_load()
 
 if __name__ == "__main__":
     main()

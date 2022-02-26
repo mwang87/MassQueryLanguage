@@ -86,6 +86,10 @@ process formatResultsMergeRounds {
     publishDir "$params.publishdir/msql", mode: 'copy'
     cache false
     echo true
+
+    errorStrategy 'ignore'
+    //errorStrategy 'retry'
+    //maxErrors 10
     
     input:
     file "results/*"  from _query_results_ch.collate( 1000 )
