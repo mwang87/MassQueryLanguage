@@ -27,4 +27,7 @@ test_full:
 # test_specific:
 # 	pytest --capture=tee-sys -vv test.py::test_min_intensitypercent
 # 	pytest --capture=tee-sys -vv test.py::test_query
-	
+
+deploy_pypi:
+	python -m build --sdist --wheel .
+	twine upload dist/*
