@@ -188,7 +188,11 @@ def _load_data_mzXML(input_filename):
         for spectrum in tqdm(reader):
             if len(spectrum["intensity array"]) == 0:
                 continue
-                
+            
+            if not "m/z array" in spectrum:
+                # This is not a mass spectrum
+                continue
+
             mz_list = list(spectrum["m/z array"])
             i_list = list(spectrum["intensity array"])
             i_max = max(i_list)
@@ -337,7 +341,11 @@ def _load_data_mzML_pyteomics(input_filename):
                 pass
 
             scan = int(spectrum["id"].replace("scanId=", "").split("scan=")[-1])
-                
+            
+            if not "m/z array" in spectrum:
+                # This is not a mass spectrum
+                continue
+
             mz = spectrum["m/z array"]
             intensity = spectrum["intensity array"]
             i_max = max(intensity)
