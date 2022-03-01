@@ -96,7 +96,7 @@ def _extract_mzML_scan(input_filename, spectrum_identifier_list):
 
                 output_list.append(spectrum_obj)
             except:
-                raise
+                pass
 
     return output_list
 

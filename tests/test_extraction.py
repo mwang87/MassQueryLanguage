@@ -87,12 +87,26 @@ def test_waters_uv_extract():
                                                     output_mzML_filename="extracted.mzML",
                                                     output_summary="extracted.tsv")
 
+def test_waters_uv_extract2():
+    query = "QUERY scaninfo(MS2DATA)"
+    results_df = msql_engine.process_query(query, "tests/data/GT15A.mzML")
+
+    results_df["filename"] = "MMSRG_027.mzML"
+    results_df = results_df.head()
+
+    merged_summary_df = msql_extract._extract_spectra(results_df, 
+                                                    "tests/data/", 
+                                                    output_mzML_filename="extracted.mzML",
+                                                    output_json_filename="extracted.json",
+                                                    output_summary="extracted.tsv")
+
 def main():
     #test_extract_mzML()
     #test_extract_mzXML()
     #test_extract_MGF()
     #test_gnps_library_extract()
-    test_waters_uv_extract()
+    #test_waters_uv_extract()
+    test_waters_uv_extract2()
 
 
 if __name__ == "__main__":
