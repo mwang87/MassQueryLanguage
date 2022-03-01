@@ -56,7 +56,7 @@ def _extract_mzML_scan(input_filename, spectrum_identifier_list):
         if str(spec.ID) in spectrum_identifier_set:
             try:
                 try:
-                    spectrum_obj["mslevel"] = int(spec.ms_level)
+                    int(spec.ms_level)
                 except:
                     # This is likely a UV spectrum
                     continue
@@ -90,6 +90,7 @@ def _extract_mzML_scan(input_filename, spectrum_identifier_list):
                 spectrum_obj = {}
                 spectrum_obj["peaks"] = peaks_list
                 spectrum_obj["scan"] = str(spec.ID)
+                spectrum_obj["mslevel"] = int(spec.ms_level)
 
                 if spec.ms_level > 1:
                     msn_mz = spec.selected_precursors[0]["mz"]
