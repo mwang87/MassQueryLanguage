@@ -112,6 +112,16 @@ def test_variable_formula_parse2():
     parsed_output = msql_parser.parse_msql(query)
     print(json.dumps(parsed_output, indent=4))
 
+def test_variable_formula_parse3():
+    query = """QUERY scaninfo(MS2DATA) WHERE 
+    MS1MZ=X-1.993:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25:TOLERANCEPPM=10 AND 
+    MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=5
+    AND MS1MZ=X+1:INTENSITYMATCH=Y*((X*0.04911+1.2397)/100):INTENSITYMATCHPERCENT=20 AND MS2PREC=X-52.91
+    """
+
+    parsed_output = msql_parser.parse_msql(query)
+    print(json.dumps(parsed_output, indent=4))
+
 def test_xrange_parse():
     query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=2.0*(X - formula(Fe)) AND X=range(min=5, max=100)"
 
@@ -256,7 +266,8 @@ def main():
     #test_wildcard()
     #test_ms1_multiple_or()
     #test_cardinality()
-    test_or_cardinality()
+    #test_or_cardinality()
+    test_variable_formula_parse3()
 
 
 
