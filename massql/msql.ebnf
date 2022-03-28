@@ -124,6 +124,7 @@ param: "TOLERANCE"
 floating: /[-+]?([0-9]*\.[0-9]+|[0-9]+)/
 variable: /[XY]/
 wildcard: "ANY"
+parenthesis: "(" | ")"
 
 // OR Numerical Expression
 numericalexpressionwithor: numericalexpression
@@ -141,7 +142,7 @@ factor: floating
     | "formula(" moleculeformula ")"
     | "aminoaciddelta(" aminoacids ")"
     | peptidefunction
-    | "(" numericalexpression ")"
+    | parenthesis numericalexpression parenthesis
 peptidefunction: "peptide(" peptide "," "charge=" peptidecharge "," "ion=" peptideion ")"
 multiply: "*"
 divide: "/"
