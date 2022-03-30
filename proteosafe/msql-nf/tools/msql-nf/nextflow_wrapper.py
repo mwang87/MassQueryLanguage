@@ -82,9 +82,12 @@ def main():
                             args.nextflow_script,
                             output_trace_filename,
                             output_stdout_file)
+    
+    parameter_dict = {}
     for parameter in args.newparameters:
         print(parameter)
-        cmd += ' --{} "{}"'.format(parameter.split(":")[0], parameter.split(":")[1].replace("\n", ""))
+        #cmd += ' --{} "{}"'.format(parameter.split(":")[0], parameter.split(":")[1].replace("\n", ""))
+        parameter_dict[parameter.split(":")[0]] = parameter.split(":")[1].replace("\n", "")
 
     params_obj = ming_proteosafe_library.parse_xml_file(open(args.workflow_params))
     for parameter in args.parametermapping:
@@ -92,9 +95,17 @@ def main():
         new_param = parameter.split(":")[1]
         old_param = parameter.split(":")[0]
 
-        cmd += ' --{} "{}"'.format(new_param, params_obj[old_param][0].replace("\n", ""))
+        #cmd += ' --{} "{}"'.format(new_param, params_obj[old_param][0].replace("\n", ""))
+        parameter_dict[new_param] = params_obj[old_param][0].replace("\n", "")
+
+    # Saving the parameters
+    output_params = os.path.abspath(os.path.join(args.metricoutput, "run_nf_params.yaml"))
+    with open(output_params, "w") as f:
+        import yaml
+        yaml.dump(parameter_dict, f)
 
     # Saving the script
+    cmd += " -params-file {}".format(output_params)
     output_script = os.path.abspath(os.path.join(args.metricoutput, "run_nf.sh"))
     with open(output_script, "w") as f:
         f.write(cmd)
