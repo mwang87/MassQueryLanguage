@@ -8,6 +8,8 @@ params.extract = 'YES'
 params.extractnaming = 'condensed'
 params.maxfilesize = "3000" // Default 3000 MB
 
+params.proteosafe_params = "" // This will be if we are running in proteosafe
+
 _spectra_ch = Channel.fromPath( params.input_spectra )
 _spectra_ch.into{_spectra_ch1;_spectra_ch2}
 
@@ -16,6 +18,9 @@ _spectra_ch3 = _spectra_ch1.map { file -> tuple(file, file.toString().replaceAll
 TOOL_FOLDER = "$baseDir/bin"
 params.publishdir = "nf_output"
 params.PYTHONRUNTIME = "python" // this is a hack because CCMS cluster does not have python installed
+
+// Writing query to file
+// TODO: Updating soon
 
 if(params.parallel_files == "YES"){
     process queryData {

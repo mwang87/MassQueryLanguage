@@ -26,6 +26,7 @@ def main():
     parser.add_argument('--extract_mzML', default=None, help='Extracting spectra found as mzML file, if filename is too long will truncate filename')
     parser.add_argument('--extract_json', default=None, help='Extracting spectra found as json file, each spectrum is a line, if filename is too long, wiil truncate',)
     parser.add_argument('--maxfilesize', default=None, help='Maximum file size in MB')
+    parser.add_argument('--query_filename', default=None, help='Query within a file')
     
     args = parser.parse_args()
 
