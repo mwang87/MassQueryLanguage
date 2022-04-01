@@ -65,6 +65,12 @@
 			<validator type="set"/>
 			<default value="NO"/>
 		</parameter>
+
+        <parameter name="MAXFILESIZE" label="Max File Size (MB)">
+            <default value="3000"/>
+            <validator type="float" minimumExclusive="1" maximum="3001"/>
+        </parameter>
+        
     </parameters>
 
     <block label="Setting">
@@ -152,7 +158,19 @@
                 <input type="select" parameter="CLUSTERPARALLEL">
                 </input>
             </cell>
-        </row>   
+        </row>
+        <row>
+            <cell>
+                <label>
+                    <content parameter="MAXFILESIZE"/>
+                </label>
+            </cell>
+            <cell>
+                <input type="text" parameter="MAXFILESIZE">
+                    <attribute name="size" value="3"/>
+                </input>
+            </cell>
+        </row>
     </block>
 
 
