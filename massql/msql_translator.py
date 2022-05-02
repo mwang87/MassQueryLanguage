@@ -15,6 +15,8 @@ def translate_query(query, language="english"):
             sentences.append("매스 스펙트럼으로 부터의 스캔 검색조건은 아래와 같습니다.")
         elif language == "chinese":
             sentences.append("这些条件被用于在数据中找到扫描数据。")
+        elif language == "japanese":
+            sentences.append("質量分析データ中のスキャンを見つけるために、次の条件が適用されます。")
         elif language == "french":
             sentences.append("Les conditions suivantes sont appliquées pour trouver les échantillons dans les données du spectrométrie.")
         elif language == "german":
@@ -48,6 +50,8 @@ def _translate_querytype(querytype, language="english"):
             return "{} 데이터상의 스캔 정보를 반환합니다.".format(ms_level)
         elif language == "chinese":
             return "返回{}的扫描信息".format(ms_level)
+        elif language == "japanese":
+            return "{} でのスキャン情報を返しています。".format(ms_level)
         elif language == "french":
             return "Retourne les informations sur le scan {}.".format(ms_level)
         elif language == "german":
@@ -66,6 +70,8 @@ def _translate_querytype(querytype, language="english"):
             return "스칼라를 {} 데이터로 더하기.".format(ms_level)
         elif language == "chinese":
             return "返回{}的总计扫描信息".format(ms_level)
+        elif language == "japanese":
+            return "{} で合わされたスキャン情報を返しています。".format(ms_level)
         elif language == "french":
             return "Retourne les informations sur le scan somme de {}.".format(ms_level)
         elif language == "german":
@@ -98,6 +104,8 @@ def _translate_condition(condition, language="english"):
             return "MS2 질량대 전하비 (m/z): {} {}.".format(all_values_string, qualifier_string)
         elif language == "chinese":
             return "寻找m/z{}的MS2峰{}".format(all_values_string, qualifier_string)
+        elif language == "japanese":
+            return "m/z で MS2 ピークを検索しています {}{}。".format(all_values_string, qualifier_string)
         elif language == "french":
             return "Trouver un pic MS2 à m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "german":
@@ -120,6 +128,8 @@ def _translate_condition(condition, language="english"):
             return "MS2 전자 소모량 {} {}.".format(all_values_string, qualifier_string)
         elif language == "chinese":
             return "在{}的MS2中探测到m/z{}".format(all_values_string, qualifier_string)
+        elif language == "japanese":
+            return "m/z で MS2 の neutral loss ピークを検索しています {}{}。".format(all_values_string, qualifier_string)
         elif language == "french":
             return "Trouver un pic MS2 neutral loss à m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "german":
@@ -142,6 +152,8 @@ def _translate_condition(condition, language="english"):
             return "MS1 파워 밀도 {} {}.".format(all_values_string, qualifier_string)
         elif language == "chinese":
             return "在{}的MS1中找到m/z{}".format(all_values_string, qualifier_string)
+        elif language == "japanese":
+            return "m/z で MS1 ピークを検索しています {}{}。".format(all_values_string, qualifier_string)
         elif language == "french":
             return "Trouver un pic MS1 à m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "german":
@@ -164,6 +176,8 @@ def _translate_condition(condition, language="english"):
             return "MS2 파워 밀도 {} {}.".format(all_values_string, qualifier_string)
         elif language == "chinese":
             return "在{}的MS2中找到m/z{}".format(all_values_string, qualifier_string)
+        elif language == "japanese":
+            return "プリカーサーの m/z で MS2 スペクトルを検索しています {}{}。".format(all_values_string, qualifier_string)
         elif language == "french":
             return "Trouver des spectres MS2 avec une m/z de précursor {}{}.".format(all_values_string, qualifier_string)
         elif language == "german":
@@ -191,6 +205,8 @@ def _translate_qualifiers(qualifiers, language="english"):
         return " 와 ".join(qualifier_phrases)
     elif language == "chinese":
         return " 和 ".join(qualifier_phrases)
+    elif language == "japanese":
+        return " と ".join(qualifier_phrases)
     elif language == "french":
         return " et ".join(qualifier_phrases)
     elif language == "german":
@@ -212,6 +228,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "오차범위 (tolerance): {} ppm 의 조건으로 검색합니다".format(qualifier["value"])
         elif language == "chinese":
             return "允许{} ppm质量偏差".format(qualifier["value"])
+        elif language == "japanese":
+            return "{} PPM の誤差範囲".format(qualifier["value"])
         elif language == "french":
             return "une tolérance {} PPM".format(qualifier["value"])
         elif language == "german":
@@ -230,6 +248,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "m/z 오차 {} 밀도".format(qualifier["value"])
         elif language == "chinese":
             return "一个{} m/z 容差".format(qualifier["value"])
+        elif language == "japanese":
+            return "{} m/z の誤差範囲".format(qualifier["value"])
         elif language == "french":
             return "une tolérance {} m/z".format(qualifier["value"])
         elif language == "german":
@@ -248,6 +268,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "최소 정상 높이 {}%".format(qualifier["value"])
         elif language == "chinese":
             return "一个最低比值{}%的精确度".format(qualifier["value"])
+        elif language == "japanese":
+            return "{}% の基準ピークに対する最小パーセントの強度".format(qualifier["value"])
         elif language == "french":
             return "une intensité minimale relative à la base de {}%".format(qualifier["value"])
         elif language == "german":
@@ -266,6 +288,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "최소 정상 높이 {}".format(qualifier["value"])
         elif language == "chinese":
             return "一个最低比值{}的精确度".format(qualifier["value"])
+        elif language == "japanese":
+            return "最小強度の値 {}".format(qualifier["value"])
         elif language == "french":
             return "une intensité minimale de {}".format(qualifier["value"])
         elif language == "german":
@@ -284,6 +308,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "이 데이터를 이용해 시퀀스에 다른 데이터를 인식한다"
         elif language == "chinese":
             return "这个峰用作输入精确度的参考峰"
+        elif language == "japanese":
+            return "このピークは、スペクトル内の他のピークに対する強度のリファレンスとして使用されます"
         elif language == "french":
             return "ce pico est utilisé comme référence d'intensité pour les autres pics de l'échantillon"
         elif language == "german":
@@ -302,6 +328,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "예상 비율 이용시 이용할 대상 데이터의 정보 {}".format(qualifier["value"])
         elif language == "chinese":
             return "一个预期相对于参考峰的精确度 {}".format(qualifier["value"])
+        elif language == "japanese":
+            return "{} のリファレンスピークに対して予想される相対強度".format(qualifier["value"])
         elif language == "french":
             return "une intensité prévu relative à la référence de {}".format(qualifier["value"])
         elif language == "german":
@@ -320,6 +348,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "이상한 {}%의 비율의 신체 이용 허용".format(qualifier["value"])
         elif language == "chinese":
             return "接受{}%的精确度变动".format(qualifier["value"])
+        elif language == "japanese":
+            return "相対強度で {}% のばらつきを受け入れる".format(qualifier["value"])
         elif language == "french":
             return "accepter la variabilité de {}% en intensité relative".format(qualifier["value"])
         elif language == "german":
