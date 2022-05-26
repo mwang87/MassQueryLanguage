@@ -48,12 +48,12 @@ server = app.server
 NAVBAR = dbc.Navbar(
     children=[
         dbc.NavbarBrand(
-            html.Img(src="https://gnps-cytoscape.ucsd.edu/static/img/GNPS_logo.png", width="120px"),
-            href="https://gnps.ucsd.edu"
+            html.Img(src="assets/massql_logo_cropped.png", width="120px"),
+            href="https://mwang87.github.io/MassQueryLanguage_Documentation/"
         ),
         dbc.Nav(
             [
-                dbc.NavItem(dbc.NavLink("GNPS - MassQL Sandbox Dashboard - Version 0.3", href="#")),
+                dbc.NavItem(dbc.NavLink("MassQL Sandbox Dashboard - Version 0.3", href="#")),
                 dbc.NavItem(dbc.NavLink("Documentation", href="https://mwang87.github.io/MassQueryLanguage_Documentation/")),
             ],
         navbar=True)
