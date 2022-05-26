@@ -53,7 +53,7 @@ def load_data(input_filename, cache=False):
     elif input_filename[-4:].lower() == ".mgf":
         ms1_df, ms2_df = _load_data_mgf(input_filename)
 
-    elif input_filename[-4:].lower() == ".txt":
+    elif input_filename[-4:].lower() == ".txt" or input_filename[-4:].lower() == ".dat":
         ms1_df, ms2_df = _load_data_txt(input_filename)
     
     else:
