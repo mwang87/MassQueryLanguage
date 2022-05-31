@@ -44,7 +44,7 @@ def _translate_querytype(querytype, language="english"):
     if querytype["function"] == "functionscaninfo":
         if language == "english":
             return "Returning the scan information on {}.".format(ms_level)
-        if language == "russian":
+        elif language == "russian":
             return "Возвращает информацию о сканировании на {}.".format(ms_level)
         elif language == "korean":
             return "{} 데이터상의 스캔 정보를 반환합니다.".format(ms_level)
@@ -64,7 +64,7 @@ def _translate_querytype(querytype, language="english"):
     if querytype["function"] == "functionscansum":
         if language == "english":
             return "Returning the summed scan information on {}.".format(ms_level)
-        if language == "russian":
+        elif language == "russian":
             return "Возвращает информацию о суммированном сканировании на {}.".format(ms_level)
         elif language == "korean":
             return "스칼라를 {} 데이터로 더하기.".format(ms_level)
@@ -80,8 +80,48 @@ def _translate_querytype(querytype, language="english"):
             return "Retornando información de cada espectro de {}.".format(ms_level)
         elif language == "portuguese":
             return "Retornando informação de cada espectro de {}.".format(ms_level)
-        
 
+    if querytype["function"] == "functionscanmz":
+        if language == "english":
+            return "Returning precursor mz on MS2."
+        elif language == "russian":
+            return "Возвращает предварительный mz на MS2."
+        elif language == "korean":
+            return "MS2에서 사전 mz를 반환합니다."
+        elif language == "chinese":
+            return "返回MS2的预测mz"
+        elif language == "japanese":
+            return "MS2でのプリカを返します。"
+        elif language == "french":
+            return "Retourne le precursor mz sur MS2."
+        elif language == "german":
+            return "Zurückgeben des precursor mz auf MS2."
+        elif language == "spanish":
+            return "Retornando precursor mz en MS2."
+        elif language == "portuguese":
+            return "Retornando precursor mz em MS2."
+        
+    if querytype["function"] is None:
+        if language == "english":
+            return "Returning scan peaks on {}.".format(ms_level)
+        elif language == "russian":
+            return "Возвращает пики сканирования на {}.".format(ms_level)
+        elif language == "korean":
+            return "{} 데이터상의 스캔 피크를 반환합니다.".format(ms_level)
+        elif language == "chinese":
+            return "返回{}的扫描峰。".format(ms_level)
+        elif language == "japanese":
+            return "{} のスキャンピークを返します。".format(ms_level)
+        elif language == "french":
+            return "Retourne les pics de scan {}.".format(ms_level)
+        elif language == "german":
+            return "Zurückgeben der Scanpeaks von {}.".format(ms_level)
+        elif language == "spanish":
+            return "Generando picos de {}.".format(ms_level)
+        elif language == "portuguese":
+            return "Encontrando picos de {}.".format(ms_level)
+
+    print(querytype["function"])
 
     return "Translator {} not implemented, contact Ming".format(querytype["function"])
 
