@@ -398,7 +398,53 @@ def _translate_condition(condition, language="english"):
         elif language == "portuguese":
             return "Buscando espectros com carga {}.".format(value)
 
+    if condition["type"] == "xcondition":
+        if "min" in condition:
+            min_x = condition["min"]
+            max_x = condition["max"]
 
+            if language == "english":
+                return "Enabling variable X with range ({}, {}).".format(min_x, max_x)
+            elif language == "russian":
+                return "Включение переменной X с диапазоном ({}, {}).".format(min_x, max_x)
+            elif language == "korean":
+                return "X 변수를 활성화하고 ({}, {}) 범위를 가집니다.".format(min_x, max_x)
+            elif language == "chinese":
+                return "启用变量 X 且范围为 ({}, {})".format(min_x, max_x)
+            elif language == "japanese":
+                return "変数 X を有効化し、({}, {})の範囲にします。".format(min_x, max_x)
+            elif language == "french":
+                return "Activer la variable X avec un intervalle ({}, {}).".format(min_x, max_x)
+            elif language == "german":
+                return "Variable X mit Intervall von ({}, {}).".format(min_x, max_x)
+            elif language == "spanish":
+                return "Activando variable X con rango ({}, {}).".format(min_x, max_x)
+            elif language == "portuguese":
+                return "Ativando variável X com intervalo ({}, {}).".format(min_x, max_x)
+
+    if condition["type"] == "mobilitycondition":
+        if "min" in condition:
+            min_x = condition["min"]
+            max_x = condition["max"]
+
+            if language == "english":
+                return "Finding spectra with a range of ion mobility ({}, {}).".format(min_x, max_x)
+            elif language == "russian":
+                return "Поиск спектров с диапазоном ионной подвижности ({}, {}).".format(min_x, max_x)
+            elif language == "korean":
+                return "자연적인 이동력 ({}, {}) 범위를 가집니다.".format(min_x, max_x)
+            elif language == "chinese":
+                return "探测具有电子移动性范围为 ({}, {})的光谱".format(min_x, max_x)
+            elif language == "japanese":
+                return "移動性の範囲 ({}, {})のスペクトルを検索します。".format(min_x, max_x)
+            elif language == "french":
+                return "Trouver des spectres avec une mobilité ionique ({}, {}).".format(min_x, max_x)
+            elif language == "german":
+                return "Findet Spektren mit einer Ionmobilitaet von ({}, {}).".format(min_x, max_x)
+            elif language == "spanish":
+                return "Encontrando espectros con un rango de movilidad de iones ({}, {}).".format(min_x, max_x)
+            elif language == "portuguese":
+                return "Buscando espectros com um intervalo de mobilidade de ionos ({}, {}).".format(min_x, max_x)
         
     return "Translator condition {} not implemented, contact Ming".format(condition["type"])
 
