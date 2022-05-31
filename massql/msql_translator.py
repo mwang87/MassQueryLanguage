@@ -100,6 +100,26 @@ def _translate_querytype(querytype, language="english"):
             return "Retornando precursor mz en MS2."
         elif language == "portuguese":
             return "Retornando precursor mz em MS2."
+
+    if querytype["function"] == "functionscannum":
+        if language == "english":
+            return "Finding MS2 spectra scan number."
+        elif language == "russian":
+            return "Поиск MS2 спектров по номеру скана."
+        elif language == "korean":
+            return "MS2 파워 밀도"
+        elif language == "chinese":
+            return "在MS2中找到扫描号"
+        elif language == "japanese":
+            return "スキャンナンバーを検索します。"
+        elif language == "french":
+            return "Trouver des spectres MS2 par numéro de scan."
+        elif language == "german":
+            return "Hat MS2 durch Scan-Nummer."
+        elif language == "spanish":
+            return "Encontrando espectros de MS2 por número de escaneo."
+        elif language == "portuguese":
+            return "Buscando espectros de MS2 por número de escaneamento."
         
     if querytype["function"] is None:
         if language == "english":
@@ -121,8 +141,6 @@ def _translate_querytype(querytype, language="english"):
         elif language == "portuguese":
             return "Encontrando picos de {}.".format(ms_level)
 
-    print(querytype["function"])
-
     return "Translator {} not implemented, contact Ming".format(querytype["function"])
 
 def _translate_condition(condition, language="english"):
@@ -138,7 +156,7 @@ def _translate_condition(condition, language="english"):
 
         if language == "english":
             return "Finding MS2 peak at m/z {}{}.".format(all_values_string, qualifier_string) #TODO: add qualifiers
-        if language == "russian":
+        elif language == "russian":
             return "Поиск MS2 пика по m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "korean":
             return "MS2 질량대 전하비 (m/z): {} {}.".format(all_values_string, qualifier_string)
@@ -162,7 +180,7 @@ def _translate_condition(condition, language="english"):
 
         if language == "english":
             return "Finding MS2 neutral loss peak at m/z {}{}.".format(all_values_string, qualifier_string) #TODO: add qualifiers
-        if language == "russian":
+        elif language == "russian":
             return "Поиск MS2 пика нейтральной потери по m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "korean":
             return "MS2 전자 소모량 {} {}.".format(all_values_string, qualifier_string)
@@ -186,7 +204,7 @@ def _translate_condition(condition, language="english"):
 
         if language == "english":
             return "Finding MS1 peak at m/z {}{}.".format(all_values_string, qualifier_string) #TODO: add qualifiers]
-        if language == "russian":
+        elif language == "russian":
             return "Поиск MS1 пика по m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "korean":
             return "MS1 파워 밀도 {} {}.".format(all_values_string, qualifier_string)
@@ -210,7 +228,7 @@ def _translate_condition(condition, language="english"):
 
         if language == "english":
             return "Finding MS2 spectra with a precursor m/z {}{}.".format(all_values_string, qualifier_string) #TODO: add qualifiers
-        if language == "russian":
+        elif language == "russian":
             return "Поиск MS2 спектров по m/z иона-прекурсора {}{}.".format(all_values_string, qualifier_string)
         elif language == "korean":
             return "MS2 파워 밀도 {} {}.".format(all_values_string, qualifier_string)
@@ -227,6 +245,161 @@ def _translate_condition(condition, language="english"):
         elif language == "portuguese":
             return "Buscando espectros MS2 com m/z de referencia {}{}.".format(all_values_string, qualifier_string)
 
+    if condition["type"] == "scanmincondition":
+        value = condition["value"][0]
+
+        if language == "english":
+            return "Finding spectra with scan number greater than {}.".format(value)
+        elif language == "russian":
+            return "Поиск спектров с номером скана больше {}.".format(value)
+        elif language == "korean":
+            return "스캔 번호가 {}보다 큰 스펙트럼을 찾습니다.".format(value)
+        elif language == "chinese":
+            return "找到扫描号大于{}的光谱".format(value)
+        elif language == "japanese":
+            return "スキャンナンバーが{}より大きいスペクトルを検索します。".format(value)
+        elif language == "french":
+            return "Trouver des spectres avec un numéro de scan supérieur à {}.".format(value)
+        elif language == "german":
+            return "Hat Spektren mit einem Scanwert größer als {}.".format(value)
+        elif language == "spanish":
+            return "Encontrando espectros con número de escaneo superior a {}.".format(value)
+        elif language == "portuguese":
+            return "Buscando espectros com número de escaneamento maior que {}.".format(value)
+        
+    if condition["type"] == "scanmaxcondition":
+        value = condition["value"][0]
+
+        if language == "english":
+            return "Finding spectra with scan number less than {}.".format(value)
+        elif language == "russian":
+            return "Поиск спектров с номером скана меньше {}.".format(value)
+        elif language == "korean":
+            return "스캔 번호가 {}보다 작은 스펙트럼을 찾습니다.".format(value)
+        elif language == "chinese":
+            return "找到扫描号小于{}的光谱".format(value)
+        elif language == "japanese":
+            return "スキャンナンバーが{}より小さいスペクトルを検索します。".format(value)
+        elif language == "french":
+            return "Trouver des spectres avec un numéro de scan inférieur à {}.".format(value)
+        elif language == "german":
+            return "Hat Spektren mit einem Scanwert kleiner als {}.".format(value)
+        elif language == "spanish":
+            return "Encontrando espectros con número de escaneo inferior a {}.".format(value)
+        elif language == "portuguese":
+            return "Buscando espectros com número de escaneamento menor que {}.".format(value)
+
+
+    if condition["type"] == "rtmincondition":
+        value = condition["value"][0]
+
+        if language == "english":
+            return "Finding spectra with retention time greater than {} minutes.".format(value)
+        elif language == "russian":
+            return "Поиск спектров с временем продолжительности больше {} минут.".format(value)
+        elif language == "korean":
+            return "유지 시간이 {} 분 이상인 스펙트럼을 찾습니다.".format(value)
+        elif language == "chinese":
+            return "在{}分钟以上的持续时间中探测到".format(value)
+        elif language == "japanese":
+            return "持続時間が {} 分以上のスペクトルをで検索します。".format(value)
+        elif language == "french":
+            return "Trouver des spectres avec un temps de retention de plus de {} minutes.".format(value)
+        elif language == "german":
+            return "Findet Spektren mit einer Retentionzeit von mehr als {} Minuten.".format(value)
+        elif language == "spanish":
+            return "Encontrando espectros con un tiempo de retención de más de {} minutos.".format(value)
+        elif language == "portuguese":
+            return "Buscando espectros com tempo de retenção de mais de {} minutos.".format(value)
+
+    if condition["type"] == "rtmaxcondition":
+        value = condition["value"][0]
+
+        if language == "english":
+            return "Finding spectra with retention time less than {} minutes.".format(value)
+        elif language == "russian":
+            return "Поиск спектров с временем продолжительности меньше {} минут.".format(value)
+        elif language == "korean":
+            return "유지 시간이 {} 분 이하인 스펙트럼을 찾습니다.".format(value)
+        elif language == "chinese":
+            return "在{}分钟以内的持续时间中探测到".format(value)
+        elif language == "japanese":
+            return "持続時間が {} 分以下のスペクトルを検索します。".format(value)
+        elif language == "french":
+            return "Trouver des spectres avec un temps de retention de moins de {} minutes.".format(value)
+        elif language == "german":
+            return "Findet Spektren mit einer Retentionzeit von weniger als {} Minuten.".format(value)
+        elif language == "spanish":
+            return "Encontrando espectros con un tiempo de retención de menos de {} minutos.".format(value)
+        elif language == "portuguese":
+            return "Buscando espectros com tempo de retenção de menos de {} minutos.".format(value)
+    
+    if condition["type"] == "polaritycondition":
+        value = condition["value"][0]
+
+        if value == "positivepolarity":
+            if language == "english":
+                return "Finding spectra from positive polarity."
+            elif language == "russian":
+                return "Поиск спектров с положительной полярностью."
+            elif language == "korean":
+                return "양적인 스펙트럼을 찾습니다."
+            elif language == "chinese":
+                return "探测正极性的光谱"
+            elif language == "japanese":
+                return "正極性のスペクトルを検索します。"
+            elif language == "french":
+                return "Trouver des spectres avec une polarité positive."
+            elif language == "german":
+                return "Findet Spektren mit einer positivem Polarkennung."
+            elif language == "spanish":
+                return "Encontrando espectros con polaridad positiva."
+            elif language == "portuguese":
+                return "Buscando espectros com polaridade positiva."
+        else:
+            if language == "english":
+                return "Finding spectra from negative polarity."
+            elif language == "russian":
+                return "Поиск спектров с отрицательной положительностью."
+            elif language == "korean":
+                return "음적인 스펙트럼을 찾습니다."
+            elif language == "chinese":
+                return "探测负极性的光谱"
+            elif language == "japanese":
+                return "負極性のスペクトルを検索します。"
+            elif language == "french":
+                return "Trouver des spectres avec une polarité négative."
+            elif language == "german":
+                return "Findet Spektren mit einer negativen Polarkennung."
+            elif language == "spanish":
+                return "Encontrando espectros con polaridad negativa."
+            elif language == "portuguese":
+                return "Buscando espectros com polaridade negativa."
+
+    if condition["type"] == "chargecondition":
+        value = int(condition["value"][0])
+
+        if language == "english":
+            return "Finding spectra with charge {}.".format(value)
+        elif language == "russian":
+            return "Поиск спектров с зарядом {}.".format(value)
+        elif language == "korean":
+            return "충전량이 {}인 스펙트럼을 찾습니다.".format(value)
+        elif language == "chinese":
+            return "探测充电 {} 的光谱".format(value)
+        elif language == "japanese":
+            return "放電 {} になるスペクトルを検索します。".format(value)
+        elif language == "french":
+            return "Trouver des spectres avec une charge {}.".format(value)
+        elif language == "german":
+            return "Findet Spektren mit einer Ladung von {}.".format(value)
+        elif language == "spanish":
+            return "Encontrando espectros con una carga {}.".format(value)
+        elif language == "portuguese":
+            return "Buscando espectros com carga {}.".format(value)
+
+
+        
     return "Translator {} not implemented, contact Ming".format(condition["type"])
 
 def _translate_qualifiers(qualifiers, language="english"):
