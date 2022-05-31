@@ -141,7 +141,7 @@ def _translate_querytype(querytype, language="english"):
         elif language == "portuguese":
             return "Encontrando picos de {}.".format(ms_level)
 
-    return "Translator {} not implemented, contact Ming".format(querytype["function"])
+    return "Translator function {} not implemented, contact Ming".format(querytype["function"])
 
 def _translate_condition(condition, language="english"):
     if "qualifiers" in condition:
@@ -400,7 +400,7 @@ def _translate_condition(condition, language="english"):
 
 
         
-    return "Translator {} not implemented, contact Ming".format(condition["type"])
+    return "Translator condition {} not implemented, contact Ming".format(condition["type"])
 
 def _translate_qualifiers(qualifiers, language="english"):
     qualifier_phrases = []
@@ -572,6 +572,25 @@ def _translate_qualifier(qualifier, language="english"):
         elif language == "portuguese":
             return "e aceitando uma variabilidade de {}% da intensidade relativa".format(qualifier["value"])
 
+    if qualifier["name"] == "qualifierintensityticpercent":
+        if language == "english":
+            return "a minimum peak intensity of {} %".format(qualifier["value"])
+        if language == "russian":
+            return "минимальная интенсивность пика {} %".format(qualifier["value"])
+        elif language == "korean":
+            return "최소 {}%의 데이터 이용".format(qualifier["value"])
+        elif language == "chinese":
+            return "最小峰值强度 {} %".format(qualifier["value"])
+        elif language == "japanese":
+            return "最小ピーク強度 {} %".format(qualifier["value"])
+        elif language == "french":
+            return "l'intensité minimale du pic {} %".format(qualifier["value"])
+        elif language == "german":
+            return "die minimale Intensität des Peaks {} %".format(qualifier["value"])
+        elif language == "spanish":
+            return "la intensidad mínima del pico {} %".format(qualifier["value"])
+        elif language == "portuguese":
+            return "a intensidade mínima do pico {} %".format(qualifier["value"])
     
 
-    return "Translator {} not implemented, contact Ming".format(qualifier["name"])
+    return "Translator qualifier {} not implemented, contact Ming".format(qualifier["name"])
