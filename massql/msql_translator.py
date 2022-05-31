@@ -145,7 +145,27 @@ def _translate_querytype(querytype, language="english"):
 
 def _translate_condition(condition, language="english"):
     if "qualifiers" in condition:
-        qualifier_string = " " + _translate_qualifiers(condition["qualifiers"], language=language)
+        # Determining preposition
+        if language == "english":
+            preposition = "with"
+        elif language == "russian":
+            preposition = "с"
+        elif language == "korean":
+            preposition = "에"
+        elif language == "chinese":
+            preposition = "与"
+        elif language == "japanese":
+            preposition = "と"
+        elif language == "french":
+            preposition = "avec"
+        elif language == "german":
+            preposition = "mit"
+        elif language == "spanish":
+            preposition = "con"
+        elif language == "portuguese":
+            preposition = "com"
+
+        qualifier_string = " {} {}".format(preposition, _translate_qualifiers(condition["qualifiers"], language=language))
     else:
         qualifier_string = ""
 
