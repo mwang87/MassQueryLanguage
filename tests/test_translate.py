@@ -20,7 +20,7 @@ def test_translate():
             test_query = line.rstrip()
             translation = msql_translator.translate_query(test_query, language=language)
             if "contact Ming" in translation:
-                print("Not Implemented", test_query)
+                print("Not Implemented ", language, test_query)
                 print(translation)
 
 
