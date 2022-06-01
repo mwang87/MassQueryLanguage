@@ -1,0 +1,29 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "filter",
+            "qualifiers": {
+                "qualifiermassdefect": {
+                    "max": 0.2112,
+                    "min": 0.1332,
+                    "name": "qualifiermassdefect"
+                },
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 35.0
+                },
+                "type": "qualifier"
+            },
+            "type": "ms1mzcondition",
+            "value": [
+                515.0
+            ]
+        }
+    ],
+    "query": "QUERY scansum(MS1DATA) FILTER MS1MZ=515:TOLERANCEMZ=35:MASSDEFECT=massdefect(min=0.1332, max=0.2112)",
+    "querytype": {
+        "datatype": "datams1data",
+        "function": "functionscansum"
+    }
+}

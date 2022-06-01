@@ -1,0 +1,28 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "type": "ms2precursorcondition",
+            "value": [
+                "X"
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "max": "X*0.00078231+0.48817",
+            "min": "X*0.0006775+0.40557",
+            "type": "mobilitycondition"
+        },
+        {
+            "conditiontype": "where",
+            "maxdefect": 0.99,
+            "mindefect": 0.9,
+            "type": "xcondition"
+        }
+    ],
+    "query": "QUERY scaninfo(MS2DATA) WHERE MS2PREC=X AND MOBILITY=range(min=X*0.0006775+0.40557, max=X*0.00078231+0.48817) AND X=massdefect(min=0.9, max=0.99)",
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}
