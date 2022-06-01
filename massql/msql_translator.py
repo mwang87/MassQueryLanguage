@@ -418,7 +418,9 @@ def _translate_condition(condition, language="english"):
         elif language == "portuguese":
             return "Buscando espectros com carga {}.".format(value)
 
+    
     if condition["type"] == "xcondition":
+        # This is range condition
         if "min" in condition:
             min_x = condition["min"]
             max_x = condition["max"]
@@ -429,6 +431,30 @@ def _translate_condition(condition, language="english"):
                 return "Включение переменной X с диапазоном ({}, {}).".format(min_x, max_x)
             elif language == "korean":
                 return "X 변수를 활성화하고 ({}, {}) 범위를 가집니다.".format(min_x, max_x)
+            elif language == "chinese":
+                return "启用变量 X 且范围为 ({}, {})".format(min_x, max_x)
+            elif language == "japanese":
+                return "変数 X を有効化し、({}, {})の範囲にします。".format(min_x, max_x)
+            elif language == "french":
+                return "Activer la variable X avec un intervalle ({}, {}).".format(min_x, max_x)
+            elif language == "german":
+                return "Variable X mit Intervall von ({}, {}).".format(min_x, max_x)
+            elif language == "spanish":
+                return "Activando variable X con rango ({}, {}).".format(min_x, max_x)
+            elif language == "portuguese":
+                return "Ativando variável X com intervalo ({}, {}).".format(min_x, max_x)
+
+        # This is mass defect condition
+        if "mindefect" in condition:
+            min_x = condition["mindefect"]
+            max_x = condition["maxdefect"]
+
+            if language == "english":
+                return "Enabling variable X with mass defect minimum of {} and a maximum {}.".format(min_x, max_x)
+            elif language == "russian":
+                return "Включение переменной X с минимальным забитым массой {} и максимальным {}.".format(min_x, max_x)
+            elif language == "korean":
+                return "X 변수를 활성화하고 최소 {} 과 최대 {} 범위를 가집니다.".format(min_x, max_x)
             elif language == "chinese":
                 return "启用变量 X 且范围为 ({}, {})".format(min_x, max_x)
             elif language == "japanese":
@@ -657,6 +683,25 @@ def _translate_qualifier(qualifier, language="english"):
             return "la intensidad mínima del pico {} %".format(qualifier["value"])
         elif language == "portuguese":
             return "a intensidade mínima do pico {} %".format(qualifier["value"])
-    
 
+    if qualifier["name"] == "qualifiermassdefect":
+        if language == "english":
+            return "a mass defect minimum of {} and maximum of {}".format(qualifier["min"], qualifier["max"])
+        if language == "russian":
+            return "массовый дефект минимум {} и максимум {}".format(qualifier["min"], qualifier["max"])
+        elif language == "korean":
+            return "최소 {} 최대 {} 데이터 이용".format(qualifier["min"], qualifier["max"])
+        elif language == "chinese":
+            return "质量缺陷最小 {} 最大 {}".format(qualifier["min"], qualifier["max"])
+        elif language == "japanese":
+            return "最小 {} 最大 {} ピーク強度".format(qualifier["min"], qualifier["max"])
+        elif language == "french":
+            return "défaut de masse minimum {} et maximum {}".format(qualifier["min"], qualifier["max"])
+        elif language == "german":
+            return "Massdefekt Minimum {} und Maximum {}".format(qualifier["min"], qualifier["max"])
+        elif language == "spanish":
+            return "defecto de masa mínimo {} y máximo {}".format(qualifier["min"], qualifier["max"])
+        elif language == "portuguese":
+            return "defeito de massa mínimo {} e máximo {}".format(qualifier["min"], qualifier["max"])
+    
     return "Translator qualifier {} not implemented, contact Ming".format(qualifier["name"])
