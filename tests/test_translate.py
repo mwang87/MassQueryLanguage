@@ -11,7 +11,7 @@ import json
 import pytest
 
 def test_translate():
-    languages = ["english", "korean", "chinese", "french", "german", "spanish", "portuguese", "japanese", "italian"]
+    languages = ["english", "korean", "chinese", "french", "german", "spanish", "portuguese", "japanese"]
 
     for language in languages:
         # Writing out the queries and comparing
