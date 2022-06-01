@@ -70,14 +70,14 @@ DATASELECTION_CARD = [
             html.H5(children='Query Sandbox'),
             dbc.InputGroup(
                 [
-                    dbc.InputGroupAddon("Query", addon_type="prepend"),
+                    dbc.InputGroupText("Query"),
                     dbc.Textarea(id='query', placeholder="Enter Query", value="", rows="4"),
                 ],
                 className="mb-3",
             ),
             dbc.InputGroup(
                 [
-                    dbc.InputGroupAddon("Filename", addon_type="prepend"),
+                    dbc.InputGroupText("Filename"),
                     dbc.Select(
                         id="filename",
                         options=[],
@@ -89,21 +89,21 @@ DATASELECTION_CARD = [
             html.H5(children='Plotting Options'),
             dbc.InputGroup(
                 [
-                    dbc.InputGroupAddon("x_axis", addon_type="prepend"),
+                    dbc.InputGroupText("x_axis"),
                     dbc.Input(id='x_axis', placeholder="Enter Query", value=""),
                 ],
                 className="mb-3",
             ),
             dbc.InputGroup(
                 [
-                    dbc.InputGroupAddon("y_axis", addon_type="prepend"),
+                    dbc.InputGroupText("y_axis"),
                     dbc.Input(id='y_axis', placeholder="Enter Query", value=""),
                 ],
                 className="mb-3",
             ),
             dbc.InputGroup(
                 [
-                    dbc.InputGroupAddon("facet_column", addon_type="prepend"),
+                    dbc.InputGroupText("facet_column"),
                     dbc.Input(id='facet_column', placeholder="Enter Facet", value=""),
                 ],
                 className="mb-3",
@@ -111,7 +111,7 @@ DATASELECTION_CARD = [
             html.Br(),
             dbc.InputGroup(
                 [
-                    dbc.InputGroupAddon("scan", addon_type="prepend"),
+                    dbc.InputGroupText("scan"),
                     dbc.Input(id='scan', placeholder="Enter Scan", value=""),
                 ],
                 className="mb-3",
@@ -119,13 +119,18 @@ DATASELECTION_CARD = [
             html.Br(),
             dbc.Row([
                 dbc.Col(
-                    dbc.Button("Copy Link", block=True, color="info", id="copy_link_button", n_clicks=0),
+                    html.Div(
+                        dbc.Button("Copy Link", color="primary", id="copy_link_button", n_clicks=0),
+                        className="d-grid gap-2"
+                    )
+                    
                 ),
                 dbc.Col(
                     html.A(
-                        dbc.Button("Query Your Files", block=True, color="info"),
+                        dbc.Button("Query Your Files", color="primary"),
                         href="https://gnps.ucsd.edu/ProteoSAFe/QueryFiles",
-                        id="query_gnps_link"
+                        id="query_gnps_link",
+                        className="d-grid gap-2"
                     )
                 ),
             ]),
@@ -134,35 +139,35 @@ DATASELECTION_CARD = [
             html.H5("Parse Viz Options"),
             dbc.InputGroup(
                 [
-                    dbc.InputGroupAddon("precursor_mz", addon_type="prepend"),
+                    dbc.InputGroupText("precursor_mz"),
                     dbc.Input(id='precursor_mz', placeholder="Enter Precursor m/z value", value="800"),
                 ],
                 className="mb-3",
             ),
             dbc.InputGroup(
                 [
-                    dbc.InputGroupAddon("x_value", addon_type="prepend"),
+                    dbc.InputGroupText("x_value"),
                     dbc.Input(id='x_value', placeholder="Enter X m/z Value", value="500"),
                 ],
                 className="mb-3",
             ),
             dbc.InputGroup(
                 [
-                    dbc.InputGroupAddon("y_value", addon_type="prepend"),
+                    dbc.InputGroupText("y_value"),
                     dbc.Input(id='y_value', placeholder="Enter Y Intensity Value", value="1"),
                 ],
                 className="mb-3",
             ),
             dbc.InputGroup(
                 [
-                    dbc.InputGroupAddon("ms1_usi", addon_type="prepend"),
+                    dbc.InputGroupText("ms1_usi"),
                     dbc.Input(id='ms1_usi', placeholder="Enter MS1 USI", value=""),
                 ],
                 className="mb-3",
             ),
             dbc.InputGroup(
                 [
-                    dbc.InputGroupAddon("ms2_usi", addon_type="prepend"),
+                    dbc.InputGroupText("ms2_usi"),
                     dbc.Input(id='ms2_usi', placeholder="Enter MS2 USI", value=""),
                 ],
                 className="mb-3",
@@ -678,7 +683,7 @@ def draw_url(query, filename, precursor_mz, x_axis, y_axis, facet_column, scan, 
 
     url_params = urllib.parse.urlencode(params)
 
-    return [request.host_url + "/?" + url_params]
+    return [request.host_url + "?" + url_params]
 
 app.clientside_callback(
     """

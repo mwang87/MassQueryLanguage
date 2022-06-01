@@ -27,3 +27,4 @@ psims
 plotly
 kaleido
 pydot
+redis
