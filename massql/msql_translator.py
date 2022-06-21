@@ -703,5 +703,28 @@ def _translate_qualifier(qualifier, language="english"):
             return "defecto de masa mínimo {} y máximo {}".format(qualifier["min"], qualifier["max"])
         elif language == "portuguese":
             return "defeito de massa mínimo {} e máximo {}".format(qualifier["min"], qualifier["max"])
+
+    if qualifier["name"] == "qualifiercardinality":
+        if language == "english":
+            return "a cardinality minimum of {} and maximum of {}".format(qualifier["min"], qualifier["max"])
+        if language == "russian":
+            return "кардинальность минимум {} и максимум {}".format(qualifier["min"], qualifier["max"])
+        elif language == "korean":
+            return "최소 {} 최대 {} 데이터 이용".format(qualifier["min"], qualifier["max"])
+        elif language == "chinese":
+            return "卡尔林数最小 {} 最大 {}".format(qualifier["min"], qualifier["max"])
+        elif language == "japanese":
+            return "最小 {} 最大 {} ピーク強度".format(qualifier["min"], qualifier["max"])
+        elif language == "french":
+            return "cardinalité minimum {} et maximum {}".format(qualifier["min"], qualifier["max"])
+        elif language == "german":
+            return "Kardinalität Minimum {} und Maximum {}".format(qualifier["min"], qualifier["max"])
+        elif language == "spanish":
+            return "cardinalidad mínima {} y máximo {}".format(qualifier["min"], qualifier["max"])
+        elif language == "portuguese":
+            return "cardinalidade mínima {} e máxima {}".format(qualifier["min"], qualifier["max"])
+        
+        
+
     
     return "Translator qualifier {} not implemented, contact Ming".format(qualifier["name"])
