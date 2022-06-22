@@ -235,7 +235,7 @@ def test_or_cardinality():
 
 def main():
     #test_xrange_parse()
-    #test_parse()
+    test_parse()
     #test_comment_parse()
     #test_number_expression_parse()
     #test_formula_expression_parse()
@@ -256,7 +256,7 @@ def main():
     #test_wildcard()
     #test_ms1_multiple_or()
     #test_cardinality()
-    test_or_cardinality()
+    #test_or_cardinality()
 
 
 
