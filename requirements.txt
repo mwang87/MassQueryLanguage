@@ -1,5 +1,5 @@
 pymzml
-lark-parser
+lark>=1.0
 pandas
 pyarrow
 ray
