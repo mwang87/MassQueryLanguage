@@ -64,47 +64,25 @@ NAVBAR = dbc.Navbar(
     sticky="top",
 )
 
-DATASELECTION_CARD = [
-    dbc.CardHeader(html.H5("Data Selection")),
-    dbc.CardBody(
-        [   
-            html.H5(children='GNPS Data Selection'),
-            dbc.InputGroup(
-                [
-                    dbc.InputGroupText("Spectrum USI"),
-                    dbc.Input(id='usi1', placeholder="Enter GNPS USI", value=""),
-                ],
-                className="mb-3",
-            ),
-            html.Hr(),
-            dbc.InputGroup(
-                [
-                    dbc.InputGroupText("Spectrum USI"),
-                    dbc.Input(id='usi2', placeholder="Enter GNPS USI", value=""),
-                ],
-                className="mb-3",
-            ),
-        ]
-    )
-]
-
-LEFT_DASHBOARD = [
-    html.Div(
-        [
-            html.Div(DATASELECTION_CARD),
-        ]
-    )
-]
 
 MIDDLE_DASHBOARD = [
-    dbc.CardHeader(html.H5("Data Exploration")),
+    dbc.CardHeader(html.H5("Compendium Exploration")),
     dbc.CardBody(
         [
             dcc.Loading(
-                id="output",
+                id="compendium_output",
                 children=[html.Div([html.Div(id="loading-output-23")])],
                 type="default",
             ),
+            html.Br(),
+            html.Br(),
+            html.H4("MassQL Visualization"),
+            dcc.Loading(
+                id="massql_visualization",
+                children=[html.Div([html.Div(id="loading-output-24")])],
+                type="default",
+            ),
+            
         ]
     )
 ]
@@ -113,12 +91,13 @@ CONTRIBUTORS_DASHBOARD = [
     dbc.CardHeader(html.H5("Contributors")),
     dbc.CardBody(
         [
-            "Mingxun Wang PhD - UC San Diego",
+            "Mingxun Wang PhD - UC Riverside",
             html.Br(),
             html.Br(),
             html.H5("Citation"),
-            html.A('Mingxun Wang, Jeremy J. Carver, Vanessa V. Phelan, Laura M. Sanchez, Neha Garg, Yao Peng, Don Duy Nguyen et al. "Sharing and community curation of mass spectrometry data with Global Natural Products Social Molecular Networking." Nature biotechnology 34, no. 8 (2016): 828. PMID: 27504778', 
-                    href="https://www.nature.com/articles/nbt.3597")
+            html.Div("Coming Soon!"),
+            html.Br(),
+            html.Div(["Reach out to colloborate on this project and my lab at UC Riverside!", html.Br(), html.A("Wang Bioinformatics Lab", href="https://www.cs.ucr.edu/~mingxunw/")]),
         ]
     )
 ]
@@ -138,10 +117,6 @@ BODY = dbc.Container(
         dcc.Location(id='url', refresh=False),
         dbc.Row([
             dbc.Col(
-                dbc.Card(LEFT_DASHBOARD),
-                className="w-50"
-            ),
-            dbc.Col(
                 [
                     dbc.Card(MIDDLE_DASHBOARD),
                     html.Br(),
@@ -149,7 +124,7 @@ BODY = dbc.Container(
                     html.Br(),
                     dbc.Card(EXAMPLES_DASHBOARD)
                 ],
-                className="w-50"
+                #className="w-50"
             ),
         ], style={"marginTop": 30}),
     ],
@@ -162,34 +137,81 @@ dash_app.layout = html.Div(children=[NAVBAR, BODY])
 def _get_url_param(param_dict, key, default):
     return param_dict.get(key, [default])[0]
 
-@dash_app.callback([
-                Output('usi1', 'value'), 
-                Output('usi2', 'value'), 
-              ],
-              [Input('url', 'search')])
-def determine_task(search):
-    
-    try:
-        query_dict = urllib.parse.parse_qs(search[1:])
-    except:
-        query_dict = {}
-
-    usi1 = _get_url_param(query_dict, "usi1", 'mzspec:MSV000082796:KP_108_Positive:scan:1974')
-    usi2 = _get_url_param(query_dict, "usi2", 'mzspec:MSV000082796:KP_108_Positive:scan:1977')
-
-    return [usi1, usi2]
-
-
 
 @dash_app.callback([
-                Output('output', 'children')
+                Output('compendium_output', 'children')
               ],
               [
-                  Input('usi1', 'value'),
-                  Input('usi2', 'value'),
+                  Input('url', 'search'),
             ])
-def draw_output(usi1, usi2):
-    return [usi1+usi2]
+def draw_output(url):
+    # Here we will draw the compendium table
+    compendium_df = pd.read_excel("assets/compendium.xlsx")
+    compendium_df = compendium_df[["Query Description", "MassQL Query", "Your name"]]
+    compendium_df["Authors"] = compendium_df["Your name"]
+    compendium_df = compendium_df[["Query Description", "MassQL Query", "Authors"]]
+    results_list = compendium_df.to_dict(orient="records")
+
+    table_obj = dash_table.DataTable(compendium_df.to_dict('records'),[{"name": i, "id": i} for i in compendium_df.columns], 
+                    sort_action="native",
+                    filter_action="native",
+                    row_selectable='single',
+                    style_cell_conditional=[
+                        {
+                            'if': {'column_id': c},
+                            'textAlign': 'left'
+                        } for c in results_list[0]
+                    ],
+                    style_data_conditional=[
+                        {
+                            'if': {'row_index': 'odd'},
+                            'backgroundColor': 'rgb(248, 248, 248)',
+                        }
+                    ],
+                    style_header={
+                        'backgroundColor': 'rgb(230, 230, 230)',
+                        'fontWeight': 'bold'
+                    },
+                    css=[{'selector': '.row', 'rule': 'margin: 0'}],
+                    style_table={
+                        'overflowX': 'auto'
+                    },
+                    style_cell={
+                        'overflow': 'hidden',
+                        'textOverflow': 'ellipsis',
+                        'maxWidth': 0,
+                    },          
+                    tooltip_data=[
+                        {
+                            column: {'value': str(value), 'type': 'markdown'}
+                            for column, value in row.items()
+                        } for row in results_list
+                    ],
+                    id='datatable'),
+
+    return [table_obj]
+
+
+@dash_app.callback([
+                Output('massql_visualization', 'children')
+              ],
+              [
+                  Input('datatable', 'derived_virtual_data'),
+                  Input('datatable', 'derived_virtual_selected_rows'),
+              ])
+def draw_visualization(table_data, table_selected):
+    try:
+        selected_row = table_data[table_selected[0]]
+    except:
+        return ["Choose a MassQL Query"]
+
+    import dash_sandbox
+
+    render_list = dash_sandbox._render_parse(selected_row["MassQL Query"])
+
+    return [render_list]
+    
+
 
 
 if __name__ == "__main__":

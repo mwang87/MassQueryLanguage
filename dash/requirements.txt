@@ -28,3 +28,4 @@ plotly
 kaleido
 pydot
 redis
+openpyxl
