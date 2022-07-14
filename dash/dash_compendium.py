@@ -53,7 +53,9 @@ NAVBAR = dbc.Navbar(
         ),
         dbc.Nav(
             [
-                dbc.NavItem(dbc.NavLink("GNPS - Template Dashboard - Version 0.1", href="#")),
+                dbc.NavItem(dbc.NavLink("MassQL Sandbox Dashboard - Version 0.3", href="/", external_link=True)),
+                dbc.NavItem(dbc.NavLink("MassQL Compendium", href="/compendium/", external_link=True)),
+                dbc.NavItem(dbc.NavLink("Documentation", href="https://mwang87.github.io/MassQueryLanguage_Documentation/")),
             ],
         navbar=True)
     ],
