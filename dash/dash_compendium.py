@@ -187,7 +187,8 @@ def draw_output(url):
                             for column, value in row.items()
                         } for row in results_list
                     ],
-                    id='datatable'),
+                    id='datatable',
+                    page_size=20),
 
     return [table_obj]
 
@@ -207,7 +208,41 @@ def draw_visualization(table_data, table_selected):
 
     import dash_sandbox
 
-    render_list = dash_sandbox._render_parse(selected_row["MassQL Query"])
+    massql_query = selected_row["MassQL Query"]
+
+    render_list = dash_sandbox._render_parse(massql_query)
+
+    param_dict = {}
+    param_dict["QUERY"] = massql_query
+    param_dict["workflow"] = "MSQL-NF"
+
+    param_string = urllib.parse.quote(json.dumps(param_dict))
+    gnps_url = "https://proteomics2.ucsd.edu/ProteoSAFe/index.jsp?&params={}".format(param_string)
+
+    sandbox_url = "/?query={}".format(massql_query)
+
+    query_row = dbc.Row([
+        dbc.Col(
+            html.A(
+                dbc.Button("Try out in SandBox", color="primary"),
+                href=sandbox_url,
+                className="d-grid gap-2",
+                target="_blank",
+            )
+        ),
+        dbc.Col(
+            html.A(
+                dbc.Button("Use Query on Your Files", color="primary"),
+                href=gnps_url,
+                className="d-grid gap-2",
+                target="_blank",
+            )
+        ),
+    ]),
+
+    render_list.insert(0, html.Br())
+    render_list.insert(0, html.Div(query_row))
+    render_list.insert(0, html.Br())
 
     return [render_list]
     
