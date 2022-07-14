@@ -128,10 +128,20 @@ BODY = dbc.Container(
             dbc.Col(
                 [
                     dbc.Card(INTRODUCTION_DASHBOARD),
-                    html.Br(),
-                    dbc.Card(MIDDLE_DASHBOARD),
-                    html.Br(),
+                ],
+                className="w-50"
+            ),
+            dbc.Col(
+                [
                     dbc.Card(CONTRIBUTORS_DASHBOARD),
+                ],
+                className="w-50"
+            ),
+        ], style={"marginTop": 30}),
+        dbc.Row([
+            dbc.Col(
+                [
+                    dbc.Card(MIDDLE_DASHBOARD),
                 ],
                 #className="w-50"
             ),
