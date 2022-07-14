@@ -416,7 +416,7 @@ def _render_parse(query):
     output_list = [html.Hr(), parse_markdown]
 
     # Creating written description that is translated
-    languages = ["russian", "korean", "japanese", "chinese", "french", "german", "spanish", "portuguese", "english"]
+    languages = ["russian", "korean", "japanese", "chinese", "italian", "french", "german", "spanish", "portuguese", "english"]
 
     for language in languages:
         try:
