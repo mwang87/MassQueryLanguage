@@ -102,12 +102,21 @@ CONTRIBUTORS_DASHBOARD = [
     )
 ]
 
-EXAMPLES_DASHBOARD = [
-    dbc.CardHeader(html.H5("Examples")),
+INTRODUCTION_DASHBOARD = [
+    dbc.CardHeader(html.H5("The MassQL Compendium")),
     dbc.CardBody(
         [
-            html.A('Basic', 
-                    href=""),
+            html.Div("The MassQL Compendium is a set of community contributions \
+                    MassQL queries that describe patterns in mass spectrometry data for different classes of molecules. \
+                    We would love your help to expand the compendium with new queries. Contribute Below!"),
+            html.Br(),
+            html.Div([
+                html.A(
+                    dbc.Button("Contribute to MassQL Compendium", color="primary"),
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSfpsTolLHE7auhq6LnmnNLjr4v_pa3FTlRs7FKd9IHT6psxeg/viewform?usp=sf_link",
+                    className="d-grid gap-2"
+                )
+            ])
         ]
     )
 ]
@@ -118,11 +127,11 @@ BODY = dbc.Container(
         dbc.Row([
             dbc.Col(
                 [
+                    dbc.Card(INTRODUCTION_DASHBOARD),
+                    html.Br(),
                     dbc.Card(MIDDLE_DASHBOARD),
                     html.Br(),
                     dbc.Card(CONTRIBUTORS_DASHBOARD),
-                    html.Br(),
-                    dbc.Card(EXAMPLES_DASHBOARD)
                 ],
                 #className="w-50"
             ),
