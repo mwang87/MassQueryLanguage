@@ -219,7 +219,7 @@ def draw_visualization(table_data, table_selected):
     param_string = urllib.parse.quote(json.dumps(param_dict))
     gnps_url = "https://proteomics2.ucsd.edu/ProteoSAFe/index.jsp?&params={}".format(param_string)
 
-    sandbox_url = "/?query={}".format(massql_query)
+    sandbox_url = "/?query={}".format(urllib.parse.quote(massql_query))
 
     query_row = dbc.Row([
         dbc.Col(
