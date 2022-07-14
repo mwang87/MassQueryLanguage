@@ -1,0 +1,73 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifiercardinality": {
+                    "max": 5.0,
+                    "min": 2.0,
+                    "name": "qualifiercardinality"
+                },
+                "qualifierintensitypercent": {
+                    "name": "qualifierintensitypercent",
+                    "value": 5.0
+                },
+                "qualifierppmtolerance": {
+                    "name": "qualifierppmtolerance",
+                    "unit": "ppm",
+                    "value": 10.0
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                58.06513,
+                60.04439,
+                70.06513,
+                72.08078,
+                74.06004,
+                84.04439,
+                84.08078,
+                86.09643,
+                87.05529,
+                88.0393,
+                88.07569,
+                100.11208,
+                101.07094,
+                101.10732,
+                102.05495,
+                102.09134,
+                104.05285,
+                110.07127,
+                114.12773,
+                115.08659,
+                115.12297,
+                116.0706,
+                118.0685,
+                120.08078,
+                124.08692,
+                129.10224,
+                129.11347,
+                129.13862,
+                130.08625,
+                132.08415,
+                134.09643,
+                136.07569,
+                138.10257,
+                143.12912,
+                148.11208,
+                150.09134,
+                157.14477,
+                159.09167,
+                164.10699,
+                173.10732,
+                187.12297
+            ]
+        }
+    ],
+    "query": "QUERY scaninfo(MS2DATA) WHERE MS2PROD=(58.06513 OR 60.04439 OR 70.06513 OR 72.08078 OR 74.06004 OR 84.04439 OR 84.08078 OR 86.09643 OR 87.05529 OR 88.0393 OR 88.07569 OR 100.11208 OR 101.07094 OR 101.10732 OR 102.05495 OR 102.09134 OR 104.05285 OR 110.07127 OR 114.12773 OR 115.08659 OR 115.12297 OR 116.0706 OR 118.0685 OR 120.08078 OR 124.08692 OR 129.10224 OR 129.11347 OR 129.13862 OR 130.08625 OR 132.08415 OR 134.09643 OR 136.07569 OR 138.10257 OR 143.12912 OR 148.11208 OR 150.09134 OR 157.14477 OR 159.09167 OR 164.10699 OR 173.10732 OR 187.12297):CARDINALITY=range(min=2,max=5):TOLERANCEPPM=10:INTENSITYPERCENT=5",
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}

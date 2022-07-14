@@ -17,3 +17,4 @@ class CustomFlask(Flask):
 app = CustomFlask(__name__)
 app.config.from_object(__name__)
 app.register_blueprint(views.blueprint)
+

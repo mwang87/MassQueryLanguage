@@ -1,0 +1,24 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifiermztolerance": {
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.005
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                85.0284
+            ]
+        }
+    ],
+    "query": "QUERY scannum(MS2DATA) WHERE MS2PROD=85.0284:TOLERANCEMZ=0.005",
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscannum"
+    }
+}
