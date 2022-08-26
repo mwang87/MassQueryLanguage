@@ -219,7 +219,7 @@ def ms2prod_condition(condition, ms1_df, ms2_df, reference_conditions_register):
         _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
 
         # Applying the intensity match
-        ms2_filtered_df = _filter_intensitymatch(ms2_filtered_df, reference_conditions_register, condition)
+        ms2_filtered_df = _filter_intensitymatch(ms2_filtered_df, reference_conditions_register, condition).copy()
         ms2_filtered_df["mzenumeration"] = i
 
         ms2_list.append(ms2_filtered_df)
