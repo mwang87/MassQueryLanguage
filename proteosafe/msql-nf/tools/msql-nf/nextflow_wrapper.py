@@ -52,7 +52,7 @@ def main():
 
         output_stdout_file = os.path.join(output_trace_folder, "stdout.log")
 
-    if args.runcluster == "YES" and args.user in ["mwang87", "allegraaron"]:
+    if args.runcluster == "YES" and args.user in ["mwang87", "allegraaron", "alaronlab"]:
         # Staging all files on gscratch because they might not be seen if we schedule outputs from local scratch disk
         workflow_task_directory = os.path.join("/gscratch/nextflow_staging", args.task)
         pathlib.Path(workflow_task_directory).mkdir(parents=True, exist_ok=True)
