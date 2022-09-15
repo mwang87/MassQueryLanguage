@@ -1,17 +1,18 @@
-# Mass Spec Query Languge
+# Mass Spec Query Language
 
 [![Unit Testing](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-unit.yml/badge.svg)](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-unit.yml)
 [![NF Workflow Testing](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-workflow.yml/badge.svg)](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-workflow.yml)
 
-The Mass Spec Query Langauge (MassQL) is a domain specific language meant to be a succinct way to 
-express a query in a mass spectrometry centric fashion. It is inspired by SQL, 
+The Mass Spec Query Language (MassQL) is a domain specific language meant to be a succinct way to
+express a query in a mass spectrometry centric fashion. It is inspired by SQL,
 but it attempts to bake in assumptions of mass spectrometry to make querying much more
 natural for mass spectrometry users. Broadly we attempt to design it according to several principles:
 
 1. Expressiveness - Capture complex mass spectrometry patterns that the community would like to look for
 1. Precision - Exactly prescribe how to find data without ambiguity
 2. Scalable - Easily facilitating the querying of one spectrum all the way up to entire repositories of data
-3. Relatively Natural - MassQL should be relatively easy to read and write and even use as a way to communicate ideas about mass spectrometry, you know like a language. 
+3. Relatively Natural - MassQL should be relatively easy to read and write and even use to communicate ideas about mass
+   spectrometry, you know like a language.
 
 ## Repository Structure
 
@@ -19,7 +20,7 @@ This is the repository to define the language and reference implementation. This
 
 1. Language Grammar
 1. Reference Implementation Python API
-1. Commandline Utility to execute
+1. Command line Utility to execute
 1. NextFlow Workflow For Large Scale Analysis
 1. ProteoSAFe workflow
 1. Dash interactive exploration
@@ -27,12 +28,12 @@ This is the repository to define the language and reference implementation. This
 ## Developers/Contact
 
 Mingxun Wang is the main creator and developer of MassQL. Contact me for contributing or using it!
+
 ## Language Specification/Documentation
 
-Checkout specifics for the langauge, examples, and design patterns at the documentation. 
+Checkout specifics for the language, examples, and design patterns at the documentation.
 
 [Documentation Link](https://mwang87.github.io/MassQueryLanguage_Documentation/)
-
 
 ## Python API
 
@@ -51,6 +52,7 @@ results_df = msql_engine.process_query(input_query, input_filename)
 ```
 
 If you want to push in a data frame you already have, you can specify it
+
 ```
 from massql import msql_engine
 from massql import msql_fileloading
@@ -64,7 +66,7 @@ results_df = msql_engine.process_query(input_query, input_filename, ms1_df=ms1_d
 
 ## Command Line Tool
 
-You can use the command line tool ```massql``` to query things or put things into a pipeline. 
+You can use the command line tool ```massql``` to query things or put things into a pipeline.
 
 A few examples of what you can do
 
@@ -97,6 +99,7 @@ Visualization image of MS2 spectra
 ```/visualize/ms2```
 
 ## Testing
+
 To run tests, you'll need to first fetch some fixtures that are not bundled with the git repo:
 ```cd tests && sh ./get_data.sh```
 
