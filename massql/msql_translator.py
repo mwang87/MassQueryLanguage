@@ -18,7 +18,7 @@ def translate_query(query, language="english"):
         elif language == "japanese":
             sentences.append("質量分析データ中のスキャンを探すにあたって、次の条件が適用されます。")
         elif language == "french":
-            sentences.append("Les conditions suivantes sont appliquées pour trouver les échantillons dans les données du spectrométrie.")
+            sentences.append("Les conditions suivantes sont appliquées pour trouver les échantillons dans les données spectrales.")
         elif language == "german":
             sentences.append("Die folgenden Bedingungen werden auf massenspektrometrische Daten angewendet um Spektren zu finden.")
         elif language == "spanish":
@@ -93,7 +93,7 @@ def _translate_querytype(querytype, language="english"):
         elif language == "japanese":
             return "MS2でのプリカを返します。"
         elif language == "french":
-            return "Retourne le precursor mz sur MS2."
+            return "Retourne le précurseur à mz sur MS2."
         elif language == "german":
             return "Zurückgeben des precursor mz auf MS2."
         elif language == "spanish":
@@ -209,7 +209,7 @@ def _translate_condition(condition, language="english"):
         elif language == "japanese":
             return "m/z {} の MS2 neutral loss ピークを {} で検索します。".format(all_values_string, qualifier_string)
         elif language == "french":
-            return "Trouver un pic MS2 neutral loss à m/z {}{}.".format(all_values_string, qualifier_string)
+            return "Trouver un pic MS2 avec une perte neutre à m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "german":
             return "Hat MS2 Neutralverlust von m/z {} {}.".format(all_values_string, qualifier_string)
         elif language == "spanish":
@@ -257,7 +257,7 @@ def _translate_condition(condition, language="english"):
         elif language == "japanese":
             return "プリカーサーの m/z が {} の MS2 スペクトルを {} で検索します。".format(all_values_string, qualifier_string)
         elif language == "french":
-            return "Trouver des spectres MS2 avec une m/z de précursor {}{}.".format(all_values_string, qualifier_string)
+            return "Trouver des spectres MS2 avec un précurseur à m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "german":
             return "Hat MS2 Vorläuferion bei m/z {} {}.".format(all_values_string, qualifier_string)
         elif language == "spanish":
@@ -536,7 +536,7 @@ def _translate_qualifier(qualifier, language="english"):
         elif language == "japanese":
             return "誤差範囲 {} PPM".format(qualifier["value"])
         elif language == "french":
-            return "une tolérance {} PPM".format(qualifier["value"])
+            return "une tolérance de {} PPM".format(qualifier["value"])
         elif language == "german":
             return "eine {} PPM Abweichung".format(qualifier["value"])
         elif language == "spanish":
@@ -616,7 +616,7 @@ def _translate_qualifier(qualifier, language="english"):
         elif language == "japanese":
             return "このピークは、スペクトル内の他のピークに対する強度のリファレンスとして使用されます"
         elif language == "french":
-            return "ce pico est utilisé comme référence d'intensité pour les autres pics de l'échantillon"
+            return "ce pic est utilisé comme référence d'intensité pour les autres pics de l'échantillon"
         elif language == "german":
             return "dieses Signal wird als Intensitätsreferenz für andere Signale verwendet"
         elif language == "spanish":
@@ -636,7 +636,7 @@ def _translate_qualifier(qualifier, language="english"):
         elif language == "japanese":
             return "{} のリファレンスピークに対して予想される相対強度".format(qualifier["value"])
         elif language == "french":
-            return "une intensité prévu relative à la référence de {}".format(qualifier["value"])
+            return "une intensité prévue relative à la référence de {}".format(qualifier["value"])
         elif language == "german":
             return "eine erwartete Intensität relativ zum Referenzsignal von {}".format(qualifier["value"])
         elif language == "spanish":
