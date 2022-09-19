@@ -244,7 +244,19 @@
                 <parser type="stream" contentType="text/xml"/>
             </parsers>
         </data>
-        <parameter name="URLBASE" value='https://gnps.ucsd.edu/ProteoSAFe/index.jsp?params={"workflow":"MOLECULAR-LIBRARYSEARCH-V2","desc":"Reanalysis of MSQL [task] with Library Search","spec_on_server":"t.[task]/query_results/extracted/extracted_mzML"}'/>
+        <parameter name="URLBASE" value='https://gnps.ucsd.edu/ProteoSAFe/index.jsp?params={"workflow":"MOLECULAR-LIBRARYSEARCH-V2","desc":"Reanalysis of MassQL [task] with Library Search","spec_on_server":"t.[task]/query_results/extracted/extracted_mzML"}'/>
+    </block>
+
+    <view id="reanalyze_massql" label="Analyze with MassQL" group="Advanced Views - Analysis Views">
+        <blockRef id="main" type="reanalyze_massql"/>
+    </view>
+    <block id="reanalyze_massql" type="dummylinkout">
+        <data>
+            <parsers>
+                <parser type="stream" contentType="text/xml"/>
+            </parsers>
+        </data>
+        <parameter name="URLBASE" value='https://gnps.ucsd.edu/ProteoSAFe/index.jsp?params={"workflow":"MOLECULAR-LIBRARYSEARCH-V2","desc":"Reanalysis of MassQL [task] with MassQL","spec_on_server":"t.[task]/query_results/extracted/extracted_mzML"}'/>
     </block>
 
     <view id="visualize_query" label="Visualize Query" group="Advanced Views - Visualize">
