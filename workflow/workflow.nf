@@ -82,7 +82,7 @@ else{
     }
 }
 
-// Merging the results, 1000 results at a time, and then doing a full merge
+// Merging the results, 100 results at a time, and then doing a full merge
 process formatResultsMergeRounds {
     publishDir "$params.publishdir/msql", mode: 'copy'
     cache false
@@ -111,7 +111,7 @@ _merged_temp_summary_ch.collectFile(name: "merged_query_results.tsv", storeDir: 
 
 if(params.extract == "YES"){
 
-    // Merging the JSON in rounds
+    // Merging the JSON in rounds, 100 files at a time
     process formatExtractedSpectraRounds {
         publishDir "$params.publishdir/extracted", mode: 'copy'
         cache false
@@ -142,6 +142,7 @@ if(params.extract == "YES"){
         """
     }
 
+    // Once we've done this, then we'lll do the actual merge
     _extracted_summary_ch.collectFile(name: "extracted.tsv", storeDir: "$params.publishdir/extracted", keepHeader: true)
 
     // Extracting the spectra
