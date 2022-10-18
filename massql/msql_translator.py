@@ -124,7 +124,7 @@ def _translate_querytype(querytype, language="english"):
             return "Trouver des spectres MS2 par numéro de scan."
         elif language == "german":
             return "Hat MS2 durch Scan-Nummer."
-         elif language == "italian":
+        elif language == "italian":
             return "Trovare gli spettri MS2 per numero di scan."
         elif language == "spanish":
             return "Encontrando espectros de MS2 por número de escaneo."
