@@ -21,6 +21,8 @@ def translate_query(query, language="english"):
             sentences.append("Les conditions suivantes sont appliquées pour trouver les échantillons dans les données spectrales.")
         elif language == "german":
             sentences.append("Die folgenden Bedingungen werden auf massenspektrometrische Daten angewendet um Spektren zu finden.")
+        elif language == "italian":
+            sentences.append("Per trovare i campioni nei dati spettrali si applicano le seguenti condizioni.")
         elif language == "spanish":
             sentences.append("Las siguientes condiciones son aplicadas para encontrar los espectros de masas en los datos de espectrometria.")
         elif language == "portuguese":
@@ -56,6 +58,8 @@ def _translate_querytype(querytype, language="english"):
             return "Retourne les informations sur le scan {}.".format(ms_level)
         elif language == "german":
             return "Zurückgeben der Scaninformation von {}.".format(ms_level)
+        elif language == "italian":
+            return "Restituire le informazioni sullo scan {}.".format(ms_level)
         elif language == "spanish":
             return "Generando información de {}.".format(ms_level)
         elif language == "portuguese":
@@ -76,6 +80,8 @@ def _translate_querytype(querytype, language="english"):
             return "Retourne les informations sur le scan somme de {}.".format(ms_level)
         elif language == "german":
             return "Zurückgeben der zusammengefassten Scaninformation von {}.".format(ms_level)
+        elif language == "italian":
+            return "Restituire le informazioni sommate sullo scan {}.".format(ms_level)
         elif language == "spanish":
             return "Retornando información de cada espectro de {}.".format(ms_level)
         elif language == "portuguese":
@@ -96,6 +102,8 @@ def _translate_querytype(querytype, language="english"):
             return "Retourne le précurseur à mz sur MS2."
         elif language == "german":
             return "Zurückgeben des precursor mz auf MS2."
+        elif language == "italian":
+            return "Restituire il precursore mz sulla MS2."
         elif language == "spanish":
             return "Retornando precursor mz en MS2."
         elif language == "portuguese":
@@ -116,6 +124,8 @@ def _translate_querytype(querytype, language="english"):
             return "Trouver des spectres MS2 par numéro de scan."
         elif language == "german":
             return "Hat MS2 durch Scan-Nummer."
+        elif language == "italian":
+            return "Trovare gli spettri MS2 per numero di scan."
         elif language == "spanish":
             return "Encontrando espectros de MS2 por número de escaneo."
         elif language == "portuguese":
@@ -136,6 +146,8 @@ def _translate_querytype(querytype, language="english"):
             return "Retourne les pics de scan {}.".format(ms_level)
         elif language == "german":
             return "Zurückgeben der Scanpeaks von {}.".format(ms_level)
+        elif language == "italian":
+            return "Trovare i picchi di scan."
         elif language == "spanish":
             return "Generando picos de {}.".format(ms_level)
         elif language == "portuguese":
@@ -160,6 +172,8 @@ def _translate_condition(condition, language="english"):
             preposition = "avec"
         elif language == "german":
             preposition = "mit"
+        elif language == "italian":
+            preposition = "con"
         elif language == "spanish":
             preposition = "con"
         elif language == "portuguese":
@@ -188,6 +202,8 @@ def _translate_condition(condition, language="english"):
             return "Trouver un pic MS2 à m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "german":
             return "Hat MS2 Signal bei m/z {} {}.".format(all_values_string, qualifier_string)
+        elif language == "italian":
+            return "Trovare un picco MS2 a m/z {} {}.".format(all_values_string, qualifier_string)
         elif language == "spanish":
             return "Encontrando pico de MS2 a m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "portuguese":
@@ -212,6 +228,8 @@ def _translate_condition(condition, language="english"):
             return "Trouver un pic MS2 avec une perte neutre à m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "german":
             return "Hat MS2 Neutralverlust von m/z {} {}.".format(all_values_string, qualifier_string)
+        elif language == "italian":
+            return "Trovare un picco MS2 con perdita neutra a m/z {} {}.".format(all_values_string, qualifier_string)
         elif language == "spanish":
             return "Encontrando pico de MS2 de neutral loss en m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "portuguese":
@@ -236,6 +254,8 @@ def _translate_condition(condition, language="english"):
             return "Trouver un pic MS1 à m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "german":
             return "Hat MS1 Signal bei m/z {} {}.".format(all_values_string, qualifier_string)
+        elif language == "italian":
+            return "Trovare un picco MS1 a m/z {} {}.".format(all_values_string, qualifier_string)
         elif language == "spanish":
             return "Encontrando pico de MS1 en m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "portuguese":
@@ -260,6 +280,8 @@ def _translate_condition(condition, language="english"):
             return "Trouver des spectres MS2 avec un précurseur à m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "german":
             return "Hat MS2 Vorläuferion bei m/z {} {}.".format(all_values_string, qualifier_string)
+        elif language == "italian":
+            return "Trovare gli spettri MS2 con un precursore a m/z {} {}.".format(all_values_string, qualifier_string)
         elif language == "spanish":
             return "Encontrando espectros de MS2 con un precursor m/z {}{}.".format(all_values_string, qualifier_string)
         elif language == "portuguese":
@@ -282,6 +304,8 @@ def _translate_condition(condition, language="english"):
             return "Trouver des spectres avec un numéro de scan supérieur à {}.".format(value)
         elif language == "german":
             return "Hat Spektren mit einem Scanwert größer als {}.".format(value)
+        elif language == "italian":
+            return "Trovare gli spettri con un numero di scan superiore a {}.".format(value)
         elif language == "spanish":
             return "Encontrando espectros con número de escaneo superior a {}.".format(value)
         elif language == "portuguese":
@@ -304,6 +328,8 @@ def _translate_condition(condition, language="english"):
             return "Trouver des spectres avec un numéro de scan inférieur à {}.".format(value)
         elif language == "german":
             return "Hat Spektren mit einem Scanwert kleiner als {}.".format(value)
+        elif language == "italian":
+            return "Trovare gli spettri con un numero di scan inferiore a {}.".format(value)
         elif language == "spanish":
             return "Encontrando espectros con número de escaneo inferior a {}.".format(value)
         elif language == "portuguese":
@@ -327,6 +353,8 @@ def _translate_condition(condition, language="english"):
             return "Trouver des spectres avec un temps de retention de plus de {} minutes.".format(value)
         elif language == "german":
             return "Findet Spektren mit einer Retentionzeit von mehr als {} Minuten.".format(value)
+        elif language == "italian":
+            return "Trovare gli spettri con un tempo di ritenzione superiore a {} minuti.".format(value)
         elif language == "spanish":
             return "Encontrando espectros con un tiempo de retención de más de {} minutos.".format(value)
         elif language == "portuguese":
@@ -349,6 +377,8 @@ def _translate_condition(condition, language="english"):
             return "Trouver des spectres avec un temps de retention de moins de {} minutes.".format(value)
         elif language == "german":
             return "Findet Spektren mit einer Retentionzeit von weniger als {} Minuten.".format(value)
+        elif language == "italian":
+            return "Trovare gli spettri con un tempo di ritenzione inferiore a {} minuti.".format(value)
         elif language == "spanish":
             return "Encontrando espectros con un tiempo de retención de menos de {} minutos.".format(value)
         elif language == "portuguese":
@@ -372,6 +402,8 @@ def _translate_condition(condition, language="english"):
                 return "Trouver des spectres avec une polarité positive."
             elif language == "german":
                 return "Findet Spektren mit einer positivem Polarkennung."
+            elif language == "italian":
+                return "Trovare gli spettri di polarita positiva."
             elif language == "spanish":
                 return "Encontrando espectros con polaridad positiva."
             elif language == "portuguese":
@@ -391,6 +423,8 @@ def _translate_condition(condition, language="english"):
                 return "Trouver des spectres avec une polarité négative."
             elif language == "german":
                 return "Findet Spektren mit einer negativen Polarkennung."
+            elif language == "italian":
+                return "Trovare gli spettri di polarita negativa."
             elif language == "spanish":
                 return "Encontrando espectros con polaridad negativa."
             elif language == "portuguese":
@@ -413,6 +447,8 @@ def _translate_condition(condition, language="english"):
             return "Trouver des spectres avec une charge {}.".format(value)
         elif language == "german":
             return "Findet Spektren mit einer Ladung von {}.".format(value)
+        elif language == "italian":
+            return "Trovare gli spettri con una carica {}.".format(value)
         elif language == "spanish":
             return "Encontrando espectros con una carga {}.".format(value)
         elif language == "portuguese":
@@ -439,6 +475,8 @@ def _translate_condition(condition, language="english"):
                 return "Activer la variable X avec un intervalle ({}, {}).".format(min_x, max_x)
             elif language == "german":
                 return "Variable X mit Intervall von ({}, {}).".format(min_x, max_x)
+            elif language == "italian":
+                return "Attivare la variabile X con un intervallo ({}, {}).".format(min_x, max_x)
             elif language == "spanish":
                 return "Activando variable X con rango ({}, {}).".format(min_x, max_x)
             elif language == "portuguese":
@@ -463,6 +501,8 @@ def _translate_condition(condition, language="english"):
                 return "Activer la variable X avec un intervalle ({}, {}).".format(min_x, max_x)
             elif language == "german":
                 return "Variable X mit Intervall von ({}, {}).".format(min_x, max_x)
+            elif language == "italian":
+                return "Attivare la variabile X con un intervallo ({}, {}).".format(min_x, max_x)
             elif language == "spanish":
                 return "Activando variable X con rango ({}, {}).".format(min_x, max_x)
             elif language == "portuguese":
@@ -487,6 +527,8 @@ def _translate_condition(condition, language="english"):
                 return "Trouver des spectres avec une mobilité ionique ({}, {}).".format(min_x, max_x)
             elif language == "german":
                 return "Findet Spektren mit einer Ionmobilitaet von ({}, {}).".format(min_x, max_x)
+            elif language == "italian":
+                return "Trovare gli spettri con mobilita ionica ({}, {}).".format(min_x, max_x)
             elif language == "spanish":
                 return "Encontrando espectros con un rango de movilidad de iones ({}, {}).".format(min_x, max_x)
             elif language == "portuguese":
@@ -516,6 +558,8 @@ def _translate_qualifiers(qualifiers, language="english"):
         return " et ".join(qualifier_phrases)
     elif language == "german":
         return " und ".join(qualifier_phrases)
+    elif language == "italian":
+        return " e ".join(qualifier_phrases)
     elif language == "spanish":
         return " y ".join(qualifier_phrases)
     elif language == "portuguese":
@@ -539,6 +583,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "une tolérance de {} PPM".format(qualifier["value"])
         elif language == "german":
             return "eine {} PPM Abweichung".format(qualifier["value"])
+        elif language == "italian":
+            return "una toleranza di {} PPM".format(qualifier["value"])
         elif language == "spanish":
             return "con tolerancia de {} PPM".format(qualifier["value"])
         elif language == "portuguese":
@@ -559,6 +605,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "une tolérance {} m/z".format(qualifier["value"])
         elif language == "german":
             return "eine {} m/z Abweichung".format(qualifier["value"])
+        elif language == "italian":
+            return "una toleranza di {} m/z".format(qualifier["value"])
         elif language == "spanish":
             return "un {} m/z de tolerancia".format(qualifier["value"])
         elif language == "portuguese":
@@ -579,6 +627,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "une intensité minimale relative à la base de {}%".format(qualifier["value"])
         elif language == "german":
             return "eine minimale Intensität relative zum Basispeak von {}%".format(qualifier["value"])
+        elif language == "italian":
+            return "un'intensità minima relativa alla base di {}%".format(qualifier["value"])
         elif language == "spanish":
             return "un mínimo de {}% de intensidad relativa a base pico".format(qualifier["value"])
         elif language == "portuguese":
@@ -599,6 +649,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "une intensité minimale de {}".format(qualifier["value"])
         elif language == "german":
             return "eine minimale Intensität von {}".format(qualifier["value"])
+        elif language == "italian":
+            return "un'intensità minima di {}%".format(qualifier["value"])
         elif language == "spanish":
             return "un mínimo de {} de intensidad".format(qualifier["value"])
         elif language == "portuguese":
@@ -619,6 +671,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "ce pic est utilisé comme référence d'intensité pour les autres pics de l'échantillon"
         elif language == "german":
             return "dieses Signal wird als Intensitätsreferenz für andere Signale verwendet"
+        elif language == "italian":
+            return "questo picco viene utilizzato come riferimento di intensità per gli altri picchi del campione"
         elif language == "spanish":
             return "este pico é utilizado como referencia de intensidade para outros picos no espectro"
         elif language == "portuguese":
@@ -639,6 +693,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "une intensité prévue relative à la référence de {}".format(qualifier["value"])
         elif language == "german":
             return "eine erwartete Intensität relativ zum Referenzsignal von {}".format(qualifier["value"])
+        elif language == "italian":
+            return "un'intensità relativa al riferimento di {}".format(qualifier["value"])
         elif language == "spanish":
             return "una intensidad esperada relativa ao pico de referencia de {}".format(qualifier["value"])
         elif language == "portuguese":
@@ -659,6 +715,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "accepter la variabilité de {}% en intensité relative".format(qualifier["value"])
         elif language == "german":
             return "eine Toleranz von {}% in der erwarteten relativen Intensität".format(qualifier["value"])
+        elif language == "italian":
+            return "accettare una variabilità di {}% nell'intensità relativa".format(qualifier["value"])
         elif language == "spanish":
             return "aceptando variabilidad de {}% de intensidad relativa".format(qualifier["value"])
         elif language == "portuguese":
@@ -679,6 +737,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "l'intensité minimale du pic {} %".format(qualifier["value"])
         elif language == "german":
             return "die minimale Intensität des Peaks {} %".format(qualifier["value"])
+        elif language == "italian":
+            return "l'intensita minima del picco {} %".format(qualifier["value"])
         elif language == "spanish":
             return "la intensidad mínima del pico {} %".format(qualifier["value"])
         elif language == "portuguese":
@@ -699,6 +759,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "défaut de masse minimum {} et maximum {}".format(qualifier["min"], qualifier["max"])
         elif language == "german":
             return "Massdefekt Minimum {} und Maximum {}".format(qualifier["min"], qualifier["max"])
+        elif language == "italian":
+            return "difetto di massa minimo {} e massimo {}".format(qualifier["min"], qualifier["max"])
         elif language == "spanish":
             return "defecto de masa mínimo {} y máximo {}".format(qualifier["min"], qualifier["max"])
         elif language == "portuguese":
@@ -719,6 +781,8 @@ def _translate_qualifier(qualifier, language="english"):
             return "cardinalité minimum {} et maximum {}".format(qualifier["min"], qualifier["max"])
         elif language == "german":
             return "Kardinalität Minimum {} und Maximum {}".format(qualifier["min"], qualifier["max"])
+        elif language == "italian":
+            return "cardinalita minima {} e massima {}".format(qualifier["min"], qualifier["max"])
         elif language == "spanish":
             return "cardinalidad mínima {} y máximo {}".format(qualifier["min"], qualifier["max"])
         elif language == "portuguese":
