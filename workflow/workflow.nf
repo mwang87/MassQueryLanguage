@@ -18,6 +18,7 @@ params.publishdir = "nf_output"
 params.PYTHONRUNTIME = "python" // this is a hack because CCMS cluster does not have python installed
 
 if(params.parallel_files == "YES"){
+    // This is the parallel run that will run on the cluster
     process queryData {
         errorStrategy 'ignore'
         time '4h'
@@ -25,7 +26,7 @@ if(params.parallel_files == "YES"){
         //memory { 6.GB * task.attempt }
         memory { 12.GB }
 
-        //publishDir "$params.publishdir/msql_temp", mode: 'copy'
+        publishDir "$params.publishdir/msql_temp", mode: 'copy'
         
         input:
         set val(filepath), val(mangled_output_filename), file(input_spectrum) from _spectra_ch3
@@ -92,7 +93,7 @@ process formatResultsMergeRounds {
     //maxErrors 10
     
     input:
-    file "results/*"  from _query_results_ch.collate( 1000 )
+    file "results/*"  from _query_results_ch.collate( 100 )
 
     output:
     file "merged_tsv/*" optional true into _merged_temp_summary_ch
@@ -118,7 +119,7 @@ if(params.extract == "YES"){
         errorStrategy 'ignore'
         
         input:
-        file "json/*"  from _query_extract_results_ch.collate( 1000 )
+        file "json/*"  from _query_extract_results_ch.collate( 100 )
 
         output:
         file "extracted_mzML/*" optional true
