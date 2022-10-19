@@ -88,9 +88,8 @@ process formatResultsMergeRounds {
     cache false
     echo true
 
-    errorStrategy 'ignore'
-    //errorStrategy 'retry'
-    //maxErrors 10
+    //errorStrategy 'ignore'
+    errorStrategy { task.attempt <= 10  ? 'retry' : 'ignore' }
     
     input:
     file "results/*"  from _query_results_ch.collate( 100 )
