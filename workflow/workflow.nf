@@ -26,7 +26,7 @@ if(params.parallel_files == "YES"){
         //memory { 6.GB * task.attempt }
         memory { 12.GB }
 
-        publishDir "$params.publishdir/msql_temp", mode: 'copy'
+        //publishDir "$params.publishdir/msql_temp", mode: 'copy'
         
         input:
         set val(filepath), val(mangled_output_filename), file(input_spectrum) from _spectra_ch3
@@ -57,7 +57,7 @@ else{
         maxForks 1
         time '4h'
         
-        publishDir "$params.publishdir/msql_temp", mode: 'copy'
+        //publishDir "$params.publishdir/msql_temp", mode: 'copy'
         
         input:
         set val(filepath), val(mangled_output_filename), file(input_spectrum) from _spectra_ch3
@@ -89,7 +89,7 @@ process formatResultsMergeRounds {
     echo true
 
     //errorStrategy 'ignore'
-    errorStrategy { task.attempt <= 10  ? 'retry' : 'ignore' }
+    errorStrategy { task.attempt <= 10  ? 'retry' : 'terminate' }
     
     input:
     file "results/*"  from _query_results_ch.collate( 100 )
