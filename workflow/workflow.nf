@@ -18,6 +18,7 @@ params.publishdir = "nf_output"
 params.PYTHONRUNTIME = "python" // this is a hack because CCMS cluster does not have python installed
 
 if(params.parallel_files == "YES"){
+    // This is the parallel run that will run on the cluster
     process queryData {
         errorStrategy 'ignore'
         time '4h'
@@ -56,7 +57,7 @@ else{
         maxForks 1
         time '4h'
         
-        publishDir "$params.publishdir/msql_temp", mode: 'copy'
+        //publishDir "$params.publishdir/msql_temp", mode: 'copy'
         
         input:
         set val(filepath), val(mangled_output_filename), file(input_spectrum) from _spectra_ch3
@@ -81,18 +82,17 @@ else{
     }
 }
 
-// Merging the results, 1000 results at a time, and then doing a full merge
+// Merging the results, 100 results at a time, and then doing a full merge
 process formatResultsMergeRounds {
     publishDir "$params.publishdir/msql", mode: 'copy'
     cache false
     echo true
 
-    errorStrategy 'ignore'
-    //errorStrategy 'retry'
-    //maxErrors 10
+    //errorStrategy 'ignore'
+    errorStrategy { task.attempt <= 10  ? 'retry' : 'terminate' }
     
     input:
-    file "results/*"  from _query_results_ch.collate( 1000 )
+    file "results/*"  from _query_results_ch.collate( 100 )
 
     output:
     file "merged_tsv/*" optional true into _merged_temp_summary_ch
@@ -110,7 +110,7 @@ _merged_temp_summary_ch.collectFile(name: "merged_query_results.tsv", storeDir: 
 
 if(params.extract == "YES"){
 
-    // Merging the JSON in rounds
+    // Merging the JSON in rounds, 100 files at a time
     process formatExtractedSpectraRounds {
         publishDir "$params.publishdir/extracted", mode: 'copy'
         cache false
@@ -118,7 +118,7 @@ if(params.extract == "YES"){
         errorStrategy 'ignore'
         
         input:
-        file "json/*"  from _query_extract_results_ch.collate( 1000 )
+        file "json/*"  from _query_extract_results_ch.collate( 100 )
 
         output:
         file "extracted_mzML/*" optional true
@@ -141,6 +141,7 @@ if(params.extract == "YES"){
         """
     }
 
+    // Once we've done this, then we'lll do the actual merge
     _extracted_summary_ch.collectFile(name: "extracted.tsv", storeDir: "$params.publishdir/extracted", keepHeader: true)
 
     // Extracting the spectra
