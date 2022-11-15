@@ -28,6 +28,9 @@ test_full:
 # 	pytest --capture=tee-sys -vv test.py::test_min_intensitypercent
 # 	pytest --capture=tee-sys -vv test.py::test_query
 
+deploy_clean:
+	rm build/ dist/ massql.egg-info -rf
+
 deploy_pypi:
 	python -m build --sdist --wheel .
 	twine upload dist/*
