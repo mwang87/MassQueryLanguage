@@ -206,7 +206,6 @@ def test_ms1_iron():
 
 @pytest.mark.skip(reason="parallel not really supported anymore")
 def test_ms1_iron_parallel():
-    msql_engine.init_ray()
 
     query = "QUERY scaninfo(MS1DATA) \
             WHERE \
@@ -235,7 +234,6 @@ def test_ms1_iron_X_changes_intensity():
 
 
 def test_ms1_iron_min_intensity():
-    #msql_engine.init_ray()
 
     query = "QUERY scaninfo(MS1DATA) \
             WHERE \
@@ -254,7 +252,6 @@ def test_ms1_iron_min_intensity():
     assert(len(results_df) == 10)
 
 def test_ms1_iron_min_intensity_m2_prec():
-    #msql_engine.init_ray()
 
     query = "QUERY scaninfo(MS2DATA) \
             WHERE \
@@ -299,7 +296,6 @@ def test_i_norm_iron_xrange():
 
 @pytest.mark.skip(reason="parallel not really supported anymore")
 def test_ms1_cu():
-    msql_engine.init_ray()
 
     query = "QUERY scaninfo(MS1DATA) \
             WHERE \
@@ -698,7 +694,6 @@ def test_mgf_intensity():
     assert(1006 in list(results_df["scan"]))
 
 def main():
-    #msql_engine.init_ray()
     
     #test_noquery()
     #test_simple_ms2_twoqualifier()

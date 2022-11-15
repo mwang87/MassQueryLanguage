@@ -18,7 +18,6 @@ celery==5.2.1
 pymzml
 lark-parser
 pyarrow
-ray
 tqdm
 py_expression_eval
 matchms

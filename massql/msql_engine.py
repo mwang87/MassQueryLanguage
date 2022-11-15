@@ -21,11 +21,6 @@ def DEBUG_MSG(msg):
 
     print(msg, file=sys.stderr, flush=True)
 
-def init_ray():
-    import ray
-    if not ray.is_initialized():
-        ray.init(ignore_reinit_error=True, object_store_memory=8000000000, num_cpus=8)
-
 
 def _get_ppm_tolerance(qualifiers):
     if qualifiers is None:
