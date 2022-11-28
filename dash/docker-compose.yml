@@ -18,10 +18,12 @@ services:
     restart: on-failure
     command: /app/run_server.sh
     environment:
-      VIRTUAL_HOST: msql.ucsd.edu
-      VIRTUAL_PORT: 5343
-      LETSENCRYPT_HOST: msql.ucsd.edu
-      LETSENCRYPT_EMAIL: miw023@ucsd.edu
+      #VIRTUAL_HOST: msql.ucsd.edu
+      VIRTUAL_HOST: massql.gnps2.org
+      VIRTUAL_PORT: 5000
+      #LETSENCRYPT_HOST: msql.ucsd.edu
+      LETSENCRYPT_HOST: massql.gnps2.org
+      LETSENCRYPT_EMAIL: mwang87@gmail.com
     deploy:
       resources:
         limits:
