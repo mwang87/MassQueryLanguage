@@ -1,0 +1,36 @@
+workflowname: massql_workflow
+workflowdescription: massql_workflow
+workflowlongdescription: This is a MassQL Workflow
+workflowversion: "0.1"
+workflowfile: workflow.nf
+workflowautohide: false
+adminonly: false
+#This maps the parameters from an input form to those that will appear in nextflow
+parameterlist:
+    - displayname: File Selection
+      paramtype: section
+
+    - displayname: Input Data Files
+      paramtype: fileselector
+      nf_paramname: input_spectra
+      formplaceholder: Enter the path to data
+      formvalue: ""
+      targettaskfolder: input_spectra
+      optional: false
+      selectsinglefile: false
+      folderunroll: true
+
+    # - displayname: Query Parameters
+    #   paramtype: section
+    
+    # - displayname: ms2_tolerance
+    #   paramtype: text
+    #   nf_paramname: ms2_tolerance
+    #   formplaceholder: Enter the ms2_tolerance
+    #   formvalue: "0.5"
+
+    
+    
+
+  
+    

@@ -1,6 +1,6 @@
 #!/usr/bin/env nextflow
 
-params.input_spectra = 'data/GNPS00002*.mzML'
+params.input_spectra = 'data' // We assume we pass it a folder with spectra files
 params.query = "QUERY scaninfo(MS2DATA)"
 params.parallel_files = 'NO'
 params.parallel_query = 'NO'
@@ -8,7 +8,8 @@ params.extract = 'YES'
 params.extractnaming = 'condensed'
 params.maxfilesize = "3000" // Default 3000 MB
 
-_spectra_ch = Channel.fromPath( params.input_spectra )
+_spectra_ch = Channel.fromPath( params.input_spectra + "/**" )
+//_spectra_ch = Channel.fromPath( params.input_spectra ) // This is the old code when we pass it a path to a glob of files
 _spectra_ch.into{_spectra_ch1;_spectra_ch2}
 
 _spectra_ch3 = _spectra_ch1.map { file -> tuple(file, file.toString().replaceAll("/", "_").replaceAll(" ", "_"), file) }
@@ -23,8 +24,11 @@ if(params.parallel_files == "YES"){
         errorStrategy 'ignore'
         time '4h'
         //maxRetries 3
+
         //memory { 6.GB * task.attempt }
         memory { 12.GB }
+
+        conda "$TOOL_FOLDER/conda_env.yml"
 
         //publishDir "$params.publishdir/msql_temp", mode: 'copy'
         
@@ -58,6 +62,7 @@ else{
         time '4h'
         
         //publishDir "$params.publishdir/msql_temp", mode: 'copy'
+        conda "$TOOL_FOLDER/conda_env.yml"
         
         input:
         set val(filepath), val(mangled_output_filename), file(input_spectrum) from _spectra_ch3
