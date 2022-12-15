@@ -4,3 +4,6 @@
 [submodule "proteosafe/CCMS-Integration-Tests"]
 	path = proteosafe/CCMS-Integration-Tests
 	url = https://github.com/CCMS-UCSD/CCMS-Integration-Tests.git
+[submodule "workflow/GNPS2_DeploymentTooling"]
+	path = workflow/GNPS2_DeploymentTooling
+	url = https://github.com/Wang-Bioinformatics-Lab/GNPS2_DeploymentTooling.git

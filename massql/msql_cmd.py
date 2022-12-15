@@ -90,6 +90,7 @@ def main():
     if output_results_filename and len(results_df) > 0:
         results_df["filename"] = os.path.basename(args.filename)
 
+        # This is for GNPS and GNPS2
         if args.original_path is not None:
             useful_filename = args.original_path
             # TODO: Clean up for ProteoSAFe
@@ -97,7 +98,14 @@ def main():
 
             # Cleanup for repository search
             useful_filename = useful_filename.replace("/data/ccms-data/uploads/", "")
-            
+
+            if "/data/nf_data/server/nf_tasks/" in useful_filename:
+                useful_filename = useful_filename.replace("/data/nf_data/server/nf_tasks/", "")
+                # Get the second folder name from path with python PathLib
+                import pathlib
+                task = pathlib.Path(useful_filename).parts[0]
+                useful_filename = useful_filename.replace(task + "/", "")
+
             # Saving output
             results_df["original_path"] = useful_filename
 

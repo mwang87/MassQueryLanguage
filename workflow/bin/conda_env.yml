@@ -1,0 +1,21 @@
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8.8
+  - pandas
+  - pip:
+    - sortedcollections
+    - xmltodict
+    - requests
+    - pymzml
+    - lark-parser
+    - pyarrow
+    - tqdm
+    - py_expression_eval
+    - matchms
+    - pyteomics
+    - psims
+    - plotly 
+    - kaleido
+    - pydot

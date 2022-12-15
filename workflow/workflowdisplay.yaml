@@ -1,0 +1,31 @@
+name: massql_workflow
+displayname: STUFF
+Views:
+-   name: Query Results
+    displayname: Query Results
+    viewname: pairslist
+    displaytype: datatable_serverbig
+    parameters:
+        filename: nf_output/msql/merged_query_results.tsv
+        columns:
+            -   title: "View"
+                data: 
+            -   title: "filename"
+                data: filename
+            -   title: "original_path"
+                data: original_path
+            -   title: "scan"
+                data: scan
+            -   title: "rt"
+                data: rt
+            -   title: "precmz"
+                data: precmz
+            -   title: "mslevel"
+                data: mslevel
+            -   title: "query_index"
+                data: query_index
+        columnDefs: '[ {"targets": 0,"data": null,"render": function ( data, type, row, meta ) {
+            return `
+            <a target="_blank" href="/dashboards/lcms?usi=mzspec:GNPS2-${task}-${encodeURIComponent(row["filename"])}">None</a>
+            `;}}]'
+            
