@@ -57,7 +57,7 @@ if(params.parallel_files == "YES"){
 else{
     process queryData2 {
         echo false
-        //errorStrategy 'ignore'
+        errorStrategy 'ignore'
         maxForks 1
         time '4h'
         
@@ -119,7 +119,6 @@ if(params.extract == "YES"){
     process formatExtractedSpectraRounds {
         publishDir "$params.publishdir/extracted", mode: 'copy'
         cache false
-        echo true
         errorStrategy 'ignore'
         
         input:
@@ -201,7 +200,6 @@ if(params.extract == "YES"){
 process summarizeResults {
     publishDir "$params.publishdir/summary", mode: 'copy'
     cache false
-    echo true
     errorStrategy 'ignore'
 
     input:

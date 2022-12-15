@@ -18,10 +18,31 @@ parameterlist:
       targettaskfolder: input_spectra
       optional: false
       selectsinglefile: false
-      folderunroll: true
+      folderunroll: false
 
-    # - displayname: Query Parameters
-    #   paramtype: section
+    - displayname: Query Options
+      paramtype: section
+
+    - displayname: Analyze in Parallel
+      paramtype: select
+      nf_paramname: parallel_files
+      formvalue: "YES"
+      options:
+        - value: "YES"
+          display: "Yes"
+        - value: "NO"
+          display: "No"
+
+    - displayname: Extract Spectra
+      paramtype: select
+      nf_paramname: extract
+      formvalue: "NO"
+      options:
+        - value: "YES"
+          display: "Yes"
+        - value: "NO"
+          display: "No"
+    
     
     # - displayname: ms2_tolerance
     #   paramtype: text
