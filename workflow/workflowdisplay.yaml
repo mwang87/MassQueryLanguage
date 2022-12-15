@@ -12,6 +12,8 @@ Views:
                 data: 
             -   title: "filename"
                 data: filename
+            -   title: "original_path"
+                data: original_path
             -   title: "scan"
                 data: scan
             -   title: "rt"
