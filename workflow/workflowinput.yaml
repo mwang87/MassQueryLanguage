@@ -20,6 +20,14 @@ parameterlist:
       selectsinglefile: false
       folderunroll: false
 
+    - displayname: MassQL Query
+      paramtype: textarea
+      nf_paramname: query
+      formplaceholder: Enter MassQL Query
+      formvalue: "QUERY scaninfo(MS2DATA)"
+      rows: 4
+      cols: 50
+
     - displayname: Query Options
       paramtype: section
 
@@ -53,5 +61,5 @@ parameterlist:
     
     
 
-  
+
     
