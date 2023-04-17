@@ -28,3 +28,4 @@ kaleido
 pydot
 redis
 openpyxl
+pyyaml
