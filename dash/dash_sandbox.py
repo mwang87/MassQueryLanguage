@@ -493,14 +493,14 @@ def _get_usi_peaks(ms1_usi, ms2_usi):
 
     try:
         if len(ms1_usi) > 5:
-            r = requests.get("https://metabolomics-usi.ucsd.edu/json/?usi1={}".format(ms1_usi))
+            r = requests.get("https://metabolomics-usi.gnps2.org/json/?usi1={}".format(ms1_usi))
             ms1_peaks = r.json()["peaks"]
     except:
         pass
 
     try:
         if len(ms2_usi) > 5:
-            r = requests.get("https://metabolomics-usi.ucsd.edu/json/?usi1={}".format(ms2_usi))
+            r = requests.get("https://metabolomics-usi.gnps2.org/json/?usi1={}".format(ms2_usi))
             ms2_peaks = r.json()["peaks"]
     except:
         pass
