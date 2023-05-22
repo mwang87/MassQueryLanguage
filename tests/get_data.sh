@@ -21,3 +21,4 @@ wget --no-verbose --output-document=meoh_water_ms2_1_31_1_395.mzML "https://prot
 wget --no-verbose --output-document=MMSRG_027.mzML "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?forceDownload=true&file=f.MSV000088268/peak/Anelize%20and%20Hector/MMSRG_027.mzML"
 wget --no-verbose --output-document=featurelist_pos.mgf "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000086995/updates/2022-01-18_mwang87_e619431a/peak/bahbobeh/featurelist_pos.mgf&forceDownload=true"
 wget --no-verbose --output-document=GT15A.mzML "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000087048/ccms_peak/Green_Tea_manuscript_data/GT15A.mzML"
+wget --no-verbose --output-document=PLT2_B1.mzML "http://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?task=9e5e3f5a23754d16a981fd009ae51e82&block=main&file=f.MSV000088800/ccms_peak/NRRL_PLT2_czapek_solid_raw/PLT2_B1.mzML"

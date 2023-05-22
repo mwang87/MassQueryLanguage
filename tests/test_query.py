@@ -693,6 +693,34 @@ def test_mgf_intensity():
 
     assert(1006 in list(results_df["scan"]))
 
+def test_otherscan_query():
+    query = """
+    QUERY scaninfo(MS1DATA) WHERE MS1MZ=X AND MS1MZ=X-52.91:TOLERANCEPPM=10:OTHERSCAN=rtrange(left=-0.01, right=0.01)
+    """
+
+    results_df = msql_engine.process_query(query, "tests/data/Hui_N2_fe.mzML")
+
+    # We should find in scan 1954 and m/z in MS1 of 535.03
+    # We should find the MS2 spectra at 482 and 535 m/z
+    # https://gnps-lcms.ucsd.edu//?xic_mz=&xic_formula=&xic_peptide=&xic_tolerance=0.5&xic_ppm_tolerance=10&xic_tolerance_unit=Da&xic_rt_window=&xic_norm=False&xic_file_grouping=MZ&xic_integration_type=AUC&show_ms2_markers=True&ms2marker_color=blue&ms2marker_size=5&ms2_identifier=MS1%3A1954&show_lcms_2nd_map=False&map_plot_zoom=%7B%7D&polarity_filtering=None&polarity_filtering2=None&tic_option=TIC&overlay_usi=None&overlay_mz=row+m%2Fz&overlay_rt=row+retention+time&overlay_color=&overlay_size=&overlay_hover=&overlay_filter_column=&overlay_filter_value=&feature_finding_type=Off&feature_finding_ppm=10&feature_finding_noise=10000&feature_finding_min_peak_rt=0.05&feature_finding_max_peak_rt=1.5&feature_finding_rt_tolerance=0.3&sychronization_session_id=0ea0c281bc404fdf99d21fb97d65d374&chromatogram_options=%5B%5D&comment=&map_plot_color_scale=Hot_r&map_plot_quantization_level=Medium&plot_theme=plotly_white#%7B%22usi%22%3A%20%22mzspec%3AMSV000084628%3Accms_peak/Hui_N2_fe.mzML%22%2C%20%22usi_select%22%3A%20%22mzspec%3AMSV000084628%3Accms_peak/Hui_N2_fe.mzML%22%2C%20%22usi2%22%3A%20%22%22%7D
+
+    print(results_df)
+
+    assert(1972 in list(results_df["scan"]))
+    assert(1971 in list(results_df["scan"]))
+
+def test_otherscan_iron_query():
+    query = """
+        QUERY scaninfo(MS2DATA) WHERE MS1MZ=X-1.993:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25:TOLERANCEPPM=10 AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=5
+        AND MS1MZ=X+1.0034:INTENSITYMATCH=(Y*X*0.04911/100+Y*1.2397/100):INTENSITYMATCHPERCENT=20:TOLERANCEPPM=10 AND MS1MZ=X-52.91:TOLERANCEPPM=10:OTHERSCAN=rt_range(-3, 0)
+        AND MS2PREC=X
+    """
+
+    results_df = msql_engine.process_query(query, "tests/data/PLT2_B1.mzML")
+
+    # Should find m/z X = 654.2669
+    # Desferrioxamine E - m/z 654.2669 (Fe3+ - 2H) ; 625.3141 (Al3+ - 2H); 645.2728 (Ti4+ - 3H); 601.3561 (H) 
+
 def main():
     
     #test_noquery()
@@ -766,7 +794,9 @@ def main():
     #test_scanmaxint_query()
     #test_cardinality_query()
     #test_big_or_cardinality()
-    test_mgf_intensity()
+    #test_mgf_intensity()
+    #test_otherscan_query()
+    test_otherscan_iron_query()
 
 
 if __name__ == "__main__":
