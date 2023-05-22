@@ -106,6 +106,9 @@ class MassQLToJSON(Transformer):
 
    def qualifiermassdefect(self, items):
       return "qualifiermassdefect"
+   
+   def qualifierotherscan(self, items):
+      return "qualifierotherscan"
 
    # Handling mobility literals
    def mobilitycondition(self, items):
@@ -166,7 +169,10 @@ class MassQLToJSON(Transformer):
          # This is mass defect
          qualifier_type = items[0]
 
-         if qualifier_type == "qualifiermassdefect" or qualifier_type == "qualifiercardinality":
+         if qualifier_type == "qualifiermassdefect" or \
+            qualifier_type == "qualifiercardinality" or \
+            qualifier_type == "qualifierotherscan":
+
             qualifier_dict = {}
             qualifier_dict["type"] = "qualifier"
             qualifier_dict[qualifier_type] = {}
