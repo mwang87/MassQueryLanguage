@@ -116,6 +116,18 @@ class MassQLToJSON(Transformer):
    
    def mobilityrange(self, items):
       return "mobilityrange"
+   
+   def multiplenumber(self, items):
+      return int(items[0])
+   
+   def multiplefunction(self, items):
+      multiple_repeater_dict = {}
+      multiple_repeater_dict["type"] = "multiple"
+      multiple_repeater_dict["mz"] = items[0]
+      multiple_repeater_dict["min"] = items[1]
+      multiple_repeater_dict["max"] = items[2]
+
+      return multiple_repeater_dict
 
    def qualifier(self, items):
       if len(items) == 1 and items[0] == "qualifierintensityreference":
@@ -375,12 +387,28 @@ class MassQLToJSON(Transformer):
          return items[0]
 
       has_variable = _has_variable(items)
+      has_multiple = _has_multiple(items)
 
       string_items = [str(item) for item in items]
       full_expression = "".join(string_items)
 
       if has_variable:
          return full_expression
+      
+      if has_multiple:
+         # then we are going to expand this into an OR query
+         print(items)
+         
+         mz = items[-1]["mz"]
+         min_value = items[-1]["min"]
+         max_value = items[-1]["max"]
+
+         all_mz_values = []
+         for i in range(min_value, max_value+1):
+            actual_mz = mz*i
+            all_mz_values.append(actual_mz)
+
+         return all_mz_values
 
       # Calculating the expression
       calculated_value = math_parser.parse(full_expression).evaluate({})
@@ -429,8 +457,6 @@ class MassQLToJSON(Transformer):
       exact_mass = mass.calculate_mass(sequence=items[0], ion_type=items[2].lower(), charge=int(items[1]))
       return exact_mass
    
-
-
    def string(self, s):
       (s,) = s
       return s[1:-1]
@@ -449,6 +475,15 @@ def _has_variable(items):
             return True
 
    return False 
+
+def _has_multiple(items):
+   for item in items:
+      if isinstance(item, dict):
+         if "type" in item:
+            if item["type"] == "multiple":
+               return True
+
+   return False
 
 def _visualize_parse(input_query, path_to_grammar=None, output_filename="parse.png"):
    if path_to_grammar is None:

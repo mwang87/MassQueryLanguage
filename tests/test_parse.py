@@ -229,13 +229,21 @@ def test_or_cardinality():
     print(parsed_output)
 
 
+def test_repeat_parse():
+    query = """
+        QUERY scaninfo(MS2DATA) WHERE MS2PROD=(formula(C3H5O2C2H6) + multiple(mz=formula(CH2),min=2, max=60) )
+    """
 
+    parsed_output = msql_parser.parse_msql(query)
+    print(parsed_output)
 
 
 
 def main():
+    test_repeat_parse()
+    #test_ms1_multiple_or_with_variable()
     #test_xrange_parse()
-    test_parse()
+    #test_parse()
     #test_comment_parse()
     #test_number_expression_parse()
     #test_formula_expression_parse()

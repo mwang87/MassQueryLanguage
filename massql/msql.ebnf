@@ -142,7 +142,9 @@ factor: floating
     | "aminoaciddelta(" aminoacids ")"
     | peptidefunction
     | "(" numericalexpression ")"
+    | multiplefunction
 peptidefunction: "peptide(" peptide "," "charge=" peptidecharge "," "ion=" peptideion ")"
+multiplefunction: "multiple(mz=" factor "," "min=" multiplenumber "," "max=" multiplenumber ")"
 multiply: "*"
 divide: "/"
 plus: "+"
@@ -153,6 +155,8 @@ aminoacids: /[A-Z][A-Z]*/
 peptide: /[A-Z][A-Z]*/
 peptidecharge: /[1-9]/
 peptideion: /[A-Za-z]/
+
+multiplenumber: /[1-9][0-9]*/
 
 // Boiler Plate
 %import common.ESCAPED_STRING   -> STRING
