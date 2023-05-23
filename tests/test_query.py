@@ -715,7 +715,7 @@ def test_otherscan_iron_query():
         AND MS1MZ=X+1.0034:INTENSITYMATCH=(Y*X*0.04911/100+Y*1.2397/100):INTENSITYMATCHPERCENT=20:TOLERANCEPPM=10 AND MS1MZ=X-52.91:TOLERANCEPPM=10:OTHERSCAN=rt_range(-3, 0)
         AND MS2PREC=X
     """
-
+    
     results_df = msql_engine.process_query(query, "tests/data/PLT2_B1.mzML")
 
     # Should find m/z X = 654.2669
