@@ -396,9 +396,7 @@ class MassQLToJSON(Transformer):
          return full_expression
       
       if has_multiple:
-         # then we are going to expand this into an OR query
-         print(items)
-         
+         # then we are going to expand this into an OR query         
          mz = items[-1]["mz"]
          min_value = items[-1]["min"]
          max_value = items[-1]["max"]
