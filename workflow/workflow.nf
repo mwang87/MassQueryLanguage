@@ -1,4 +1,5 @@
 #!/usr/bin/env nextflow
+nextflow.enable.dsl=2
 
 params.input_spectra = 'data' // We assume we pass it a folder with spectra files
 params.query = "QUERY scaninfo(MS2DATA)"
