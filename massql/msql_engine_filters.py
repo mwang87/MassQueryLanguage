@@ -453,9 +453,6 @@ def ms1_condition(condition, ms1_df, ms2_df, reference_conditions_register, ms1_
                 (ms1_filtered_df["i_tic_norm"] > min_tic_percent_intensity)
             ]
         else:
-            print(condition)
-            
-
             # Checking defect options
             massdefect_min, massdefect_max = _get_massdefect_min(condition.get("qualifiers", None))
 
@@ -491,8 +488,6 @@ def ms1_condition(condition, ms1_df, ms2_df, reference_conditions_register, ms1_
                 for scan, row in grouped_df.iterrows():
                     current_scan_rt = row["rt"]
                     
-                    print(scan, current_scan_rt)
-
                     min_original_rt = current_scan_rt - otherscan_qualifier["min"]
                     max_original_rt = current_scan_rt + otherscan_qualifier["max"]
 
