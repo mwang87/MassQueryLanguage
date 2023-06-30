@@ -225,5 +225,5 @@ workflow {
         _extracted_summary_ch.collectFile(name: "extracted.tsv", storeDir: "$params.publishdir/extracted", keepHeader: true)
     }
 
-    // summarizeResults(_query_results_merged_ch)
+    summarizeResults(_query_results_merged_ch)
 }
