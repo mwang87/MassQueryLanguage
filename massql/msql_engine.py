@@ -357,8 +357,8 @@ def _evalute_variable_query(parsed_dict, input_filename, cache=True, parallel=Fa
 def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, cache=True):
     # This function attempts to find the data that the query specifies in the conditions
     
-    #import json
-    #print("parsed_dict", json.dumps(parsed_dict, indent=4))
+    import json
+    print("parsed_dict", json.dumps(parsed_dict, indent=4))
 
     # Let's apply this to real data
     if ms1_input_df is None and ms2_input_df is None:
@@ -366,6 +366,10 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
     else:
         ms1_df = ms1_input_df
         ms2_df = ms2_input_df
+
+    # Saving out the full unfiltered data
+    ms1_original_df = ms1_df
+    ms2_original_df = ms2_df
 
     # In order to handle intensities, we will make sure to sort all conditions with 
     # with the conditions that are the reference intensity first, then subsequent conditions
@@ -472,7 +476,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
 
         # finding MS1 peaks
         if condition["type"] == "ms1mzcondition":
-            ms1_df, ms2_df = msql_engine_filters.ms1_condition(condition, ms1_df, ms2_df, reference_conditions_register)
+            ms1_df, ms2_df = msql_engine_filters.ms1_condition(condition, ms1_df, ms2_df, reference_conditions_register, ms1_original_df, ms2_original_df)
             continue
 
         skip_conditions = [ "rtmincondition", 

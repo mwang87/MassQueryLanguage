@@ -229,10 +229,13 @@ def test_or_cardinality():
     print(parsed_output)
 
 def test_other_rt():
-    query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=X AND MS1MZ=X+52:OTHERSCAN=rtrange(left=-40, right=0)"
+    query = """QUERY scaninfo(MS1DATA) WHERE 
+    MS1MZ=X AND 
+    MS1MZ=X+52:OTHERSCAN=rtrange(left=-40, right=0)"""
 
     parsed_output = msql_parser.parse_msql(query)
     print(parsed_output)
+
 
 
 

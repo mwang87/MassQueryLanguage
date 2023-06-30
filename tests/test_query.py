@@ -711,8 +711,11 @@ def test_otherscan_query():
 
 def test_otherscan_iron_query():
     query = """
-        QUERY scaninfo(MS2DATA) WHERE MS1MZ=X-1.993:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25:TOLERANCEPPM=10 AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=5
-        AND MS1MZ=X+1.0034:INTENSITYMATCH=(Y*X*0.04911/100+Y*1.2397/100):INTENSITYMATCHPERCENT=20:TOLERANCEPPM=10 AND MS1MZ=X-52.91:TOLERANCEPPM=10:OTHERSCAN=rt_range(-3, 0)
+        QUERY scaninfo(MS2DATA) WHERE 
+        MS1MZ=X-1.993:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25:TOLERANCEPPM=10 AND 
+        MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=5 AND 
+        MS1MZ=X+1.0034:INTENSITYMATCH=(Y*X*0.04911/100+Y*1.2397/100):INTENSITYMATCHPERCENT=20:TOLERANCEPPM=10 AND 
+        MS1MZ=X-52.91:TOLERANCEPPM=10:OTHERSCAN=rtrange(-3, 0)
         AND MS2PREC=X
     """
     
@@ -720,6 +723,38 @@ def test_otherscan_iron_query():
 
     # Should find m/z X = 654.2669
     # Desferrioxamine E - m/z 654.2669 (Fe3+ - 2H) ; 625.3141 (Al3+ - 2H); 645.2728 (Ti4+ - 3H); 601.3561 (H) 
+
+def test_otherscan():
+
+    # If we don't do the other scan, we shoudlnt get anything
+    query = """
+        QUERY scaninfo(MS1DATA) WHERE 
+        MS1MZ=645.2728:TOLERANCEPPM=10 AND 
+        MS1MZ=645.2728-43.9167:INTENSITYVALUE=100000:TOLERANCEPPM=10 AND
+        RTMIN=2.16 AND RTMAX=2.17
+    """
+
+    results_df = msql_engine.process_query(query, "tests/data/PLT2_B1.mzML")
+    # Should not find scan 831
+    
+    assert(len(results_df) == 0)
+    
+    query = """
+        QUERY scaninfo(MS1DATA) WHERE 
+        MS1MZ=645.2728:TOLERANCEPPM=10 AND 
+        MS1MZ=645.2728-43.9167:OTHERSCAN=rtrange(left=0.5, right=1.5):INTENSITYVALUE=100000:TOLERANCEPPM=10 AND
+        RTMIN=2.16 AND RTMAX=2.17
+    """
+
+    parsed_output = msql_parser.parse_msql(query)
+
+    results_df = msql_engine.process_query(query, "tests/data/PLT2_B1.mzML")
+    # Should find m/z X = 654.2669, around 2 min
+    print(results_df)
+
+    assert(831 in list(results_df["scan"]))
+
+
 
 def main():
     
@@ -796,7 +831,8 @@ def main():
     #test_big_or_cardinality()
     #test_mgf_intensity()
     #test_otherscan_query()
-    test_otherscan_iron_query()
+    #test_otherscan_iron_query()
+    test_otherscan()
 
 
 if __name__ == "__main__":
