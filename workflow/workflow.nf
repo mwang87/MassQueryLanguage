@@ -5,7 +5,7 @@ params.query = "QUERY scaninfo(MS2DATA)"
 params.parallel_files = 'NO'
 params.parallel_query = 'NO'
 params.extract = 'YES'
-params.extractnaming = 'condensed'
+params.extractnaming = 'condensed' //condensed means it is mangled, original means the original mzML filenames
 params.maxfilesize = "3000" // Default 3000 MB
 
 _spectra_ch = Channel.fromPath( params.input_spectra + "/**" )

@@ -51,6 +51,15 @@ parameterlist:
         - value: "NO"
           display: "No"
     
+    - displayname: Extracted File Naming
+      paramtype: select
+      nf_paramname: extractnaming
+      formvalue: "condensed"
+      options:
+        - value: "condensed"
+          display: "Condensed and Aggregated"
+        - value: "original"
+          display: "Original Mass Spec Filename"
     
     # - displayname: ms2_tolerance
     #   paramtype: text
