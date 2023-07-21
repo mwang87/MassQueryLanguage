@@ -29,3 +29,16 @@ Views:
             <a target="_blank" href="/dashboards/lcms?usi=mzspec:GNPS2-${task}-${encodeURIComponent(row["filename"])}">None</a>
             `;}}]'
             
+
+# Linking out to do molecular networking
+-   name: Downstream Analysis - Run Molecular Networking
+    displayname: Downstream Analysis - Run Molecular Networking
+    viewname: downstreamworkflow
+    displaytype: linkout
+    parameters:
+        baseurl: /workflowinput
+        urlparam:
+            -   workflowname:classical_networking_workflow
+        hashparam:
+            -   input_spectra:TASKLOCATION/[task]/input_spectra
+            -   description:Downstream from [task] MassQL
