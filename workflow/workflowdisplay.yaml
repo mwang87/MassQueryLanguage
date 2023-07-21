@@ -40,5 +40,5 @@ Views:
         urlparam:
             -   workflowname:classical_networking_workflow
         hashparam:
-            -   input_spectra:TASKLOCATION/[task]/input_spectra
+            -   input_spectra:TASKLOCATION/[task]/nf_output/extracted/extracted_mzML/
             -   description:Downstream from [task] MassQL
