@@ -58,7 +58,7 @@ def test_visualize_usi():
     ms1_usi = "mzspec:MSV000085669:ccms_peak/mzML_ph5/std_mix_100-mixed-metal_2_ph8.mzML:scan:1380"
 
     import requests
-    r = requests.get("https://metabolomics-usi.ucsd.edu/json/?usi1={}".format(ms1_usi))
+    r = requests.get("https://metabolomics-usi.gnps2.org/json/?usi1={}".format(ms1_usi))
     ms1_peaks = r.json()["peaks"]
     
 
