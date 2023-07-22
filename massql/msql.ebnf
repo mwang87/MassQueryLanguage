@@ -39,6 +39,7 @@ qualifier: qualifier ":" qualifier
     | qualifiermassdefect equal xdefect "(min=" numericalexpression "," "max=" numericalexpression ")"
     | qualifierexclude
     | qualifiercardinality equal xrange "(min=" numericalexpression "," "max=" numericalexpression ")"
+    | qualifierotherscan equal otherscanrtrange "(left=" numericalexpression "," "right=" numericalexpression ")"
 
 equal: "="
 lessthan: "<"
@@ -80,6 +81,9 @@ xfunction: xrange | xdefect
 xrange: "range"
 xdefect: "massdefect"
 
+otherscanrtrange: "rtrange"
+
+
 qualifierfields: qualifiermztolerance
     | qualifierppmtolerance
     | qualifierintensitypercent
@@ -99,6 +103,7 @@ qualifierintensityreference: "INTENSITYMATCHREFERENCE"
 qualifiermassdefect: "MASSDEFECT"
 qualifierexclude: "EXCLUDED"
 qualifiercardinality: "CARDINALITY" | "MATCHCOUNT"
+qualifierotherscan: "OTHERSCAN"
 
 function: functionscannum
     | functionscansum
