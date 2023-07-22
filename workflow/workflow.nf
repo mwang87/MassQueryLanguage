@@ -20,7 +20,7 @@ process queryData {
     //maxRetries 3
 
     //memory { 6.GB * task.attempt }
-    memory { 12.GB }
+    //memory { 12.GB }
 
     conda "$TOOL_FOLDER/conda_env.yml"
 
