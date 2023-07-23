@@ -1,5 +1,5 @@
 run_test:
-	nextflow run workflow.nf -c test.config --parallel_files "YES" --resume
+	nextflow run workflow.nf -C test.config --parallel_files "YES" --resume
 
 run_test_extract_original:
 	nextflow run workflow.nf -c test.config --extractnaming="original"
