@@ -28,7 +28,7 @@ jobs:
         #wget -qO- get.nextflow.io | bash
         #sudo mv nextflow /usr/local/bin/
         conda install -c conda-forge mamba
-        conda install -c bioconda nextflow
+        mamba install -c bioconda nextflow
     - name: Download Data
       run: |
         cd tests && sh ./get_data.sh && cd ..
