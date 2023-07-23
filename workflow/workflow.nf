@@ -212,6 +212,7 @@ workflow {
     _spectra_ch = _spectra_ch.concat(Channel.fromPath( params.input_spectra + "/**.mzxml" ))
     _spectra_ch = _spectra_ch.concat(Channel.fromPath( params.input_spectra + "/**.MGF" ))
     _spectra_ch = _spectra_ch.concat(Channel.fromPath( params.input_spectra + "/**.mgf" ))
+    _spectra_ch = _spectra_ch.concat(Channel.fromPath( params.input_spectra + "/**.json" ))
     
     //_spectra_ch = Channel.fromPath( params.input_spectra ) // This is the old code when we pass it a path to a glob of files
     
