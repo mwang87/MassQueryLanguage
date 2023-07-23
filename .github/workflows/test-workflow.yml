@@ -25,9 +25,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        wget -qO- get.nextflow.io | bash
-        sudo mv nextflow /usr/local/bin/
+        #wget -qO- get.nextflow.io | bash
+        #sudo mv nextflow /usr/local/bin/
         conda install -c conda-forge mamba
+        conda install -c bioconda nextflow
     - name: Download Data
       run: |
         cd tests && sh ./get_data.sh && cd ..
