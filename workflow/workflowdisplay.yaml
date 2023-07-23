@@ -29,6 +29,8 @@ Views:
             <a target="_blank" href="/dashboards/lcms?usi=mzspec:GNPS2-${task}-${encodeURIComponent(row["filename"])}">None</a>
             `;}}]'
             
+# TODO: Show the extraction results
+
 
 # Linking out to do molecular networking
 -   name: Downstream Analysis - Run Molecular Networking

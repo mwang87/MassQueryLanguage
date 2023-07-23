@@ -15,7 +15,7 @@ params.PYTHONRUNTIME = "python" // this is a hack because CCMS cluster does not 
 
 // This is the parallel run that will run on the cluster
 process queryData {
-    errorStrategy 'ignore'
+    //errorStrategy 'ignore'
     time '4h'
     //maxRetries 3
 
@@ -82,6 +82,7 @@ process formatResultsMergeRounds {
 
     //errorStrategy 'ignore'
     errorStrategy { task.attempt <= 10  ? 'retry' : 'terminate' }
+    conda "$TOOL_FOLDER/conda_env.yml"
     
     input:
     file "results/*" 
@@ -104,6 +105,8 @@ process formatExtractedSpectraRounds {
     publishDir "$params.publishdir/extracted", mode: 'copy'
     cache false
     errorStrategy 'ignore'
+
+    conda "$TOOL_FOLDER/conda_env.yml"
     
     input:
     file "json/*" 
@@ -184,6 +187,8 @@ process summarizeResults {
     cache false
     errorStrategy 'ignore'
 
+    conda "$TOOL_FOLDER/conda_env.yml"
+
     input:
     file(merged_results)
 
@@ -200,7 +205,14 @@ process summarizeResults {
 
 
 workflow {
-    _spectra_ch = Channel.fromPath( params.input_spectra + "/**" )
+    _spectra_ch = Channel.empty()
+    _spectra_ch = _spectra_ch.concat(Channel.fromPath( params.input_spectra + "/**.mzML" ))
+    _spectra_ch = _spectra_ch.concat(Channel.fromPath( params.input_spectra + "/**.mzml" ))
+    _spectra_ch = _spectra_ch.concat(Channel.fromPath( params.input_spectra + "/**.mzXML" ))
+    _spectra_ch = _spectra_ch.concat(Channel.fromPath( params.input_spectra + "/**.mzxml" ))
+    _spectra_ch = _spectra_ch.concat(Channel.fromPath( params.input_spectra + "/**.MGF" ))
+    _spectra_ch = _spectra_ch.concat(Channel.fromPath( params.input_spectra + "/**.mgf" ))
+    
     //_spectra_ch = Channel.fromPath( params.input_spectra ) // This is the old code when we pass it a path to a glob of files
     
     _spectra_ch3 = _spectra_ch.map { file -> tuple(file, file.toString().replaceAll("/", "_").replaceAll(" ", "_"), file) }
