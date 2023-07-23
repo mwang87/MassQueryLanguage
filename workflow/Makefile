@@ -7,9 +7,6 @@ run_test_extract_original:
 run_test_no_extract:
 	nextflow run workflow.nf --extract="No" -c test.config
 
-run_resume_test:
-	nextflow run workflow.nf --resume
-
 # Running example with Iron
 run_test_iron:
 	nextflow run workflow.nf -c test.config --input_spectra="./test/isa_9_fe.mzML" --query="QUERY scaninfo(MS1DATA) WHERE MS1MZ=X-2:INTENSITYMATCH=Y*0.063:INTENSITYMATCHPERCENT=25 AND MS1MZ=X:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE:INTENSITYPERCENT=5 AND MS2PREC=X" --resume
