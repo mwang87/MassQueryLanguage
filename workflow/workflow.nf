@@ -20,12 +20,10 @@ process queryData {
     //maxRetries 3
 
     //memory { 6.GB * task.attempt }
-    memory 12.GB
+    //memory 12.GB
 
     conda "$TOOL_FOLDER/conda_env.yml"
 
-    //publishDir "$params.publishdir/msql_temp", mode: 'copy'
-    
     input:
     tuple val(filepath), val(mangled_output_filename), file(input_spectrum)
 
