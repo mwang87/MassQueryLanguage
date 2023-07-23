@@ -10,3 +10,4 @@ psims
 plotly
 kaleido
 pydot
+pyyaml
