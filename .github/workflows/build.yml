@@ -11,7 +11,7 @@ on:
     - cron:  '0 0 * * *'
 
 jobs:
-  load-test:
+  build-test:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
