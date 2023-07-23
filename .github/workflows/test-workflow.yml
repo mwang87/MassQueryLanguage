@@ -27,9 +27,11 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         wget -qO- get.nextflow.io | bash
         sudo mv nextflow /usr/local/bin/
+    - name: Download Data
+      run: |
+        cd tests && sh ./get_data.sh && cd ..
     - name: Workflow Testing
       run: |
-        cd tests && sh ./get_data.sh
-        cd ../workflow
+        cd workflow
         make run_test
         make run_test_no_extract
