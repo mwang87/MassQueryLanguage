@@ -1,7 +1,7 @@
 workflowname: massql_workflow
 workflowdescription: massql_workflow
 workflowlongdescription: This is a MassQL Workflow
-workflowversion: "0.2"
+workflowversion: "0.3"
 workflowfile: workflow.nf
 workflowautohide: false
 adminonly: false
@@ -41,6 +41,26 @@ parameterlist:
         - value: "NO"
           display: "No"
 
+    # Data Filtering Options
+    - displayname: Data Filtering Options
+      paramtype: section
+
+    - displayname: Max File Size (in MB)
+      paramtype: select
+      nf_paramname: maxfilesize
+      formvalue: "300"
+      options:
+        - value: "300"
+          display: "300"
+        - value: "1000"
+          display: "1000"
+        - value: "2000"
+          display: "2000"
+    
+    
+    - displayname: Extraction Options
+      paramtype: section
+
     - displayname: Extract Spectra
       paramtype: select
       nf_paramname: extract
@@ -60,15 +80,4 @@ parameterlist:
           display: "Condensed and Aggregated"
         - value: "original"
           display: "Original Mass Spec Filename"
-    
-    # - displayname: ms2_tolerance
-    #   paramtype: text
-    #   nf_paramname: ms2_tolerance
-    #   formplaceholder: Enter the ms2_tolerance
-    #   formvalue: "0.5"
-
-    
-    
-
-
     
