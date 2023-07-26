@@ -15,7 +15,7 @@ params.PYTHONRUNTIME = "python" // this is a hack because CCMS cluster does not 
 
 // This is the parallel run that will run on the cluster
 process queryData {
-    //errorStrategy 'ignore'
+    errorStrategy 'ignore'
     time '4h'
     //maxRetries 3
 
