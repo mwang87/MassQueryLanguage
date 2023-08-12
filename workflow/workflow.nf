@@ -138,7 +138,7 @@ process formatExtractedSpectraRounds {
 //     publishDir "$params.publishdir/extracted", mode: 'copy'
 //     cache false
 //     errorStrategy 'ignore'
-    
+
 //     input:
 //     file "input_merged.json" from _query_extract_results_merged_ch
 
