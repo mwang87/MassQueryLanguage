@@ -1,3 +1,5 @@
+NOTE: This nextflow workflow is deprecated, please see dedicated repository.
+
 ## Enviornment
 
 ```
