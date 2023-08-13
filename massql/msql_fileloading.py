@@ -11,38 +11,55 @@ import logging
 logger = logging.getLogger('msql_fileloading')
 
 
-def load_data(input_filename, cache=False):
+def load_data(input_filename, cache=None, cache_dir=None, cache_file=None):
     """
     Loading data generically
 
     Args:
         input_filename ([type]): [description]
-        cache (bool, optional): [description]. Defaults to False.
+        cache (string, optional): [description]. Defaults to None. The different types are feather and parquet
+        cache_dir (string, optional): [If we use the cache, we can specify a folder and utilize our own naming]. Defaults to None.
+        cache_file (string, optional): [If we use the cache, we can also specify the file, this is mutually exclusive to the folder]. Defaults to None.
 
     Returns:
         [type]: [description]
     """
-    if cache:
-        ms1_filename = input_filename + "_ms1.msql.feather"
-        ms2_filename = input_filename + "_ms2.msql.feather"
+    if cache is not None:
+        if cache == "feather":
+            ms1_filename = input_filename + "_ms1.msql.feather"
+            ms2_filename = input_filename + "_ms2.msql.feather"
 
-        if os.path.exists(ms1_filename) or os.path.exists(ms2_filename):
-            try:
-                ms1_df = pd.read_feather(ms1_filename)
-            except:
-                ms1_df = pd.DataFrame()
-            try:
-                ms2_df = pd.read_feather(ms2_filename)
-            except:
-                ms2_df = pd.DataFrame()
+            if os.path.exists(ms1_filename) or os.path.exists(ms2_filename):
+                try:
+                    ms1_df = pd.read_feather(ms1_filename)
+                except:
+                    ms1_df = pd.DataFrame()
+                try:
+                    ms2_df = pd.read_feather(ms2_filename)
+                except:
+                    ms2_df = pd.DataFrame()
 
-            return ms1_df, ms2_df
+                return ms1_df, ms2_df
+        
+        if cache == "parquet":
+            ms_filename = input_filename + ".msql.parquet"
+
+            if os.path.exists(ms_filename):
+                try:
+                    ms_df = pd.read_parquet(ms_filename)
+                except:
+                    raise
+
+                ms1_df = ms_df[ms_df["mslevel"] == 1]
+                ms2_df = ms_df[ms_df["mslevel"] == 2]
+
+                return ms1_df, ms2_df
 
     # Actually loading
     if input_filename[-5:].lower() == ".mzml":
         #ms1_df, ms2_df = _load_data_mzML(input_filename)
         #ms1_df, ms2_df = _load_data_mzML2(input_filename) # Faster version using pymzML
-        ms1_df, ms2_df = _load_data_mzML_pyteomics(input_filename) # Faster version using pymzML
+        ms1_df, ms2_df = _load_data_mzML_pyteomics(input_filename) # Faster version using pyteomics
 
     elif input_filename[-6:].lower() == ".mzxml":
         ms1_df, ms2_df = _load_data_mzXML(input_filename)
@@ -62,20 +79,31 @@ def load_data(input_filename, cache=False):
 
 
     # Saving Cache
-    if cache:
-        ms1_filename = input_filename + "_ms1.msql.feather"
-        ms2_filename = input_filename + "_ms2.msql.feather"
+    if cache is not None:
+        if cache == "feather":
+            ms1_filename = input_filename + "_ms1.msql.feather"
+            ms2_filename = input_filename + "_ms2.msql.feather"
 
-        if not (os.path.exists(ms1_filename) or os.path.exists(ms2_filename)):
-            try:
-                ms1_df.to_feather(ms1_filename)
-            except:
-                pass
+            if not (os.path.exists(ms1_filename) or os.path.exists(ms2_filename)):
+                try:
+                    ms1_df.to_feather(ms1_filename)
+                except:
+                    pass
 
-            try:
-                ms2_df.to_feather(ms2_filename)
-            except:
-                pass
+                try:
+                    ms2_df.to_feather(ms2_filename)
+                except:
+                    pass
+        if cache == "parquet":
+            ms_filename = input_filename + ".msql.parquet"
+
+            if not os.path.exists(ms_filename):
+                ms1_df["mslevel"] = 1
+                ms2_df["mslevel"] = 2
+
+                ms_df = pd.concat([ms1_df, ms2_df])
+                ms_df.to_parquet(ms_filename)
+
 
     return ms1_df, ms2_df
 

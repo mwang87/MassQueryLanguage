@@ -33,31 +33,41 @@ def test_mzml_load():
 
 
 def test_mzxml_load():
-    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/T04251505.mzXML", cache=False)
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/T04251505.mzXML", cache=None)
 
 def test_mgf_load():
-    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/specs_ms.mgf", cache=False)
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/specs_ms.mgf", cache=None)
 
 def test_mzml_mobility_load():
-    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/meoh_water_ms2_1_31_1_395.mzML", cache=False)
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/meoh_water_ms2_1_31_1_395.mzML", cache=None)
     assert("mobility" in ms2_df)
     assert(max(ms2_df["rt"]) > 0)
 
 def test_mzml_rt_seconds():
-    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/1810E-II.mzML", cache=False)
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/1810E-II.mzML", cache=None)
     print(ms2_df)
     assert(max(ms2_df["rt"]) < 60)
 
 def test_waters_load():
     # This has UV spectra in it, we need to handle that gracefully
-    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/GT15A.mzML", cache=False)
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/GT15A.mzML", cache=None)
     
+def test_cache_parquet():
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache="parquet")
 
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache="parquet")
+
+def test_cache_feather():
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache="feather")
+
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache="feather")
+    
 def main():
     #test_mzml_load()
     #test_mzml_mobility_load()
     #test_mzml_rt_seconds()
-    test_waters_load()
+    #test_waters_load()
+    test_cache_parquet()
 
 if __name__ == "__main__":
     main()
