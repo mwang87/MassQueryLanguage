@@ -54,20 +54,24 @@ def test_waters_load():
     
 def test_cache_parquet():
     ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache="parquet")
-
     ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache="parquet")
 
 def test_cache_feather():
     ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache="feather")
-
     ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache="feather")
+
+def test_nocache():
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache=None)
+    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache=None)
     
 def main():
     #test_mzml_load()
     #test_mzml_mobility_load()
     #test_mzml_rt_seconds()
     #test_waters_load()
-    test_cache_parquet()
+    #test_cache_parquet()
+    #test_cache_feather()
+    test_nocache()
 
 if __name__ == "__main__":
     main()
