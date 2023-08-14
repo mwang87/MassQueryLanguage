@@ -21,7 +21,11 @@ def main():
     parser.add_argument('query', help='Input Query')
     parser.add_argument('--output_file', default=None, help='output results filename, if filename is too long will truncate filename')
     parser.add_argument('--parallel_query', default="NO", help='YES to make it parallel with ray locally, NO is default')
+    
     parser.add_argument('--cache', default="YES", help='YES to cache with feather, YES is the default')
+    parser.add_argument('--cache_filename', default=None, help='Path to explicit cache filename, must have cache set to YES')
+    parser.add_argument('--cache_dir', default=None, help='Path to cache directory, must have cache set to YES. Mutually exclusive to cache_filename. Additionally, caching filename will automatically be hashed')
+
     parser.add_argument('--original_path', default=None, help='Original absolute path for the filename, useful in proteosafe')
     parser.add_argument('--extract_mzML', default=None, help='Extracting spectra found as mzML file, if filename is too long will truncate filename')
     parser.add_argument('--extract_json', default=None, help='Extracting spectra found as json file, each spectrum is a line, if filename is too long, wiil truncate',)
