@@ -62,7 +62,8 @@ def main():
         results_df = msql_engine.process_query(query, 
                                                 args.filename, 
                                                 cache=args.cache, 
-                                                parallel=PARALLEL)
+                                                cache_filename=args.cache_filename,
+                                                cache_dir=args.cache_dir)
 
         results_df["query_index"] = i
         all_results_list.append(results_df)
