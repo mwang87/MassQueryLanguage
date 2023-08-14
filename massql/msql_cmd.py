@@ -23,8 +23,8 @@ def main():
     parser.add_argument('--parallel_query', default="NO", help='YES to make it parallel with ray locally, NO is default')
     
     parser.add_argument('--cache', default=None, help='feather cache with feather, no caching is the default')
-    parser.add_argument('--cache_filename', default=None, help='Path to explicit cache filename, must have cache set to YES')
-    parser.add_argument('--cache_dir', default=None, help='Path to cache directory, must have cache set to YES. Mutually exclusive to cache_filename. Additionally, caching filename will automatically be hashed')
+    parser.add_argument('--cache_file', default=None, help='Path to explicit cache filename, must have cache set to YES')
+    parser.add_argument('--cache_dir', default=None, help='Path to cache directory, must have cache set to YES. Mutually exclusive to cache_file. Additionally, caching filename will automatically be hashed')
 
     parser.add_argument('--original_path', default=None, help='Original absolute path for the filename, useful in proteosafe')
     parser.add_argument('--extract_mzML', default=None, help='Extracting spectra found as mzML file, if filename is too long will truncate filename')
@@ -62,7 +62,7 @@ def main():
         results_df = msql_engine.process_query(query, 
                                                 args.filename, 
                                                 cache=args.cache, 
-                                                cache_filename=args.cache_filename,
+                                                cache_file=args.cache_file,
                                                 cache_dir=args.cache_dir)
 
         results_df["query_index"] = i

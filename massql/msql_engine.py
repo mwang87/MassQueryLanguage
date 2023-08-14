@@ -43,7 +43,7 @@ def _get_da_tolerance(qualifiers):
 
 
 def process_query(input_query, input_filename, path_to_grammar=None, 
-                    cache=None, cache_dir=None, cache_filename=None,
+                    cache=None, cache_dir=None, cache_file=None,
                     parallel=False, ms1_df=None, ms2_df=None):
     """
     Process an actual query
@@ -64,7 +64,7 @@ def process_query(input_query, input_filename, path_to_grammar=None,
     parsed_dict = msql_parser.parse_msql(input_query, path_to_grammar=path_to_grammar)
 
     return _evalute_variable_query(parsed_dict, input_filename, 
-                                    cache=cache, cache_dir=cache_dir, cache_filename=cache_filename,
+                                    cache=cache, cache_dir=cache_dir, cache_file=cache_file,
                                     parallel=parallel, ms1_df=ms1_df, ms2_df=ms2_df)
 
 def _determine_mz_max(mz, ppm_tol, da_tol):
@@ -78,7 +78,7 @@ def _determine_mz_max(mz, ppm_tol, da_tol):
     return mz + half_delta
 
 def _evalute_variable_query(parsed_dict, input_filename, 
-                            cache=None, cache_dir=None, cache_filename=None,
+                            cache=None, cache_dir=None, cache_file=None,
                             parallel=False, ms1_df=None, ms2_df=None):
     # Lets check if there is a variable in here, the only one allowed is X
     for condition in parsed_dict["conditions"]:
@@ -86,7 +86,7 @@ def _evalute_variable_query(parsed_dict, input_filename,
             if "querytype" in condition["value"][0]:
                 subquery_val_df = _evalute_variable_query(
                     condition["value"][0], input_filename, 
-                    cache=cache, cache_dir=cache_dir, cache_filename=cache_filename
+                    cache=cache, cache_dir=cache_dir, cache_file=cache_file
                 )
                 condition["value"] = list(
                     subquery_val_df["precmz"]
@@ -162,7 +162,7 @@ def _evalute_variable_query(parsed_dict, input_filename,
     # Loading data if not passed in 
     if ms1_df is None:
         ms1_df, ms2_df = msql_fileloading.load_data(input_filename, 
-                                                    cache=cache, cache_dir=cache_dir, cache_filename=cache_filename)
+                                                    cache=cache, cache_dir=cache_dir, cache_file=cache_file)
 
     # Setting types for DF
     try:
@@ -210,7 +210,7 @@ def _evalute_variable_query(parsed_dict, input_filename,
         presearch_parse["conditions"] = non_variable_conditions
 
         ms1_df, ms2_df = _executeconditions_query(presearch_parse, input_filename, 
-                                                cache=cache, cache_dir=cache_dir, cache_filename=cache_filename)
+                                                cache=cache, cache_dir=cache_dir, cache_file=cache_file)
         variable_x_ms1_df = ms1_df
 
         # Here we are trying to pre-filter conditions based upon the qualifiers to make the variable search space smaller
@@ -343,7 +343,7 @@ def _evalute_variable_query(parsed_dict, input_filename,
         # Serial Version
         for concrete_query in tqdm(all_concrete_queries):
             results_ms1_df, results_ms2_df = _executeconditions_query(concrete_query, input_filename, ms1_input_df=ms1_df, ms2_input_df=ms2_df, 
-                                                                    cache=cache, cache_dir=cache_dir, cache_filename=cache_filename)
+                                                                    cache=cache, cache_dir=cache_dir, cache_file=cache_file)
             
             collated_df = _executecollate_query(parsed_dict, results_ms1_df, results_ms2_df)
             collated_list.append(collated_df)
@@ -365,7 +365,7 @@ def _evalute_variable_query(parsed_dict, input_filename,
 
 
 def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, 
-                            cache=True, cache_dir=None, cache_filename=None):
+                            cache=True, cache_dir=None, cache_file=None):
     # This function attempts to find the data that the query specifies in the conditions
     
     import json
@@ -374,7 +374,7 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
     # Let's apply this to real data
     if ms1_input_df is None and ms2_input_df is None:
         ms1_df, ms2_df = msql_fileloading.load_data(input_filename, 
-                                                    cache=cache, cache_dir=cache_dir, cache_filename=cache_filename)
+                                                    cache=cache, cache_dir=cache_dir, cache_file=cache_file)
     else:
         ms1_df = ms1_input_df
         ms2_df = ms2_input_df
