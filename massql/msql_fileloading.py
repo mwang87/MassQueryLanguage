@@ -81,8 +81,7 @@ def load_data(input_filename, cache=None, cache_dir=None, cache_file=None):
     """
     if cache is not None:
         if cache == "feather":
-            ms1_filename = input_filename + "_ms1.msql.feather"
-            ms2_filename = input_filename + "_ms2.msql.feather"
+            ms1_filename, ms2_filename = _determine_feather_cache_filename(input_filename, cache_dir=cache_dir, cache_file=cache_file)
 
             if os.path.exists(ms1_filename) or os.path.exists(ms2_filename):
                 try:
@@ -122,8 +121,7 @@ def load_data(input_filename, cache=None, cache_dir=None, cache_file=None):
     # Saving Cache
     if cache is not None:
         if cache == "feather":
-            ms1_filename = input_filename + "_ms1.msql.feather"
-            ms2_filename = input_filename + "_ms2.msql.feather"
+            ms1_filename, ms2_filename = _determine_feather_cache_filename(input_filename, cache_dir=cache_dir, cache_file=cache_file)
 
             if not (os.path.exists(ms1_filename) or os.path.exists(ms2_filename)):
                 try:
