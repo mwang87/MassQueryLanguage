@@ -1,15 +1,70 @@
 import json
 import os
-import pymzml
+import uuid
 import pandas as pd
 import numpy as np
+
 from tqdm import tqdm
 from matchms.importing import load_from_mgf
+import pymzml
 from pyteomics import mzxml, mzml
 
 import logging
 logger = logging.getLogger('msql_fileloading')
 
+
+def _determine_cache_filename_prefix(input_filename, cache_dir=None, cache_file=None):
+    """
+    This function determines the cache filename prefix before the extensions
+
+    Args:
+        input_filename ([type]): [description]
+        cache_dir ([type], optional): [description]. Defaults to None.
+        cache_file ([type], optional): [description]. Defaults to None.
+
+    Raises:
+        Exception: [description]
+
+    Returns:
+        [type]: [description]
+    """
+    if cache_dir is not None and cache_file is not None:
+        raise Exception("Cannot specify both cache_dir and cache_file")
+
+    if cache_dir is not None:
+        # Calculate the file size of the input_filename
+        input_file_size = os.path.getsize(input_filename)
+
+        # Use a hashing that takes into account the file size and filename
+        namespace = uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8')
+        hashed_identifier = str(uuid.uuid3(namespace, "{}:{}".format(input_filename, input_file_size))).replace("-", "")
+
+        cache_filename = os.path.join(cache_dir, hashed_identifier)
+    elif cache_file is not None:
+        # Here we assume that the cache_file is a full path but without the extensions
+        cache_filename = cache_file
+    else:
+        cache_filename = input_filename
+
+    return cache_filename
+    
+def _determine_feather_cache_filename(input_filename, cache_dir=None, cache_file=None):
+    """
+    This function determines the feather cache filename
+
+    Args:
+        input_filename ([type]): [description]
+        cache_dir ([type], optional): [description]. Defaults to None.
+        cache_file ([type], optional): [description]. Defaults to None.
+
+    Returns:
+        [type]: [description]
+    """
+    cache_filename = _determine_cache_filename_prefix(input_filename, cache_dir=cache_dir, cache_file=cache_file)
+    ms1_cache_filename = cache_filename + "_ms1.msql.feather"
+    ms2_cache_filename = cache_filename + "_ms2.msql.feather"
+
+    return ms1_cache_filename, ms2_cache_filename
 
 def load_data(input_filename, cache=None, cache_dir=None, cache_file=None):
     """

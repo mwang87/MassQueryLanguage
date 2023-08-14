@@ -73,14 +73,27 @@ def test_nocache():
     # Measure end time
     end_time = time.time()
     print("No cache time: ", end_time - start_time)
-    
+
+def test_cache_filename():
+    input_filename = "tests/data/JB_182_2_fe.mzML"
+    ms1_filename, ms2_filename = msql_fileloading._determine_feather_cache_filename(input_filename)
+    assert(ms1_filename == "tests/data/JB_182_2_fe.mzML_ms1.msql.feather")
+
+    ms1_filename, ms2_filename = msql_fileloading._determine_feather_cache_filename(input_filename, cache_file="cache_file")
+
+    ms1_filename, ms2_filename = msql_fileloading._determine_feather_cache_filename(input_filename, cache_dir="cache_file")
+    print(ms1_filename, ms2_filename)
+
+
 def main():
     #test_mzml_load()
     #test_mzml_mobility_load()
     #test_mzml_rt_seconds()
     #test_waters_load()
-    test_cache_feather()
-    test_nocache()
+    #test_cache_feather()
+    #test_nocache()
+    test_cache_filename()
+    
 
 if __name__ == "__main__":
     main()
