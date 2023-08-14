@@ -8,6 +8,7 @@ from massql import msql_fileloading
 
 import json
 import pytest
+import time
 
 def test_improper_file():
     with pytest.raises(Exception):
@@ -53,24 +54,42 @@ def test_waters_load():
     ms1_df, ms2_df = msql_fileloading.load_data("tests/data/GT15A.mzML", cache=None)
     
 def test_cache_parquet():
-    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache="parquet")
-    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache="parquet")
+    # Measure start time
+    start_time = time.time()
+    msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache="parquet")
+    msql_fileloading.load_data("tests/data/T04251505.mzXML", cache="parquet")
+    msql_fileloading.load_data("tests/data/meoh_water_ms2_1_31_1_395.mzML", cache="parquet")
+    # Measure end time
+    end_time = time.time()
+    print("Parquet time: ", end_time - start_time)
 
 def test_cache_feather():
-    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache="feather")
-    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache="feather")
+    # Measure start time
+    start_time = time.time()
+    msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache="feather")
+    msql_fileloading.load_data("tests/data/T04251505.mzXML", cache="feather")
+    msql_fileloading.load_data("tests/data/meoh_water_ms2_1_31_1_395.mzML", cache="feather")
+    # Measure end time
+    end_time = time.time()
+    print("Feather time: ", end_time - start_time)
 
 def test_nocache():
-    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache=None)
-    ms1_df, ms2_df = msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache=None)
+    # Measure start time
+    start_time = time.time()
+    msql_fileloading.load_data("tests/data/JB_182_2_fe.mzML", cache=None)
+    msql_fileloading.load_data("tests/data/T04251505.mzXML", cache=None)
+    msql_fileloading.load_data("tests/data/meoh_water_ms2_1_31_1_395.mzML", cache=None)
+    # Measure end time
+    end_time = time.time()
+    print("No cache time: ", end_time - start_time)
     
 def main():
     #test_mzml_load()
     #test_mzml_mobility_load()
     #test_mzml_rt_seconds()
     #test_waters_load()
-    #test_cache_parquet()
-    #test_cache_feather()
+    test_cache_parquet()
+    test_cache_feather()
     test_nocache()
 
 if __name__ == "__main__":
