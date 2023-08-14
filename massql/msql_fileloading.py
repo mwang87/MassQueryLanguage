@@ -17,7 +17,7 @@ def load_data(input_filename, cache=None, cache_dir=None, cache_file=None):
 
     Args:
         input_filename ([type]): [description]
-        cache (string, optional): [description]. Defaults to None. The different types are feather and parquet
+        cache (string, optional): [description]. Defaults to None. The different types are feather
         cache_dir (string, optional): [If we use the cache, we can specify a folder and utilize our own naming]. Defaults to None.
         cache_file (string, optional): [If we use the cache, we can also specify the file, this is mutually exclusive to the folder]. Defaults to None.
 
@@ -38,20 +38,6 @@ def load_data(input_filename, cache=None, cache_dir=None, cache_file=None):
                     ms2_df = pd.read_feather(ms2_filename)
                 except:
                     ms2_df = pd.DataFrame()
-
-                return ms1_df, ms2_df
-        
-        if cache == "parquet":
-            ms_filename = input_filename + ".msql.parquet"
-
-            if os.path.exists(ms_filename):
-                try:
-                    ms_df = pd.read_parquet(ms_filename)
-                except:
-                    raise
-
-                ms1_df = ms_df[ms_df["mslevel"] == 1]
-                ms2_df = ms_df[ms_df["mslevel"] == 2]
 
                 return ms1_df, ms2_df
 
@@ -94,16 +80,6 @@ def load_data(input_filename, cache=None, cache_dir=None, cache_file=None):
                     ms2_df.to_feather(ms2_filename)
                 except:
                     pass
-        if cache == "parquet":
-            ms_filename = input_filename + ".msql.parquet"
-
-            if not os.path.exists(ms_filename):
-                ms1_df["mslevel"] = 1
-                ms2_df["mslevel"] = 2
-
-                ms_df = pd.concat([ms1_df, ms2_df])
-                ms_df.to_parquet(ms_filename)
-
 
     return ms1_df, ms2_df
 
