@@ -22,7 +22,7 @@ def main():
     parser.add_argument('--output_file', default=None, help='output results filename, if filename is too long will truncate filename')
     parser.add_argument('--parallel_query', default="NO", help='YES to make it parallel with ray locally, NO is default')
     
-    parser.add_argument('--cache', default=None, help='feather cache with feather, no cachine is the default')
+    parser.add_argument('--cache', default=None, help='feather cache with feather, no caching is the default')
     parser.add_argument('--cache_filename', default=None, help='Path to explicit cache filename, must have cache set to YES')
     parser.add_argument('--cache_dir', default=None, help='Path to cache directory, must have cache set to YES. Mutually exclusive to cache_filename. Additionally, caching filename will automatically be hashed')
 
