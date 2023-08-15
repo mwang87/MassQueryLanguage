@@ -33,7 +33,7 @@ def _determine_cache_filename_prefix(input_filename, cache_dir=None, cache_file=
 
     if cache_dir is not None:
         # Calculate the file size of the input_filename
-        input_file_size = os.path.getsize(input_filename)
+        input_file_size = os.stat(input_filename).st_size
 
         # Use a hashing that takes into account the file size and filename
         namespace = uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8')
