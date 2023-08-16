@@ -39,7 +39,9 @@ def _determine_cache_filename_prefix(input_filename, cache_dir=None, cache_file=
         namespace = uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8')
         hashed_identifier = str(uuid.uuid3(namespace, "{}:{}".format(input_filename, input_file_size))).replace("-", "")
 
-        cache_filename = os.path.join(cache_dir, hashed_identifier)
+        hash_folder = hashed_identifier[:2]
+
+        cache_filename = os.path.join(cache_dir, hash_folder, hashed_identifier)
     elif cache_file is not None:
         # Here we assume that the cache_file is a full path but without the extensions
         cache_filename = cache_file
@@ -122,6 +124,10 @@ def load_data(input_filename, cache=None, cache_dir=None, cache_file=None):
     if cache is not None:
         if cache == "feather":
             ms1_filename, ms2_filename = _determine_feather_cache_filename(input_filename, cache_dir=cache_dir, cache_file=cache_file)
+
+            # lets make sure the folder exists for the filenames
+            if not os.path.exists(os.path.dirname(ms1_filename)):
+                os.makedirs(os.path.dirname(ms1_filename))
 
             if not (os.path.exists(ms1_filename) or os.path.exists(ms2_filename)):
                 try:
