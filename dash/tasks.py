@@ -36,7 +36,7 @@ def task_executequery(query, filename):
 
 
 def _get_gnps_spectruminfo(spectrumid):
-    url = "https://gnps-external.ucsd.edu/gnpsspectrum?SpectrumID={}".format(spectrumid)
+    url = "https://external.gnps2.org/gnpsspectrum?SpectrumID={}".format(spectrumid)
     spectruminfo = requests.get(url).json()
 
     return spectruminfo
