@@ -18,6 +18,9 @@ def main():
     parser.add_argument('extracted_mzML', help='extracted_mgf')
     parser.add_argument('extracted_result', help='extracted_mgf')
 
+    # Parameter for maximum extracted scans
+    parser.add_argument('--max_extracted_scans', help='max_extracted_scans', default=10000, type=int)
+
     args = parser.parse_args()
 
     if os.path.isdir(args.results_file):
@@ -248,7 +251,7 @@ def _extract_spectra(results_df, input_spectra_folder,
     if output_summary is not None:
         merged_summary_df.to_csv(output_summary, sep='\t', index=False)
 
-    if len(spectrum_list) > 10000:
+    if len(spectrum_list) > arg.max_extracted_scans:
         print("Not Extracting, too many spectra")
         return None
 
