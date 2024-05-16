@@ -36,7 +36,8 @@ def main():
                         output_summary=args.extracted_result)
     except Exception as e: 
         print("FAILURE ON EXTRACTION")
-        pass
+        #pass
+        raise
 
 def _extract_mzML_scan(input_filename, spectrum_identifier_list):
     MS_precisions = {
@@ -197,7 +198,8 @@ def _extract_spectra(results_df, input_spectra_folder,
                     output_mgf_filename=None, 
                     output_mzML_filename=None, 
                     output_json_filename=None,
-                    output_summary=None):
+                    output_summary=None,
+                    max_extracted_scans=10000):
     spectrum_list = []
     result_df_list = []
 
@@ -251,7 +253,7 @@ def _extract_spectra(results_df, input_spectra_folder,
     if output_summary is not None:
         merged_summary_df.to_csv(output_summary, sep='\t', index=False)
 
-    if len(spectrum_list) > arg.max_extracted_scans:
+    if len(spectrum_list) > max_extracted_scans:
         print("Not Extracting, too many spectra")
         return None
 
