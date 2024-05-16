@@ -104,12 +104,27 @@ def main():
             # Cleanup for repository search
             useful_filename = useful_filename.replace("/data/ccms-data/uploads/", "")
 
+            # This works for paths in nf_tasks
             if "/data/nf_data/server/nf_tasks/" in useful_filename:
                 useful_filename = useful_filename.replace("/data/nf_data/server/nf_tasks/", "")
                 # Get the second folder name from path with python PathLib
                 import pathlib
                 task = pathlib.Path(useful_filename).parts[0]
                 useful_filename = useful_filename.replace(task + "/", "")
+
+            # This works for nf_work becuase of getting data from the nf_work directory
+            if "/data/nf_data/server/nf_work/" in useful_filename:
+                useful_filename = useful_filename.replace("/data/nf_data/server/nf_work/", "")
+                # Get the second folder name from path with python PathLib
+                import pathlib
+                task = pathlib.Path(useful_filename).parts[0]
+                useful_filename = useful_filename.replace(task + "/", "")
+
+                hash1 = pathlib.Path(useful_filename).parts[0]
+                useful_filename = useful_filename.replace(hash1 + "/", "")
+
+                hash2 = pathlib.Path(useful_filename).parts[0]
+                useful_filename = useful_filename.replace(hash2 + "/", "")
 
             # Saving output
             results_df["original_path"] = useful_filename
