@@ -5,9 +5,8 @@ import pandas as pd
 import numpy as np
 
 from tqdm import tqdm
-from matchms.importing import load_from_mgf
 import pymzml
-from pyteomics import mzxml, mzml
+from pyteomics import mzxml, mzml, mgf
 
 import logging
 logger = logging.getLogger('msql_fileloading')
@@ -143,10 +142,10 @@ def load_data(input_filename, cache=None, cache_dir=None, cache_file=None):
     return ms1_df, ms2_df
 
 def _load_data_mgf(input_filename):
-    file = load_from_mgf(input_filename)
+    reader = mgf.read(input_filename)
 
     ms2mz_list = []
-    for i, spectrum in enumerate(file):
+    for i, spectrum in reader:
         if len(spectrum.peaks.mz) == 0:
             continue
 
