@@ -26,6 +26,10 @@ jobs:
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f requirements.txt ]; then pip install -r requirements_test.txt; fi
+    - name: Download Test Data
+      run: |
+        cd tests && sh ./get_data.sh
+        cd ..
     - name: Testing
       run: |
         pytest -vv --cov=massql ./tests/test_parse.py
@@ -102,10 +106,6 @@ jobs:
           pip install flake8 pytest pytest-cov
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
-      - name: Download Test Data
-        run: |
-          cd tests && sh ./get_data.sh
-          cd ..
       - name: Run test_file_loading
         run: |
           pytest -vv --cov=massql ./tests/test_file_loading.py
@@ -125,10 +125,6 @@ jobs:
           pip install flake8 pytest pytest-cov pytest-xdist
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
-      - name: Download Test Data
-        run: |
-          cd tests && sh ./get_data.sh
-          cd ..
       - name: Run test_query
         run: |
           pytest -vv --cov=massql ./tests/test_query.py -n 4
