@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="massql",
-    version="0.0.15",
+    version="2025.06.18",
     author="Mingxun Wang",
     author_email="mwang87@gmail.com",
     description="Mass spectrometry query language python implementation",
