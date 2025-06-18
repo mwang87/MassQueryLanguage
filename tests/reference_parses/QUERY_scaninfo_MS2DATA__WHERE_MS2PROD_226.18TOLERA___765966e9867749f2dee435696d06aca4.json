@@ -1,0 +1,27 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierexcluded": {
+                    "name": "qualifierexcluded"
+                },
+                "qualifierppmtolerance": {
+                    "name": "qualifierppmtolerance",
+                    "unit": "ppm",
+                    "value": 5.0
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                226.18
+            ]
+        }
+    ],
+    "query": "QUERY scaninfo(MS2DATA) WHERE MS2PROD=226.18:TOLERANCEPPM=5:EXCLUDED",
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}
