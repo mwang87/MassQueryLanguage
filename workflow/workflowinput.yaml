@@ -1,7 +1,7 @@
 workflowname: massql_workflow
 workflowdescription: massql_workflow
 workflowlongdescription: This is a MassQL Workflow
-workflowversion: "0.3"
+workflowversion: "2025.08.08"
 workflowfile: workflow.nf
 workflowautohide: false
 adminonly: false
