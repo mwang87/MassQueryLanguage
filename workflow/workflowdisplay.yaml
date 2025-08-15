@@ -24,10 +24,10 @@ Views:
                 data: mslevel
             -   title: "query_index"
                 data: query_index
-        columnDefs: '[ {"targets": 0,"data": null,"render": function ( data, type, row, meta ) {
-            return `
-            <a target="_blank" href="/dashboards/lcms?usi=mzspec:GNPS2-${task}-${encodeURIComponent(row["filename"])}">None</a>
-            `;}}]'
+        # columnDefs: '[ {"targets": 0,"data": null,"render": function ( data, type, row, meta ) {
+        #     return `
+        #     <a target="_blank" href="/dashboards/lcms?usi=mzspec:GNPS2-${task}-${encodeURIComponent(row["filename"])}">None</a>
+        #     `;}}]'
             
 # TODO: Show the extraction results
 
