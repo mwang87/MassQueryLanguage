@@ -43,11 +43,6 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
 
-      - name: Download Test Data
-        run: |
-          cd tests && sh ./get_data.sh
-          cd ..
-
       - name: Testing
         run: |
           # Use python -m pytest to ensure the correct environment's pytest is used
@@ -55,7 +50,7 @@ jobs:
         
   test-translate:
     runs-on: ubuntu-latest
-    needs: unit-testing-parse
+    
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -74,13 +69,17 @@ jobs:
 
   test-extraction:
     runs-on: ubuntu-latest
-    needs: unit-testing-parse
+    
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - uses: ts-graphviz/setup-graphviz@v1
+      - name: Download Test Data
+        run: |
+          cd tests && sh ./get_data.sh
+          cd ..
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -93,7 +92,7 @@ jobs:
 
   test-visualize:
     runs-on: ubuntu-latest
-    needs: unit-testing-parse
+    
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -112,13 +111,17 @@ jobs:
 
   test-fileloading:
     runs-on: ubuntu-latest
-    needs: unit-testing-parse
+    
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - uses: ts-graphviz/setup-graphviz@v1
+      - name: Download Test Data
+        run: |
+          cd tests && sh ./get_data.sh
+          cd ..
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -131,13 +134,17 @@ jobs:
 
   test-query:
     runs-on: ubuntu-latest
-    needs: unit-testing-parse
+    
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - uses: ts-graphviz/setup-graphviz@v1
+      - name: Download Test Data
+        run: |
+          cd tests && sh ./get_data.sh
+          cd ..
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
