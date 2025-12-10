@@ -781,7 +781,7 @@ def main():
     #test_translator()
     #test_ms1_iron_X_changes_intensity()
     #test_nocache()
-    #test_topdown()
+    test_topdown()
     #test_defect()
     #test_or_against_iron()
     #test_quad_brominated()
@@ -801,7 +801,7 @@ def main():
     #test_mgf_intensity()
     #test_otherscan_query()
     #test_otherscan_iron_query()
-    test_otherscan()
+    #test_otherscan()
 
 
 if __name__ == "__main__":

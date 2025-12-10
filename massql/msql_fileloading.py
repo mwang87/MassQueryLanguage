@@ -141,10 +141,20 @@ def load_data(input_filename, cache=None, cache_dir=None, cache_file=None):
 
     return ms1_df, ms2_df
 
+## Library MGF Loader
 def _load_data_mgf(input_filename):
+    ms1_df, ms2_df = _load_data_mgf_pyteomics(input_filename)
+
+    # try manual loader if pyteomics fails
+    if len(ms2_df) == 0:
+        ms1_df, ms2_df = _load_data_mgf_manual(input_filename)
+
+    return ms1_df, ms2_df
+
+
+def _load_data_mgf_pyteomics(input_filename):
     ms2_data_list = []
 
-    # Use 'with' context manager for safe file handling
     with mgf.read(input_filename) as reader:
         for index, spectrum in enumerate(reader):
             
@@ -216,10 +226,138 @@ def _load_data_mgf(input_filename):
     # Convert to DataFrames
     ms2_df = pd.DataFrame(ms2_data_list)
     
-    # Original code assigned the last single peak to ms1_df. 
-    # Initializing empty to prevent bugs.
-    ms1_df = pd.DataFrame() 
+    # This is kind of a hack for compatibility
+    try:
+        ms1_df = pd.DataFrame([peak_dict]) 
+    except Exception:
+        peak_dict = {
+            "i": 0,
+            "i_norm": 0,
+            "i_tic_norm": 0,
+            "mz": 0,
+            "scan": 1,
+            "rt": 0,
+            "polarity": 1       # Default
+        }
+        ms1_df = pd.DataFrame([peak_dict])
 
+    return ms1_df, ms2_df
+
+def _load_data_mgf_manual(input_filename):
+
+    ms2_data_list = []
+    
+    # Defaults for the current spectrum
+    current_params = {}
+    current_peaks = []
+    in_spectrum = False
+    spectrum_index = 0
+
+    with open(input_filename, 'r') as f:
+        for line_num, line in enumerate(f):
+            line = line.strip()
+            
+            if not line:
+                continue
+
+            if line == "BEGIN IONS":
+                in_spectrum = True
+                current_params = {
+                    "scan": spectrum_index + 1, # Default scan to index
+                    "rt": 0.0,
+                    "precmz": 0.0,
+                    "charge": 1
+                }
+                current_peaks = []
+                continue
+
+            if line == "END IONS":
+                in_spectrum = False
+                spectrum_index += 1
+                
+                # Process the collected spectrum
+                if not current_peaks:
+                    continue
+
+                # Unzip peaks for calculation
+                # peaks is list of [mz, intensity]
+                mz_list = [p[0] for p in current_peaks]
+                i_list = [p[1] for p in current_peaks]
+                
+                i_max = max(i_list)
+                i_sum = sum(i_list)
+
+                if i_max == 0:
+                    continue
+
+                # Create rows for DataFrame
+                for mz, intensity in current_peaks:
+                    if intensity == 0:
+                        continue
+                        
+                    peak_dict = {
+                        "i": intensity,
+                        "i_norm": intensity / i_max,
+                        "i_tic_norm": intensity / i_sum,
+                        "mz": mz,
+                        "scan": current_params["scan"],
+                        "rt": current_params["rt"],
+                        "precmz": current_params["precmz"],
+                        "ms1scan": 0,
+                        "charge": current_params["charge"],
+                        "polarity": 1
+                    }
+                    ms2_data_list.append(peak_dict)
+                continue
+
+            if in_spectrum:
+                # Check if line is metadata (contains '=') or peak data
+                if '=' in line:
+                    # Split only on the first '=' to handle values containing '='
+                    key, value = line.split('=', 1)
+                    key = key.upper().strip()
+                    value = value.strip()
+
+                    try:
+                        if key == "PEPMASS":
+                            # PEPMASS often looks like "400.0 5000.0" (mz intensity)
+                            current_params["precmz"] = float(value.split()[0])
+                        elif key == "SCANS":
+                            current_params["scan"] = value
+                        elif key == "RTINSECONDS":
+                            current_params["rt"] = float(value) / 60.0
+                        elif key == "CHARGE":
+                            # Handle "2+" or "2"
+                            current_params["charge"] = int(value.strip('+'))
+                    except (ValueError, IndexError):
+                        # If header parsing fails, keep default values
+                        pass
+                else:
+                    # Assume it is peak data: "mz intensity"
+                    try:
+                        parts = line.split()
+                        if len(parts) >= 2:
+                            mz = float(parts[0])
+                            intensity = float(parts[1])
+                            current_peaks.append((mz, intensity))
+                    except ValueError:
+                        # Skip malformed peak lines
+                        pass
+
+    ms2_df = pd.DataFrame(ms2_data_list)
+    
+    # This is kind of a hack for portability
+    peak_dict = {
+            "i": 0,
+            "i_norm": 0,
+            "i_tic_norm": 0,
+            "mz": 0,
+            "scan": 1,
+            "rt": 0,
+            "polarity": 1       # Default
+        }
+    ms1_df = pd.DataFrame([peak_dict])
+    
     return ms1_df, ms2_df
 
 def _load_data_gnps_json(input_filename):
