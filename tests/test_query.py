@@ -398,7 +398,8 @@ def test_networking_mgf_library():
     results_df = msql_engine.process_query(query, "tests/data/specs_ms.mgf")
     print(results_df)
     assert(2 in list(results_df["scan"]))
-    
+
+@pytest.mark.skip(reason="input file missing")
 def test_mse():
     query = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=X:TOLERANCEMZ=0.1:INTENSITYPERCENT=25:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE \
         AND MS1MZ=X+2:TOLERANCEMZ=0.1:INTENSITYMATCH=Y*0.33:INTENSITYMATCHPERCENT=30 AND \
@@ -806,8 +807,8 @@ def main():
     #test_otherscan_query()
     #test_otherscan_iron_query()
     #test_otherscan()
-    
-    debug_query()
+
+    #debug_query()
 
 
 if __name__ == "__main__":
