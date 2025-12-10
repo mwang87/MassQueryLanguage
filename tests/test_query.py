@@ -808,7 +808,7 @@ def main():
     #test_otherscan_iron_query()
     #test_otherscan()
 
-    #debug_query()
+    debug_query()
 
 
 if __name__ == "__main__":
