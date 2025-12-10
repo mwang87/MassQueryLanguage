@@ -6,6 +6,9 @@ name: Periodic Testing of Pypi Package
 on:
   push:
     branches: [ master ]
+  schedule:
+    # Runs every Monday at 08:00 UTC
+    - cron: '0 8 * * 1'
 
 jobs:
   package-testing-parse:
