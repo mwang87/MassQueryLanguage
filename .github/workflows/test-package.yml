@@ -1,0 +1,51 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Periodic Testing of Package
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  package-testing-parse:
+    # Use a matrix strategy to test against multiple Python versions
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Define the Python versions you want to test
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+    steps:
+      - uses: actions/checkout@v2
+
+      # Step to set up Python using the version from the matrix
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # Added step to explicitly output the Python version for clarity in logs
+      - name: 🐍 Display Python version
+        run: python -V
+
+      - name: Setup Graphviz
+        uses: ts-graphviz/setup-graphviz@v1
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install massql
+          if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
+      
+      - name: Removing MassQL source
+        run: |
+          rm massql -r
+
+      - name: Testing Parse
+        run: |
+          # Use python -m pytest to ensure the correct environment's pytest is used
+          python -m pytest -vv --cov=massql ./tests/test_parse.py
+      
+      - name: Run test_translate
+        run: |
+          pytest -vv --cov=massql ./tests/test_translate.py
