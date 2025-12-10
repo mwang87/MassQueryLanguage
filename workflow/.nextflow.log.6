@@ -1,0 +1,265 @@
+Jul-23 12:08:24.749 [main] DEBUG nextflow.cli.Launcher - $> nextflow run workflow.nf -c test.config --parallel_files YES --resume --maxfilesize 100
+Jul-23 12:08:25.088 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.10.0
+Jul-23 12:08:25.197 [main] INFO  nextflow.cli.CmdRun - Launching `workflow.nf` [desperate_elion] - revision: b399ae2781
+Jul-23 12:08:25.255 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /home/user/SourceCode/MassQueryLanguage/workflow/test.config
+Jul-23 12:08:25.256 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/user/SourceCode/MassQueryLanguage/workflow/test.config
+Jul-23 12:08:25.338 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Jul-23 12:08:28.053 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/home/user/.nextflow/plugins
+Jul-23 12:08:28.059 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Jul-23 12:08:28.085 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jul-23 12:08:28.088 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jul-23 12:08:28.097 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Jul-23 12:08:28.119 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jul-23 12:08:28.266 [main] DEBUG nextflow.Session - Session uuid: 514e5b26-3728-4d42-9293-85ab6c38e470
+Jul-23 12:08:28.267 [main] DEBUG nextflow.Session - Run name: desperate_elion
+Jul-23 12:08:28.270 [main] DEBUG nextflow.Session - Executor pool size: 16
+Jul-23 12:08:28.355 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 21.10.0 build 5640
+  Created: 11-11-2021 18:27 UTC (10:27 PDT)
+  System: Linux 5.15.0-53-generic
+  Runtime: Groovy 3.0.9 on OpenJDK 64-Bit Server VM 1.8.0_152-release-1056-b12
+  Encoding: UTF-8 (UTF-8)
+  Process: 4155175@mingwangucr [169.235.26.140]
+  CPUs: 16 - Mem: 61.8 GB (1.4 GB) - Swap: 735.3 MB (0)
+Jul-23 12:08:28.415 [main] DEBUG nextflow.Session - Work-dir: /home/user/SourceCode/MassQueryLanguage/workflow/work [ext2/ext3]
+Jul-23 12:08:28.480 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Jul-23 12:08:28.516 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Jul-23 12:08:28.628 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Jul-23 12:08:28.816 [main] DEBUG nextflow.Session - Session start invoked
+Jul-23 12:08:30.634 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jul-23 12:08:30.929 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Jul-23 12:08:31.194 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 12:08:31.194 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 12:08:31.207 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Jul-23 12:08:31.220 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=16; memory=61.8 GB; capacity=16; pollInterval=100ms; dumpInterval=5m
+Jul-23 12:08:31.476 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 12:08:31.476 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 12:08:31.558 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 12:08:31.558 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 12:08:31.580 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 12:08:31.580 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 12:08:31.601 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: summarizeResults, formatResultsMergeRounds, queryData2, queryData, formatExtractedSpectraRounds
+Jul-23 12:08:31.602 [main] DEBUG nextflow.Session - Ignite dataflow network (5)
+Jul-23 12:08:31.615 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > queryData
+Jul-23 12:08:31.616 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > formatResultsMergeRounds
+Jul-23 12:08:31.625 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > formatExtractedSpectraRounds
+Jul-23 12:08:31.627 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > summarizeResults
+Jul-23 12:08:31.628 [main] DEBUG nextflow.script.ScriptRunner - > Await termination 
+Jul-23 12:08:31.628 [main] DEBUG nextflow.Session - Session await
+Jul-23 12:08:31.665 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **; options: [:]
+Jul-23 12:08:32.873 [Actor Thread 24] DEBUG nextflow.conda.CondaCache - conda found local env for environment=/home/user/SourceCode/MassQueryLanguage/workflow/bin/conda_env.yml; path=/home/user/SourceCode/MassQueryLanguage/workflow/work/conda/conda_env-a7c7dacd5204cfe814b4763f1b0accf4
+Jul-23 12:08:33.120 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.129 [Task submitter] INFO  nextflow.Session - [38/cda8c1] Submitted process > queryData (1)
+Jul-23 12:08:33.156 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.159 [Task submitter] INFO  nextflow.Session - [f7/b2b249] Submitted process > queryData (4)
+Jul-23 12:08:33.169 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.170 [Task submitter] INFO  nextflow.Session - [ec/5654b4] Submitted process > queryData (7)
+Jul-23 12:08:33.180 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.191 [Task submitter] INFO  nextflow.Session - [93/379893] Submitted process > queryData (10)
+Jul-23 12:08:33.201 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.202 [Task submitter] INFO  nextflow.Session - [64/36ffcc] Submitted process > queryData (5)
+Jul-23 12:08:33.208 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.222 [Task submitter] INFO  nextflow.Session - [d5/0b7312] Submitted process > queryData (2)
+Jul-23 12:08:33.233 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.256 [Task submitter] INFO  nextflow.Session - [b3/370104] Submitted process > queryData (9)
+Jul-23 12:08:33.273 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.283 [Task submitter] INFO  nextflow.Session - [95/d545b5] Submitted process > queryData (13)
+Jul-23 12:08:33.295 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.318 [Task submitter] INFO  nextflow.Session - [9e/e7bdc6] Submitted process > queryData (8)
+Jul-23 12:08:33.327 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.340 [Task submitter] INFO  nextflow.Session - [8b/094387] Submitted process > queryData (24)
+Jul-23 12:08:33.347 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.364 [Task submitter] INFO  nextflow.Session - [d1/0d81fe] Submitted process > queryData (11)
+Jul-23 12:08:33.374 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.392 [Task submitter] INFO  nextflow.Session - [23/f2f622] Submitted process > queryData (14)
+Jul-23 12:08:33.399 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.420 [Task submitter] INFO  nextflow.Session - [d2/e5c33b] Submitted process > queryData (15)
+Jul-23 12:08:33.447 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.465 [Task submitter] INFO  nextflow.Session - [74/699052] Submitted process > queryData (6)
+Jul-23 12:08:33.489 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.504 [Task submitter] INFO  nextflow.Session - [a7/c80bb7] Submitted process > queryData (12)
+Jul-23 12:08:33.517 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:33.528 [Task submitter] INFO  nextflow.Session - [a5/7c2ba5] Submitted process > queryData (3)
+Jul-23 12:08:35.154 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 7; name: queryData (8); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/9e/e7bdc60d0e574eaec90d382e14185f]
+Jul-23 12:08:35.162 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:35.162 [Task submitter] INFO  nextflow.Session - [de/1d2882] Submitted process > queryData (16)
+Jul-23 12:08:35.202 [Task monitor] INFO  nextflow.processor.TaskProcessor - [9e/e7bdc6] NOTE: Process `queryData (8)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:35.226 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 15; name: queryData (15); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/d2/e5c33b7bfb1fc05f12cb1d11fbb1c9]
+Jul-23 12:08:35.231 [Task monitor] INFO  nextflow.processor.TaskProcessor - [d2/e5c33b] NOTE: Process `queryData (15)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:35.246 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 4; name: queryData (4); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/f7/b2b249fe94256a22a743d26c7db019]
+Jul-23 12:08:35.248 [Task monitor] INFO  nextflow.processor.TaskProcessor - [f7/b2b249] NOTE: Process `queryData (4)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:35.251 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:35.264 [Task submitter] INFO  nextflow.Session - [3b/e7b28f] Submitted process > queryData (17)
+Jul-23 12:08:35.267 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 6; name: queryData (7); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/ec/5654b405ac8cd384ee8b9aaae3fc30]
+Jul-23 12:08:35.270 [Task monitor] INFO  nextflow.processor.TaskProcessor - [ec/5654b4] NOTE: Process `queryData (7)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:35.289 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:35.290 [Task submitter] INFO  nextflow.Session - [32/1ed675] Submitted process > queryData (18)
+Jul-23 12:08:35.299 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 11; name: queryData (10); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/93/3798933f28a40917f0d30fa8876e36]
+Jul-23 12:08:35.305 [Task monitor] INFO  nextflow.processor.TaskProcessor - [93/379893] NOTE: Process `queryData (10)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:35.317 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:35.318 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 5; name: queryData (5); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/64/36ffccf9026684234a87d2958b6209]
+Jul-23 12:08:35.319 [Task monitor] INFO  nextflow.processor.TaskProcessor - [64/36ffcc] NOTE: Process `queryData (5)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:35.319 [Task submitter] INFO  nextflow.Session - [b7/bb6ba8] Submitted process > queryData (19)
+Jul-23 12:08:35.323 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: queryData (2); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/d5/0b73126ec35d7cd567d9c02d4e4979]
+Jul-23 12:08:35.328 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:35.329 [Task submitter] INFO  nextflow.Session - [67/76e0dd] Submitted process > queryData (21)
+Jul-23 12:08:35.334 [Task monitor] INFO  nextflow.processor.TaskProcessor - [d5/0b7312] NOTE: Process `queryData (2)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:35.336 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:35.341 [Task submitter] INFO  nextflow.Session - [c0/fb5874] Submitted process > queryData (20)
+Jul-23 12:08:35.346 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 13; name: queryData (13); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/95/d545b53be1962ad726d53d50c7d625]
+Jul-23 12:08:35.349 [Task monitor] INFO  nextflow.processor.TaskProcessor - [95/d545b5] NOTE: Process `queryData (13)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:35.349 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:35.358 [Task submitter] INFO  nextflow.Session - [fe/957178] Submitted process > queryData (22)
+Jul-23 12:08:35.362 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 12; name: queryData (12); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/a7/c80bb7eeb0871a1051f8bd30c7ba56]
+Jul-23 12:08:35.363 [Task monitor] INFO  nextflow.processor.TaskProcessor - [a7/c80bb7] NOTE: Process `queryData (12)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:35.385 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:35.398 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: queryData (1); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/38/cda8c10444c8083bef9c58a02de7cf]
+Jul-23 12:08:35.416 [Task submitter] INFO  nextflow.Session - [78/438197] Submitted process > queryData (23)
+Jul-23 12:08:35.416 [Task monitor] INFO  nextflow.processor.TaskProcessor - [38/cda8c1] NOTE: Process `queryData (1)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:35.449 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:35.450 [Task submitter] INFO  nextflow.Session - [7a/8974ee] Submitted process > queryData (25)
+Jul-23 12:08:35.454 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:35.455 [Task submitter] INFO  nextflow.Session - [66/3fe8b7] Submitted process > queryData (27)
+Jul-23 12:08:35.543 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 8; name: queryData (9); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/b3/370104e052b98636959d67eac2f5f4]
+Jul-23 12:08:35.544 [Task monitor] INFO  nextflow.processor.TaskProcessor - [b3/370104] NOTE: Process `queryData (9)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:35.550 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 9; name: queryData (6); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/74/69905287ae4ea49129bde5b25d1938]
+Jul-23 12:08:35.551 [Task monitor] INFO  nextflow.processor.TaskProcessor - [74/699052] NOTE: Process `queryData (6)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:35.558 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:35.558 [Task submitter] INFO  nextflow.Session - [ff/5f0840] Submitted process > queryData (28)
+Jul-23 12:08:35.562 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:35.562 [Task submitter] INFO  nextflow.Session - [3f/282941] Submitted process > queryData (31)
+Jul-23 12:08:35.851 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 10; name: queryData (11); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/d1/0d81fe01a8bfdbfecb3f7f845b76fb]
+Jul-23 12:08:35.852 [Task monitor] INFO  nextflow.processor.TaskProcessor - [d1/0d81fe] NOTE: Process `queryData (11)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:35.855 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:35.855 [Task submitter] INFO  nextflow.Session - [8d/ee719b] Submitted process > queryData (30)
+Jul-23 12:08:35.896 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: queryData (3); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/a5/7c2ba5830edd1597ea5d7e98bc8f90]
+Jul-23 12:08:35.896 [Task monitor] INFO  nextflow.processor.TaskProcessor - [a5/7c2ba5] NOTE: Process `queryData (3)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:35.900 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:35.901 [Task submitter] INFO  nextflow.Session - [ef/e6e9e7] Submitted process > queryData (29)
+Jul-23 12:08:36.008 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 24; name: queryData (24); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/8b/094387b4fb73c075b50586bec91994]
+Jul-23 12:08:36.009 [Task monitor] INFO  nextflow.processor.TaskProcessor - [8b/094387] NOTE: Process `queryData (24)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:36.015 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:36.015 [Task submitter] INFO  nextflow.Session - [1f/a5e3d7] Submitted process > queryData (26)
+Jul-23 12:08:36.804 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 17; name: queryData (17); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/3b/e7b28f0df6ad59125cd1003ee9a401]
+Jul-23 12:08:36.807 [Task monitor] INFO  nextflow.processor.TaskProcessor - [3b/e7b28f] NOTE: Process `queryData (17)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:36.812 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:36.813 [Task submitter] INFO  nextflow.Session - [2b/8e73fc] Submitted process > queryData (33)
+Jul-23 12:08:36.875 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 16; name: queryData (16); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/de/1d28828e1704b1fe72e34054129d5d]
+Jul-23 12:08:36.876 [Task monitor] INFO  nextflow.processor.TaskProcessor - [de/1d2882] NOTE: Process `queryData (16)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:36.883 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:36.888 [Task submitter] INFO  nextflow.Session - [a0/158f92] Submitted process > queryData (32)
+Jul-23 12:08:36.891 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 21; name: queryData (21); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/67/76e0dd647a3cea07fde7694d2a2665]
+Jul-23 12:08:36.892 [Task monitor] INFO  nextflow.processor.TaskProcessor - [67/76e0dd] NOTE: Process `queryData (21)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:36.901 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:36.901 [Task submitter] INFO  nextflow.Session - [5d/f19b03] Submitted process > queryData (34)
+Jul-23 12:08:36.945 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 18; name: queryData (18); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/32/1ed675bd61b58049460661e6b7fa7e]
+Jul-23 12:08:36.946 [Task monitor] INFO  nextflow.processor.TaskProcessor - [32/1ed675] NOTE: Process `queryData (18)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:36.962 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:36.963 [Task submitter] INFO  nextflow.Session - [b4/f96f93] Submitted process > queryData (38)
+Jul-23 12:08:37.114 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 25; name: queryData (25); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/7a/8974eec4d5bff11a5ebd5b70ed0e80]
+Jul-23 12:08:37.115 [Task monitor] INFO  nextflow.processor.TaskProcessor - [7a/8974ee] NOTE: Process `queryData (25)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:37.125 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:37.125 [Task submitter] INFO  nextflow.Session - [0a/e4d9ad] Submitted process > queryData (37)
+Jul-23 12:08:37.129 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 20; name: queryData (20); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/c0/fb58749d05b6aae9261203da82bc1a]
+Jul-23 12:08:37.129 [Task monitor] INFO  nextflow.processor.TaskProcessor - [c0/fb5874] NOTE: Process `queryData (20)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:37.137 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:37.138 [Task submitter] INFO  nextflow.Session - [af/0ba830] Submitted process > queryData (35)
+Jul-23 12:08:37.142 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 22; name: queryData (22); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/fe/95717885e17c503673e315070c7a32]
+Jul-23 12:08:37.143 [Task monitor] INFO  nextflow.processor.TaskProcessor - [fe/957178] NOTE: Process `queryData (22)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:37.147 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:37.151 [Task submitter] INFO  nextflow.Session - [9c/101afd] Submitted process > queryData (36)
+Jul-23 12:08:37.170 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 23; name: queryData (23); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/78/438197653deb91e4f81629743919cc]
+Jul-23 12:08:37.171 [Task monitor] INFO  nextflow.processor.TaskProcessor - [78/438197] NOTE: Process `queryData (23)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:37.173 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:37.173 [Task submitter] INFO  nextflow.Session - [dc/be7f9f] Submitted process > queryData (40)
+Jul-23 12:08:37.416 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 28; name: queryData (28); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/ff/5f08401d5871202b4bf096441aa385]
+Jul-23 12:08:37.417 [Task monitor] INFO  nextflow.processor.TaskProcessor - [ff/5f0840] NOTE: Process `queryData (28)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:37.420 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:37.420 [Task submitter] INFO  nextflow.Session - [65/6efa43] Submitted process > queryData (39)
+Jul-23 12:08:37.616 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 27; name: queryData (27); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/66/3fe8b700c4b4a9cbc08b1883755def]
+Jul-23 12:08:37.617 [Task monitor] INFO  nextflow.processor.TaskProcessor - [66/3fe8b7] NOTE: Process `queryData (27)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:37.623 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:37.623 [Task submitter] INFO  nextflow.Session - [dd/fe8e76] Submitted process > queryData (42)
+Jul-23 12:08:37.854 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 26; name: queryData (26); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/1f/a5e3d74f2929728fc6b638ca896175]
+Jul-23 12:08:37.854 [Task monitor] INFO  nextflow.processor.TaskProcessor - [1f/a5e3d7] NOTE: Process `queryData (26)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:37.858 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:37.859 [Task submitter] INFO  nextflow.Session - [73/aad050] Submitted process > queryData (41)
+Jul-23 12:08:37.938 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 29; name: queryData (29); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/ef/e6e9e7924785dc75eca5066d51f25c]
+Jul-23 12:08:37.939 [Task monitor] INFO  nextflow.processor.TaskProcessor - [ef/e6e9e7] NOTE: Process `queryData (29)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:37.944 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:37.944 [Task submitter] INFO  nextflow.Session - [3e/cd1591] Submitted process > queryData (44)
+Jul-23 12:08:37.980 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 30; name: queryData (30); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/8d/ee719b50dac02f22ba6a70fc47400b]
+Jul-23 12:08:37.981 [Task monitor] INFO  nextflow.processor.TaskProcessor - [8d/ee719b] NOTE: Process `queryData (30)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:37.984 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:37.984 [Task submitter] INFO  nextflow.Session - [41/1c86de] Submitted process > queryData (45)
+Jul-23 12:08:38.544 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 37; name: queryData (37); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/0a/e4d9ada5401c6286a39202e22a5c96]
+Jul-23 12:08:38.545 [Task monitor] INFO  nextflow.processor.TaskProcessor - [0a/e4d9ad] NOTE: Process `queryData (37)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:38.549 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:38.550 [Task submitter] INFO  nextflow.Session - [54/58a1b2] Submitted process > queryData (43)
+Jul-23 12:08:38.700 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 31; name: queryData (31); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/3f/2829411cfbe7f07c59a0ed07854de8]
+Jul-23 12:08:38.701 [Task monitor] INFO  nextflow.processor.TaskProcessor - [3f/282941] NOTE: Process `queryData (31)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:38.704 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:38.705 [Task submitter] INFO  nextflow.Session - [13/536295] Submitted process > queryData (47)
+Jul-23 12:08:38.753 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 33; name: queryData (33); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/2b/8e73fcd4f8163ef0ae215f77f58c9a]
+Jul-23 12:08:38.754 [Task monitor] INFO  nextflow.processor.TaskProcessor - [2b/8e73fc] NOTE: Process `queryData (33)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:38.757 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:38.757 [Task submitter] INFO  nextflow.Session - [a5/615fd5] Submitted process > queryData (46)
+Jul-23 12:08:38.825 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 38; name: queryData (38); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/b4/f96f933798161ec686b79db989df69]
+Jul-23 12:08:38.826 [Task monitor] INFO  nextflow.processor.TaskProcessor - [b4/f96f93] NOTE: Process `queryData (38)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:38.832 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:38.833 [Task submitter] INFO  nextflow.Session - [c7/33d2cd] Submitted process > queryData (49)
+Jul-23 12:08:38.979 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 35; name: queryData (35); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/af/0ba830603527adbee0741abe528c42]
+Jul-23 12:08:38.980 [Task monitor] INFO  nextflow.processor.TaskProcessor - [af/0ba830] NOTE: Process `queryData (35)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:38.989 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:38.990 [Task submitter] INFO  nextflow.Session - [de/5dc7a2] Submitted process > queryData (48)
+Jul-23 12:08:39.054 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 40; name: queryData (40); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/dc/be7f9fe35b271bdcf7bd44d0a04cad]
+Jul-23 12:08:39.056 [Task monitor] INFO  nextflow.processor.TaskProcessor - [dc/be7f9f] NOTE: Process `queryData (40)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:39.062 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:39.063 [Task submitter] INFO  nextflow.Session - [b7/aa098b] Submitted process > queryData (51)
+Jul-23 12:08:39.185 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 32; name: queryData (32); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/a0/158f92b237763adb66a5917707b112]
+Jul-23 12:08:39.186 [Task monitor] INFO  nextflow.processor.TaskProcessor - [a0/158f92] NOTE: Process `queryData (32)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:39.189 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:39.200 [Task submitter] INFO  nextflow.Session - [e1/3d1078] Submitted process > queryData (52)
+Jul-23 12:08:39.201 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 42; name: queryData (42); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/dd/fe8e76573adb330e305009ea6c082c]
+Jul-23 12:08:39.202 [Task monitor] INFO  nextflow.processor.TaskProcessor - [dd/fe8e76] NOTE: Process `queryData (42)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:39.206 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 12:08:39.207 [Task submitter] INFO  nextflow.Session - [07/0fb6e2] Submitted process > queryData (50)
+Jul-23 12:08:39.274 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 19; name: queryData (19); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/b7/bb6ba834f85463fa5dee2f0497caf5]
+Jul-23 12:08:39.275 [Task monitor] INFO  nextflow.processor.TaskProcessor - [b7/bb6ba8] NOTE: Process `queryData (19)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:39.281 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 36; name: queryData (36); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/9c/101afdb768bf792fc3f8121f1636e6]
+Jul-23 12:08:39.282 [Task monitor] INFO  nextflow.processor.TaskProcessor - [9c/101afd] NOTE: Process `queryData (36)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:39.324 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 34; name: queryData (34); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/5d/f19b03acb7c22c7a3f1a44b5f911e5]
+Jul-23 12:08:39.325 [Task monitor] INFO  nextflow.processor.TaskProcessor - [5d/f19b03] NOTE: Process `queryData (34)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:39.343 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 14; name: queryData (14); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/23/f2f6220fc841af6387417ea9d34831]
+Jul-23 12:08:39.344 [Task monitor] INFO  nextflow.processor.TaskProcessor - [23/f2f622] NOTE: Process `queryData (14)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:39.512 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 45; name: queryData (45); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/41/1c86de1046468dbca57e8804fb5208]
+Jul-23 12:08:39.513 [Task monitor] INFO  nextflow.processor.TaskProcessor - [41/1c86de] NOTE: Process `queryData (45)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:39.623 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 44; name: queryData (44); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/3e/cd15912032f0b229a7bc88895a0e8c]
+Jul-23 12:08:39.624 [Task monitor] INFO  nextflow.processor.TaskProcessor - [3e/cd1591] NOTE: Process `queryData (44)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:39.690 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 39; name: queryData (39); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/65/6efa434d3760ed96b6df70722270f4]
+Jul-23 12:08:39.691 [Task monitor] INFO  nextflow.processor.TaskProcessor - [65/6efa43] NOTE: Process `queryData (39)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:39.766 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 41; name: queryData (41); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/73/aad050d3c8c0f9ee93c82aafccf853]
+Jul-23 12:08:39.766 [Task monitor] INFO  nextflow.processor.TaskProcessor - [73/aad050] NOTE: Process `queryData (41)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:39.990 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 43; name: queryData (43); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/54/58a1b285995398febbeb767ed4971d]
+Jul-23 12:08:39.991 [Task monitor] INFO  nextflow.processor.TaskProcessor - [54/58a1b2] NOTE: Process `queryData (43)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:40.134 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 47; name: queryData (47); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/13/536295bf4e21aa057eac160d45137e]
+Jul-23 12:08:40.134 [Task monitor] INFO  nextflow.processor.TaskProcessor - [13/536295] NOTE: Process `queryData (47)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:40.262 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 49; name: queryData (49); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/c7/33d2cd2061f28d22c0f03794393739]
+Jul-23 12:08:40.263 [Task monitor] INFO  nextflow.processor.TaskProcessor - [c7/33d2cd] NOTE: Process `queryData (49)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:40.454 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 46; name: queryData (46); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/a5/615fd524febe15b850d0e4e2e00c78]
+Jul-23 12:08:40.455 [Task monitor] INFO  nextflow.processor.TaskProcessor - [a5/615fd5] NOTE: Process `queryData (46)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:40.472 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 48; name: queryData (48); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/de/5dc7a267e802b851e6f83a13ad10ec]
+Jul-23 12:08:40.472 [Task monitor] INFO  nextflow.processor.TaskProcessor - [de/5dc7a2] NOTE: Process `queryData (48)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:40.476 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 51; name: queryData (51); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/b7/aa098b84c183d620914d6521f65486]
+Jul-23 12:08:40.477 [Task monitor] INFO  nextflow.processor.TaskProcessor - [b7/aa098b] NOTE: Process `queryData (51)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:40.577 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 50; name: queryData (50); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/07/0fb6e2be909087021e2575c29dd2b2]
+Jul-23 12:08:40.578 [Task monitor] INFO  nextflow.processor.TaskProcessor - [07/0fb6e2] NOTE: Process `queryData (50)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:41.110 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 52; name: queryData (52); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/e1/3d1078e3cbff3546b683c9eafa07f1]
+Jul-23 12:08:41.111 [Task monitor] INFO  nextflow.processor.TaskProcessor - [e1/3d1078] NOTE: Process `queryData (52)` terminated with an error exit status (127) -- Error is ignored
+Jul-23 12:08:41.123 [Actor Thread 24] DEBUG nextflow.file.SortFileCollector - FileCollector temp dir not removed: null
+Jul-23 12:08:41.124 [Actor Thread 13] DEBUG nextflow.file.SortFileCollector - FileCollector temp dir not removed: null
+Jul-23 12:08:41.125 [main] DEBUG nextflow.Session - Session await > all process finished
+Jul-23 12:08:41.215 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Jul-23 12:08:41.252 [main] DEBUG nextflow.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=0; failedCount=52; ignoredCount=52; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=0ms; failedDuration=1m 41s; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=16; peakCpus=16; peakMemory=0; ]
+Jul-23 12:08:41.474 [main] DEBUG nextflow.CacheDB - Closing CacheDB done
+Jul-23 12:08:41.510 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

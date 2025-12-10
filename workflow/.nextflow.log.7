@@ -1,0 +1,100 @@
+Jul-23 12:00:17.540 [main] DEBUG nextflow.cli.Launcher - $> nextflow run workflow.nf -c test.config --parallel_files YES --resume
+Jul-23 12:00:17.879 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.10.0
+Jul-23 12:00:17.965 [main] INFO  nextflow.cli.CmdRun - Launching `workflow.nf` [big_pauling] - revision: b399ae2781
+Jul-23 12:00:18.019 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /home/user/SourceCode/MassQueryLanguage/workflow/test.config
+Jul-23 12:00:18.020 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/user/SourceCode/MassQueryLanguage/workflow/test.config
+Jul-23 12:00:18.111 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Jul-23 12:00:20.842 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/home/user/.nextflow/plugins
+Jul-23 12:00:20.846 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Jul-23 12:00:20.871 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jul-23 12:00:20.874 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jul-23 12:00:20.884 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Jul-23 12:00:20.914 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jul-23 12:00:21.138 [main] DEBUG nextflow.Session - Session uuid: 82349cae-2a67-4e19-9235-3d1ac0695aa8
+Jul-23 12:00:21.139 [main] DEBUG nextflow.Session - Run name: big_pauling
+Jul-23 12:00:21.142 [main] DEBUG nextflow.Session - Executor pool size: 16
+Jul-23 12:00:21.254 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 21.10.0 build 5640
+  Created: 11-11-2021 18:27 UTC (10:27 PDT)
+  System: Linux 5.15.0-53-generic
+  Runtime: Groovy 3.0.9 on OpenJDK 64-Bit Server VM 1.8.0_152-release-1056-b12
+  Encoding: UTF-8 (UTF-8)
+  Process: 4150305@mingwangucr [169.235.26.140]
+  CPUs: 16 - Mem: 61.8 GB (1.4 GB) - Swap: 735.3 MB (0)
+Jul-23 12:00:21.346 [main] DEBUG nextflow.Session - Work-dir: /home/user/SourceCode/MassQueryLanguage/workflow/work [ext2/ext3]
+Jul-23 12:00:21.396 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Jul-23 12:00:21.428 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Jul-23 12:00:21.556 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Jul-23 12:00:21.762 [main] DEBUG nextflow.Session - Session start invoked
+Jul-23 12:00:23.674 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jul-23 12:00:24.035 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Jul-23 12:00:24.292 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 12:00:24.292 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 12:00:24.309 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Jul-23 12:00:24.326 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=16; memory=61.8 GB; capacity=16; pollInterval=100ms; dumpInterval=5m
+Jul-23 12:00:24.671 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 12:00:24.672 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 12:00:24.771 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 12:00:24.771 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 12:00:24.814 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 12:00:24.814 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 12:00:24.834 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: summarizeResults, formatResultsMergeRounds, queryData2, queryData, formatExtractedSpectraRounds
+Jul-23 12:00:24.836 [main] DEBUG nextflow.Session - Ignite dataflow network (5)
+Jul-23 12:00:24.880 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > queryData
+Jul-23 12:00:24.893 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > formatResultsMergeRounds
+Jul-23 12:00:24.894 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > formatExtractedSpectraRounds
+Jul-23 12:00:24.895 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > summarizeResults
+Jul-23 12:00:24.895 [main] DEBUG nextflow.script.ScriptRunner - > Await termination 
+Jul-23 12:00:24.896 [main] DEBUG nextflow.Session - Session await
+Jul-23 12:00:24.901 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **; options: [:]
+Jul-23 12:00:26.107 [Actor Thread 24] INFO  nextflow.conda.CondaCache - Creating env using conda: /home/user/SourceCode/MassQueryLanguage/workflow/bin/conda_env.yml [cache /home/user/SourceCode/MassQueryLanguage/workflow/work/conda/conda_env-a7c7dacd5204cfe814b4763f1b0accf4]
+Jul-23 12:05:24.547 [Task monitor] DEBUG n.processor.TaskPollingMonitor - No more task to compute -- The following nodes are still active:
+[process] queryData
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] formatResultsMergeRounds
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: results/*
+  port 1: (cntrl) -     ; channel: $
+
+[process] formatExtractedSpectraRounds
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: json/*
+  port 1: (cntrl) -     ; channel: $
+
+[process] summarizeResults
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: merged_results
+  port 1: (cntrl) -     ; channel: $
+
+Jul-23 12:08:19.708 [SIGINT handler] DEBUG nextflow.Session - Session aborted -- Cause: SIGINT
+Jul-23 12:08:19.721 [SIGINT handler] DEBUG nextflow.Session - The following nodes are still active:
+[process] queryData
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] formatResultsMergeRounds
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: results/*
+  port 1: (cntrl) -     ; channel: $
+
+[process] formatExtractedSpectraRounds
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: json/*
+  port 1: (cntrl) -     ; channel: $
+
+[process] summarizeResults
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: merged_results
+  port 1: (cntrl) -     ; channel: $
+
+Jul-23 12:08:19.732 [main] DEBUG nextflow.Session - Session await > all process finished
+Jul-23 12:08:19.733 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Jul-23 12:08:19.756 [Actor Thread 27] DEBUG nextflow.file.SortFileCollector - FileCollector temp dir not removed: null
+Jul-23 12:08:19.762 [Actor Thread 25] DEBUG nextflow.file.SortFileCollector - FileCollector temp dir not removed: null
+Jul-23 12:08:19.791 [main] DEBUG nextflow.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=0; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=0ms; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=0; peakCpus=0; peakMemory=0; ]
+Jul-23 12:08:19.807 [main] DEBUG nextflow.CacheDB - Closing CacheDB done
+Jul-23 12:08:19.829 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

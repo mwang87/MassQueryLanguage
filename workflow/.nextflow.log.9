@@ -1,0 +1,79 @@
+Jul-23 10:04:24.787 [main] DEBUG nextflow.cli.Launcher - $> nextflow run workflow.nf -c test.config --parallel_files YES --resume
+Jul-23 10:04:25.196 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.10.0
+Jul-23 10:04:25.308 [main] INFO  nextflow.cli.CmdRun - Launching `workflow.nf` [mighty_solvay] - revision: bdcb50bad8
+Jul-23 10:04:25.373 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /home/user/SourceCode/MassQueryLanguage/workflow/test.config
+Jul-23 10:04:25.374 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/user/SourceCode/MassQueryLanguage/workflow/test.config
+Jul-23 10:04:25.497 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Jul-23 10:04:28.280 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/home/user/.nextflow/plugins
+Jul-23 10:04:28.284 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Jul-23 10:04:28.320 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jul-23 10:04:28.324 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jul-23 10:04:28.334 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Jul-23 10:04:28.364 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jul-23 10:04:28.566 [main] DEBUG nextflow.Session - Session uuid: 636d7f3e-d7c4-47ab-bf3f-b264282d416c
+Jul-23 10:04:28.567 [main] DEBUG nextflow.Session - Run name: mighty_solvay
+Jul-23 10:04:28.568 [main] DEBUG nextflow.Session - Executor pool size: 16
+Jul-23 10:04:33.792 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 21.10.0 build 5640
+  Created: 11-11-2021 18:27 UTC (10:27 PDT)
+  System: Linux 5.15.0-53-generic
+  Runtime: Groovy 3.0.9 on OpenJDK 64-Bit Server VM 1.8.0_152-release-1056-b12
+  Encoding: UTF-8 (UTF-8)
+  Process: 4123733@mingwangucr [169.235.26.140]
+  CPUs: 16 - Mem: 61.8 GB (1.4 GB) - Swap: 735.3 MB (0)
+Jul-23 10:04:33.865 [main] DEBUG nextflow.Session - Work-dir: /home/user/SourceCode/MassQueryLanguage/workflow/work [ext2/ext3]
+Jul-23 10:04:33.917 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Jul-23 10:04:33.965 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Jul-23 10:04:34.114 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Jul-23 10:04:34.361 [main] DEBUG nextflow.Session - Session start invoked
+Jul-23 10:04:36.606 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jul-23 10:04:36.880 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Jul-23 10:04:37.063 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 10:04:37.063 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 10:04:37.084 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Jul-23 10:04:37.098 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=16; memory=61.8 GB; capacity=16; pollInterval=100ms; dumpInterval=5m
+Jul-23 10:04:37.338 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 10:04:37.338 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 10:04:37.449 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 10:04:37.449 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 10:04:37.500 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 10:04:37.500 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 10:04:37.513 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: summarizeResults, formatResultsMergeRounds, queryData2, queryData, formatExtractedSpectraRounds
+Jul-23 10:04:37.514 [main] DEBUG nextflow.Session - Ignite dataflow network (5)
+Jul-23 10:04:37.558 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > queryData
+Jul-23 10:04:37.563 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **; options: [:]
+Jul-23 10:04:37.565 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > formatResultsMergeRounds
+Jul-23 10:04:37.587 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > formatExtractedSpectraRounds
+Jul-23 10:04:37.588 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > summarizeResults
+Jul-23 10:04:37.593 [main] DEBUG nextflow.script.ScriptRunner - > Await termination 
+Jul-23 10:04:37.594 [main] DEBUG nextflow.Session - Session await
+Jul-23 10:04:38.781 [Actor Thread 23] INFO  nextflow.conda.CondaCache - Creating env using conda: /home/user/SourceCode/MassQueryLanguage/workflow/bin/conda_env.yml [cache /home/user/SourceCode/MassQueryLanguage/workflow/work/conda/conda_env-1a73718c9f06f7c6630eeee45ccbfd68]
+Jul-23 10:05:06.717 [SIGINT handler] DEBUG nextflow.Session - Session aborted -- Cause: SIGINT
+Jul-23 10:05:06.762 [SIGINT handler] DEBUG nextflow.Session - The following nodes are still active:
+[process] queryData
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] formatResultsMergeRounds
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: results/*
+  port 1: (cntrl) -     ; channel: $
+
+[process] formatExtractedSpectraRounds
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: json/*
+  port 1: (cntrl) -     ; channel: $
+
+[process] summarizeResults
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: merged_results
+  port 1: (cntrl) -     ; channel: $
+
+Jul-23 10:05:06.775 [main] DEBUG nextflow.Session - Session await > all process finished
+Jul-23 10:05:06.776 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Jul-23 10:05:06.799 [Actor Thread 26] DEBUG nextflow.file.SortFileCollector - FileCollector temp dir not removed: null
+Jul-23 10:05:06.799 [Actor Thread 25] DEBUG nextflow.file.SortFileCollector - FileCollector temp dir not removed: null
+Jul-23 10:05:06.812 [main] DEBUG nextflow.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=0; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=0ms; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=0; peakCpus=0; peakMemory=0; ]
+Jul-23 10:05:06.928 [main] DEBUG nextflow.CacheDB - Closing CacheDB done
+Jul-23 10:05:06.969 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

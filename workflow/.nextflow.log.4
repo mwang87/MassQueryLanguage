@@ -1,0 +1,147 @@
+Jul-23 13:27:38.153 [main] DEBUG nextflow.cli.Launcher - $> nextflow run workflow.nf -c test.config --parallel_files YES --resume --maxfilesize 100
+Jul-23 13:27:38.536 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.10.0
+Jul-23 13:27:38.608 [main] INFO  nextflow.cli.CmdRun - Launching `workflow.nf` [compassionate_lumiere] - revision: cf0e0c8002
+Jul-23 13:27:38.660 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /home/user/SourceCode/MassQueryLanguage/workflow/test.config
+Jul-23 13:27:38.661 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/user/SourceCode/MassQueryLanguage/workflow/test.config
+Jul-23 13:27:38.768 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Jul-23 13:27:41.292 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/home/user/.nextflow/plugins
+Jul-23 13:27:41.296 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Jul-23 13:27:41.318 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jul-23 13:27:41.320 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jul-23 13:27:41.328 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Jul-23 13:27:41.348 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jul-23 13:27:41.473 [main] DEBUG nextflow.Session - Session uuid: 14f27b53-5a2d-4720-bfa6-d01541f3d9e8
+Jul-23 13:27:41.473 [main] DEBUG nextflow.Session - Run name: compassionate_lumiere
+Jul-23 13:27:41.474 [main] DEBUG nextflow.Session - Executor pool size: 16
+Jul-23 13:27:41.589 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 21.10.0 build 5640
+  Created: 11-11-2021 18:27 UTC (10:27 PDT)
+  System: Linux 5.15.0-53-generic
+  Runtime: Groovy 3.0.9 on OpenJDK 64-Bit Server VM 1.8.0_152-release-1056-b12
+  Encoding: UTF-8 (UTF-8)
+  Process: 4174469@mingwangucr [169.235.26.140]
+  CPUs: 16 - Mem: 61.8 GB (1.3 GB) - Swap: 735.3 MB (0)
+Jul-23 13:27:41.668 [main] DEBUG nextflow.Session - Work-dir: /home/user/SourceCode/MassQueryLanguage/workflow/work [ext2/ext3]
+Jul-23 13:27:41.749 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Jul-23 13:27:41.798 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Jul-23 13:27:41.891 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Jul-23 13:27:42.106 [main] DEBUG nextflow.Session - Session start invoked
+Jul-23 13:27:43.936 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jul-23 13:27:44.230 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Jul-23 13:27:44.430 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 13:27:44.432 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 13:27:44.440 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Jul-23 13:27:44.449 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=16; memory=61.8 GB; capacity=16; pollInterval=100ms; dumpInterval=5m
+Jul-23 13:27:44.725 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 13:27:44.725 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 13:27:44.858 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 13:27:44.859 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 13:27:44.889 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 13:27:44.890 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 13:27:44.904 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: summarizeResults, formatResultsMergeRounds, queryData2, queryData, formatExtractedSpectraRounds
+Jul-23 13:27:44.905 [main] DEBUG nextflow.Session - Ignite dataflow network (5)
+Jul-23 13:27:44.936 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > queryData
+Jul-23 13:27:44.940 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > formatResultsMergeRounds
+Jul-23 13:27:44.941 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > formatExtractedSpectraRounds
+Jul-23 13:27:44.944 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > summarizeResults
+Jul-23 13:27:44.945 [main] DEBUG nextflow.script.ScriptRunner - > Await termination 
+Jul-23 13:27:44.965 [main] DEBUG nextflow.Session - Session await
+Jul-23 13:27:44.964 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **; options: [:]
+Jul-23 13:27:46.194 [Actor Thread 26] DEBUG nextflow.conda.CondaCache - mamba found local env for environment=/home/user/SourceCode/MassQueryLanguage/workflow/bin/conda_env.yml; path=/home/user/SourceCode/MassQueryLanguage/workflow/work/conda/conda_env-a7c7dacd5204cfe814b4763f1b0accf4
+Jul-23 13:27:46.405 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.427 [Task submitter] INFO  nextflow.Session - [d2/0d3fcb] Submitted process > queryData (1)
+Jul-23 13:27:46.484 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.485 [Task submitter] INFO  nextflow.Session - [47/01554a] Submitted process > queryData (2)
+Jul-23 13:27:46.500 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.501 [Task submitter] INFO  nextflow.Session - [a2/7a5daf] Submitted process > queryData (16)
+Jul-23 13:27:46.519 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.520 [Task submitter] INFO  nextflow.Session - [ab/600324] Submitted process > queryData (5)
+Jul-23 13:27:46.529 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.530 [Task submitter] INFO  nextflow.Session - [a1/46b6d3] Submitted process > queryData (3)
+Jul-23 13:27:46.538 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.539 [Task submitter] INFO  nextflow.Session - [fb/9d92a3] Submitted process > queryData (11)
+Jul-23 13:27:46.551 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.568 [Task submitter] INFO  nextflow.Session - [72/6aa7b7] Submitted process > queryData (13)
+Jul-23 13:27:46.601 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.607 [Task submitter] INFO  nextflow.Session - [0e/f15e60] Submitted process > queryData (14)
+Jul-23 13:27:46.625 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.626 [Task submitter] INFO  nextflow.Session - [28/27f283] Submitted process > queryData (15)
+Jul-23 13:27:46.635 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.643 [Task submitter] INFO  nextflow.Session - [d4/37988d] Submitted process > queryData (12)
+Jul-23 13:27:46.653 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.668 [Task submitter] INFO  nextflow.Session - [07/fd08d0] Submitted process > queryData (10)
+Jul-23 13:27:46.678 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.688 [Task submitter] INFO  nextflow.Session - [a0/8f6375] Submitted process > queryData (6)
+Jul-23 13:27:46.709 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.718 [Task submitter] INFO  nextflow.Session - [0b/d64029] Submitted process > queryData (9)
+Jul-23 13:27:46.733 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.744 [Task submitter] INFO  nextflow.Session - [8e/d1378e] Submitted process > queryData (4)
+Jul-23 13:27:46.762 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.773 [Task submitter] INFO  nextflow.Session - [0f/438a44] Submitted process > queryData (7)
+Jul-23 13:27:46.785 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:46.796 [Task submitter] INFO  nextflow.Session - [44/7f909b] Submitted process > queryData (8)
+Jul-23 13:27:48.014 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: queryData (5); status: COMPLETED; exit: 127; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/ab/60032476e2a5aea1547d8d98c48e56]
+Jul-23 13:27:48.018 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:27:48.019 [Task submitter] INFO  nextflow.Session - [ec/11faf0] Submitted process > queryData (25)
+Jul-23 13:27:48.113 [Task monitor] ERROR nextflow.processor.TaskProcessor - Error executing process > 'queryData (5)'
+
+Caused by:
+  Process `queryData (5)` terminated with an error exit status (127)
+
+Command executed:
+
+  python /home/user/SourceCode/MassQueryLanguage/workflow/bin/msql_cmd.py         "featurelist_pos.mgf"         "QUERY scaninfo(MS2DATA)"         --output_file "_home_user_SourceCode_MassQueryLanguage_workflow_data_featurelist_pos.mgf_output.tsv"         --parallel_query NO         --cache NO         --original_path "/home/user/SourceCode/MassQueryLanguage/workflow/data/featurelist_pos.mgf"         --extract_json _home_user_SourceCode_MassQueryLanguage_workflow_data_featurelist_pos.mgf_extract.json         --maxfilesize 100
+
+Command exit status:
+  127
+
+Command output:
+  (empty)
+
+Command error:
+  .command.sh: line 2: python: command not found
+
+Work dir:
+  /home/user/SourceCode/MassQueryLanguage/workflow/work/ab/60032476e2a5aea1547d8d98c48e56
+
+Tip: you can replicate the issue by changing to the process work dir and entering the command `bash .command.run`
+Jul-23 13:27:48.142 [Task monitor] DEBUG nextflow.Session - Session aborted -- Cause: Process `queryData (5)` terminated with an error exit status (127)
+Jul-23 13:27:48.178 [Task monitor] DEBUG nextflow.Session - The following nodes are still active:
+[process] formatResultsMergeRounds
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: results/*
+  port 1: (cntrl) -     ; channel: $
+
+[process] formatExtractedSpectraRounds
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: json/*
+  port 1: (cntrl) -     ; channel: $
+
+[process] summarizeResults
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: merged_results
+  port 1: (cntrl) -     ; channel: $
+
+Jul-23 13:27:48.182 [main] DEBUG nextflow.Session - Session await > all process finished
+Jul-23 13:27:48.183 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Jul-23 13:27:48.208 [main] WARN  n.processor.TaskPollingMonitor - Killing pending tasks (16)
+Jul-23 13:27:48.221 [Actor Thread 14] DEBUG nextflow.file.SortFileCollector - FileCollector temp dir not removed: null
+Jul-23 13:27:48.253 [Actor Thread 8] DEBUG nextflow.file.SortFileCollector - FileCollector temp dir not removed: null
+Jul-23 13:27:48.260 [main] DEBUG nextflow.executor.LocalTaskHandler - Unable to kill queryData (1) -- command: kill -TERM 4174860; exit: 1 
+ bash: line 1: kill: (4174860) - No such process
+
+Jul-23 13:27:48.274 [main] DEBUG nextflow.executor.LocalTaskHandler - Unable to kill queryData (2) -- command: kill -TERM 4174866; exit: 1 
+ bash: line 1: kill: (4174866) - No such process
+
+Jul-23 13:27:48.313 [main] DEBUG nextflow.executor.LocalTaskHandler - Unable to kill queryData (11) -- command: kill -TERM 4174894; exit: 1 
+ bash: line 1: kill: (4174894) - No such process
+
+Jul-23 13:27:48.358 [main] DEBUG nextflow.executor.LocalTaskHandler - Unable to kill queryData (15) -- command: kill -TERM 4174913; exit: 1 
+ bash: line 1: kill: (4174913) - No such process
+
+Jul-23 13:27:48.401 [main] DEBUG nextflow.executor.LocalTaskHandler - Unable to kill queryData (8) -- command: kill -TERM 4174960; exit: 1 
+ bash: line 1: kill: (4174960) - No such process
+
+Jul-23 13:27:48.422 [main] DEBUG nextflow.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=0; failedCount=1; ignoredCount=0; cachedCount=0; pendingCount=35; submittedCount=1; runningCount=-1; retriesCount=0; abortedCount=16; succeedDuration=0ms; failedDuration=1.4s; cachedDuration=0ms;loadCpus=-1; loadMemory=0; peakRunning=16; peakCpus=16; peakMemory=0; ]
+Jul-23 13:27:48.544 [main] DEBUG nextflow.CacheDB - Closing CacheDB done
+Jul-23 13:27:48.569 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

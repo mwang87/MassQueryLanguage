@@ -1,0 +1,22 @@
+2023-06-29 17:27:14	-	clever_poincare	-	970777586803ac5cf3829da36228416b	28a5681c-8724-46e0-aaea-d4d46ace730d	nextflow run workflow.nf -c test.config
+2023-06-29 17:28:07	-	fervent_roentgen	-	39a1d0251ee21699f787b323bc30ec78	0ecca33d-d6ef-4f54-b93d-3d4f24ea6ac8	nextflow run workflow.nf -c test.config
+2023-06-29 17:28:27	-	scruffy_moriondo	-	ad24abe470e05583572d9283de7926ce	dff43999-fd46-4b77-aa98-7b10c8e8cce2	nextflow run workflow.nf -c test.config
+2023-06-29 17:28:58	-	distracted_faraday	-	c1c1ec0d1157f96997e994439f10cc9f	601e2974-9388-4979-8d9e-e38deb8da9cb	nextflow run workflow.nf -c test.config
+2023-06-29 17:29:29	-	fervent_carlsson	-	ba4e4cdee6217b25063bdc022644bef5	e922605c-0877-4299-b626-d45dedbef936	nextflow run workflow.nf -c test.config
+2023-06-29 17:29:45	4m 7s	compassionate_bartik	ERR	7576a5a9f2d43c5a3f9487b46ddca565	86505b83-a56d-4179-8498-3987c26f2c05	nextflow run workflow.nf -c test.config
+2023-06-29 17:33:58	4m 6s	angry_torvalds	OK	bc9cb50db6b442959f1d11b63085e64e	f9eeffa0-390d-4389-9a8b-5921ed3db901	nextflow run workflow.nf -c test.config --parallel_files YES
+2023-06-29 17:38:12	7.3s	mighty_galileo	ERR	bc9cb50db6b442959f1d11b63085e64e	dde8c0e1-778e-4e7c-a123-a26d751526b7	nextflow run workflow.nf -c test.config --parallel_files YES
+2023-06-29 17:38:26	-	peaceful_hilbert	-	a4021aecb5535bf5ac80f668dcfbf0bc	b75a5f59-d24c-4b83-a8a3-b8af416d00b8	nextflow run workflow.nf -c test.config --parallel_files YES
+2023-06-29 17:38:42	-	stoic_brown	-	a4021aecb5535bf5ac80f668dcfbf0bc	fae3991d-c833-4ecc-921e-2ab73bb95746	nextflow run workflow.nf -c test.config --parallel_files YES --resume
+2023-06-29 17:39:15	4m 44s	admiring_kirch	OK	bed422ff9b8c096939f08df30c250f05	0bc4b07e-570c-44d6-af81-6c8162ead2fd	nextflow run workflow.nf -c test.config --parallel_files YES --resume
+2023-06-29 17:44:17	4m 48s	ridiculous_payne	OK	0cda8d56eb164dcd180c04688e673f35	23505b1e-0ef3-41a2-9d58-161eab2ade49	nextflow run workflow.nf -c test.config --parallel_files YES --resume
+2023-07-23 10:04:33	33.9s	mighty_solvay	ERR	bdcb50bad8e1371f8a5e118592eb7865	636d7f3e-d7c4-47ab-bf3f-b264282d416c	nextflow run workflow.nf -c test.config --parallel_files YES --resume
+2023-07-23 11:33:28	13s	exotic_pauling	ERR	b399ae278185a91451e63827f80a0818	d24bf493-6303-4706-973e-b60c310a82ec	nextflow run workflow.nf -c test.config --parallel_files YES --resume
+2023-07-23 12:00:21	7m 59s	big_pauling	ERR	b399ae278185a91451e63827f80a0818	82349cae-2a67-4e19-9235-3d1ac0695aa8	nextflow run workflow.nf -c test.config --parallel_files YES --resume
+2023-07-23 12:08:28	13.5s	desperate_elion	OK	b399ae278185a91451e63827f80a0818	514e5b26-3728-4d42-9293-85ab6c38e470	nextflow run workflow.nf -c test.config --parallel_files YES --resume --maxfilesize 100
+2023-07-23 13:22:39	8.5s	mighty_goodall	ERR	cf0e0c8002bca83be33254242463e2b6	b98d1746-9c1a-4e3a-a4a6-4e6317e8052b	nextflow run workflow.nf -c test.config --parallel_files YES --resume --maxfilesize 100
+2023-07-23 13:27:41	7.6s	compassionate_lumiere	ERR	cf0e0c8002bca83be33254242463e2b6	14f27b53-5a2d-4720-bfa6-d01541f3d9e8	nextflow run workflow.nf -c test.config --parallel_files YES --resume --maxfilesize 100
+2023-07-23 13:29:06	2m 35s	cranky_noyce	ERR	cf0e0c8002bca83be33254242463e2b6	edba329c-a7dc-4757-93a8-40740444e360	nextflow run workflow.nf -c test.config --parallel_files YES --resume --maxfilesize 100
+2023-07-23 13:34:55	3.9s	condescending_plateau	OK	593bbe495d0ab259db5a5df48fa2a798	0144b051-9fc7-4715-9899-5093dfaf80f6	nextflow run workflow.nf -c test.config --parallel_files YES --resume --maxfilesize 100
+2023-07-23 13:35:21	4m 35s	chaotic_minsky	ERR	e8137b4fbeab6fd97849066a7fa34e68	aa7fd51f-b34b-4692-a396-d56f916e7fff	nextflow run workflow.nf -c test.config --parallel_files YES --resume --maxfilesize 100
+2023-07-23 13:41:37	5m 31s	special_pasteur	OK	85aa13ec71093fff899b816e843e75bb	ddd73f2b-3938-4c1c-8d16-6304d0196e78	nextflow run workflow.nf -c test.config --parallel_files YES --resume --maxfilesize 100

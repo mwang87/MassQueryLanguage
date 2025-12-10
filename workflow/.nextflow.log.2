@@ -1,0 +1,62 @@
+Jul-23 13:34:52.008 [main] DEBUG nextflow.cli.Launcher - $> nextflow run workflow.nf -c test.config --parallel_files YES --resume --maxfilesize 100
+Jul-23 13:34:52.425 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.10.0
+Jul-23 13:34:52.488 [main] INFO  nextflow.cli.CmdRun - Launching `workflow.nf` [condescending_plateau] - revision: 593bbe495d
+Jul-23 13:34:52.528 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /home/user/SourceCode/MassQueryLanguage/workflow/test.config
+Jul-23 13:34:52.529 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/user/SourceCode/MassQueryLanguage/workflow/test.config
+Jul-23 13:34:52.593 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Jul-23 13:34:55.025 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/home/user/.nextflow/plugins
+Jul-23 13:34:55.028 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Jul-23 13:34:55.051 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jul-23 13:34:55.054 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jul-23 13:34:55.063 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Jul-23 13:34:55.085 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jul-23 13:34:55.228 [main] DEBUG nextflow.Session - Session uuid: 0144b051-9fc7-4715-9899-5093dfaf80f6
+Jul-23 13:34:55.229 [main] DEBUG nextflow.Session - Run name: condescending_plateau
+Jul-23 13:34:55.230 [main] DEBUG nextflow.Session - Executor pool size: 16
+Jul-23 13:34:55.306 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 21.10.0 build 5640
+  Created: 11-11-2021 18:27 UTC (10:27 PDT)
+  System: Linux 5.15.0-53-generic
+  Runtime: Groovy 3.0.9 on OpenJDK 64-Bit Server VM 1.8.0_152-release-1056-b12
+  Encoding: UTF-8 (UTF-8)
+  Process: 4179540@mingwangucr [169.235.26.140]
+  CPUs: 16 - Mem: 61.8 GB (1.3 GB) - Swap: 735.3 MB (0)
+Jul-23 13:34:55.366 [main] DEBUG nextflow.Session - Work-dir: /home/user/SourceCode/MassQueryLanguage/workflow/work [ext2/ext3]
+Jul-23 13:34:55.423 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Jul-23 13:34:55.459 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Jul-23 13:34:55.561 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Jul-23 13:34:55.772 [main] DEBUG nextflow.Session - Session start invoked
+Jul-23 13:34:57.518 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jul-23 13:34:57.759 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Jul-23 13:34:58.067 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 13:34:58.068 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 13:34:58.081 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Jul-23 13:34:58.093 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=16; memory=61.8 GB; capacity=16; pollInterval=100ms; dumpInterval=5m
+Jul-23 13:34:58.340 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 13:34:58.340 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 13:34:58.418 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 13:34:58.418 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 13:34:58.437 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 13:34:58.437 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 13:34:58.451 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: summarizeResults, formatResultsMergeRounds, queryData2, queryData, formatExtractedSpectraRounds
+Jul-23 13:34:58.458 [main] DEBUG nextflow.extension.CH - Bridging dataflow queue=DataflowQueue(queue=[])
+Jul-23 13:34:58.464 [main] DEBUG nextflow.Session - Ignite dataflow network (11)
+Jul-23 13:34:58.505 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > queryData
+Jul-23 13:34:58.507 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > formatResultsMergeRounds
+Jul-23 13:34:58.511 [PathVisitor-3] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **/*.mzXML; options: [:]
+Jul-23 13:34:58.512 [PathVisitor-4] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **/*.mzxml; options: [:]
+Jul-23 13:34:58.511 [PathVisitor-6] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **/*.mgf; options: [:]
+Jul-23 13:34:58.511 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **/*.mzML; options: [:]
+Jul-23 13:34:58.511 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > formatExtractedSpectraRounds
+Jul-23 13:34:58.511 [PathVisitor-2] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **/*.mzml; options: [:]
+Jul-23 13:34:58.529 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > summarizeResults
+Jul-23 13:34:58.530 [main] DEBUG nextflow.script.ScriptRunner - > Await termination 
+Jul-23 13:34:58.511 [PathVisitor-5] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **/*.MGF; options: [:]
+Jul-23 13:34:58.534 [main] DEBUG nextflow.Session - Session await
+Jul-23 13:34:58.667 [Actor Thread 14] DEBUG nextflow.file.SortFileCollector - FileCollector temp dir not removed: null
+Jul-23 13:34:58.670 [Actor Thread 17] DEBUG nextflow.file.SortFileCollector - FileCollector temp dir not removed: null
+Jul-23 13:34:58.670 [main] DEBUG nextflow.Session - Session await > all process finished
+Jul-23 13:34:58.735 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Jul-23 13:34:58.761 [main] DEBUG nextflow.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=0; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=0ms; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=0; peakCpus=0; peakMemory=0; ]
+Jul-23 13:34:58.882 [main] DEBUG nextflow.CacheDB - Closing CacheDB done
+Jul-23 13:34:58.930 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

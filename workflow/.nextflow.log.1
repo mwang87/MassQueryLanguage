@@ -1,0 +1,177 @@
+Jul-23 13:35:17.824 [main] DEBUG nextflow.cli.Launcher - $> nextflow run workflow.nf -c test.config --parallel_files YES --resume --maxfilesize 100
+Jul-23 13:35:18.279 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.10.0
+Jul-23 13:35:18.386 [main] INFO  nextflow.cli.CmdRun - Launching `workflow.nf` [chaotic_minsky] - revision: e8137b4fbe
+Jul-23 13:35:18.455 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /home/user/SourceCode/MassQueryLanguage/workflow/test.config
+Jul-23 13:35:18.456 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/user/SourceCode/MassQueryLanguage/workflow/test.config
+Jul-23 13:35:18.540 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Jul-23 13:35:21.130 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/home/user/.nextflow/plugins
+Jul-23 13:35:21.135 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Jul-23 13:35:21.167 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jul-23 13:35:21.170 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jul-23 13:35:21.179 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Jul-23 13:35:21.203 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jul-23 13:35:21.362 [main] DEBUG nextflow.Session - Session uuid: aa7fd51f-b34b-4692-a396-d56f916e7fff
+Jul-23 13:35:21.363 [main] DEBUG nextflow.Session - Run name: chaotic_minsky
+Jul-23 13:35:21.364 [main] DEBUG nextflow.Session - Executor pool size: 16
+Jul-23 13:35:21.472 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 21.10.0 build 5640
+  Created: 11-11-2021 18:27 UTC (10:27 PDT)
+  System: Linux 5.15.0-53-generic
+  Runtime: Groovy 3.0.9 on OpenJDK 64-Bit Server VM 1.8.0_152-release-1056-b12
+  Encoding: UTF-8 (UTF-8)
+  Process: 4179963@mingwangucr [169.235.26.140]
+  CPUs: 16 - Mem: 61.8 GB (1.3 GB) - Swap: 735.3 MB (0)
+Jul-23 13:35:21.541 [main] DEBUG nextflow.Session - Work-dir: /home/user/SourceCode/MassQueryLanguage/workflow/work [ext2/ext3]
+Jul-23 13:35:21.582 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Jul-23 13:35:21.615 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Jul-23 13:35:21.742 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Jul-23 13:35:21.946 [main] DEBUG nextflow.Session - Session start invoked
+Jul-23 13:35:23.841 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jul-23 13:35:24.173 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Jul-23 13:35:24.414 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 13:35:24.415 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 13:35:24.426 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Jul-23 13:35:24.435 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=16; memory=61.8 GB; capacity=16; pollInterval=100ms; dumpInterval=5m
+Jul-23 13:35:24.581 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 13:35:24.586 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 13:35:24.669 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 13:35:24.669 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 13:35:24.692 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-23 13:35:24.693 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-23 13:35:24.702 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: summarizeResults, formatResultsMergeRounds, queryData2, queryData, formatExtractedSpectraRounds
+Jul-23 13:35:24.704 [main] DEBUG nextflow.extension.CH - Bridging dataflow queue=DataflowQueue(queue=[])
+Jul-23 13:35:24.712 [main] DEBUG nextflow.Session - Ignite dataflow network (11)
+Jul-23 13:35:24.752 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > queryData
+Jul-23 13:35:24.754 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > formatResultsMergeRounds
+Jul-23 13:35:24.758 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > formatExtractedSpectraRounds
+Jul-23 13:35:24.761 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > summarizeResults
+Jul-23 13:35:24.762 [main] DEBUG nextflow.script.ScriptRunner - > Await termination 
+Jul-23 13:35:24.763 [main] DEBUG nextflow.Session - Session await
+Jul-23 13:35:24.772 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **.mzML; options: [:]
+Jul-23 13:35:24.772 [PathVisitor-5] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **.MGF; options: [:]
+Jul-23 13:35:24.772 [PathVisitor-2] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **.mzml; options: [:]
+Jul-23 13:35:24.772 [PathVisitor-3] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **.mzXML; options: [:]
+Jul-23 13:35:24.776 [PathVisitor-6] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **.mgf; options: [:]
+Jul-23 13:35:24.787 [PathVisitor-4] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: data/; pattern: **.mzxml; options: [:]
+Jul-23 13:35:25.977 [Actor Thread 22] DEBUG nextflow.conda.CondaCache - mamba found local env for environment=/home/user/SourceCode/MassQueryLanguage/workflow/bin/conda_env.yml; path=/home/user/SourceCode/MassQueryLanguage/workflow/work/conda/conda_env-a7c7dacd5204cfe814b4763f1b0accf4
+Jul-23 13:35:26.262 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.271 [Task submitter] INFO  nextflow.Session - [69/7e8c1d] Submitted process > queryData (9)
+Jul-23 13:35:26.288 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.290 [Task submitter] INFO  nextflow.Session - [4f/b7f525] Submitted process > queryData (2)
+Jul-23 13:35:26.308 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.309 [Task submitter] INFO  nextflow.Session - [30/c97ad3] Submitted process > queryData (13)
+Jul-23 13:35:26.334 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.336 [Task submitter] INFO  nextflow.Session - [c0/f2db03] Submitted process > queryData (10)
+Jul-23 13:35:26.350 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.353 [Task submitter] INFO  nextflow.Session - [b7/173823] Submitted process > queryData (1)
+Jul-23 13:35:26.373 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.375 [Task submitter] INFO  nextflow.Session - [32/8eb738] Submitted process > queryData (15)
+Jul-23 13:35:26.386 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.387 [Task submitter] INFO  nextflow.Session - [f9/c8b682] Submitted process > queryData (4)
+Jul-23 13:35:26.405 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.407 [Task submitter] INFO  nextflow.Session - [02/10e68d] Submitted process > queryData (12)
+Jul-23 13:35:26.437 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.439 [Task submitter] INFO  nextflow.Session - [b2/38c5d5] Submitted process > queryData (16)
+Jul-23 13:35:26.450 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.464 [Task submitter] INFO  nextflow.Session - [b6/c35fb1] Submitted process > queryData (8)
+Jul-23 13:35:26.492 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.510 [Task submitter] INFO  nextflow.Session - [32/5a2330] Submitted process > queryData (3)
+Jul-23 13:35:26.518 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.522 [Task submitter] INFO  nextflow.Session - [0e/7a7fe4] Submitted process > queryData (5)
+Jul-23 13:35:26.548 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.552 [Task submitter] INFO  nextflow.Session - [a3/17cc4b] Submitted process > queryData (14)
+Jul-23 13:35:26.565 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.571 [Task submitter] INFO  nextflow.Session - [68/c68a74] Submitted process > queryData (11)
+Jul-23 13:35:26.583 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.604 [Task submitter] INFO  nextflow.Session - [36/0bf82d] Submitted process > queryData (6)
+Jul-23 13:35:26.625 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:26.637 [Task submitter] INFO  nextflow.Session - [2b/feb659] Submitted process > queryData (7)
+Jul-23 13:35:33.396 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: queryData (4); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/f9/c8b682a578f298d82d1a6e578a097b]
+Jul-23 13:35:33.400 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:33.400 [Task submitter] INFO  nextflow.Session - [6f/e576ef] Submitted process > queryData (17)
+Jul-23 13:35:33.791 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 13; name: queryData (13); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/30/c97ad3c8c02accb916685f87138ca9]
+Jul-23 13:35:33.796 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:33.796 [Task submitter] INFO  nextflow.Session - [d9/30e883] Submitted process > queryData (18)
+Jul-23 13:35:33.978 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process queryData > Skipping output binding because one or more optional files are missing: fileoutparam<0>
+Jul-23 13:35:33.979 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process queryData > Skipping output binding because one or more optional files are missing: fileoutparam<1>
+Jul-23 13:35:33.996 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 11; name: queryData (11); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/68/c68a7458a89e49f270adff7812fcef]
+Jul-23 13:35:34.005 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:34.005 [Task submitter] INFO  nextflow.Session - [21/aefcf9] Submitted process > queryData (19)
+Jul-23 13:35:34.017 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process queryData > Skipping output binding because one or more optional files are missing: fileoutparam<0>
+Jul-23 13:35:34.017 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process queryData > Skipping output binding because one or more optional files are missing: fileoutparam<1>
+Jul-23 13:35:34.072 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 9; name: queryData (9); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/69/7e8c1d98453f699335920204279117]
+Jul-23 13:35:34.075 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:34.075 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process queryData > Skipping output binding because one or more optional files are missing: fileoutparam<0>
+Jul-23 13:35:34.075 [Task submitter] INFO  nextflow.Session - [16/f02c06] Submitted process > queryData (21)
+Jul-23 13:35:34.075 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process queryData > Skipping output binding because one or more optional files are missing: fileoutparam<1>
+Jul-23 13:35:34.492 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 14; name: queryData (14); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/a3/17cc4b3a576743c9f072ce2ea495a3]
+Jul-23 13:35:34.495 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:35:34.495 [Task submitter] INFO  nextflow.Session - [f3/955a86] Submitted process > queryData (20)
+Jul-23 13:35:36.763 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 4; name: queryData (5); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/0e/7a7fe459f538855ab7a1c820d4be03]
+Jul-23 13:35:36.766 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process queryData > Skipping output binding because one or more optional files are missing: fileoutparam<0>
+Jul-23 13:35:36.767 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process queryData > Skipping output binding because one or more optional files are missing: fileoutparam<1>
+Jul-23 13:35:40.337 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 18; name: queryData (18); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/d9/30e883cead9ec444d2bec2e4bc86ab]
+Jul-23 13:35:40.876 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: queryData (2); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/4f/b7f525cc73b107a39ebfc0c5949414]
+Jul-23 13:35:47.331 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 5; name: queryData (1); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/b7/173823f1b80370aaf19908074cb898]
+Jul-23 13:35:47.364 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 17; name: queryData (17); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/6f/e576efab6b9fd2db070230b6633f28]
+Jul-23 13:35:47.366 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process queryData > Skipping output binding because one or more optional files are missing: fileoutparam<0>
+Jul-23 13:35:47.367 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process queryData > Skipping output binding because one or more optional files are missing: fileoutparam<1>
+Jul-23 13:35:52.494 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 16; name: queryData (16); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/b2/38c5d54727124a454b5c4b1ccdaeb1]
+Jul-23 13:35:53.902 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 15; name: queryData (15); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/32/8eb7386c3176604fa2f0495cb09dbc]
+Jul-23 13:35:54.922 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 10; name: queryData (10); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/c0/f2db03161a7d06fc48fc34b6406d97]
+Jul-23 13:35:55.226 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 20; name: queryData (20); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/f3/955a86b211a924115e98daefb41bd4]
+Jul-23 13:35:57.248 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 8; name: queryData (8); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/b6/c35fb14941cad3caa2c241216bb55c]
+Jul-23 13:35:57.371 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 6; name: queryData (6); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/36/0bf82d7244af116b992db34367dd3f]
+Jul-23 13:35:59.241 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 19; name: queryData (19); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/21/aefcf9e9db5bfa4f348d3275dad591]
+Jul-23 13:35:59.245 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process queryData > Skipping output binding because one or more optional files are missing: fileoutparam<0>
+Jul-23 13:35:59.245 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process queryData > Skipping output binding because one or more optional files are missing: fileoutparam<1>
+Jul-23 13:35:59.390 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: queryData (3); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/32/5a2330367c6bf273f9f0c30b9a4abb]
+Jul-23 13:36:04.099 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 12; name: queryData (12); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/02/10e68d11c6dfd4d844a5cf34713090]
+Jul-23 13:38:08.765 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 21; name: queryData (21); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/16/f02c067565aaa4fecf3a5115975bc8]
+Jul-23 13:39:54.527 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 7; name: queryData (7); status: COMPLETED; exit: 0; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/2b/feb659ab7026151012f7ce32305097]
+Jul-23 13:39:54.533 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process queryData > Skipping output binding because one or more optional files are missing: fileoutparam<1>
+Jul-23 13:39:54.640 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:39:54.641 [Task submitter] INFO  nextflow.Session - [bb/ab08cd] Submitted process > formatResultsMergeRounds (1)
+Jul-23 13:39:54.658 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:39:54.659 [Task submitter] INFO  nextflow.Session - [cd/1e523a] Submitted process > formatExtractedSpectraRounds (1)
+Jul-23 13:39:54.999 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 23; name: formatResultsMergeRounds (1); status: COMPLETED; exit: 1; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/bb/ab08cd906b5d0ee55311280dc32df3]
+Jul-23 13:39:55.029 [Task monitor] INFO  nextflow.processor.TaskProcessor - [bb/ab08cd] NOTE: Process `formatResultsMergeRounds (1)` terminated with an error exit status (1) -- Execution is retried (1)
+Jul-23 13:39:55.049 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 22; name: formatExtractedSpectraRounds (1); status: COMPLETED; exit: 1; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/cd/1e523af44233dfa11266f6aa66cea7]
+Jul-23 13:39:55.052 [Task monitor] INFO  nextflow.processor.TaskProcessor - [cd/1e523a] NOTE: Process `formatExtractedSpectraRounds (1)` terminated with an error exit status (1) -- Error is ignored
+Jul-23 13:39:55.056 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-23 13:39:55.057 [Task submitter] INFO  nextflow.Session - [ce/05e992] Re-submitted process > formatResultsMergeRounds (1)
+Jul-23 13:39:55.065 [Actor Thread 13] DEBUG nextflow.file.SortFileCollector - FileCollector temp dir not removed: null
+Jul-23 13:39:55.326 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 24; name: formatResultsMergeRounds (1); status: COMPLETED; exit: 1; error: -; workDir: /home/user/SourceCode/MassQueryLanguage/workflow/work/ce/05e992817fb6cd196096e4926aea05]
+Jul-23 13:39:55.376 [Task monitor] ERROR nextflow.processor.TaskProcessor - Error executing process > 'formatResultsMergeRounds (1)'
+
+Caused by:
+  Process `formatResultsMergeRounds (1)` terminated with an error exit status (1)
+
+Command executed:
+
+  mkdir merged_tsv
+  python /home/user/SourceCode/MassQueryLanguage/workflow/bin/merged_results.py     results     --output_tsv_prefix merged_tsv/merged_tsv
+
+Command exit status:
+  1
+
+Command output:
+  (empty)
+
+Command error:
+  Traceback (most recent call last):
+    File "/home/user/SourceCode/MassQueryLanguage/workflow/bin/merged_results.py", line 6, in <module>
+      import pandas as pd
+  ModuleNotFoundError: No module named 'pandas'
+
+Work dir:
+  /home/user/SourceCode/MassQueryLanguage/workflow/work/ce/05e992817fb6cd196096e4926aea05
+
+Tip: you can try to figure out what's wrong by changing to the process work dir and showing the script file named `.command.sh`
+Jul-23 13:39:55.384 [Actor Thread 13] DEBUG nextflow.file.SortFileCollector - FileCollector temp dir not removed: null
+Jul-23 13:39:55.386 [main] DEBUG nextflow.Session - Session await > all process finished
+Jul-23 13:39:55.387 [Task monitor] DEBUG nextflow.Session - Session aborted -- Cause: Process `formatResultsMergeRounds (1)` terminated with an error exit status (1)
+Jul-23 13:39:55.425 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Jul-23 13:39:55.470 [main] DEBUG nextflow.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=21; failedCount=3; ignoredCount=1; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=1; abortedCount=0; succeedDuration=13m 5s; failedDuration=758ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=16; peakCpus=16; peakMemory=0; ]
+Jul-23 13:39:55.612 [main] DEBUG nextflow.CacheDB - Closing CacheDB done
+Jul-23 13:39:55.633 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

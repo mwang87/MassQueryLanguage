@@ -1,1 +1,0 @@
-wget --output-document=gnps_qexactive.tsv "https://gnps-datasetcache.ucsd.edu/datasette/database/filename.csv?_dl=on&_stream=on&_sort=filepath&instrument_model__exact=Q+Exactive&collection__exact=ccms_peak&instrument_vendor__exact=Thermo+Fisher+Scientific&sample_type__exact=GNPS&_size=max"
