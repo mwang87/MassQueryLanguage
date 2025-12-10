@@ -92,8 +92,7 @@ def main():
     #test_waters_load()
     #test_cache_feather()
     #test_nocache()
-    #test_cache_filename()
-    test_mgf_load()
+    test_cache_filename()
     
 
 if __name__ == "__main__":

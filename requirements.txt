@@ -1,9 +1,10 @@
+pymzml
 lark>=1.0
 pandas
 pyarrow
 tqdm
 py_expression_eval
-pymzml
+matchms
 pyteomics
 psims
 plotly
