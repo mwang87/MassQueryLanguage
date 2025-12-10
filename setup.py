@@ -34,7 +34,6 @@ setuptools.setup(
         "pyarrow",
         "tqdm",
         "py_expression_eval",
-        "matchms",
         "pyteomics",
         "psims",
         "plotly",

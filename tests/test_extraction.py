@@ -61,6 +61,9 @@ def test_extract_MGF():
     results_df["filename"] = "specs_ms.mgf"
 
     print("Extracting", len(results_df))
+    print(results_df)
+
+    # Extracting now
     merged_summary_df = msql_extract._extract_spectra(results_df, "tests/data/", output_json_filename="test.json")
     assert(len(merged_summary_df) == 5)
 
@@ -90,9 +93,9 @@ def test_waters_uv_extract():
 def main():
     #test_extract_mzML()
     #test_extract_mzXML()
-    #test_extract_MGF()
+    test_extract_MGF()
     #test_gnps_library_extract()
-    test_waters_uv_extract()
+    #test_waters_uv_extract()
 
 
 if __name__ == "__main__":
