@@ -723,6 +723,10 @@ def test_otherscan():
 
     assert(831 in list(results_df["scan"]))
 
+def debug_query():
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=341.28:TOLERANCEMZ=0.01:INTENSITYPERCENT=2 AND MS2PROD=323.27:TOLERANCEMZ=0.01:INTENSITYPERCENT=2 AND MS2PREC=X AND MS2PROD=X-358.2871:TOLERANCEMZ=0.01:INTENSITYPERCENT=2"
+
+    msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
 
 
 def main():
@@ -781,7 +785,7 @@ def main():
     #test_translator()
     #test_ms1_iron_X_changes_intensity()
     #test_nocache()
-    test_topdown()
+    #test_topdown()
     #test_defect()
     #test_or_against_iron()
     #test_quad_brominated()
@@ -802,6 +806,8 @@ def main():
     #test_otherscan_query()
     #test_otherscan_iron_query()
     #test_otherscan()
+    
+    debug_query()
 
 
 if __name__ == "__main__":

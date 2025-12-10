@@ -235,20 +235,36 @@ def _evalute_variable_query(parsed_dict, input_filename,
         # Here we will start with the smallest mass and then go up
         masses_considered_df_list = []
         if variable_properties["query_ms1"]:
-            masses_considered_df_list.append(variable_x_ms1_df["mz"])
+            try:
+                masses_considered_df_list.append(variable_x_ms1_df["mz"])
+            except:
+                pass
         if variable_properties["query_ms2"]:
-            masses_considered_df_list.append(ms2_df["mz"])
+            try:
+                masses_considered_df_list.append(ms2_df["mz"])
+            except:
+                pass
         if variable_properties["query_ms2prec"]:
-            masses_considered_df_list.append(ms2_df["precmz"])
+            try:
+                masses_considered_df_list.append(ms2_df["precmz"])
+            except:
+                pass
 
         masses_considered_df = pd.DataFrame()
-        masses_considered_df["mz"] = pd.concat(masses_considered_df_list)
-        # NOTE: This might cause bugs, we might consider every mass within every single scan, or at least we could make the tolernace as even smaller than half the max
-        masses_considered_df["mz_max"] = masses_considered_df["mz"].apply(lambda x: _determine_mz_max(x, variable_properties["ppm_tolerance"], variable_properties["da_tolerance"]))
-        
-        masses_considered_df = masses_considered_df.sort_values("mz")
-        masses_list = masses_considered_df.to_dict(orient="records")
 
+        if len(masses_considered_df_list) > 0:
+            masses_considered_df["mz"] = pd.concat(masses_considered_df_list)
+        
+            # NOTE: This might cause bugs, we might consider every mass within every single scan, or at least we could make the tolernace as even smaller than half the max
+            masses_considered_df["mz_max"] = masses_considered_df["mz"].apply(lambda x: _determine_mz_max(x, variable_properties["ppm_tolerance"], variable_properties["da_tolerance"]))
+            
+            masses_considered_df = masses_considered_df.sort_values("mz")
+
+            masses_list = masses_considered_df.to_dict(orient="records")
+        else:
+            masses_list = []
+
+        # Going through the masses
         running_max_mz = 0
         for masses_obj in tqdm(masses_list):
             mz_val = masses_obj["mz"]
@@ -349,8 +365,12 @@ def _evalute_variable_query(parsed_dict, input_filename,
             collated_list.append(collated_df)
 
     # Concatenating all the results
-    collated_df = pd.concat(collated_list)
-    collated_df = collated_df.reset_index(drop=True)
+    if len(collated_list) > 0:
+        collated_df = pd.concat(collated_list)
+        collated_df = collated_df.reset_index(drop=True)
+    else:
+        collated_df = pd.DataFrame()
+    
 
     # Lets try to remove duplicates
     try:
