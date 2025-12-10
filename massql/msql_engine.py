@@ -387,9 +387,6 @@ def _evalute_variable_query(parsed_dict, input_filename,
 def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2_input_df=None, 
                             cache=True, cache_dir=None, cache_file=None):
     # This function attempts to find the data that the query specifies in the conditions
-    
-    import json
-    print("parsed_dict", json.dumps(parsed_dict, indent=4))
 
     # Let's apply this to real data
     if ms1_input_df is None and ms2_input_df is None:
