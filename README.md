@@ -1,7 +1,8 @@
 # Mass Spec Query Language
 
 [![Unit Testing](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-unit.yml/badge.svg)](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-unit.yml)
-[![NF Workflow Testing](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-workflow.yml/badge.svg)](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-workflow.yml)
+[![Periodic Testing of Package](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-package.yml/badge.svg)](https://github.com/mwang87/MassQueryLanguage/actions/workflows/test-package.yml)
+
 
 The Mass Spec Query Language (MassQL) is a domain specific language meant to be a succinct way to
 express a query in a mass spectrometry centric fashion. It is inspired by SQL,
