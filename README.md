@@ -37,6 +37,8 @@ Checkout specifics for the language, examples, and design patterns at the docume
 
 ## Python API
 
+We currently test massql in python 3.9, but are figuring out other versions if they work or not. 
+
 To install massql
 
 ```
