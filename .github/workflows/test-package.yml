@@ -43,9 +43,24 @@ jobs:
 
       - name: Testing Parse
         run: |
-          # Use python -m pytest to ensure the correct environment's pytest is used
           python -m pytest -vv --cov=massql ./tests/test_parse.py
       
       - name: Run test_translate
         run: |
           pytest -vv --cov=massql ./tests/test_translate.py
+
+      - name: Run test_extraction
+        run: |
+          pytest -vv --cov=massql ./tests/test_extraction.py
+
+      - name: Run test_visualize
+        run: |
+          pytest -vv --cov=massql ./tests/test_visualize.py
+
+      - name: Run test_file_loading
+        run: |
+          pytest -vv --cov=massql ./tests/test_file_loading.py
+
+      - name: Run test_query
+        run: |
+          pytest -vv --cov=massql ./tests/test_query.py -n 4
