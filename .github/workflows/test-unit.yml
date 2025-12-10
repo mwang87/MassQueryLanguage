@@ -43,31 +43,16 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
 
-      - name: Testing
+      - name: Testing Parse
         run: |
           # Use python -m pytest to ensure the correct environment's pytest is used
           python -m pytest -vv --cov=massql ./tests/test_parse.py
-        
-  test-translate:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - uses: ts-graphviz/setup-graphviz@v1
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install flake8 pytest pytest-cov
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
+      
       - name: Run test_translate
         run: |
           pytest -vv --cov=massql ./tests/test_translate.py
-
-  test-extraction:
+        
+  test-data-processing:
     runs-on: ubuntu-latest
     
     steps:
@@ -76,81 +61,31 @@ jobs:
         with:
           python-version: 3.9
       - uses: ts-graphviz/setup-graphviz@v1
+
       - name: Download Test Data
         run: |
           cd tests && sh ./get_data.sh
           cd ..
+      
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install flake8 pytest pytest-cov
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
+      
       - name: Run test_extraction
         run: |
           pytest -vv --cov=massql ./tests/test_extraction.py
 
-  test-visualize:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - uses: ts-graphviz/setup-graphviz@v1
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install flake8 pytest pytest-cov
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
       - name: Run test_visualize
         run: |
           pytest -vv --cov=massql ./tests/test_visualize.py
 
-  test-fileloading:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - uses: ts-graphviz/setup-graphviz@v1
-      - name: Download Test Data
-        run: |
-          cd tests && sh ./get_data.sh
-          cd ..
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install flake8 pytest pytest-cov
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
       - name: Run test_file_loading
         run: |
           pytest -vv --cov=massql ./tests/test_file_loading.py
 
-  test-query:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - uses: ts-graphviz/setup-graphviz@v1
-      - name: Download Test Data
-        run: |
-          cd tests && sh ./get_data.sh
-          cd ..
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install flake8 pytest pytest-cov pytest-xdist
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
       - name: Run test_query
         run: |
           pytest -vv --cov=massql ./tests/test_query.py -n 4
