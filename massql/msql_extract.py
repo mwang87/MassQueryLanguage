@@ -6,8 +6,7 @@ import sys
 import pandas as pd
 import numpy as np
 import pymzml
-from pyteomics import mzxml
-from matchms.importing import load_from_mgf
+from pyteomics import mzxml, mgf
 from psims.mzml.writer import MzMLWriter
 
 def main():
@@ -139,31 +138,38 @@ def _extract_mzXML_scan(input_filename, spectrum_identifier_list):
 
 def _extract_mgf_scan(input_filename, spectrum_identifier_list):
     output_list = []
-    spectrum_identifier_set = set([str(spectrum_scan) for spectrum_scan in spectrum_identifier_list])
+    
+    # Convert identifiers to a set
+    spectrum_identifier_set = set(str(scan) for scan in spectrum_identifier_list)
 
-    file = load_from_mgf(input_filename)
+    # Open the MGF file using pyteomics
+    with mgf.read(input_filename) as reader:
+        for spectrum in reader:
+            # Pyteomics stores metadata in the 'params' dictionary
+            # We convert to string to ensure matching works against the set
+            scan_number = str(spectrum['params'].get('scans'))
 
-    spec = None
-    for spectrum in file:
-        scan_number = spectrum.metadata["scans"]
-        if str(scan_number) in spectrum_identifier_set:
-            spec = spectrum
+            if scan_number in spectrum_identifier_set:
+                # pyteomics returns numpy arrays for 'm/z array' and 'intensity array'
+                # We zip them to create the [[mz, int], [mz, int]] structure
+                mz_array = spectrum['m/z array']
+                int_array = spectrum['intensity array']
+                
+                # Create the list of lists
+                peaks_list = [[float(mz), float(i)] for mz, i in zip(mz_array, int_array)]
 
-            mz_list = list(spec.peaks.mz)
-            i_list = list(spec.peaks.intensities)
+                # Extract precursor m/z (pepmass is usually a tuple: (mz, intensity))
+                precursor_mz = float(spectrum['params']['pepmass'][0])
 
-            peaks_list = []
-            for i in range(len(mz_list)):
-                peaks_list.append([mz_list[i], i_list[i]])
+                # Construct the object
+                spectrum_obj = {
+                    "peaks": peaks_list,
+                    "mslevel": 2, 
+                    "scan": scan_number,
+                    "precursor_mz": precursor_mz
+                }
 
-            # Loading Data
-            spectrum_obj = {}
-            spectrum_obj["peaks"] = peaks_list
-            spectrum_obj["mslevel"] = 2
-            spectrum_obj["scan"] = scan_number
-            spectrum_obj["precursor_mz"] = float(spec.metadata["pepmass"][0])
-
-            output_list.append(spectrum_obj)
+                output_list.append(spectrum_obj)
 
     return output_list
 
@@ -226,6 +232,8 @@ def _extract_spectra(results_df, input_spectra_folder,
                 spectrum_obj_list = _extract_mgf_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
             elif input_spectra_filename[-5:] == ".json":
                 spectrum_obj_list = _extract_json_scan(input_spectra_filename, list(set(results_by_file_df["scan"])))
+
+            print(spectrum_obj_list)
 
             for spectrum_obj in spectrum_obj_list:                
                 # These are a new scan number in the file, not sure if we need this

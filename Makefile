@@ -34,3 +34,7 @@ deploy_clean:
 deploy_pypi:
 	python -m build --sdist --wheel .
 	twine upload dist/*
+
+specific_pytest:
+	#pytest -vv --cov=massql ./tests/test_extraction.py::test_extract_MGF
+	python ./tests/test_extraction.py

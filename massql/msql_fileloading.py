@@ -5,9 +5,8 @@ import pandas as pd
 import numpy as np
 
 from tqdm import tqdm
-from matchms.importing import load_from_mgf
 import pymzml
-from pyteomics import mzxml, mzml
+from pyteomics import mzxml, mzml, mgf
 
 import logging
 logger = logging.getLogger('msql_fileloading')
@@ -143,51 +142,83 @@ def load_data(input_filename, cache=None, cache_dir=None, cache_file=None):
     return ms1_df, ms2_df
 
 def _load_data_mgf(input_filename):
-    file = load_from_mgf(input_filename)
+    ms2_data_list = []
 
-    ms2mz_list = []
-    for i, spectrum in enumerate(file):
-        if len(spectrum.peaks.mz) == 0:
-            continue
+    # Use 'with' context manager for safe file handling
+    with mgf.read(input_filename) as reader:
+        for index, spectrum in enumerate(reader):
+            
+            # Pyteomics returns numpy arrays
+            mz_array = spectrum['m/z array']
+            int_array = spectrum['intensity array']
 
-        mz_list = list(spectrum.peaks.mz)
-        i_list = list(spectrum.peaks.intensities)
-        i_max = max(i_list)
-        i_sum = sum(i_list)
-
-        for i in range(len(mz_list)):
-            if i_list[i] == 0:
+            # Skip empty spectra
+            if len(mz_array) == 0:
                 continue
 
-            peak_dict = {}
-            peak_dict["i"] = i_list[i]
-            peak_dict["i_norm"] = i_list[i] / i_max
-            peak_dict["i_tic_norm"] = i_list[i] / i_sum
-            peak_dict["mz"] = mz_list[i]
+            # Calculate spectrum-wide statistics
+            i_max = int_array.max()
+            i_sum = int_array.sum()
 
-            # Handling malformed mgf files
+            # --- Metadata Extraction ---
+            params = spectrum.get('params', {})
+
+            # Scan: Use 'scans' or fallback to index
+            scan = params.get('scans', index + 1)
+
+            # RT: Parse 'rtinseconds', default 0, convert to minutes
             try:
-                peak_dict["scan"] = spectrum.metadata["scans"]
-            except:
-                peak_dict["scan"] = i + 1
+                rt = float(params.get('rtinseconds', 0)) / 60.0
+            except (ValueError, TypeError):
+                rt = 0.0
+
+            # Precursor m/z: 'pepmass' is usually a tuple (mz, intensity)
             try:
-                peak_dict["rt"] = float(spectrum.metadata["rtinseconds"]) / 60
-            except:
-                peak_dict["rt"] = 0
+                precmz = float(params.get('pepmass', [0])[0])
+            except (IndexError, ValueError, TypeError):
+                precmz = 0.0
+
+            # Charge: Parse 'CHARGE=2+' format
+            # Pyteomics often returns charge as a list or integer depending on config
             try:
-                peak_dict["precmz"] = float(spectrum.metadata["pepmass"][0])
+                charge_val = params.get('charge', [1])
+                # Handle cases where it is a list e.g., [2+] or [2]
+                if isinstance(charge_val, list):
+                    charge_str = str(charge_val[0])
+                else:
+                    charge_str = str(charge_val)
+                # Strip '+' and convert to int
+                charge = int(charge_str.strip('+'))
             except:
-                peak_dict["precmz"] = 0
+                charge = 1
 
-            peak_dict["ms1scan"] = 0
-            peak_dict["charge"] = 1 # TODO: Add Charge Correctly here
-            peak_dict["polarity"] = 1 # TODO: Add Polarity Correctly here
+            # --- Peak Extraction ---
+            # Zip arrays to iterate pairs
+            for mz, intensity in zip(mz_array, int_array):
+                if intensity == 0:
+                    continue
 
-            ms2mz_list.append(peak_dict)
+                peak_dict = {
+                    "i": intensity,
+                    "i_norm": intensity / i_max,
+                    "i_tic_norm": intensity / i_sum,
+                    "mz": mz,
+                    "scan": scan,
+                    "rt": rt,
+                    "precmz": precmz,
+                    "ms1scan": 0,
+                    "charge": charge,   # Implemented
+                    "polarity": 1       # Default
+                }
 
-    # Turning into pandas data frames
-    ms1_df = pd.DataFrame([peak_dict])
-    ms2_df = pd.DataFrame(ms2mz_list)
+                ms2_data_list.append(peak_dict)
+
+    # Convert to DataFrames
+    ms2_df = pd.DataFrame(ms2_data_list)
+    
+    # Original code assigned the last single peak to ms1_df. 
+    # Initializing empty to prevent bugs.
+    ms1_df = pd.DataFrame() 
 
     return ms1_df, ms2_df
 
