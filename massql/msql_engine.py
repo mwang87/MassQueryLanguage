@@ -10,7 +10,7 @@ from py_expression_eval import Parser
 from massql import msql_parser
 from massql import msql_fileloading
 from massql import msql_engine_filters
-from massql.msql_engine_filters import _get_mz_tolerance, _get_minintensity, _get_intensity_mask
+from massql.msql_engine_filters import _get_mz_tolerance, _get_intensity_mask
 
 math_parser = Parser()
 console = logging.StreamHandler()
