@@ -10,7 +10,7 @@ from py_expression_eval import Parser
 from massql import msql_parser
 from massql import msql_fileloading
 from massql import msql_engine_filters
-from massql.msql_engine_filters import _get_mz_tolerance, _get_minintensity
+from massql.msql_engine_filters import _get_mz_tolerance, _get_minintensity, _get_intensity_mask
 
 math_parser = Parser()
 console = logging.StreamHandler()
@@ -224,11 +224,8 @@ def _evalute_variable_query(parsed_dict, input_filename,
         
             # Filtering MS1 peaks only to consider contention for X
             if condition["type"] == "ms1mzcondition":
-                min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
-                variable_x_ms1_df = ms1_df[
-                    (ms1_df["i"] > min_int) & 
-                    (ms1_df["i_norm"] > min_intpercent) & 
-                    (ms1_df["i_tic_norm"] > min_tic_percent_intensity)]
+                intensity_mask = _get_intensity_mask(ms1_df, condition.get("qualifiers", None))
+                variable_x_ms1_df = ms1_df[intensity_mask]
 
             # TODO: Do this for other types of variables
 
@@ -546,13 +543,11 @@ def _executeconditions_query(parsed_dict, input_filename, ms1_input_df=None, ms2
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
 
-            min_int, min_intpercent, min_tic_percent_intensity = _get_minintensity(condition.get("qualifiers", None))
+            intensity_mask = _get_intensity_mask(ms2_df, condition.get("qualifiers", None))
 
-            ms2_df = ms2_df[(ms2_df["mz"] > mz_min) & 
-                            (ms2_df["mz"] < mz_max) & 
-                            (ms2_df["i"] > min_int) & 
-                            (ms2_df["i_norm"] > min_intpercent) & 
-                            (ms2_df["i_tic_norm"] > min_tic_percent_intensity)]
+            ms2_df = ms2_df[(ms2_df["mz"] > mz_min) &
+                            (ms2_df["mz"] < mz_max) &
+                            intensity_mask]
 
     if "comment" in parsed_dict:
         ms1_df["comment"] = parsed_dict["comment"]

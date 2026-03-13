@@ -146,6 +146,13 @@ class MassQLToJSON(Transformer):
          qualifier_dict[qualifier_type] = {}
          qualifier_dict[qualifier_type]["name"] = qualifier_type
 
+         # Capture the comparator operator (equal, greaterthan, lessthan)
+         operator_tree = items[1]
+         if hasattr(operator_tree, 'data'):
+            qualifier_dict[qualifier_type]["comparator"] = operator_tree.data
+         else:
+            qualifier_dict[qualifier_type]["comparator"] = "equal"
+
          if qualifier_type == "qualifierppmtolerance":
             qualifier_dict[qualifier_type]["unit"] = "ppm"
          if qualifier_type == "qualifiermztolerance":
