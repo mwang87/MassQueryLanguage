@@ -7,7 +7,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from massql import msql_engine
 
 
-def test_ms2_intensity_gt_lt_eq_dev():
+# Note: This is a manual development helper, not part of the automated pytest suite.
+def dev_ms2_intensity_gt_lt_eq():
 	"""
 	Development test for intensity comparators on a realistic multi-fragment query.
 
@@ -78,7 +79,7 @@ def test_ms2_intensity_gt_lt_eq_dev():
 
 
 def main():
-	test_ms2_intensity_gt_lt_eq_dev()
+	dev_ms2_intensity_gt_lt_eq()
 
 
 if __name__ == "__main__":
