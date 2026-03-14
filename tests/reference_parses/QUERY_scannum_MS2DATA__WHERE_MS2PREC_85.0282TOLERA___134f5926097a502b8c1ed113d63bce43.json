@@ -4,6 +4,7 @@
             "conditiontype": "where",
             "qualifiers": {
                 "qualifiermztolerance": {
+                    "comparator": "equal",
                     "name": "qualifiermztolerance",
                     "unit": "mz",
                     "value": 0.1

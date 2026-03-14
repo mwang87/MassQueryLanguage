@@ -9,10 +9,12 @@
                     "name": "qualifiercardinality"
                 },
                 "qualifierintensitypercent": {
+                    "comparator": "equal",
                     "name": "qualifierintensitypercent",
                     "value": 5.0
                 },
                 "qualifierppmtolerance": {
+                    "comparator": "equal",
                     "name": "qualifierppmtolerance",
                     "unit": "ppm",
                     "value": 10.0

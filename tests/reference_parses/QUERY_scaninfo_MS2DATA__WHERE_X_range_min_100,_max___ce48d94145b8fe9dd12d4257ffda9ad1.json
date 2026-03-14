@@ -10,10 +10,12 @@
             "conditiontype": "where",
             "qualifiers": {
                 "qualifierintensitymatch": {
+                    "comparator": "equal",
                     "name": "qualifierintensitymatch",
                     "value": "Y*0.0608+2e-06*X"
                 },
                 "qualifierintensitytolpercent": {
+                    "comparator": "equal",
                     "name": "qualifierintensitytolpercent",
                     "value": 25.0
                 },
@@ -28,10 +30,12 @@
             "conditiontype": "where",
             "qualifiers": {
                 "qualifierintensitymatch": {
+                    "comparator": "equal",
                     "name": "qualifierintensitymatch",
                     "value": "Y"
                 },
                 "qualifierintensitypercent": {
+                    "comparator": "equal",
                     "name": "qualifierintensitypercent",
                     "value": 5.0
                 },

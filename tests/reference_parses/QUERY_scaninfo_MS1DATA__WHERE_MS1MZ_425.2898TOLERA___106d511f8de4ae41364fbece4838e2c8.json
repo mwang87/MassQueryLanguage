@@ -4,10 +4,12 @@
             "conditiontype": "where",
             "qualifiers": {
                 "qualifierintensitypercent": {
+                    "comparator": "greaterthan",
                     "name": "qualifierintensitypercent",
                     "value": 0.1
                 },
                 "qualifiermztolerance": {
+                    "comparator": "equal",
                     "name": "qualifiermztolerance",
                     "unit": "mz",
                     "value": 0.1

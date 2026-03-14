@@ -4,14 +4,17 @@
             "conditiontype": "where",
             "qualifiers": {
                 "qualifierintensitymatch": {
+                    "comparator": "equal",
                     "name": "qualifierintensitymatch",
                     "value": "Y*0.063"
                 },
                 "qualifierintensitytolpercent": {
+                    "comparator": "equal",
                     "name": "qualifierintensitytolpercent",
                     "value": 25.0
                 },
                 "qualifierppmtolerance": {
+                    "comparator": "equal",
                     "name": "qualifierppmtolerance",
                     "unit": "ppm",
                     "value": 10.0
@@ -27,10 +30,12 @@
             "conditiontype": "where",
             "qualifiers": {
                 "qualifierintensitymatch": {
+                    "comparator": "equal",
                     "name": "qualifierintensitymatch",
                     "value": "Y"
                 },
                 "qualifierintensitypercent": {
+                    "comparator": "equal",
                     "name": "qualifierintensitypercent",
                     "value": 5.0
                 },
@@ -48,10 +53,12 @@
             "conditiontype": "where",
             "qualifiers": {
                 "qualifierintensitymatch": {
+                    "comparator": "equal",
                     "name": "qualifierintensitymatch",
                     "value": "Y*0.5"
                 },
                 "qualifierintensitytolpercent": {
+                    "comparator": "equal",
                     "name": "qualifierintensitytolpercent",
                     "value": 60.0
                 },
@@ -66,6 +73,7 @@
             "conditiontype": "where",
             "qualifiers": {
                 "qualifierppmtolerance": {
+                    "comparator": "equal",
                     "name": "qualifierppmtolerance",
                     "unit": "ppm",
                     "value": 10.0

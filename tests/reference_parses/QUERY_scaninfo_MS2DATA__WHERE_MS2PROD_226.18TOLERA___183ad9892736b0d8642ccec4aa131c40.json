@@ -4,6 +4,7 @@
             "conditiontype": "where",
             "qualifiers": {
                 "qualifierppmtolerance": {
+                    "comparator": "equal",
                     "name": "qualifierppmtolerance",
                     "unit": "ppm",
                     "value": 5.0
