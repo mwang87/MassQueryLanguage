@@ -724,6 +724,179 @@ def test_otherscan():
 
     assert(831 in list(results_df["scan"]))
 
+def test_ms2_intensityvalue_gt_lt_disjoint():
+    """INTENSITYVALUE> and INTENSITYVALUE< at the same threshold produce disjoint scan sets."""
+    data_file = "tests/data/featurelist_pos.mgf"
+    base = "QUERY MS2DATA WHERE MS2PROD=184.0739:TOLERANCEMZ=0.01:{op} AND SCANMIN=1000 AND SCANMAX=1020"
+
+    results_gt = msql_engine.process_query(base.format(op="INTENSITYVALUE>500000"), data_file)
+    results_lt = msql_engine.process_query(base.format(op="INTENSITYVALUE<500000"), data_file)
+
+    scans_gt = set(results_gt["scan"]) if len(results_gt) > 0 else set()
+    scans_lt = set(results_lt["scan"]) if len(results_lt) > 0 else set()
+
+    assert scans_gt.isdisjoint(scans_lt), "INTENSITYVALUE > and < at same threshold must produce disjoint scan sets"
+
+
+def test_ms2_intensitypercent_gt_lt_disjoint():
+    """INTENSITYPERCENT> and INTENSITYPERCENT< at the same threshold produce disjoint scan sets."""
+    data_file = "tests/data/featurelist_pos.mgf"
+    base = "QUERY MS2DATA WHERE MS2PROD=184.0739:TOLERANCEMZ=0.01:{op} AND SCANMIN=1000 AND SCANMAX=1020"
+
+    results_gt = msql_engine.process_query(base.format(op="INTENSITYPERCENT>30"), data_file)
+    results_lt = msql_engine.process_query(base.format(op="INTENSITYPERCENT<30"), data_file)
+
+    scans_gt = set(results_gt["scan"]) if len(results_gt) > 0 else set()
+    scans_lt = set(results_lt["scan"]) if len(results_lt) > 0 else set()
+
+    assert scans_gt.isdisjoint(scans_lt), "INTENSITYPERCENT > and < at same threshold must produce disjoint scan sets"
+    assert len(scans_gt) > 0 or len(scans_lt) > 0, "At least one set should be non-empty"
+
+
+def test_ms1_intensityvalue_gt_vs_gte():
+    """INTENSITYVALUE> (strict) returns fewer or equal results than INTENSITYVALUE= (>= semantics)."""
+    data_file = "tests/data/GNPS00002_A3_p.mzML"
+    query_gte = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=226.18:INTENSITYVALUE=300000"
+    query_gt = "QUERY scaninfo(MS1DATA) WHERE MS1MZ=226.18:INTENSITYVALUE>300000"
+
+    results_gte = msql_engine.process_query(query_gte, data_file)
+    results_gt = msql_engine.process_query(query_gt, data_file)
+
+    assert len(results_gt) <= len(results_gte), "Strict > should return fewer or equal results than >= (= semantics)"
+
+
+def test_ms1_intensityvalue_lt():
+    """INTENSITYVALUE< filter works: impossible threshold gives 0 results; high cap gives results."""
+    data_file = "tests/data/GNPS00002_A3_p.mzML"
+
+    # No peak has negative intensity, so < 0 must return nothing
+    results_zero = msql_engine.process_query(
+        "QUERY scaninfo(MS1DATA) WHERE MS1MZ=226.18:INTENSITYVALUE<0", data_file)
+    assert len(results_zero) == 0, "INTENSITYVALUE<0 should return 0 results"
+
+    # A very high cap should return scans where the peak is present
+    results_high = msql_engine.process_query(
+        "QUERY scaninfo(MS1DATA) WHERE MS1MZ=226.18:INTENSITYVALUE<999999999", data_file)
+    assert len(results_high) > 0, "INTENSITYVALUE< with very high cap should return some results"
+
+
+def test_ms1_intensitypercent_lt():
+    """INTENSITYPERCENT< filter works: impossible threshold gives 0 results; high cap gives results."""
+    data_file = "tests/data/GNPS00002_A3_p.mzML"
+
+    # No peak has negative normalized intensity
+    results_zero = msql_engine.process_query(
+        "QUERY scaninfo(MS1DATA) WHERE MS1MZ=226.18:INTENSITYPERCENT<0", data_file)
+    assert len(results_zero) == 0, "INTENSITYPERCENT<0 should return 0 results"
+
+    # All real peaks have relative intensity < 100%, so a cap of 100 returns those that are present
+    results_high = msql_engine.process_query(
+        "QUERY scaninfo(MS1DATA) WHERE MS1MZ=226.18:INTENSITYPERCENT<100", data_file)
+    assert len(results_high) > 0, "INTENSITYPERCENT< with cap of 100 should return some results"
+
+
+def test_intensityticpercent_lt():
+    """INTENSITYTICPERCENT< filter works: impossible threshold gives 0 results; monotonicity holds."""
+    data_file = "tests/data/GNPS00002_A3_p.mzML"
+
+    # No peak has negative TIC-normalized intensity
+    results_zero = msql_engine.process_query(
+        "QUERY scansum(MS1DATA) WHERE MS2PROD=309.2:TOLERANCEMZ=0.1:INTENSITYTICPERCENT<0", data_file)
+    assert len(results_zero) == 0, "INTENSITYTICPERCENT<0 should return 0 results"
+
+    # Monotonicity: higher cap returns at least as many results as lower cap
+    results_high = msql_engine.process_query(
+        "QUERY scansum(MS1DATA) WHERE MS2PROD=309.2:TOLERANCEMZ=0.1:INTENSITYTICPERCENT<50", data_file)
+    results_low = msql_engine.process_query(
+        "QUERY scansum(MS1DATA) WHERE MS2PROD=309.2:TOLERANCEMZ=0.1:INTENSITYTICPERCENT<5", data_file)
+    assert len(results_high) >= len(results_low), "Higher INTENSITYTICPERCENT< cap should return more or equal results"
+
+
+def test_intensityvalue_gt_monotonicity():
+    """Higher INTENSITYVALUE> threshold returns fewer or equal results (monotonicity)."""
+    data_file = "tests/data/featurelist_pos.mgf"
+    query_low = "QUERY MS2DATA WHERE MS2PROD=184.0739:TOLERANCEMZ=0.01:INTENSITYVALUE>100000 AND SCANMIN=1000 AND SCANMAX=1020"
+    query_high = "QUERY MS2DATA WHERE MS2PROD=184.0739:TOLERANCEMZ=0.01:INTENSITYVALUE>1000000 AND SCANMIN=1000 AND SCANMAX=1020"
+
+    results_low = msql_engine.process_query(query_low, data_file)
+    results_high = msql_engine.process_query(query_high, data_file)
+
+    assert len(results_high) <= len(results_low), "Higher INTENSITYVALUE> threshold should return fewer or equal scans"
+
+
+def test_intensityvalue_lt_monotonicity():
+    """Lower INTENSITYVALUE< cap returns fewer or equal results (monotonicity)."""
+    data_file = "tests/data/featurelist_pos.mgf"
+    query_high_cap = "QUERY MS2DATA WHERE MS2PROD=184.0739:TOLERANCEMZ=0.01:INTENSITYVALUE<2000000 AND SCANMIN=1000 AND SCANMAX=1020"
+    query_low_cap = "QUERY MS2DATA WHERE MS2PROD=184.0739:TOLERANCEMZ=0.01:INTENSITYVALUE<100000 AND SCANMIN=1000 AND SCANMAX=1020"
+
+    results_high_cap = msql_engine.process_query(query_high_cap, data_file)
+    results_low_cap = msql_engine.process_query(query_low_cap, data_file)
+
+    assert len(results_low_cap) <= len(results_high_cap), "Lower INTENSITYVALUE< cap should return fewer or equal scans"
+
+
+def test_ms2_combined_intensity_lt_subset():
+    """Adding an INTENSITYPERCENT< constraint on top of INTENSITYVALUE< narrows the result set."""
+    data_file = "tests/data/featurelist_pos.mgf"
+    query_value_only = (
+        "QUERY MS2DATA WHERE MS2PROD=184.0739:TOLERANCEMZ=0.01:INTENSITYVALUE<2000000 AND SCANMIN=1000 AND SCANMAX=1020"
+    )
+    query_combined = (
+        "QUERY MS2DATA WHERE MS2PROD=184.0739:TOLERANCEMZ=0.01:INTENSITYVALUE<2000000:INTENSITYPERCENT<80 AND SCANMIN=1000 AND SCANMAX=1020"
+    )
+
+    results_value_only = msql_engine.process_query(query_value_only, data_file)
+    results_combined = msql_engine.process_query(query_combined, data_file)
+
+    scans_value_only = set(results_value_only["scan"]) if len(results_value_only) > 0 else set()
+    scans_combined = set(results_combined["scan"]) if len(results_combined) > 0 else set()
+
+    assert scans_combined.issubset(scans_value_only), "Combined INTENSITYVALUE< + INTENSITYPERCENT< must be a subset of INTENSITYVALUE< alone"
+
+
+def test_ms2nl_intensitypercent_lt():
+    """MS2NL INTENSITYPERCENT< filter works: impossible threshold gives 0 results; monotonicity holds."""
+    data_file = "tests/data/GNPS00002_A3_p.mzML"
+
+    # No peak has negative percent intensity
+    results_zero = msql_engine.process_query(
+        "QUERY MS2DATA WHERE MS2NL=18:TOLERANCEMZ=0.5:INTENSITYPERCENT<0", data_file)
+    assert len(results_zero) == 0, "MS2NL INTENSITYPERCENT<0 should return 0 results"
+
+    # Monotonicity: higher cap should include all scans found by lower cap
+    results_high = msql_engine.process_query(
+        "QUERY MS2DATA WHERE MS2NL=18:TOLERANCEMZ=0.5:INTENSITYPERCENT<100", data_file)
+    results_low = msql_engine.process_query(
+        "QUERY MS2DATA WHERE MS2NL=18:TOLERANCEMZ=0.5:INTENSITYPERCENT<1", data_file)
+    scans_high = set(results_high["scan"]) if len(results_high) > 0 else set()
+    scans_low = set(results_low["scan"]) if len(results_low) > 0 else set()
+    assert scans_low.issubset(scans_high), "Lower INTENSITYPERCENT< cap results must be a subset of higher cap results"
+
+
+def test_ms2_intensitypercent_gt_lt_eq_tripartite():
+    """GT, LT, and EQ (>=) scan sets have expected relationships for the same data."""
+    data_file = "tests/data/featurelist_pos.mgf"
+    base = "QUERY MS2DATA WHERE MS2PROD=184.0739:TOLERANCEMZ=0.01:{op} AND SCANMIN=1000 AND SCANMAX=1020"
+
+    results_gt = msql_engine.process_query(base.format(op="INTENSITYPERCENT>30"), data_file)
+    results_lt = msql_engine.process_query(base.format(op="INTENSITYPERCENT<30"), data_file)
+    results_eq = msql_engine.process_query(base.format(op="INTENSITYPERCENT=30"), data_file)
+
+    scans_gt = set(results_gt["scan"]) if len(results_gt) > 0 else set()
+    scans_lt = set(results_lt["scan"]) if len(results_lt) > 0 else set()
+    scans_eq = set(results_eq["scan"]) if len(results_eq) > 0 else set()
+
+    print(f"INTENSITYPERCENT>30: {len(scans_gt)} scans -> {sorted(scans_gt)}")
+    print(f"INTENSITYPERCENT<30: {len(scans_lt)} scans -> {sorted(scans_lt)}")
+    print(f"INTENSITYPERCENT=30: {len(scans_eq)} scans -> {sorted(scans_eq)}")
+
+    # GT and LT must be disjoint
+    assert scans_gt.isdisjoint(scans_lt), "INTENSITYPERCENT > and < must produce disjoint scan sets"
+    # EQ (which means >=) must be a superset of GT
+    assert scans_gt.issubset(scans_eq), "INTENSITYPERCENT= (>=) must include all scans matched by INTENSITYPERCENT>"
+
+
 def debug_query():
     query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=341.28:TOLERANCEMZ=0.01:INTENSITYPERCENT=2 AND MS2PROD=323.27:TOLERANCEMZ=0.01:INTENSITYPERCENT=2 AND MS2PREC=X AND MS2PROD=X-358.2871:TOLERANCEMZ=0.01:INTENSITYPERCENT=2"
 
