@@ -9,6 +9,7 @@
                     "name": "qualifiermassdefect"
                 },
                 "qualifiermztolerance": {
+                    "comparator": "equal",
                     "name": "qualifiermztolerance",
                     "unit": "mz",
                     "value": 35.0

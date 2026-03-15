@@ -4,10 +4,12 @@
             "conditiontype": "where",
             "qualifiers": {
                 "qualifierintensitymatch": {
+                    "comparator": "equal",
                     "name": "qualifierintensitymatch",
                     "value": "Y"
                 },
                 "qualifierintensitypercent": {
+                    "comparator": "equal",
                     "name": "qualifierintensitypercent",
                     "value": 5.0
                 },
@@ -15,6 +17,7 @@
                     "name": "qualifierintensityreference"
                 },
                 "qualifiermztolerance": {
+                    "comparator": "equal",
                     "name": "qualifiermztolerance",
                     "unit": "mz",
                     "value": 0.1
@@ -30,14 +33,17 @@
             "conditiontype": "where",
             "qualifiers": {
                 "qualifierintensitymatch": {
+                    "comparator": "equal",
                     "name": "qualifierintensitymatch",
                     "value": "Y*0.97"
                 },
                 "qualifierintensitytolpercent": {
+                    "comparator": "equal",
                     "name": "qualifierintensitytolpercent",
                     "value": 30.0
                 },
                 "qualifiermztolerance": {
+                    "comparator": "equal",
                     "name": "qualifiermztolerance",
                     "unit": "mz",
                     "value": 0.1
@@ -53,14 +59,17 @@
             "conditiontype": "where",
             "qualifiers": {
                 "qualifierintensitymatch": {
+                    "comparator": "equal",
                     "name": "qualifierintensitymatch",
                     "value": "Y*0.34"
                 },
                 "qualifierintensitytolpercent": {
+                    "comparator": "equal",
                     "name": "qualifierintensitytolpercent",
                     "value": 30.0
                 },
                 "qualifiermztolerance": {
+                    "comparator": "equal",
                     "name": "qualifiermztolerance",
                     "unit": "mz",
                     "value": 0.1
@@ -76,14 +85,17 @@
             "conditiontype": "where",
             "qualifiers": {
                 "qualifierintensitymatch": {
+                    "comparator": "equal",
                     "name": "qualifierintensitymatch",
                     "value": "Y*0.32"
                 },
                 "qualifierintensitytolpercent": {
+                    "comparator": "equal",
                     "name": "qualifierintensitytolpercent",
                     "value": 40.0
                 },
                 "qualifiermztolerance": {
+                    "comparator": "equal",
                     "name": "qualifiermztolerance",
                     "unit": "mz",
                     "value": 0.2
@@ -99,6 +111,7 @@
             "conditiontype": "where",
             "qualifiers": {
                 "qualifiermztolerance": {
+                    "comparator": "equal",
                     "name": "qualifiermztolerance",
                     "unit": "mz",
                     "value": 2.0
