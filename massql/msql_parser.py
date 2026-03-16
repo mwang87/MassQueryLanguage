@@ -367,6 +367,9 @@ class MassQLToJSON(Transformer):
    def factor(self, s):
       return s[0]
 
+   def factor_parens(self, items):
+      return f"({items[0]})"
+
    def term(self, items):
       if len(items) == 1:
          return items[0]

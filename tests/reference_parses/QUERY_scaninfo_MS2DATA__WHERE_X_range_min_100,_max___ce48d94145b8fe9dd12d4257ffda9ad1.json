@@ -12,7 +12,7 @@
                 "qualifierintensitymatch": {
                     "comparator": "equal",
                     "name": "qualifierintensitymatch",
-                    "value": "Y*0.0608+2e-06*X"
+                    "value": "Y*(0.0608+(2e-06*X))"
                 },
                 "qualifierintensitytolpercent": {
                     "comparator": "equal",
