@@ -146,7 +146,7 @@ factor: floating
     | "formula(" moleculeformula ")"
     | "aminoaciddelta(" aminoacids ")"
     | peptidefunction
-    | "(" numericalexpression ")"
+    | "(" numericalexpression ")" -> factor_parens
 peptidefunction: "peptide(" peptide "," "charge=" peptidecharge "," "ion=" peptideion ")"
 multiply: "*"
 divide: "/"

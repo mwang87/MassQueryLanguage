@@ -112,6 +112,25 @@ def test_variable_formula_parse2():
     parsed_output = msql_parser.parse_msql(query)
     print(json.dumps(parsed_output, indent=4))
 
+def test_formula_distribution():
+    """Verify that formula() is correctly distributed through multiplication in X-expressions.
+
+    Previously, 2*(X - formula(Fe)) was parsed as 2*X - 55.93 instead of 2*(X - 55.93),
+    which is a ~56 Da error when evaluated.
+    """
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=2.0*(X - formula(Fe))"
+    parsed_output = msql_parser.parse_msql(query)
+
+    value = parsed_output["conditions"][1]["value"][0]
+    assert value == "2.0*(X-55.9349375)", f"Expected parenthesized form, got: {value}"
+
+    # Verify the expression evaluates correctly
+    from py_expression_eval import Parser
+    p = Parser()
+    result = p.parse(value).evaluate({"X": 100.0})
+    expected = 2.0 * (100.0 - 55.9349375)
+    assert abs(result - expected) < 1e-6, f"Expected {expected}, got {result}"
+
 def test_xrange_parse():
     query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X AND MS2PROD=2.0*(X - formula(Fe)) AND X=range(min=5, max=100)"
 
