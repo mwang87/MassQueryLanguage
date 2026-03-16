@@ -615,6 +615,26 @@ def test_massdefect_ANY_query():
     results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML")
     assert(len(results_df) == 77)
 
+def test_massdefect_bug_reproduction():
+    f = "tests/data/GNPS00002_A3_p.mzML"
+    
+    # MS2PROD MASSDEFECT
+    exclude_query = "QUERY MS2DATA WHERE MS2PROD=226.18:MASSDEFECT=massdefect(min=0.8,max=0.9)"
+    df_exclude = msql_engine.process_query(exclude_query, f)
+    assert len(df_exclude) == 0
+
+    # MS1MZ MASSDEFECT Full Range
+    full_range_query = "QUERY MS1DATA WHERE MS1MZ=226.18:MASSDEFECT=massdefect(min=0.0,max=1.0)"
+    df_full = msql_engine.process_query(full_range_query, f)
+    # Get baseline
+    df_all = msql_engine.process_query("QUERY MS1DATA WHERE MS1MZ=226.18", f)
+    assert len(df_full) == len(df_all)
+    
+    # MS1MZ MASSDEFECT Exclusion
+    exclude_ms1_query = "QUERY MS1DATA WHERE MS1MZ=226.18:MASSDEFECT=massdefect(min=0.8,max=0.9)"
+    df_ms1_exclude = msql_engine.process_query(exclude_ms1_query, f)
+    assert len(df_ms1_exclude) == 0
+
 def test_advanced_filters():
     query = """
         QUERY scansum(MS1DATA) FILTER MS1MZ=ANY:TOLERANCEMZ=35:MASSDEFECT=massdefect(min=0.1332, max=0.2112)

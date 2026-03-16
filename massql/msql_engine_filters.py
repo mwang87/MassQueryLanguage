@@ -248,11 +248,20 @@ def ms2prod_condition(condition, ms1_df, ms2_df, reference_conditions_register):
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
 
+            massdefect_min, massdefect_max = _get_massdefect_min(condition.get("qualifiers", None))
             intensity_mask = _get_intensity_mask(ms2_df, condition.get("qualifiers", None))
 
             ms2_filtered_df = ms2_df[(ms2_df["mz"] > mz_min) &
                                     (ms2_df["mz"] < mz_max) &
                                     intensity_mask]
+            
+            if massdefect_min > 0 or massdefect_max < 1:
+                ms2_filtered_df["mz_defect"] = ms2_filtered_df["mz"] - ms2_filtered_df["mz"].astype(int)
+
+                ms2_filtered_df = ms2_filtered_df[
+                    (ms2_filtered_df["mz_defect"] > massdefect_min) &
+                    (ms2_filtered_df["mz_defect"] < massdefect_max)
+                ]
 
         # Setting the intensity match register
         _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
@@ -328,6 +337,7 @@ def ms2nl_condition(condition, ms1_df, ms2_df, reference_conditions_register):
             nl_min = mz - mz_tol
             nl_max = mz + mz_tol
 
+            massdefect_min, massdefect_max = _get_massdefect_min(condition.get("qualifiers", None))
             intensity_mask = _get_intensity_mask(ms2_df, condition.get("qualifiers", None))
 
             ms2_filtered_df = ms2_df[
@@ -335,6 +345,14 @@ def ms2nl_condition(condition, ms1_df, ms2_df, reference_conditions_register):
                 ((ms2_df["precmz"] - ms2_df["mz"]) < nl_max) &
                 intensity_mask
             ]
+
+            if massdefect_min > 0 or massdefect_max < 1:
+                ms2_filtered_df["mz_defect"] = (ms2_filtered_df["precmz"] - ms2_filtered_df["mz"]) - (ms2_filtered_df["precmz"] - ms2_filtered_df["mz"]).astype(int)
+
+                ms2_filtered_df = ms2_filtered_df[
+                    (ms2_filtered_df["mz_defect"] > massdefect_min) &
+                    (ms2_filtered_df["mz_defect"] < massdefect_max)
+                ]
 
         # Setting the intensity match register
         _set_intensity_register(ms2_filtered_df, reference_conditions_register, condition)
@@ -402,6 +420,7 @@ def ms2prec_condition(condition, ms1_df, ms2_df, reference_conditions_register):
                 (ms2_filtered_df["precmz_defect"] < massdefect_max)
             ]
         else:
+            massdefect_min, massdefect_max = _get_massdefect_min(condition.get("qualifiers", None))
             mz_tol = _get_mz_tolerance(condition.get("qualifiers", None), mz)
             mz_min = mz - mz_tol
             mz_max = mz + mz_tol
@@ -410,6 +429,14 @@ def ms2prec_condition(condition, ms1_df, ms2_df, reference_conditions_register):
                 ms2_df["precmz"] > mz_min) & 
                 (ms2_df["precmz"] < mz_max)
             ]
+
+            if massdefect_min > 0 or massdefect_max < 1:
+                ms2_filtered_df["precmz_defect"] = ms2_filtered_df["precmz"] - ms2_filtered_df["precmz"].astype(int)
+
+                ms2_filtered_df = ms2_filtered_df[
+                    (ms2_filtered_df["precmz_defect"] > massdefect_min) &
+                    (ms2_filtered_df["precmz_defect"] < massdefect_max)
+                ]
 
         ms2_list.append(ms2_filtered_df)
 
@@ -494,7 +521,7 @@ def ms1_condition(condition, ms1_df, ms2_df, reference_conditions_register, ms1_
                     (ms1_df["mz"] < mz_max) &
                     intensity_mask]
 
-                if massdefect_min > 0 or massdefect_max < 1:
+                if massdefect_min != 0 or massdefect_max != 1:
                     ms1_filtered_df["mz_defect"] = ms1_filtered_df["mz"] - ms1_filtered_df["mz"].astype(int)
 
                     ms1_filtered_df = ms1_filtered_df[
@@ -608,7 +635,7 @@ def ms1_filter(condition, ms1_df):
                 (ms1_df["mz"] < mz_max) &
                 intensity_mask]
 
-            if massdefect_min > 0 or massdefect_max < 1:
+            if massdefect_min != 0 or massdefect_max != 1:
                 ms1_filtered_df["mz_defect"] = ms1_filtered_df["mz"] - ms1_filtered_df["mz"].astype(int)
 
                 ms1_filtered_df = ms1_filtered_df[
