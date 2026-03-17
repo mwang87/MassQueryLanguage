@@ -917,6 +917,61 @@ def test_ms2_intensitypercent_gt_lt_eq_tripartite():
     assert scans_gt.issubset(scans_eq), "INTENSITYPERCENT= (>=) must include all scans matched by INTENSITYPERCENT>"
 
 
+def test_ms2_variable_with_intensitymatch():
+    """Test a complex query combining MS2PREC=X variable, MS2PROD with INTENSITYMATCH and INTENSITYMATCHREFERENCE."""
+    import pandas as pd
+    import numpy as np
+
+    query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=337.25:TOLERANCEMZ=0.05 AND MS2PROD=319.24:TOLERANCEMZ=0.05 AND MS2PREC=X AND MS2PROD=X-390.277:TOLERANCEMZ=0.05 AND MS2PROD=319.24:TOLERANCEPPM=40:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE AND MS2PROD=201.16:TOLERANCEPPM=40:INTENSITYMATCH=Y*300:INTENSITYMATCHPERCENT=99"
+
+    # Verify it parses correctly
+    parse_obj = msql_parser.parse_msql(query)
+    print(json.dumps(parse_obj, indent=4))
+
+    condition_types = [c["type"] for c in parse_obj["conditions"]]
+    assert condition_types.count("ms2productcondition") == 5
+    assert condition_types.count("ms2precursorcondition") == 1
+
+    # Check INTENSITYMATCH qualifiers are present
+    ref_conditions = [c for c in parse_obj["conditions"]
+                      if "qualifiers" in c and "qualifierintensityreference" in c.get("qualifiers", {})]
+    assert len(ref_conditions) == 1
+
+    match_conditions = [c for c in parse_obj["conditions"]
+                        if "qualifiers" in c and "qualifierintensitytolpercent" in c.get("qualifiers", {})]
+    assert len(match_conditions) == 1
+    assert match_conditions[0]["qualifiers"]["qualifierintensitymatch"]["value"] == "Y*300.0"
+
+    # Test execution with synthetic data that has matching peaks
+    precmz = 710.0
+    rows = []
+    peaks = [
+        (337.25, 1000.0),
+        (319.24, 500.0),       # reference Y
+        (201.16, 150000.0),    # Y*300 = 500*300 = 150000
+        (319.723, 800.0),      # X-390.277 = 710-390.277 = 319.723
+    ]
+    for mz, intensity in peaks:
+        rows.append({
+            'scan': 1, 'ms1scan': 0, 'rt': 1.0,
+            'mz': mz, 'i': intensity,
+            'precmz': precmz, 'charge': 1, 'polarity': 1,
+            'i_norm': intensity / max(p[1] for p in peaks),
+            'i_tic_norm': intensity / sum(p[1] for p in peaks),
+        })
+    ms2_df = pd.DataFrame(rows)
+    ms1_df = pd.DataFrame({
+        'scan': [0], 'rt': [1.0], 'mz': [precmz], 'i': [10000.0],
+        'i_norm': [1.0], 'i_tic_norm': [1.0], 'polarity': [1]
+    })
+
+    results_df = msql_engine.process_query(query, "tests/data/GNPS00002_A3_p.mzML",
+                                            ms1_df=ms1_df, ms2_df=ms2_df)
+    print(results_df)
+    assert len(results_df) > 0, "Query should find the matching scan in synthetic data"
+    assert 1 in results_df["scan"].values
+
+
 def debug_query():
     query = "QUERY scaninfo(MS2DATA) WHERE MS2PROD=341.28:TOLERANCEMZ=0.01:INTENSITYPERCENT=2 AND MS2PROD=323.27:TOLERANCEMZ=0.01:INTENSITYPERCENT=2 AND MS2PREC=X AND MS2PROD=X-358.2871:TOLERANCEMZ=0.01:INTENSITYPERCENT=2"
 
