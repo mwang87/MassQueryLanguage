@@ -1,0 +1,114 @@
+{
+    "conditions": [
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifiermztolerance": {
+                    "comparator": "equal",
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.05
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                337.25
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifiermztolerance": {
+                    "comparator": "equal",
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.05
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                319.24
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "type": "ms2precursorcondition",
+            "value": [
+                "X"
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifiermztolerance": {
+                    "comparator": "equal",
+                    "name": "qualifiermztolerance",
+                    "unit": "mz",
+                    "value": 0.05
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                "X-390.277"
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitymatch": {
+                    "comparator": "equal",
+                    "name": "qualifierintensitymatch",
+                    "value": "Y"
+                },
+                "qualifierintensityreference": {
+                    "name": "qualifierintensityreference"
+                },
+                "qualifierppmtolerance": {
+                    "comparator": "equal",
+                    "name": "qualifierppmtolerance",
+                    "unit": "ppm",
+                    "value": 40.0
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                319.24
+            ]
+        },
+        {
+            "conditiontype": "where",
+            "qualifiers": {
+                "qualifierintensitymatch": {
+                    "comparator": "equal",
+                    "name": "qualifierintensitymatch",
+                    "value": "Y*300.0"
+                },
+                "qualifierintensitytolpercent": {
+                    "comparator": "equal",
+                    "name": "qualifierintensitytolpercent",
+                    "value": 99.0
+                },
+                "qualifierppmtolerance": {
+                    "comparator": "equal",
+                    "name": "qualifierppmtolerance",
+                    "unit": "ppm",
+                    "value": 40.0
+                },
+                "type": "qualifier"
+            },
+            "type": "ms2productcondition",
+            "value": [
+                201.16
+            ]
+        }
+    ],
+    "query": "QUERY scaninfo(MS2DATA) WHERE MS2PROD=337.25:TOLERANCEMZ=0.05 AND MS2PROD=319.24:TOLERANCEMZ=0.05 AND MS2PREC=X AND MS2PROD=X-390.277:TOLERANCEMZ=0.05 AND MS2PROD=319.24:TOLERANCEPPM=40:INTENSITYMATCH=Y:INTENSITYMATCHREFERENCE AND MS2PROD=201.16:TOLERANCEPPM=40:INTENSITYMATCH=Y*300:INTENSITYMATCHPERCENT=99",
+    "querytype": {
+        "datatype": "datams2data",
+        "function": "functionscaninfo"
+    }
+}
