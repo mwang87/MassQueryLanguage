@@ -209,7 +209,8 @@ def _evalute_variable_query(parsed_dict, input_filename,
 
         presearch_parse["conditions"] = non_variable_conditions
 
-        ms1_df, ms2_df = _executeconditions_query(presearch_parse, input_filename, 
+        ms1_df, ms2_df = _executeconditions_query(presearch_parse, input_filename,
+                                                ms1_input_df=ms1_df, ms2_input_df=ms2_df,
                                                 cache=cache, cache_dir=cache_dir, cache_file=cache_file)
         variable_x_ms1_df = ms1_df
 

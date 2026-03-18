@@ -51,8 +51,12 @@ def test_extract_mzXML():
     assert(len(merged_summary_df) == 5)
     
 def test_extract_MGF():
+    mgf_path = "tests/data/specs_ms.mgf"
+    assert os.path.exists(mgf_path), f"Test data file {mgf_path} not found - download may have failed"
+    assert os.path.getsize(mgf_path) > 1000, f"Test data file {mgf_path} appears corrupt (too small) - download may have failed"
+
     query = "QUERY scaninfo(MS2DATA)"
-    results_df = msql_engine.process_query(query, "tests/data/specs_ms.mgf")
+    results_df = msql_engine.process_query(query, mgf_path)
     print(results_df)
 
     assert(len(results_df) > 1)
