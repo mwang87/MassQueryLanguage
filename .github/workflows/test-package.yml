@@ -58,7 +58,7 @@ jobs:
     strategy:
       matrix:
         # Define the Python versions you want to test
-        python-version: ["3.9"]
+        python-version: ["3.11"]
     steps:
       - uses: actions/checkout@v2
 
