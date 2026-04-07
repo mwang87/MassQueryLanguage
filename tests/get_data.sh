@@ -31,3 +31,17 @@ download MMSRG_027.mzML "https://massiveproxy.gnps2.org/massiveproxy/MSV00008826
 download featurelist_pos.mgf "https://massiveproxy.gnps2.org/massiveproxy/MSV000086995/updates/2022-01-18_mwang87_e619431a/peak/bahbobeh/featurelist_pos.mgf"
 download GT15A.mzML "https://massiveproxy.gnps2.org/massiveproxy/MSV000087048/ccms_peak/Green_Tea_manuscript_data/GT15A.mzML"
 download PLT2_B1.mzML "https://massiveproxy.gnps2.org/massiveproxy/MSV000088800/ccms_peak/NRRL_PLT2_czapek_solid_raw/PLT2_B1.mzML"
+
+# --- Diagnostic: print file sizes and first 5 lines of each downloaded file ---
+echo ""
+echo "=== Downloaded file sizes ==="
+ls -lh .
+
+echo ""
+echo "=== File heads for debugging ==="
+for f in *.mzML *.mzml *.mzXML *.mgf *.json; do
+    [ -f "$f" ] || continue
+    echo ""
+    echo "--- $f ($(wc -c < "$f") bytes) ---"
+    head -5 "$f"
+done
