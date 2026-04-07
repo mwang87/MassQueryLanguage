@@ -1,14 +1,17 @@
 mkdir -p data
 cd data
 
-# Rate limit: at most 10 files/minute => sleep 6s between downloads.
+# massiveproxy.gnps2.org enforces per-IP rate limiting (~1 request per 70 seconds).
+# Use --retry-on-http-error=429 with exponential backoff (--waitretry=120, --tries=10)
+# so wget retries automatically after waiting long enough for the rate limit to reset.
 download() {
-    wget --no-verbose --tries=3 --waitretry=5 --output-document="$1" "$2"
-    sleep 6
+    wget --no-verbose --tries=10 --waitretry=120 --retry-on-http-error=429 --output-document="$1" "$2"
+    sleep 5
 }
 
 download GNPS00002_A3_p.mzML "https://massiveproxy.gnps2.org/massiveproxy/MSV000084494/ccms_peak/raw/GNPS00002_A3_p.mzML"
-download GNPS00002_A3_p.mzml "https://massiveproxy.gnps2.org/massiveproxy/MSV000084494/ccms_peak/raw/GNPS00002_A3_p.mzML"
+# mzml (lowercase) is the same file as mzML - copy to avoid an extra rate-limited request
+cp GNPS00002_A3_p.mzML GNPS00002_A3_p.mzml
 download GNPS00002_A10_n.mzML "https://massiveproxy.gnps2.org/massiveproxy/MSV000084494/ccms_peak/raw/GNPS00002_A10_n.mzML"
 download QC_0.mzML "https://massiveproxy.gnps2.org/massiveproxy/MSV000085852/ccms_peak/QC_raw/QC_0.mzML"
 download bld_plt1_07_120_1.mzML "https://massiveproxy.gnps2.org/massiveproxy/MSV000085944/ccms_peak/raw_data/bld_plt1_07_120_1.mzML"
