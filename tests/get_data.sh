@@ -1,10 +1,40 @@
 mkdir -p data
 cd data
 
-# Rate limit: at most 10 files/minute => sleep 6s between downloads.
+# Download with retry on HTTP 429 rate limiting.
+# Uses curl to properly detect the HTTP status and avoid leaving 0-byte files.
 download() {
-    wget --no-verbose --tries=3 --waitretry=5 --output-document="$1" "$2"
-    sleep 6
+    filename="$1"
+    url="$2"
+    max_retries=8
+    retry=0
+
+    while [ "$retry" -lt "$max_retries" ]; do
+        http_code=$(curl -L -o "$filename" -w "%{http_code}" --silent --show-error "$url")
+        curl_exit=$?
+
+        if [ "$curl_exit" -eq 0 ] && [ "$http_code" = "200" ] && [ -s "$filename" ]; then
+            echo "OK: $filename ($(wc -c < "$filename") bytes)"
+            sleep 7
+            return 0
+        fi
+
+        rm -f "$filename"
+
+        if [ "$http_code" = "429" ]; then
+            wait_time=$((60 + retry * 30))
+            echo "Rate limited (429) for $filename, waiting ${wait_time}s before retry $((retry+1))/$max_retries ..."
+            sleep "$wait_time"
+        else
+            echo "Download failed (HTTP $http_code, curl exit $curl_exit) for $filename, retrying in 15s ..."
+            sleep 15
+        fi
+
+        retry=$((retry + 1))
+    done
+
+    echo "ERROR: Failed to download $filename from $url after $max_retries attempts"
+    return 1
 }
 
 download GNPS00002_A3_p.mzML "https://massiveproxy.gnps2.org/massiveproxy/MSV000084494/ccms_peak/raw/GNPS00002_A3_p.mzML"
