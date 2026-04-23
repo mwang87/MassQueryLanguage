@@ -1,0 +1,23 @@
+{
+  "file": "tests/data/GNPS00002_A3_p.mzML",
+  "query": "QUERY scaninfo(MS1DATA) WHERE SCANMIN=20 AND SCANMAX=30",
+  "row_count": 2,
+  "scans": [
+    22,
+    28
+  ],
+  "per_scan": [
+    {
+      "scan": 22,
+      "rt": 0.064170165,
+      "i_sum": 401863008.0,
+      "i_norm_max": 1.0
+    },
+    {
+      "scan": 28,
+      "rt": 0.079057633,
+      "i_sum": 373267264.0,
+      "i_norm_max": 1.0
+    }
+  ]
+}

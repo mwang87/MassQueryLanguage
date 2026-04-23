@@ -1,0 +1,75 @@
+{
+  "file": "tests/data/GNPS00002_A3_p.mzML",
+  "query": "QUERY scaninfo(MS2DATA) WHERE MS2PROD=X :TOLERANCEMZ=0.1:INTENSITYPERCENT=5 AND MS2PROD=X+119.1 :TOLERANCEMZ=0.1:INTENSITYPERCENT=5",
+  "row_count": 6,
+  "scans": [
+    37,
+    48,
+    53,
+    97,
+    101,
+    101
+  ],
+  "per_scan": [
+    {
+      "scan": 37,
+      "rt": 0.1009929,
+      "i_sum": 460027.9375,
+      "i_norm_max": 1.0,
+      "precmz": 221.011533868455,
+      "ms1scan": 34,
+      "charge": 1,
+      "comment": 119.99077606201172
+    },
+    {
+      "scan": 48,
+      "rt": 0.12870718,
+      "i_sum": 142756.90625,
+      "i_norm_max": 1.0,
+      "precmz": 197.078046762308,
+      "ms1scan": 46,
+      "charge": 1,
+      "comment": 57.016319274902344
+    },
+    {
+      "scan": 53,
+      "rt": 0.14152588,
+      "i_sum": 344841.5625,
+      "i_norm_max": 1.0,
+      "precmz": 226.179701848308,
+      "ms1scan": 52,
+      "charge": 1,
+      "comment": 107.04940795898438
+    },
+    {
+      "scan": 97,
+      "rt": 0.2639043,
+      "i_sum": 144472.203125,
+      "i_norm_max": 1.0,
+      "precmz": 347.221135831256,
+      "ms1scan": 95,
+      "charge": 1,
+      "comment": 72.9375991821289
+    },
+    {
+      "scan": 101,
+      "rt": 0.27653968,
+      "i_sum": 178464.453125,
+      "i_norm_max": 1.0,
+      "precmz": 237.109310701922,
+      "ms1scan": 100,
+      "charge": 1,
+      "comment": 123.0245590209961
+    },
+    {
+      "scan": 101,
+      "rt": 0.27653968,
+      "i_sum": 178464.453125,
+      "i_norm_max": 1.0,
+      "precmz": 237.109310701922,
+      "ms1scan": 100,
+      "charge": 1,
+      "comment": 126.0551528930664
+    }
+  ]
+}

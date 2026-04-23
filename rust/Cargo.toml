@@ -1,0 +1,14 @@
+[workspace]
+resolver = "2"
+members = [
+    "massql-parser",
+    "massql-loader",
+    "massql-engine",
+    "massql-translator",
+    "massql-cli",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"

@@ -1,0 +1,19 @@
+[package]
+name = "massql-loader"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Mass spec file loading for the Rust massql port"
+
+[dependencies]
+# Default features pull in zlib-ng (requires cmake); swap to pure-Rust miniz.
+mzdata = { version = "0.63", default-features = false, features = ["mzml", "mgf", "miniz_oxide"] }
+thiserror = "1"
+serde_json = "1"
+quick-xml = "0.31"
+base64 = "0.22"
+flate2 = { version = "1", default-features = false, features = ["rust_backend"] }
+
+[dev-dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

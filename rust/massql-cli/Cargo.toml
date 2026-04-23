@@ -1,0 +1,21 @@
+[package]
+name = "massql-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "massql command-line entry point"
+
+[[bin]]
+name = "massql"
+path = "src/main.rs"
+
+[dependencies]
+massql-parser = { path = "../massql-parser" }
+massql-loader = { path = "../massql-loader" }
+massql-engine = { path = "../massql-engine" }
+massql-translator = { path = "../massql-translator" }
+clap = { version = "4", features = ["derive"] }
+ryu = "1"
+
+[dev-dependencies]
+serde_json = "1"
