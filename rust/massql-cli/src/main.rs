@@ -24,8 +24,14 @@ struct Args {
     /// Input mass-spec file (mzML currently; others TBD)
     filename: PathBuf,
 
-    /// MassQL query
-    query: String,
+    /// MassQL query (required unless `--query-yaml` is given).
+    query: Option<String>,
+
+    /// Read the MassQL query from the `query:` field of a YAML file
+    /// instead of the positional argument. Mutually exclusive with
+    /// the positional `<QUERY>`.
+    #[arg(long, conflicts_with = "query")]
+    query_yaml: Option<PathBuf>,
 
     /// Output TSV file (.tsv) or CSV (.csv) path. `.tsv` uses tab
     /// separator, otherwise comma.
@@ -56,11 +62,41 @@ struct Args {
     translate: bool,
 }
 
+/// Narrow shape of what we pull out of the YAML file — we only care
+/// about the `query` key, but we allow unknown siblings so callers
+/// can pile whatever else they want in the file alongside it.
+#[derive(serde::Deserialize)]
+struct QueryYaml {
+    query: String,
+}
+
+fn resolve_query(args: &Args) -> Result<String, String> {
+    if let Some(q) = &args.query {
+        return Ok(q.clone());
+    }
+    if let Some(path) = &args.query_yaml {
+        let text = std::fs::read_to_string(path)
+            .map_err(|e| format!("read {}: {}", path.display(), e))?;
+        let parsed: QueryYaml = serde_yaml::from_str(&text)
+            .map_err(|e| format!("parse {} as YAML: {}", path.display(), e))?;
+        return Ok(parsed.query);
+    }
+    Err("missing query: pass <QUERY> positionally or --query-yaml PATH".into())
+}
+
 fn main() -> ExitCode {
     let args = Args::parse();
 
+    let query = match resolve_query(&args) {
+        Ok(q) => q,
+        Err(e) => {
+            eprintln!("{}", e);
+            return ExitCode::from(2);
+        }
+    };
+
     if args.translate {
-        match massql_translator::translate_query(&args.query, massql_translator::Lang::English) {
+        match massql_translator::translate_query(&query, massql_translator::Lang::English) {
             Ok(s) => {
                 println!("{}", s);
                 return ExitCode::SUCCESS;
@@ -80,7 +116,7 @@ fn main() -> ExitCode {
         }
     };
 
-    let result = match process_query(&args.query, &dataset) {
+    let result = match process_query(&query, &dataset) {
         Ok(r) => r,
         Err(e) => {
             eprintln!("query error: {}", e);
