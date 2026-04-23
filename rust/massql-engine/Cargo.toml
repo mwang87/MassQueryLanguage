@@ -1,0 +1,15 @@
+[package]
+name = "massql-engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Query execution engine for the Rust massql port"
+
+[dependencies]
+massql-parser = { path = "../massql-parser" }
+massql-loader = { path = "../massql-loader" }
+serde_json = "1"
+thiserror = "1"
+
+[dev-dependencies]
+serde = { version = "1", features = ["derive"] }

@@ -1,0 +1,9 @@
+{
+  "file": "tests/data/GNPS00002_A3_p.mzML",
+  "query": "QUERY scannum(MS2DATA) WHERE MS2PREC=226.18:TOLERANCEMZ=0.5",
+  "row_count": 1,
+  "scans": [
+    53
+  ],
+  "per_scan": []
+}

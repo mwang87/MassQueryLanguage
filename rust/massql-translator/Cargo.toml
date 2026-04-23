@@ -1,0 +1,11 @@
+[package]
+name = "massql-translator"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "MassQL parsed-query → natural-language explainer"
+
+[dependencies]
+massql-parser = { path = "../massql-parser" }
+serde_json = "1"
+thiserror = "1"

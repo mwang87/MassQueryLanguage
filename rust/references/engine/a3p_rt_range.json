@@ -1,0 +1,58 @@
+{
+  "file": "tests/data/GNPS00002_A3_p.mzML",
+  "query": "QUERY scaninfo(MS1DATA) WHERE RTMIN=0.1 AND RTMAX=0.2",
+  "row_count": 7,
+  "scans": [
+    40,
+    46,
+    52,
+    58,
+    63,
+    69,
+    72
+  ],
+  "per_scan": [
+    {
+      "scan": 40,
+      "rt": 0.10902618,
+      "i_sum": 248183968.0,
+      "i_norm_max": 1.0
+    },
+    {
+      "scan": 46,
+      "rt": 0.12405935,
+      "i_sum": 209994896.0,
+      "i_norm_max": 1.0
+    },
+    {
+      "scan": 52,
+      "rt": 0.1392031,
+      "i_sum": 194694000.0,
+      "i_norm_max": 1.0
+    },
+    {
+      "scan": 58,
+      "rt": 0.15438843,
+      "i_sum": 162538608.0,
+      "i_norm_max": 1.0
+    },
+    {
+      "scan": 63,
+      "rt": 0.16727373,
+      "i_sum": 153578480.0,
+      "i_norm_max": 1.0
+    },
+    {
+      "scan": 69,
+      "rt": 0.18259023,
+      "i_sum": 145327760.0,
+      "i_norm_max": 1.0
+    },
+    {
+      "scan": 72,
+      "rt": 0.19305058,
+      "i_sum": 132149376.0,
+      "i_norm_max": 1.0
+    }
+  ]
+}

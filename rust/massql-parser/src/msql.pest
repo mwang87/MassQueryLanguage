@@ -1,0 +1,193 @@
+// MassQL grammar — Rust/pest port of massql/msql.ebnf
+//
+// Structural differences from the Lark grammar:
+//   * pest is PEG (ordered choice) so every left-recursive Lark rule is rewritten
+//     as a loop (`numericalexpression = term (("+"|"-") term)*`).
+//   * Alternatives are ordered longest-first so a shorter prefix doesn't swallow
+//     a longer match (e.g. the `condition ":" qualifier` form is tried before
+//     the bare `condition` form inside wherefullcondition/filterfullcondition).
+//   * Whitespace handling is explicit via WHITESPACE/COMMENT.
+
+WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
+
+statement = { querykeyword ~ querytype
+              ~ (wherekeyword ~ wherefullcondition+)?
+              ~ (filterkeyword ~ filterfullcondition+)?
+              ~ EOI? }
+
+querykeyword  = @{ "QUERY" | "query" | "Query" }
+wherekeyword  = @{ "WHERE" | "where" | "Where" }
+filterkeyword = @{ "FILTER" }
+
+querytype = { function ~ "(" ~ datams1data ~ "," ~ param ~ "=" ~ floating ~ ")"
+            | function ~ "(" ~ datams1data ~ ")"
+            | function ~ "(" ~ datams2data ~ ")"
+            | datams1data
+            | datams2data }
+
+datams1data = @{ "MS1DATA" | "ms1data" | "Ms1Data" }
+datams2data = @{ "MS2DATA" | "ms2data" | "Ms2Data" }
+
+// -------------------- WHERE / FILTER clauses --------------------
+
+wherefullcondition  = { where_single  ~ (booleanandconjunction ~ where_single)* }
+filterfullcondition = { filter_single ~ (booleanandconjunction ~ filter_single)* }
+
+where_single  = { condition ~ (":" ~ qualifier)? }
+filter_single = { condition ~ (":" ~ qualifier)? }
+
+// -------------------- Conditions --------------------
+
+condition = {
+      xcondition ~ equal ~ xfunction ~ "(" ~ "min" ~ "=" ~ numericalexpression ~ "," ~ "max" ~ "=" ~ numericalexpression ~ ")"
+    | mobilitycondition ~ equal ~ mobilityfunction ~ "(" ~ "min" ~ "=" ~ numericalexpression ~ "," ~ "max" ~ "=" ~ numericalexpression ~ ")"
+    | polaritycondition ~ equal ~ (positivepolarity | negativepolarity)
+    | conditionfields ~ equal ~ wildcard
+    | conditionfields ~ equal ~ "(" ~ statement ~ ")"
+    | conditionfields ~ equal ~ "(" ~ numericalexpressionwithor ~ ")"
+    | conditionfields ~ equal ~ numericalexpression
+}
+
+// Qualifier chains — flattened loop (Lark used left recursion).
+qualifier = { qualifier_atom ~ (":" ~ qualifier_atom)* }
+
+qualifier_atom = {
+      qualifiermassdefect   ~ equal ~ xdefect ~ "(" ~ "min" ~ "=" ~ numericalexpression ~ "," ~ "max" ~ "=" ~ numericalexpression ~ ")"
+    | qualifiercardinality  ~ equal ~ xrange  ~ "(" ~ "min" ~ "=" ~ numericalexpression ~ "," ~ "max" ~ "=" ~ numericalexpression ~ ")"
+    | qualifierotherscan    ~ equal ~ otherscanrtrange ~ "(" ~ "left" ~ "=" ~ numericalexpression ~ "," ~ "right" ~ "=" ~ numericalexpression ~ ")"
+    | qualifierintensityreference
+    | qualifierexclude
+    | qualifierfields ~ (equal | greaterthan | lessthan) ~ numericalexpression
+}
+
+// -------------------- Condition / qualifier fields --------------------
+
+conditionfields = {
+      ms2productcondition
+    | ms2precursorcondition
+    | ms2neutrallosscondition
+    | ms1mzcondition
+    | rtmincondition
+    | rtmaxcondition
+    | scanmincondition
+    | scanmaxcondition
+    | chargecondition
+}
+
+// NOTE: MS2MZ is an alias for MS2PROD in the Lark grammar; both emit
+// "ms2productcondition" from the transformer.
+ms2productcondition      = @{ "MS2PROD" | "MS2MZ" }
+ms2precursorcondition    = @{ "MS2PREC" }
+ms2neutrallosscondition  = @{ "MS2NL" }
+ms1mzcondition           = @{ "MS1MZ" }
+rtmincondition           = @{ "RTMIN" }
+rtmaxcondition           = @{ "RTMAX" }
+scanmincondition         = @{ "SCANMIN" }
+scanmaxcondition         = @{ "SCANMAX" }
+polaritycondition        = @{ "POLARITY" }
+chargecondition          = @{ "CHARGE" }
+
+mobilitycondition = @{ "MOBILITY" }
+mobilityfunction  = { mobilityrange }
+mobilityrange     = @{ "range" }
+
+xcondition = @{ "X" }
+xfunction  = { xrange | xdefect }
+xrange     = @{ "range" }
+xdefect    = @{ "massdefect" }
+
+otherscanrtrange = @{ "rtrange" }
+
+// Ordered longest-first so PEG doesn't swallow a prefix (e.g.
+// INTENSITYMATCH inside INTENSITYMATCHPERCENT, or INTENSITYPERCENT
+// inside INTENSITYTICPERCENT would each be wrong).
+qualifierfields = {
+      qualifierintensitytolpercent    // INTENSITYMATCHPERCENT
+    | qualifierintensityticpercent    // INTENSITYTICPERCENT
+    | qualifierintensitypercent       // INTENSITYPERCENT
+    | qualifierintensitymatch         // INTENSITYMATCH
+    | qualifierintensityvalue         // INTENSITYVALUE
+    | qualifierppmtolerance           // TOLERANCEPPM
+    | qualifiermztolerance            // TOLERANCEMZ
+}
+
+qualifiermztolerance         = @{ "TOLERANCEMZ" }
+qualifierppmtolerance        = @{ "TOLERANCEPPM" }
+qualifierintensitypercent    = @{ "INTENSITYPERCENT" }
+qualifierintensityticpercent = @{ "INTENSITYTICPERCENT" }
+qualifierintensityvalue      = @{ "INTENSITYVALUE" }
+qualifierintensitymatch      = @{ "INTENSITYMATCH" }
+qualifierintensitytolpercent = @{ "INTENSITYMATCHPERCENT" }
+qualifierintensityreference  = @{ "INTENSITYMATCHREFERENCE" }
+qualifiermassdefect          = @{ "MASSDEFECT" }
+qualifierexclude             = @{ "EXCLUDED" }
+qualifiercardinality         = @{ "CARDINALITY" | "MATCHCOUNT" }
+qualifierotherscan           = @{ "OTHERSCAN" }
+
+// -------------------- Functions / polarity --------------------
+
+function = {
+      functionscannum
+    | functionscansum
+    | functionscanrangesum
+    | functionscanmz
+    | functionscaninfo
+    | functionscanmaxint
+}
+
+functionscannum      = @{ "scannum" }
+functionscansum      = @{ "scansum" }
+functionscanrangesum = @{ "scanrangesum" }
+functionscanmz       = @{ "scanmz" }
+functionscaninfo     = @{ "scaninfo" }
+functionscanmaxint   = @{ "scanmaxint" }
+
+positivepolarity = @{ "POSITIVE" | "positive" | "Positive" }
+negativepolarity = @{ "NEGATIVE" | "negative" | "Negative" }
+
+equal       = @{ "=" }
+lessthan    = @{ "<" }
+greaterthan = @{ ">" }
+
+booleanandconjunction = @{ "AND" | "and" | "And" }
+booleanorconjunction  = @{ "OR" }
+
+param    = @{ "TOLERANCE" }
+wildcard = @{ "ANY" }
+
+// -------------------- Numerical expressions --------------------
+
+// OR'd expression — e.g. MS1MZ=(X OR X+2 OR X+4)
+numericalexpressionwithor = { numericalexpression ~ (booleanorconjunction ~ numericalexpression)* }
+
+// Lark rule:   numericalexpression: term | numericalexpression (plus|minus) term
+// Rewritten:   numericalexpression = term ((plus|minus) term)*
+numericalexpression = { term ~ ((plus | minus) ~ term)* }
+term                = { factor ~ ((multiply | divide) ~ factor)* }
+
+factor = {
+      floating
+    | formula_expr
+    | aminoaciddelta_expr
+    | peptide_expr
+    | variable
+    | factor_parens
+}
+factor_parens        = { "(" ~ numericalexpression ~ ")" }
+formula_expr         = { "formula" ~ "(" ~ moleculeformula ~ ")" }
+aminoaciddelta_expr  = { "aminoaciddelta" ~ "(" ~ aminoacids ~ ")" }
+peptide_expr         = { "peptide" ~ "(" ~ peptide ~ "," ~ "charge" ~ "=" ~ peptidecharge ~ "," ~ "ion" ~ "=" ~ peptideion ~ ")" }
+
+multiply = @{ "*" }
+divide   = @{ "/" }
+plus     = @{ "+" }
+minus    = @{ "-" }
+
+// Numbers / identifiers (atomic — no inner whitespace).
+floating        = @{ ("-" | "+")? ~ (ASCII_DIGIT* ~ "." ~ ASCII_DIGIT+ | ASCII_DIGIT+) }
+variable        = @{ "X" | "Y" }
+moleculeformula = @{ ASCII_ALPHA_UPPER ~ (ASCII_ALPHA | ASCII_DIGIT)* }
+aminoacids      = @{ ASCII_ALPHA_UPPER+ }
+peptide         = @{ ASCII_ALPHA_UPPER+ }
+peptidecharge   = @{ '1'..'9' }
+peptideion      = @{ ASCII_ALPHA }

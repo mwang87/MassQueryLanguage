@@ -1,0 +1,19 @@
+{
+  "file": "tests/data/GNPS00002_A3_p.mzML",
+  "query": "QUERY scaninfo(MS2DATA) WHERE MS2PROD=226.18:TOLERANCEMZ=0.1",
+  "row_count": 1,
+  "scans": [
+    53
+  ],
+  "per_scan": [
+    {
+      "scan": 53,
+      "rt": 0.14152588,
+      "i_sum": 344841.5625,
+      "i_norm_max": 1.0,
+      "precmz": 226.179701848308,
+      "ms1scan": 52,
+      "charge": 1
+    }
+  ]
+}
